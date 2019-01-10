@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+ai.yue.library.data.jdbc.config.DBAutoConfig

@@ -1,0 +1,29 @@
+package ai.yue.library.data.jdbc.config;
+
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import ai.yue.library.data.jdbc.client.DB;
+
+/**
+ * @author  孙金川
+ * @version 创建时间：2018年6月11日
+ */
+@Configuration
+@AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
+@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
+public class DBAutoConfig {
+
+	@Bean
+	@Primary
+	public DB db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		return new DB(jdbcTemplate, namedParameterJdbcTemplate);
+	}
+	
+}
