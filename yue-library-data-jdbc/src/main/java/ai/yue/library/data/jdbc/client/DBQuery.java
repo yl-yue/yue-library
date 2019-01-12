@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.DBException;
-import ai.yue.library.base.ipo.PageIPO;
 import ai.yue.library.base.util.ArithCompute;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
@@ -20,6 +19,7 @@ import ai.yue.library.base.view.ResultErrorPrompt;
 import ai.yue.library.data.jdbc.constant.DBConstant;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
+import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
@@ -35,22 +35,13 @@ class DBQuery extends DBUpdate {
 	
 	// Query
 	
-	String querySql(String tableName, Map<String, Object> paramMap) {
+	private String querySql(String tableName, Map<String, Object> paramMap) {
 		paramValidate(tableName, paramMap);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(tableName);
-		sql.append(" WHERE 1 = 1 ");
-		paramMap.keySet().forEach(condition -> {
-			sql.append(" AND ");
-			sql.append(condition);
-			if (null == paramMap.get(condition)) {
-				sql.append(" IS :");
-			}else {
-				sql.append(" = :");
-			}
-			sql.append(condition);
-		});
+		String whereSql = paramToWhereSql(paramMap);
+		sql.append(whereSql);
 		return sql.toString();
 	}
 	
@@ -77,22 +68,13 @@ class DBQuery extends DBUpdate {
 		return namedParameterJdbcTemplate.query(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
-	String querySql(String tableName, Map<String, Object> paramMap, String ... conditions) {
+	private String querySql(String tableName, Map<String, Object> paramMap, String ... conditions) {
 		paramValidate(tableName, paramMap, conditions);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(tableName);
-		sql.append(" WHERE 1 = 1 ");
-		for (String condition : conditions) {
-			sql.append(" AND ");
-			sql.append(condition);
-			if (null == paramMap.get(condition)) {
-				sql.append(" IS :");
-			}else {
-				sql.append(" = :");
-			}
-			sql.append(condition);
-		}
+		String whereSql = paramToWhereSql(paramMap, conditions);
+		sql.append(whereSql);
 		return sql.toString();
 	}
 	
@@ -121,7 +103,7 @@ class DBQuery extends DBUpdate {
 		return namedParameterJdbcTemplate.query(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
-	String queryByIdSql(String tableName, Long id) {
+	private String queryByIdSql(String tableName, Long id) {
 		paramValidate(tableName, id);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
@@ -157,7 +139,7 @@ class DBQuery extends DBUpdate {
 		return queryForObject(sql, paramJSON, mappedClass);
 	}
     
-	String queryByIdSql(String tableName, Long id, String[] fieldName) {
+    private String queryByIdSql(String tableName, Long id, String[] fieldName) {
 		paramValidate(tableName, id, fieldName);
 		String field = StringUtils.deleteFirstLastString(Arrays.toString(fieldName), 1);
 		StringBuffer sql = new StringBuffer();
@@ -183,7 +165,7 @@ class DBQuery extends DBUpdate {
 		return queryForMap(sql, paramJSON);
 	}
     
-    String queryAllSql(String tableName) {
+    private String queryAllSql(String tableName) {
 		paramValidate(tableName);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
@@ -284,7 +266,7 @@ class DBQuery extends DBUpdate {
 	 * @param pageIPO
 	 * @return
 	 */
-	JSONObject pageIPO(PageIPO pageIPO) {
+    private JSONObject pageIPO(PageIPO pageIPO) {
 		// 1. 处理分页参数
 		int page = pageIPO.getPage();
 		int limit = pageIPO.getLimit();
@@ -306,7 +288,7 @@ class DBQuery extends DBUpdate {
 		return paramJSON;
 	}
 	
-	PageVO pageVO(PageDTO pageDTO) {
+    private PageVO pageVO(PageDTO pageDTO) {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
@@ -321,7 +303,7 @@ class DBQuery extends DBUpdate {
 		return PageVO.builder().count(count).data(data).build();
 	}
 	
-	<T> PageTVO<T> pageTVO(PageDTO pageDTO, Class<T> mappedClass) {
+    private <T> PageTVO<T> pageTVO(PageDTO pageDTO, Class<T> mappedClass) {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
@@ -337,7 +319,7 @@ class DBQuery extends DBUpdate {
 		return pageTVO.toBuilder().count(count).data(data).build();
 	}
 	
-	PageDTO pageDTO(String tableName, PageIPO pageIPO, DBSortEnum dBSortEnum) {
+    private PageDTO pageDTO(String tableName, PageIPO pageIPO, DBSortEnum dBSortEnum) {
 		// 1. 参数验证
 		paramValidate(tableName);
 		
@@ -352,21 +334,13 @@ class DBQuery extends DBUpdate {
 		querySql.append("(SELECT id FROM ");
 		querySql.append(tableName);
 		// 添加查询条件
-		if (null != conditions) {
-			querySql.append(" WHERE 1 = 1");
-			conditions.forEach((key, value) -> {
-				querySql.append(" AND ");
-			    querySql.append(key);
-				if (value == null) {
-					querySql.append(" IS :");
-				}else {
-					querySql.append(" = :");
-				}
-			    querySql.append(key);
-			});
+		String whereSql = "";
+		if (conditions != null) {
+			whereSql = paramToWhereSql(conditions);
 		}
+		querySql.append(whereSql);
 		// 排序
-		if (null == dBSortEnum) {// 默认（不排序）
+		if (dBSortEnum == null) {// 默认（不排序）
 			querySql.append(" LIMIT :page, :limit) b WHERE a.id = b.id");
 		} else {
 			if (DBSortEnum.升序 == dBSortEnum) {// 升序
@@ -380,19 +354,7 @@ class DBQuery extends DBUpdate {
 		StringBuffer countSql = new StringBuffer();
 		countSql.append("SELECT COUNT(*) count FROM ");
 		countSql.append(tableName);
-		if (null != conditions) {
-			countSql.append(" WHERE 1 = 1");
-			conditions.forEach((key, value) -> {
-				countSql.append(" AND ");
-				countSql.append(key);
-				if (value == null) {
-					countSql.append(" IS :");
-				}else {
-					countSql.append(" = :");
-				}
-				countSql.append(key);
-			});
-		}
+		countSql.append(whereSql);
 		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramMap).get("count");
 		
 		// 5. 返回结果
@@ -457,7 +419,7 @@ class DBQuery extends DBUpdate {
 		return pageTVO(pageDTO, mappedClass);
 	}
 	
-	PageDTO pageWhereDTO(String tableName, String whereSql, PageIPO pageIPO) {
+	private PageDTO pageWhereDTO(String tableName, String whereSql, PageIPO pageIPO) {
 		// 1. 参数验证
 		paramValidate(tableName, whereSql);
 		
@@ -518,7 +480,7 @@ class DBQuery extends DBUpdate {
 		return pageTVO(pageDTO, mappedClass);
 	}
 	
-	PageDTO pageSqlDTO(String querySql, PageIPO pageIPO) {
+	private PageDTO pageSqlDTO(String querySql, PageIPO pageIPO) {
 		// 1. 参数校验
 		if (StringUtils.isEmpty(querySql)) {
 			throw new DBException("querySql不能为空");
@@ -549,7 +511,7 @@ class DBQuery extends DBUpdate {
 		return PageDTO.builder().count(count).querySql(querySql.toString()).paramMap(paramMap).build();
 	}
 	
-	PageDTO pageSqlDTO(String countSql, String querySql, PageIPO pageIPO) {
+	private PageDTO pageSqlDTO(String countSql, String querySql, PageIPO pageIPO) {
 		// 1. 参数校验
 		if (StringUtils.isEmpty(querySql)) {
 			throw new DBException("querySql不能为空");

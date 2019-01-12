@@ -9,7 +9,7 @@ import lombok.Data;
  * @version 创建时间：2018年11月6日
  */
 @Data
-@ConfigurationProperties("constant")
+@ConfigurationProperties("yue.constant")
 public class ConstantProperties {
 	
 	/**

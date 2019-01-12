@@ -121,4 +121,32 @@
 			<url>https://repo.rdc.aliyun.com/repository/31558-snapshot-j7XaKT/</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<pomElements>
+						<parent>expand</parent>
+						<dependencyManagement>interpolate</dependencyManagement>
+						<properties>interpolate</properties>
+						<distributionManagement>interpolate</distributionManagement>
+						<repositories>interpolate</repositories>
+					</pomElements>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

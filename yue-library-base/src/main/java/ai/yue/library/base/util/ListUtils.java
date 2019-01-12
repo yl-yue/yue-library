@@ -19,6 +19,24 @@ import com.alibaba.fastjson.JSONObject;
 public class ListUtils {
 	
 	/**
+	 * List数组是否为空
+	 * @param list
+	 * @return
+	 */
+	public static boolean isEmpty(List<?> list) {
+		return null == list || list.isEmpty();
+	}
+	
+	/**
+	 * List数组不为空
+	 * @param list
+	 * @return
+	 */
+	public static boolean isNotEmpty(List<?> list) {
+		return !isEmpty(list);
+	}
+	
+	/**
 	 * 数据分组
 	 * <p>
 	 * 将拥有相同的 key 值的JSON数据归为一组

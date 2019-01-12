@@ -25,7 +25,7 @@ class DBUpdate extends DBDelete {
 	
 	// Update
 
-    String updateSql(String tableName, Map<String, Object> paramMap, String[] conditions, DBUpdateEnum dBUpdateEnum) {
+    private String updateSql(String tableName, Map<String, Object> paramMap, String[] conditions, DBUpdateEnum dBUpdateEnum) {
 		paramValidate(tableName, paramMap, conditions);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ");
@@ -54,19 +54,9 @@ class DBUpdate extends DBDelete {
 				sql.append(", ");
 			}
 		}
-        sql = StringUtils.deleteLastEqualString(sql, ", ");
-        sql.append(" WHERE 1 = 1");
-        
-        for (String condition : conditions) {
-            sql.append(" AND ");
-            sql.append(condition);
-			if (null == paramMap.get(condition)) {
-				sql.append(" IS :");
-			}else {
-				sql.append(" = :");
-			}
-            sql.append(condition);
-        }
+		sql = StringUtils.deleteLastEqualString(sql, ", ");
+		String whereSql = paramToWhereSql(paramMap, conditions);
+		sql.append(whereSql);
         
 		if (dBUpdateEnum == DBUpdateEnum.递减_无符号) {// 递减-无符号更新
 			List<String> updateKeys = MapUtils.keyList(paramMap);
@@ -164,7 +154,7 @@ class DBUpdate extends DBDelete {
 		}
 	}
 
-    String updateByIdSql(String tableName, Map<String, Object> paramMap, DBUpdateEnum dBUpdateEnum) {
+    private String updateByIdSql(String tableName, Map<String, Object> paramMap, DBUpdateEnum dBUpdateEnum) {
 		paramValidate(tableName, paramMap);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ");

@@ -1,4 +1,4 @@
-package ai.yue.library.base.config;
+package ai.yue.library.base.config.factory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

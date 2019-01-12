@@ -19,7 +19,7 @@ class DBDelete extends DBInsert {
 	
 	// Delete
 	
-    String deleteSql(String tableName) {
+    private String deleteSql(String tableName) {
 		// 1.确认参数
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
