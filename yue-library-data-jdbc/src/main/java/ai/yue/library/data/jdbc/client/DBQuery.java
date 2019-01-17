@@ -13,9 +13,9 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.DBException;
 import ai.yue.library.base.util.ArithCompute;
+import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.base.view.ResultErrorPrompt;
 import ai.yue.library.data.jdbc.constant.DBConstant;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
@@ -31,16 +31,16 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.1
  */
 @Slf4j
-class DBQuery extends DBUpdate {
+class DBQuery extends DBBase {
 	
 	// Query
 	
-	private String querySql(String tableName, Map<String, Object> paramMap) {
-		paramValidate(tableName, paramMap);
+	private String querySql(String tableName, JSONObject paramJSON) {
+		paramValidate(tableName, paramJSON);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramMap);
+		String whereSql = paramToWhereSql(paramJSON);
 		sql.append(whereSql);
 		return sql.toString();
 	}
@@ -48,59 +48,24 @@ class DBQuery extends DBUpdate {
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramMap 查询参数
+	 * @param paramJSON 查询参数
 	 * @return
 	 */
-	public List<Map<String, Object>> query(String tableName, Map<String, Object> paramMap) {
-		String sql = querySql(tableName, paramMap);
-		return namedParameterJdbcTemplate.queryForList(sql, paramMap);
+	public List<JSONObject> query(String tableName, JSONObject paramJSON) {
+		String sql = querySql(tableName, paramJSON);
+		return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
 	}
     
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramMap 查询参数
+	 * @param paramJSON 查询参数
 	 * @param mappedClass 映射类
 	 * @return
 	 */
-	public <T> List<T> query(String tableName, Map<String, Object> paramMap, Class<T> mappedClass) {
-		String sql = querySql(tableName, paramMap);
-		return namedParameterJdbcTemplate.query(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
-	}
-	
-	private String querySql(String tableName, Map<String, Object> paramMap, String ... conditions) {
-		paramValidate(tableName, paramMap, conditions);
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM ");
-		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramMap, conditions);
-		sql.append(whereSql);
-		return sql.toString();
-	}
-	
-	/**
-	 * 绝对条件查询
-	 * @param tableName 表名
-	 * @param paramMap 参数
-	 * @param conditions 条件（参数的Key）
-	 * @return
-	 */
-	public List<Map<String, Object>> query(String tableName, Map<String, Object> paramMap, String ... conditions) {
-		String sql = querySql(tableName, paramMap, conditions);
-		return namedParameterJdbcTemplate.queryForList(sql, paramMap);
-	}
-	
-	/**
-	 * 绝对条件查询
-	 * @param tableName 表名
-	 * @param paramMap 参数
-	 * @param conditions 条件（参数的Key）
-	 * @param mappedClass 映射类
-	 * @return
-	 */
-	public <T> List<T> query(String tableName, Map<String, Object> paramMap, String[] conditions, Class<T> mappedClass) {
-		String sql = querySql(tableName, paramMap, conditions);
-		return namedParameterJdbcTemplate.query(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
+	public <T> List<T> query(String tableName, JSONObject paramJSON, Class<T> mappedClass) {
+		String sql = querySql(tableName, paramJSON);
+		return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
 	private String queryByIdSql(String tableName, Long id) {
@@ -122,13 +87,13 @@ class DBQuery extends DBUpdate {
     	String sql = queryByIdSql(tableName, id);
 		JSONObject paramJSON = new JSONObject();
 		paramJSON.put("id", id);
-		return queryForMap(sql, paramJSON);
+		return queryForJSON(sql, paramJSON);
 	}
     
 	/**
 	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
 	 * @param tableName 表名
-	 * @param paramMap 参数（key=id, value=值）
+	 * @param paramJSON 参数（key=id, value=值）
 	 * @param mappedClass 映射类
 	 * @return
 	 */
@@ -162,7 +127,7 @@ class DBQuery extends DBUpdate {
     	String sql = queryByIdSql(tableName, id, fieldName);
 		JSONObject paramJSON = new JSONObject();
 		paramJSON.put("id", id);
-		return queryForMap(sql, paramJSON);
+		return queryForJSON(sql, paramJSON);
 	}
     
     private String queryAllSql(String tableName) {
@@ -178,9 +143,9 @@ class DBQuery extends DBUpdate {
 	 * @param tableName 表名
 	 * @return
 	 */
-    public List<Map<String, Object>> queryAll(String tableName) {
+    public List<JSONObject> queryAll(String tableName) {
     	String sql = queryAllSql(tableName);
-		return namedParameterJdbcTemplate.queryForList(sql, MapUtils.FINAL_EMPTY_MAP);
+    	return queryForList(sql, MapUtils.FINAL_EMPTY_JSON);
 	}
     
 	/**
@@ -198,37 +163,26 @@ class DBQuery extends DBUpdate {
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param sql 要执行的SQL查询
-     * @param paramMap 要绑定到查询的参数映射
+     * @param paramJSON 要绑定到查询的参数映射
      * @return
      */
-    public JSONObject queryForMap(String sql, Map<String, Object> paramMap) {
-    	var list = namedParameterJdbcTemplate.queryForList(sql, paramMap);
-    	int size = list.size();
-    	int expectedValue = 1;
-    	if (size != expectedValue) {
-    		if (size > expectedValue) {
-    			String msg = ResultErrorPrompt.dataStructure(expectedValue, size);
-    			log.warn(msg);
-    		}
-    		
-    		return null;
-    	}
-    	
-    	return new JSONObject(list.get(0));
+	public JSONObject queryForJSON(String sql, JSONObject paramJSON) {
+		var list = queryForList(sql, paramJSON);
+		return resultToJSON(list);
 	}
-
+    
     /**
      * 同{@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param <T>
      * @param sql 要执行的SQL查询
-     * @param paramMap 要绑定到查询的参数映射
+     * @param paramJSON 要绑定到查询的参数映射
      * @param mappedClass 映射类
      * @return
      */
-    public <T> T queryForObject(String sql, Map<String, Object> paramMap, Class<T> mappedClass) {
+    public <T> T queryForObject(String sql, JSONObject paramJSON, Class<T> mappedClass) {
     	try {
-    		return namedParameterJdbcTemplate.queryForObject(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
+    		return namedParameterJdbcTemplate.queryForObject(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
     	}catch (Exception e) {
     		log.warn(e.getMessage());
     		return null;
@@ -239,11 +193,11 @@ class DBQuery extends DBUpdate {
      * 同 {@link NamedParameterJdbcTemplate#queryForList(String, Map)}<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
      * @param sql 要执行的查询SQL
-     * @param paramMap 要绑定到查询的参数映射
+     * @param paramJSON 要绑定到查询的参数映射
      * @return
      */
-    public List<Map<String, Object>> queryForList(String sql, Map<String, Object> paramMap) {
-    	return namedParameterJdbcTemplate.queryForList(sql, paramMap);
+    public List<JSONObject> queryForList(String sql, JSONObject paramJSON) {
+    	return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
 	}
     
     /**
@@ -251,12 +205,12 @@ class DBQuery extends DBUpdate {
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
      * @param <T>
      * @param sql 要执行的查询SQL
-     * @param paramMap 要绑定到查询的参数映射
+     * @param paramJSON 要绑定到查询的参数映射
      * @param mappedClass 映射类
      * @return
      */
-    public <T> List<T> queryForList(String sql, Map<String, Object> paramMap, Class<T> mappedClass) {
-    	return namedParameterJdbcTemplate.query(sql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
+    public <T> List<T> queryForList(String sql, JSONObject paramJSON, Class<T> mappedClass) {
+    	return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
 	// Page
@@ -292,12 +246,12 @@ class DBQuery extends DBUpdate {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
-		Map<String, Object> paramMap = pageDTO.getParamMap();
+		JSONObject paramJSON = pageDTO.getParamJSON();
 		
 		// 2. 查询数据
-		List<Map<String, Object>> data = new ArrayList<>();
+		List<JSONObject> data = new ArrayList<>();
 		if (count == null || count != 0) {
-			data = namedParameterJdbcTemplate.queryForList(querySql, paramMap);
+			ListUtils.toList(namedParameterJdbcTemplate.queryForList(querySql, paramJSON));
 		}
 		// 3. 分页
 		return PageVO.builder().count(count).data(data).build();
@@ -307,12 +261,12 @@ class DBQuery extends DBUpdate {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
-		Map<String, Object> paramMap = pageDTO.getParamMap();
+		JSONObject paramJSON = pageDTO.getParamJSON();
 		
 		// 2. 查询数据
 		List<T> data = new ArrayList<>();
 		if (count != 0) {
-			data = namedParameterJdbcTemplate.query(querySql, paramMap, BeanPropertyRowMapper.newInstance(mappedClass));
+			data = namedParameterJdbcTemplate.query(querySql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
 		}
 		// 3. 分页
 		PageTVO<T> pageTVO = new PageTVO<>();
@@ -324,7 +278,7 @@ class DBQuery extends DBUpdate {
 		paramValidate(tableName);
 		
 		// 2. 处理分页参数
-		JSONObject paramMap = pageIPO(pageIPO);
+		JSONObject paramJSON = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 预编译SQL拼接
@@ -355,10 +309,10 @@ class DBQuery extends DBUpdate {
 		countSql.append("SELECT COUNT(*) count FROM ");
 		countSql.append(tableName);
 		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramMap).get("count");
+		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJSON).get("count");
 		
 		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramMap(paramMap).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
 	}
 	
     /**
@@ -424,7 +378,7 @@ class DBQuery extends DBUpdate {
 		paramValidate(tableName, whereSql);
 		
 		// 2. 处理分页参数
-		JSONObject paramMap = pageIPO(pageIPO);
+		JSONObject paramJSON = pageIPO(pageIPO);
 		
 		// 3. 预编译SQL拼接
 		StringBuffer querySql = new StringBuffer();
@@ -442,10 +396,10 @@ class DBQuery extends DBUpdate {
 		countSql.append(tableName);
 		countSql.append(" ");
 		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramMap).get("count");
+		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJSON).get("count");
 		
 		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramMap(paramMap).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
 	}
 	
 	/**
@@ -487,7 +441,7 @@ class DBQuery extends DBUpdate {
 		}
 		
 		// 2. 处理分页参数
-		JSONObject paramMap = pageIPO(pageIPO);
+		JSONObject paramJSON = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 统计
@@ -508,7 +462,7 @@ class DBQuery extends DBUpdate {
 		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), conditions).get("count");
 		
 		// 4. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramMap(paramMap).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
 	}
 	
 	private PageDTO pageSqlDTO(String countSql, String querySql, PageIPO pageIPO) {
@@ -518,7 +472,7 @@ class DBQuery extends DBUpdate {
 		}
 		
 		// 2. 处理分页参数
-		JSONObject paramMap = pageIPO(pageIPO);
+		JSONObject paramJSON = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 统计
@@ -528,7 +482,7 @@ class DBQuery extends DBUpdate {
 		}
 		
 		// 4. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramMap(paramMap).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
 	}
 	
     /**

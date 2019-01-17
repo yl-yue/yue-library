@@ -2,6 +2,7 @@ package ai.yue.library.base.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import cn.hutool.core.util.ArrayUtil;
 
 /**
  * List工具类
@@ -147,11 +150,11 @@ public class ListUtils {
 	/**
 	 * <h1>List-Map集合排序</h1>
 	 * <p>
-	 * &nbsp;0 （降序）<br>
-	 * &nbsp;1+（升序）
+	 * &nbsp;rule == 0 （降序）<br>
+	 * &nbsp;rule != 0 （升序）
 	 * </p>
 	 * @param list 需要处理的集合
-	 * @param sortKey 去重的依据（Map的key）
+	 * @param sortKey 排序依据（Map的key）
 	 * @param rule 排序方式：0（降序）&nbsp;1（升序）
 	 * @return 处理后的List集合
 	 */
@@ -168,6 +171,17 @@ public class ListUtils {
 			}
 		});
 		return list;
+	}
+	
+	/**
+	 * 反转集合
+	 * @param <T>
+	 * @param list	需要处理的集合
+	 * @param clazz 集合元素类型
+	 * @return 反转后的List集合
+	 */
+	public static <T> List<T> reverse(List<T> list, Class<T> clazz) {
+		return ListUtils.toList(ArrayUtil.reverse(ArrayUtil.toArray(list, clazz)));
 	}
 	
 	/**
@@ -317,6 +331,20 @@ public class ListUtils {
 	public static <T> ArrayList<T> toList(T... a) {
 		ArrayList<T> toList = new ArrayList<>(Arrays.asList(a));
 		return toList;
+	}
+	
+	/**
+	 * <h1>{@linkplain List} >> {@link Map} 转 {@linkplain List} >> {@link JSONObject}</h1>
+	 * <p>
+	 * 注意：此方法没有转换过程，所以无丝毫性能损耗。
+	 * @param list 		需要转换的List
+	 * @return			转换后的List
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<JSONObject> toList(List<Map<String, Object>> list) {
+		List<JSONObject> jsonList = new ArrayList<>();
+		jsonList.addAll((Collection<? extends JSONObject>) list);
+		return jsonList;
 	}
 	
 	/**

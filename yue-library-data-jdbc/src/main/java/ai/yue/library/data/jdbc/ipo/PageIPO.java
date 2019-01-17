@@ -1,7 +1,5 @@
 package ai.yue.library.data.jdbc.ipo;
 
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.ParamException;
@@ -32,23 +30,23 @@ public class PageIPO {
 	 * 将分页参数转换为分页对象
 	 * <p>
 	 * {@linkplain JSONObject} >> {@linkplain PageIPO}
-	 * @param param 最大limit值 = 200
+	 * @paramJSON paramJSON 最大limit值 = 200
 	 * @return
 	 */
-	public static PageIPO parsePageIPO(Map<String, Object> param) {
-		return parsePageIPO(param, 200);
+	public static PageIPO parsePageIPO(JSONObject paramJSON) {
+		return parsePageIPO(paramJSON, 200);
 	}
 	
 	/**
 	 * 将分页参数转换为分页对象
 	 * <p>
 	 * {@linkplain JSONObject} >> {@linkplain PageIPO}
-	 * @param param
-	 * @param maxLimit 最大限制
+	 * @paramJSON paramJSON
+	 * @paramJSON maxLimit 最大限制
 	 * @return
 	 */
-	public static PageIPO parsePageIPO(Map<String, Object> param, int maxLimit) {
-		JSONObject conditions = new JSONObject(param);
+	public static PageIPO parsePageIPO(JSONObject paramJSON, int maxLimit) {
+		JSONObject conditions = new JSONObject(paramJSON);
 		Integer page = conditions.getInteger("page");
 		Integer limit = conditions.getInteger("limit");
 		if (null == page || null == limit) {

@@ -1,7 +1,6 @@
 package ai.yue.library.data.jdbc.vo;
 
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -25,7 +24,7 @@ public class PageVO {
 	/** 总数 */
 	Long count;
 	/** 分页列表数据 */
-	List<Map<String, Object>> data;
+	List<JSONObject> data;
 	
 	public JSONObject toJSONObject() {
 		JSONObject json = new JSONObject();
@@ -39,7 +38,7 @@ public class PageVO {
 	 * <p>
 	 * @return
 	 */
-	public Result<List<Map<String, Object>>> toResult() {
+	public Result<List<JSONObject>> toResult() {
 		return ResultInfo.success(data, count);
 	}
 	

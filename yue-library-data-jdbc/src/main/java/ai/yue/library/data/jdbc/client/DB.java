@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * Created by sunJinChuan on 2016/6/6
  * @since 0.0.1
  */
-public class DB extends DBQuery {
+public class DB extends DBInsert {
 	
 	public DB(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;

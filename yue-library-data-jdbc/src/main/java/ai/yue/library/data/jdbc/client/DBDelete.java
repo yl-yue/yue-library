@@ -1,9 +1,8 @@
 package ai.yue.library.data.jdbc.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.DBException;
 import ai.yue.library.base.util.MapUtils;
@@ -15,7 +14,7 @@ import ai.yue.library.base.view.ResultErrorPrompt;
  * Created by sunJinChuan on 2016/6/6
  * @since 0.0.1
  */
-class DBDelete extends DBInsert {
+class DBDelete extends DBUpdate {
 	
 	// Delete
 	
@@ -49,9 +48,9 @@ class DBDelete extends DBInsert {
 		// 2. 获得SQL
 		String sql = deleteSql(tableName);
 		
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("id", id);
-        int updateRowsNumber = namedParameterJdbcTemplate.update(sql.toString(), paramMap);
+		JSONObject paramJSON = new JSONObject();
+        paramJSON.put("id", id);
+        int updateRowsNumber = namedParameterJdbcTemplate.update(sql.toString(), paramJSON);
         
         if (updateRowsNumber != 1) {
         	throw new DBException(ResultErrorPrompt.DELETE_ERROR);
@@ -63,22 +62,22 @@ class DBDelete extends DBInsert {
      * <b>相对</b>条件批量删除优化SQL可参照如下编写：<br>
      * <code>DELETE FROM table WHERE id IN (:id)</code><br>
      * @param tableName    	表名
-     * @param paramMaps     需要删除的Map数组（key=id, value=具体值）
+     * @param paramJSONs     需要删除的Map数组（key=id, value=具体值）
      * @return
      */
 	@Transactional
-    public void deleteBatch(String tableName, Map<String, Object>[] paramMaps) {
+    public void deleteBatch(String tableName, JSONObject[] paramJSONs) {
 		// 1.确认条件
-		if (MapUtils.isEmptys(paramMaps)) {
+		if (MapUtils.isEmptys(paramJSONs)) {
 			throw new DBException("删除条件不能为空");
 		}
         
 		// 2. 获得SQL
 		String sql = deleteSql(tableName);
 		
-        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramMaps).length;
+        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJSONs).length;
         
-        if (updateRowsNumber != paramMaps.length) {
+        if (updateRowsNumber != paramJSONs.length) {
         	throw new DBException(ResultErrorPrompt.DELETE_ERROR_BATCH);
         }
     }

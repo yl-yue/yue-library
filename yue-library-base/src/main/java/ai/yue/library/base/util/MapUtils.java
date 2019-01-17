@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +21,11 @@ import com.alibaba.fastjson.JSONObject;
  * @version 创建时间：2018年1月26日
  */
 public class MapUtils {
-
+	
 	/**
-	 * 不可变的空Map常量
+	 * 不可变的空JSON常量
 	 */
-	public final static Map<String, Object> FINAL_EMPTY_MAP = new HashMap<>();
-	/**
-	 * @deprecated {@link #FINAL_EMPTY_MAP}
-	 */
-	@Deprecated
-	public final static Map<String, Object> newHashMap = new HashMap<>();
+	public final static JSONObject FINAL_EMPTY_JSON = new JSONObject();
 	
 	/**
 	 * 判断Map数据结构key的一致性
@@ -126,6 +120,18 @@ public class MapUtils {
     public static boolean isEmpty(Map<String, Object> map) {
         return (map == null || map.isEmpty());
     }
+	
+    /**
+     * Null-安全检查指定的Map不为空。
+     * <p>
+     * Not Null returns true.
+     * 
+     * @param map  the map to check, not be null
+     * @return true if not empty
+     */
+	public static boolean isNotEmpty(Map<String, Object> map) {
+		return !isEmpty(map);
+	}
     
 	/**
 	 * 判断Map数组是否为空<br>

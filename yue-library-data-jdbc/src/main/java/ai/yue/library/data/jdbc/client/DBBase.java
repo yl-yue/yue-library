@@ -1,7 +1,6 @@
 package ai.yue.library.data.jdbc.client;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +11,7 @@ import ai.yue.library.base.exception.DBException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultErrorPrompt;
+import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -96,11 +96,11 @@ class DBBase {
 	}
 
     /**
-     * 同 {@linkplain #queryForMap(String, Map)} 的安全查询结果获取
-     * @param list {@linkplain #queryForList(String, Map)} 查询结果
+     * 同 {@linkplain DBQuery#queryForJSON(String, JSONObject)} 的安全查询结果获取
+     * @param list {@linkplain DBQuery#queryForList(String, JSONObject)} 查询结果
      * @return
      */
-    public JSONObject resultToJSON(List<Map<String, Object>> list) {
+    public JSONObject resultToJSON(List<JSONObject> list) {
     	int size = list.size();
     	int expectedValue = 1;
     	if (size != expectedValue) {
@@ -112,13 +112,13 @@ class DBBase {
     		return null;
     	}
     	
-    	return new JSONObject(list.get(0));
+    	return list.get(0);
 	}
     
     /**
-     * 同 {@linkplain #queryForObject(String, Map, Class)} 的安全查询结果获取
+     * 同 {@linkplain DBQuery#queryForObject(String, JSONObject, Class)} 的安全查询结果获取
      * @param <T>
-     * @param list {@linkplain #queryForList(String, Map, Class)} 查询结果
+     * @param list {@linkplain DBQuery#queryForList(String, JSONObject, Class)} 查询结果
      * @return
      */
     public <T> T resultToObject(List<T> list) {
@@ -138,11 +138,11 @@ class DBBase {
     
     // WHERE SQL
     
-	private synchronized void paramToWhereSql(StringBuffer whereSql, final Map<String, Object> paramMap,
+	private synchronized void paramToWhereSql(StringBuffer whereSql, final JSONObject paramJSON,
 			final String condition) {
 		whereSql.append(" AND ");
 		whereSql.append(condition);
-		var value = paramMap.get(condition);
+		var value = paramJSON.get(condition);
 		if (null == value) {
 			whereSql.append(" IS :");
 			whereSql.append(condition);
@@ -176,15 +176,17 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramMap
+     * @param paramJSON
      * @param conditions
      * @return
      */
-	protected String paramToWhereSql(Map<String, Object> paramMap, String... conditions) {
+	protected String paramToWhereSql(JSONObject paramJSON, String... conditions) {
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" WHERE 1 = 1 ");
-		for (String condition : conditions) {
-			paramToWhereSql(whereSql, paramMap, condition);
+		if (ArrayUtil.isNotEmpty(conditions)) {
+			for (String condition : conditions) {
+				paramToWhereSql(whereSql, paramJSON, condition);
+			}
 		}
 		
 		return whereSql.toString();
@@ -210,14 +212,14 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramMap
+     * @param paramJSON
      * @return
      */
-    public String paramToWhereSql(Map<String, Object> paramMap) {
+    public String paramToWhereSql(JSONObject paramJSON) {
     	StringBuffer whereSql = new StringBuffer();
     	whereSql.append(" WHERE 1 = 1 ");
-		paramMap.keySet().forEach(condition -> {
-			paramToWhereSql(whereSql, paramMap, condition);
+		paramJSON.keySet().forEach(condition -> {
+			paramToWhereSql(whereSql, paramJSON, condition);
 		});
 		return whereSql.toString();
     }
@@ -283,13 +285,13 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramMap
+	 * @param paramJSON
 	 */
-    protected void paramValidate(String tableName, Map<String, Object> paramMap) {
+    protected void paramValidate(String tableName, JSONObject paramJSON) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (paramMap.isEmpty()) {
+		if (MapUtils.isEmpty(paramJSON)) {
 			throw new DBException("参数不能为空");
 		}
 	}
@@ -297,13 +299,13 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramMaps
+	 * @param paramJSONs
 	 */
-    protected void paramValidate(String tableName, Map<String, Object>[] paramMaps) {
+    protected void paramValidate(String tableName, JSONObject[] paramJSONs) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (MapUtils.isEmptys(paramMaps)) {
+		if (MapUtils.isEmptys(paramJSONs)) {
 			throw new DBException("参数不能为空");
 		}
 	}
@@ -311,17 +313,17 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramMap
+	 * @param paramJSON
 	 * @param conditions
 	 */
-    protected void paramValidate(String tableName, Map<String, Object> paramMap, String[] conditions) {
+    protected void paramValidate(String tableName, JSONObject paramJSON, String[] conditions) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (paramMap.isEmpty()) {
+		if (MapUtils.isEmpty(paramJSON)) {
 			throw new DBException("参数不能为空");
 		}
-        if (StringUtils.isEmptys(conditions) || !MapUtils.isKeys(paramMap, conditions)) {
+        if (StringUtils.isEmptys(conditions) || !MapUtils.isKeys(paramJSON, conditions)) {
         	throw new DBException("更新条件不能为空");
         }
 	}

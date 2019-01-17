@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 
 /**
  * String工具类
@@ -54,7 +54,7 @@ public class StringUtils {
 	 */
 	public static String autoIncrement(String str) {
 		int maxIndex = str.length() - 1;
-		Integer autoIncrementValue = Integer.valueOf(str.charAt(maxIndex)) + 1;
+		Integer autoIncrementValue = Integer.parseInt(CharUtil.toString(str.charAt(maxIndex))) + 1;
 		return str.substring(0, maxIndex) + autoIncrementValue;
 	}
 	
@@ -111,21 +111,4 @@ public class StringUtils {
     	return str.substring(length, str.length() - length);
     }
     
-	/**
-	 * <h1>判断字符串是否存在字符串数组中</h1>
-	 * @deprecated {@linkplain ArrayUtil#contains(Object[], Object)}
-	 * @param array
-	 * @param str
-	 * @return
-	 */
-    @Deprecated
-	public static boolean isExistArrayInner(String[] array, String str) {
-		for(String content : array) {
-			if (content.equals(str)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

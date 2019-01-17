@@ -1,6 +1,6 @@
 package ai.yue.library.data.jdbc.dto;
 
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,6 @@ public class PageDTO {
 	
 	Long count;
 	String querySql;
-	Map<String, Object> paramMap;
+	JSONObject paramJSON;
 	
 }
