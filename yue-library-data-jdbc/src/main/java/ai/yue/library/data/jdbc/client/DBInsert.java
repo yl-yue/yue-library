@@ -44,7 +44,7 @@ class DBInsert extends DBDelete {
 		
 		// 3. 设置ColumnNames
 		List<String> keys = MapUtils.keyList(paramJSON);
-		List<String> columnNames = ListUtils.toList(jdbcTemplate.queryForList("desc " + tableName), "Field");
+		List<String> columnNames = ListUtils.toList(queryForList("desc " + tableName, MapUtils.FINAL_EMPTY_JSON), "Field");
 		List<String> insertColumn = ListUtils.keepSameValue(keys, columnNames);
 		simpleJdbcInsert.setColumnNames(insertColumn);
 		
@@ -110,7 +110,7 @@ class DBInsert extends DBDelete {
 		
 		// 3. 设置ColumnNames
 		List<String> keys = MapUtils.keyList(paramJSONs[0]);
-		List<String> columnNames = ListUtils.toList(jdbcTemplate.queryForList("desc " + tableName), "Field");
+		List<String> columnNames = ListUtils.toList(queryForList("desc " + tableName, MapUtils.FINAL_EMPTY_JSON), "Field");
 		List<String> insertColumn = ListUtils.keepSameValue(keys, columnNames);
 		simpleJdbcInsert.setColumnNames(insertColumn);
 		

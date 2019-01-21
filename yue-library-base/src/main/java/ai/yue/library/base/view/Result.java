@@ -12,6 +12,7 @@ import static com.alibaba.fastjson.util.TypeUtils.castToLong;
 import static com.alibaba.fastjson.util.TypeUtils.castToSqlDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToTimestamp;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,6 +20,9 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -166,10 +170,10 @@ public class Result<T> implements Serializable {
     
     /**
      * HttpServletResponse
-     * @param response
-     * @throws Exception
+     * @throws IOException 
      */
-	public void response(HttpServletResponse response) throws Exception {
+	public void response() throws IOException {
+		HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter writer = response.getWriter();
 		writer.print(JSONObject.toJSONString(this));

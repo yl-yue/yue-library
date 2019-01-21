@@ -8,20 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * cookie工具类
+ * Cookie工具类
  * @author  孙金川
  * @version 创建时间：2017年10月8日
  */
 public class CookieUtils {
-
+	
     /**
      * 设置
-     * @param response
      * @param key
      * @param value
      * @param timeout
      */
-    public static void set(HttpServletResponse response, String key, String value, int timeout) {
+    public static void set(String key, String value, int timeout) {
+		HttpServletResponse response = HttpUtils.getResponse();
         Cookie cookie = new Cookie(key, value);
         cookie.setPath("/");
         cookie.setMaxAge(timeout);
@@ -30,26 +30,24 @@ public class CookieUtils {
     
     /**
      * 获取cookie
-     * @param request
      * @param key
      * @return
      */
-    public static Cookie get(HttpServletRequest request,
-                           String key) {
-        Map<String, Cookie> cookieMap = readCookieMap(request);
+	public static Cookie get(String key) {
+        Map<String, Cookie> cookieMap = readCookieMap();
         if (cookieMap.containsKey(key)) {
             return cookieMap.get(key);
         }else {
             return null;
         }
     }
-
+	
     /**
      * 将cookie封装成Map
-     * @param request
      * @return
      */
-    private static Map<String, Cookie> readCookieMap(HttpServletRequest request) {
+    private static Map<String, Cookie> readCookieMap() {
+    	HttpServletRequest request = HttpUtils.getRequest();
         Map<String, Cookie> cookieMap = new HashMap<>();
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -57,6 +55,7 @@ public class CookieUtils {
                 cookieMap.put(cookie.getName(), cookie);
             }
         }
+        
         return cookieMap;
     }
     

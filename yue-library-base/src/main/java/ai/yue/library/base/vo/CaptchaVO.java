@@ -5,9 +5,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import ai.yue.library.base.util.CaptchaUtils;
+import ai.yue.library.base.util.HttpUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,12 +39,16 @@ public class CaptchaVO {
 	 * <p>
 	 * 设置验证码到session中<br>
 	 * 设置验证码图片到response中，并设置ContentType为image/png<br>
-	 * @param session
-	 * @param response
 	 */
-	public void toLocalSessionAndResponse(HttpSession session, HttpServletResponse response) {
-        session.setAttribute("captcha", captcha);
+	public void toLocalSessionAndResponse() {
+		ServletRequestAttributes servletRequestAttributes = HttpUtils.getRequestAttributes();
+		HttpServletRequest request = servletRequestAttributes.getRequest();
+		HttpServletResponse response = servletRequestAttributes.getResponse();
+		HttpSession httpSession = request.getSession();
+		
+		httpSession.setAttribute(CaptchaUtils.CAPTCHA_KEY, captcha);
         response.setContentType("image/png");
+        
         OutputStream out;
 		try {
 			out = response.getOutputStream();

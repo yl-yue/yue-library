@@ -5,8 +5,9 @@ package ai.yue.library.base.exception;
  * @author  孙金川
  * @version 创建时间：2017年10月9日
  */
-@SuppressWarnings("serial")
 public class ParamException extends RuntimeException {
+	
+	private static final long serialVersionUID = -7818277682527873103L;
 	
 	public ParamException(String msg) {
         super(msg);

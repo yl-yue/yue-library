@@ -15,12 +15,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.hutool.core.map.MapUtil;
+
 /**
  * Map工具类
  * @author  孙金川
  * @version 创建时间：2018年1月26日
  */
-public class MapUtils {
+public class MapUtils extends MapUtil {
 	
 	/**
 	 * 不可变的空JSON常量
@@ -35,22 +37,25 @@ public class MapUtils {
 	 * @return
 	 */
 	public static boolean isKeys(Map<String, Object> paramMap, String[] mustContainKeys, String... canContainKeys) {
+		// 1. 必传参数校验
 		for (String key : mustContainKeys) {
 			if (!paramMap.containsKey(key)) {
 				return false;
 			}
 		}
 		
-		// 无可包含key
-		if (0 == canContainKeys.length) {
+		// 2. 无可选参数
+		if (StringUtils.isEmptys(canContainKeys)) {
 			return true;
 		}
 		
+		// 3. 可选参数校验-确认paramMap大小
 		int keySize = mustContainKeys.length + canContainKeys.length;
 		if (paramMap.size() > keySize) {
 			return false;
 		}
 		
+		// 4. 获得paramMap中包含可包含key的大小
 		int paramMapCanContainKeysLength = 0;
 		for (String key : canContainKeys) {
 			if (paramMap.containsKey(key)) {
@@ -58,10 +63,12 @@ public class MapUtils {
 			}
 		}
 		
+		// 5. 确认paramMap中包含的可包含key大小 + 必须包含key大小 是否等于 paramMap大小
 		if (paramMapCanContainKeysLength + mustContainKeys.length != paramMap.size()) {
 			return false;
 		}
 		
+		// 6. 通过所有校验，返回最终结果
 		return true;
 	}
 	
@@ -109,30 +116,6 @@ public class MapUtils {
 		return isKeys(paramMaps[0], keys);
 	}
 	
-    /**
-     * Null-安全检查指定的Map是否为空。
-     * <p>
-     * Null returns true.
-     * 
-     * @param map  the map to check, may be null
-     * @return true if empty or null
-     */
-    public static boolean isEmpty(Map<String, Object> map) {
-        return (map == null || map.isEmpty());
-    }
-	
-    /**
-     * Null-安全检查指定的Map不为空。
-     * <p>
-     * Not Null returns true.
-     * 
-     * @param map  the map to check, not be null
-     * @return true if not empty
-     */
-	public static boolean isNotEmpty(Map<String, Object> map) {
-		return !isEmpty(map);
-	}
-    
 	/**
 	 * 判断Map数组是否为空<br>
 	 * <p>弱判断，只确定数组中第一个元素是否为空</p>

@@ -17,11 +17,11 @@ import ai.yue.library.data.jdbc.client.DB;
  */
 @Configuration
 @AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
-@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
-public class DBAutoConfig {
+public class JdbcAutoConfig {
 
 	@Bean
 	@Primary
+	@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
 	public DB db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		return new DB(jdbcTemplate, namedParameterJdbcTemplate);
 	}

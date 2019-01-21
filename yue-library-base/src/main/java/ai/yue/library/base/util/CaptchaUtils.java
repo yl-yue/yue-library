@@ -17,6 +17,11 @@ import ai.yue.library.base.vo.CaptchaVO;
  */
 public class CaptchaUtils {
 	
+	/**
+	 * captcha Key
+	 */
+	public static final String CAPTCHA_KEY = "captcha";
+	
     private static final char[] CHARS = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -81,16 +86,17 @@ public class CaptchaUtils {
     
     /**
      * 验证-验证码
-     * @param session
      * @param captcha
      * @return 
      */
-    public static boolean isValidateCaptcha(HttpSession session, String captcha) {
-		String randCaptcha = (String) session.getAttribute("captcha");
+    public static boolean isValidateCaptcha(String captcha) {
+    	HttpSession httpSession = HttpUtils.getSession();
+		String randCaptcha = (String) httpSession.getAttribute(CAPTCHA_KEY);
 		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
 			return false;
 		}
-		session.removeAttribute("captcha");
+		
+		httpSession.removeAttribute(CAPTCHA_KEY);
 		return true;
     }
     

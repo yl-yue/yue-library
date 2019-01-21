@@ -1,6 +1,7 @@
 package ai.yue.library.base.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import ai.yue.library.base.config.factory.HttpsRequestFactory;
 import ai.yue.library.base.config.properties.ConstantProperties;
+import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.properties.RestProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({ConstantProperties.class, RestProperties.class})
+@EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
 public class BeanAutoConfig {
 	
 	// restTemplate-HTTPS客户端
@@ -33,8 +35,19 @@ public class BeanAutoConfig {
     @ConditionalOnMissingBean
     public ClientHttpRequestFactory httpsRequestFactory(RestProperties restProperties){
     	HttpsRequestFactory factory = new HttpsRequestFactory();
-        factory.setReadTimeout(restProperties.getReadTimeout());
-        factory.setConnectTimeout(restProperties.getConnectTimeout());
+    	
+    	// 设置链接超时时间
+    	Integer connectTimeout = restProperties.getConnectTimeout();
+		if (connectTimeout != null) {
+			factory.setConnectTimeout(connectTimeout);
+		}
+		
+    	// 设置读取超时时间
+    	Integer readTimeout = restProperties.getReadTimeout();
+    	if (readTimeout != null) {
+    		factory.setReadTimeout(readTimeout);
+    	}
+    	
         return factory;
     }
     
@@ -50,7 +63,7 @@ public class BeanAutoConfig {
 	@Bean
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(prefix = "yue.cors", name = "allow", havingValue = "true", matchIfMissing = true)
-	public CorsFilter corsFilter() {
+	public CorsFilter corsFilter(CorsProperties corsProperties) {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		final CorsConfiguration config = new CorsConfiguration();
 		
@@ -58,7 +71,15 @@ public class BeanAutoConfig {
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowedMethods(Arrays.asList("*"));
 		config.setAllowedOrigins(Arrays.asList("*"));
-		config.setMaxAge(300L);
+		config.setMaxAge(3600L);
+		
+		// 设置response允许暴露的Headers
+		List<String> exposedHeaders = corsProperties.getExposedHeaders();
+		if (exposedHeaders != null) {
+			config.setExposedHeaders(exposedHeaders);
+		} else {
+			config.addExposedHeader("token");
+		}
 		
 		source.registerCorsConfiguration("/**", config);
 		

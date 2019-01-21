@@ -9,20 +9,28 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import ai.yue.library.data.redis.client.Redis;
+import ai.yue.library.data.redis.client.User;
 
 /**
  * @author  孙金川
  * @version 创建时间：2018年6月11日
  */
 @Configuration
-@ConditionalOnBean(StringRedisTemplate.class)
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class RedisAutoConfig {
 	
 	@Bean
 	@Primary
+	@ConditionalOnBean(StringRedisTemplate.class)
 	public Redis redis(StringRedisTemplate stringRedisTemplate) {
 		return new Redis(stringRedisTemplate);
+	}
+	
+	@Bean
+	@Primary
+	@ConditionalOnBean(Redis.class)
+	public User user() {
+		return new User();
 	}
 	
 }

@@ -138,31 +138,7 @@ public class ParamUtils {
 	 * @throws ParamException 	不满足条件抛出此异常及其提示信息
 	 */
 	public static void paramValidate(JSONObject paramJSON, String[] mustContainKeys, String... canContainKeys) {
-		for (String key : mustContainKeys) {
-			if (!paramJSON.containsKey(key)) {
-				throw new ParamException(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys));
-			}
-		}
-		
-		// 无可包含key
-		if (StringUtils.isEmptys(canContainKeys)) {
-			return;
-		}
-		
-		int keySize = mustContainKeys.length + canContainKeys.length;
-		if (paramJSON.size() > keySize) {
-			throw new ParamException(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys) + "，" + PARAM_PREFIX_CAN
-					+ Arrays.toString(canContainKeys));
-		}
-		
-		int paramJSONCanContainKeysLength = 0;
-		for (String key : canContainKeys) {
-			if (paramJSON.containsKey(key)) {
-				paramJSONCanContainKeysLength++;
-			}
-		}
-		
-		if (paramJSONCanContainKeysLength + mustContainKeys.length != paramJSON.size()) {
+		if (!MapUtils.isKeys(paramJSON, mustContainKeys, canContainKeys)) {
 			throw new ParamException(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys) + "，" + PARAM_PREFIX_CAN
 					+ Arrays.toString(canContainKeys));
 		}

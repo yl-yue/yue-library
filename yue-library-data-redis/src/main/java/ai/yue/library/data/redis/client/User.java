@@ -1,31 +1,37 @@
-package ai.yue.library.data.redis.util;
+package ai.yue.library.data.redis.client;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.constant.TokenConstant;
 import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.util.CookieUtils;
-import ai.yue.library.data.redis.client.Redis;
+import lombok.NoArgsConstructor;
 
 /**
  * @author  孙金川
  * @version 创建时间：2018年4月24日
  */
-public class UserUtils {
+@NoArgsConstructor
+public class User {
+	
+	@Autowired
+	Redis redis;
+	@Autowired
+	HttpServletRequest request;
 	
 	/**
 	 * 获得用户ID
-	 * @param request
-	 * @param redis
 	 * @return
 	 */
-	public static Long getUserId(HttpServletRequest request, Redis redis) {
+	public Long getUserId() {
 		try {
 			// 1. 查询cookie
-			Cookie cookie = CookieUtils.get(request, TokenConstant.COOKIE_TOKEN_KEY);
+			Cookie cookie = CookieUtils.get(TokenConstant.COOKIE_TOKEN_KEY);
 			String token = "";
 	        if (null == cookie) {
 	        	token = request.getHeader(TokenConstant.COOKIE_TOKEN_KEY);
@@ -43,15 +49,13 @@ public class UserUtils {
 	/**
 	 * 获得用户相关信息
 	 * @param <T>
-	 * @param request
-	 * @param redis
 	 * @param clazz
 	 * @return
 	 */
-	public static <T> T getUser(HttpServletRequest request, Redis redis, Class<T> clazz) {
+	public <T> T getUser(Class<T> clazz) {
 		try {
 			// 1. 查询cookie
-			Cookie cookie = CookieUtils.get(request, TokenConstant.COOKIE_TOKEN_KEY);
+			Cookie cookie = CookieUtils.get(TokenConstant.COOKIE_TOKEN_KEY);
 			String token = "";
 	        if (null == cookie) {
 	        	token = request.getHeader(TokenConstant.COOKIE_TOKEN_KEY);

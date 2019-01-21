@@ -2,7 +2,6 @@ package ai.yue.library.base.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -324,72 +323,97 @@ public class ListUtils {
 	 * <p>
 	 * 此方法为 {@link Arrays#asList} 的安全实现
 	 * @param <T>	数组中的对象类
-	 * @param a		将被转换的数组
+	 * @param array	将被转换的数组
 	 * @return		被转换数组的列表视图
 	 */
-	@SafeVarargs
-	public static <T> ArrayList<T> toList(T... a) {
-		ArrayList<T> toList = new ArrayList<>(Arrays.asList(a));
+	public static <T> ArrayList<T> toList(T[] array) {
+		ArrayList<T> toList = new ArrayList<>(Arrays.asList(array));
 		return toList;
 	}
 	
 	/**
 	 * <h1>{@linkplain List} >> {@link Map} 转 {@linkplain List} >> {@link JSONObject}</h1>
 	 * <p>
-	 * 注意：此方法没有转换过程，所以无丝毫性能损耗。
+	 * 	<b><i>性能测试说明：</i></b><br>
+	 * 	<i>测试CPU：</i>i7-4710MQ<br>
+	 * 	<i>测试结果：</i>百万级数据平均200ms（毫秒）<br>
+	 * </p>
 	 * @param list 		需要转换的List
 	 * @return			转换后的List
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<JSONObject> toList(List<Map<String, Object>> list) {
 		List<JSONObject> jsonList = new ArrayList<>();
-		jsonList.addAll((Collection<? extends JSONObject>) list);
+		for (int i = 0; i < list.size(); i++) {
+			jsonList.add(new JSONObject(list.get(i)));
+		}
+		
 		return jsonList;
 	}
 	
 	/**
-	 * <h1>{@linkplain List}>>{@link Map} 转 {@linkplain List}>>{@link String}</h1>
+	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link String}</h1>
 	 * @param list 		需要转换的List
 	 * @param keep_key	保留值的key
 	 * @return			转换后的List
 	 */
-	public static List<String> toList(List<Map<String, Object>> list, String keep_key) {
+	public static List<String> toList(List<JSONObject> list, String keep_key) {
 		List<String> toList = new ArrayList<> ();
-		for(Map<String, Object> map : list) {
-			String value = map.get(keep_key).toString();
+		for(JSONObject json : list) {
+			String value = json.getString(keep_key);
 			toList.add(value);
 		}
+		
 		return toList;
 	}
 	
 	/**
 	 * <h1>{@linkplain JSONArray} 转 {@linkplain List}>>{@link String}</h1>
-	 * @param array 	需要转换的JSONArray
+	 * @param jsonArray 需要转换的JSONArray
 	 * @param keep_key	保留值的key
 	 * @return			转换后的List
 	 */
-	public static List<String> toList(JSONArray array, String keep_key) {
+	public static List<String> toList(JSONArray jsonArray, String keep_key) {
 		List<String> toList = new ArrayList<> ();
-		array.forEach(action -> {
-			JSONObject json = (JSONObject) action;
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject json = jsonArray.getJSONObject(i);
 			toList.add(json.getString(keep_key));
-		});
+		}
+		
 		return toList;
 	}
 	
 	/**
-	 * <h1>{@linkplain List}>>{@link Map} 转 {@linkplain List}>>{@link T}</h1>
+	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link T}</h1>
 	 * @param <T>
 	 * @param list 		需要转换的List
 	 * @param keep_key	保留值的key
 	 * @param clazz		类型
 	 * @return			转换后的List
 	 */
-	public static <T> List<T> toList(List<Map<String, Object>> list, String keep_key, Class<T> clazz) {
+	public static <T> List<T> toList(List<JSONObject> list, String keep_key, Class<T> clazz) {
 		List<T> toList = new ArrayList<> ();
-		for(Map<String, Object> map : list) {
-			toList.add(ObjectUtils.toObject(map.get(keep_key), clazz));
+		for(JSONObject json : list) {
+			toList.add(ObjectUtils.toObject(json.get(keep_key), clazz));
 		}
+		
+		return toList;
+	}
+	
+	/**
+	 * <h1>{@linkplain JSONArray} 转 {@linkplain List}>>{@link T}</h1>
+	 * @param <T>
+	 * @param jsonArray 需要转换的JSONArray
+	 * @param keep_key	保留值的key
+	 * @param clazz		类型
+	 * @return			转换后的List
+	 */
+	public static <T> List<T> toList(JSONArray jsonArray, String keep_key, Class<T> clazz) {
+		List<T> toList = new ArrayList<> ();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject json = jsonArray.getJSONObject(i);
+			toList.add(ObjectUtils.toObject(json.get(keep_key), clazz));
+		}
+		
 		return toList;
 	}
 	
@@ -426,7 +450,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}>>{@link Map} 转 {@linkplain List}>>{@link T}并去除重复元素</h1>
+	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link T}并去除重复元素</h1>
 	 * @param <T>
 	 * @param list 		需要转换的List
 	 * @param keep_key	保留值的key
@@ -434,7 +458,7 @@ public class ListUtils {
 	 * @return			处理后的List
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> toListAndDistinct(List<Map<String, Object>> list, String keep_key, Class<T> clazz) {
+	public static <T> List<T> toListAndDistinct(List<JSONObject> list, String keep_key, Class<T> clazz) {
 		return distinct(toList(list, keep_key, clazz));
 	}
 	
