@@ -27,7 +27,6 @@
 
 	<modules>
 		<module>yue-library-dependencies</module>
-		<module>yue-library-template</module>
 		<module>yue-library-base</module>
 		<module>yue-library-data-jdbc</module>
 		<module>yue-library-data-redis</module>

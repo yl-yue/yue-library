@@ -35,13 +35,18 @@ class DBQuery extends DBBase {
 	
 	// Query
 	
-	private String querySql(String tableName, JSONObject paramJSON) {
+	private String querySql(String tableName, JSONObject paramJSON, DBSortEnum dBSortEnum) {
 		paramValidate(tableName, paramJSON);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(tableName);
 		String whereSql = paramToWhereSql(paramJSON);
 		sql.append(whereSql);
+		if (DBSortEnum.升序 == dBSortEnum) {// 升序
+			sql.append(" ORDER BY id");
+		} else {// 降序
+			sql.append(" ORDER BY id DESC");
+		}
 		return sql.toString();
 	}
 	
@@ -52,7 +57,7 @@ class DBQuery extends DBBase {
 	 * @return
 	 */
 	public List<JSONObject> query(String tableName, JSONObject paramJSON) {
-		String sql = querySql(tableName, paramJSON);
+		String sql = querySql(tableName, paramJSON, null);
 		return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
 	}
     
@@ -64,7 +69,32 @@ class DBQuery extends DBBase {
 	 * @return
 	 */
 	public <T> List<T> query(String tableName, JSONObject paramJSON, Class<T> mappedClass) {
-		String sql = querySql(tableName, paramJSON);
+		String sql = querySql(tableName, paramJSON, null);
+		return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * @param tableName 表名
+	 * @param paramJSON 查询参数
+	 * @param dBSortEnum 排序方式
+	 * @return
+	 */
+	public List<JSONObject> query(String tableName, JSONObject paramJSON, DBSortEnum dBSortEnum) {
+		String sql = querySql(tableName, paramJSON, dBSortEnum);
+		return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * @param tableName 表名
+	 * @param paramJSON 查询参数
+	 * @param mappedClass 映射类
+	 * @param dBSortEnum 排序方式
+	 * @return
+	 */
+	public <T> List<T> query(String tableName, JSONObject paramJSON, Class<T> mappedClass, DBSortEnum dBSortEnum) {
+		String sql = querySql(tableName, paramJSON, dBSortEnum);
 		return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
