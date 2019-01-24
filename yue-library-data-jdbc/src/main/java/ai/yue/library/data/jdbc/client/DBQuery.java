@@ -35,12 +35,12 @@ class DBQuery extends DBBase {
 	
 	// Query
 	
-	private String querySql(String tableName, JSONObject paramJSON, DBSortEnum dBSortEnum) {
-		paramValidate(tableName, paramJSON);
+	private String querySql(String tableName, JSONObject paramJson, DBSortEnum dBSortEnum) {
+		paramValidate(tableName, paramJson);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramJSON);
+		String whereSql = paramToWhereSql(paramJson);
 		sql.append(whereSql);
 		if (DBSortEnum.升序 == dBSortEnum) {// 升序
 			sql.append(" ORDER BY id");
@@ -53,49 +53,49 @@ class DBQuery extends DBBase {
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramJSON 查询参数
+	 * @param paramJson 查询参数
 	 * @return
 	 */
-	public List<JSONObject> query(String tableName, JSONObject paramJSON) {
-		String sql = querySql(tableName, paramJSON, null);
-		return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
+	public List<JSONObject> query(String tableName, JSONObject paramJson) {
+		String sql = querySql(tableName, paramJson, null);
+		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
 	}
     
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramJSON 查询参数
+	 * @param paramJson 查询参数
 	 * @param mappedClass 映射类
 	 * @return
 	 */
-	public <T> List<T> query(String tableName, JSONObject paramJSON, Class<T> mappedClass) {
-		String sql = querySql(tableName, paramJSON, null);
-		return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
+	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass) {
+		String sql = querySql(tableName, paramJson, null);
+		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramJSON 查询参数
+	 * @param paramJson 查询参数
 	 * @param dBSortEnum 排序方式
 	 * @return
 	 */
-	public List<JSONObject> query(String tableName, JSONObject paramJSON, DBSortEnum dBSortEnum) {
-		String sql = querySql(tableName, paramJSON, dBSortEnum);
-		return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
+	public List<JSONObject> query(String tableName, JSONObject paramJson, DBSortEnum dBSortEnum) {
+		String sql = querySql(tableName, paramJson, dBSortEnum);
+		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
 	}
 	
 	/**
 	 * 绝对条件查询
 	 * @param tableName 表名
-	 * @param paramJSON 查询参数
+	 * @param paramJson 查询参数
 	 * @param mappedClass 映射类
 	 * @param dBSortEnum 排序方式
 	 * @return
 	 */
-	public <T> List<T> query(String tableName, JSONObject paramJSON, Class<T> mappedClass, DBSortEnum dBSortEnum) {
-		String sql = querySql(tableName, paramJSON, dBSortEnum);
-		return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
+	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass, DBSortEnum dBSortEnum) {
+		String sql = querySql(tableName, paramJson, dBSortEnum);
+		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
 	private String queryByIdSql(String tableName, Long id) {
@@ -115,23 +115,23 @@ class DBQuery extends DBBase {
 	 */
     public JSONObject queryById(String tableName, long id) {
     	String sql = queryByIdSql(tableName, id);
-		JSONObject paramJSON = new JSONObject();
-		paramJSON.put("id", id);
-		return queryForJSON(sql, paramJSON);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+		return queryForJSON(sql, paramJson);
 	}
     
 	/**
 	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
 	 * @param tableName 表名
-	 * @param paramJSON 参数（key=id, value=值）
+	 * @param paramJson 参数（key=id, value=值）
 	 * @param mappedClass 映射类
 	 * @return
 	 */
     public <T> T queryById(String tableName, Long id, Class<T> mappedClass) {
     	String sql = queryByIdSql(tableName, id);
-		JSONObject paramJSON = new JSONObject();
-		paramJSON.put("id", id);
-		return queryForObject(sql, paramJSON, mappedClass);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+		return queryForObject(sql, paramJson, mappedClass);
 	}
     
     private String queryByIdSql(String tableName, Long id, String[] fieldName) {
@@ -155,9 +155,9 @@ class DBQuery extends DBBase {
 	 */
     public JSONObject queryById(String tableName, Long id, String ... fieldName) {
     	String sql = queryByIdSql(tableName, id, fieldName);
-		JSONObject paramJSON = new JSONObject();
-		paramJSON.put("id", id);
-		return queryForJSON(sql, paramJSON);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+		return queryForJSON(sql, paramJson);
 	}
     
     private String queryAllSql(String tableName) {
@@ -193,11 +193,11 @@ class DBQuery extends DBBase {
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param sql 要执行的SQL查询
-     * @param paramJSON 要绑定到查询的参数映射
+     * @param paramJson 要绑定到查询的参数映射
      * @return
      */
-	public JSONObject queryForJSON(String sql, JSONObject paramJSON) {
-		var list = queryForList(sql, paramJSON);
+	public JSONObject queryForJSON(String sql, JSONObject paramJson) {
+		var list = queryForList(sql, paramJson);
 		return resultToJSON(list);
 	}
     
@@ -206,13 +206,13 @@ class DBQuery extends DBBase {
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param <T>
      * @param sql 要执行的SQL查询
-     * @param paramJSON 要绑定到查询的参数映射
+     * @param paramJson 要绑定到查询的参数映射
      * @param mappedClass 映射类
      * @return
      */
-    public <T> T queryForObject(String sql, JSONObject paramJSON, Class<T> mappedClass) {
+    public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
     	try {
-    		return namedParameterJdbcTemplate.queryForObject(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
+    		return namedParameterJdbcTemplate.queryForObject(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
     	}catch (Exception e) {
     		log.warn(e.getMessage());
     		return null;
@@ -223,11 +223,11 @@ class DBQuery extends DBBase {
      * 同 {@link NamedParameterJdbcTemplate#queryForList(String, Map)}<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
      * @param sql 要执行的查询SQL
-     * @param paramJSON 要绑定到查询的参数映射
+     * @param paramJson 要绑定到查询的参数映射
      * @return
      */
-    public List<JSONObject> queryForList(String sql, JSONObject paramJSON) {
-    	return ListUtils.toList(namedParameterJdbcTemplate.queryForList(sql, paramJSON));
+    public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
+    	return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
 	}
     
     /**
@@ -235,12 +235,12 @@ class DBQuery extends DBBase {
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
      * @param <T>
      * @param sql 要执行的查询SQL
-     * @param paramJSON 要绑定到查询的参数映射
+     * @param paramJson 要绑定到查询的参数映射
      * @param mappedClass 映射类
      * @return
      */
-    public <T> List<T> queryForList(String sql, JSONObject paramJSON, Class<T> mappedClass) {
-    	return namedParameterJdbcTemplate.query(sql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
+    public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
+    	return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
 	// Page
@@ -261,46 +261,15 @@ class DBQuery extends DBBase {
 		}
 		
 		// 2. 处理查询条件
-		JSONObject paramJSON = new JSONObject();
-		paramJSON.put("page", page);
-		paramJSON.put("limit", limit);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("page", page);
+		paramJson.put("limit", limit);
 		if (null != conditions && !conditions.isEmpty()) {
-			paramJSON.putAll(conditions);
+			paramJson.putAll(conditions);
 		}
 		
 		// 3. 返回结果
-		return paramJSON;
-	}
-	
-    private PageVO pageVO(PageDTO pageDTO) {
-		// 1. 处理PageDTO
-		Long count = pageDTO.getCount();
-		String querySql = pageDTO.getQuerySql();
-		JSONObject paramJSON = pageDTO.getParamJSON();
-		
-		// 2. 查询数据
-		List<JSONObject> data = new ArrayList<>();
-		if (count == null || count != 0) {
-			ListUtils.toList(namedParameterJdbcTemplate.queryForList(querySql, paramJSON));
-		}
-		// 3. 分页
-		return PageVO.builder().count(count).data(data).build();
-	}
-	
-    private <T> PageTVO<T> pageTVO(PageDTO pageDTO, Class<T> mappedClass) {
-		// 1. 处理PageDTO
-		Long count = pageDTO.getCount();
-		String querySql = pageDTO.getQuerySql();
-		JSONObject paramJSON = pageDTO.getParamJSON();
-		
-		// 2. 查询数据
-		List<T> data = new ArrayList<>();
-		if (count != 0) {
-			data = namedParameterJdbcTemplate.query(querySql, paramJSON, BeanPropertyRowMapper.newInstance(mappedClass));
-		}
-		// 3. 分页
-		PageTVO<T> pageTVO = new PageTVO<>();
-		return pageTVO.toBuilder().count(count).data(data).build();
+		return paramJson;
 	}
 	
     private PageDTO pageDTO(String tableName, PageIPO pageIPO, DBSortEnum dBSortEnum) {
@@ -308,7 +277,7 @@ class DBQuery extends DBBase {
 		paramValidate(tableName);
 		
 		// 2. 处理分页参数
-		JSONObject paramJSON = pageIPO(pageIPO);
+		JSONObject paramJson = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 预编译SQL拼接
@@ -339,14 +308,45 @@ class DBQuery extends DBBase {
 		countSql.append("SELECT COUNT(*) count FROM ");
 		countSql.append(tableName);
 		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJSON).get("count");
+		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJson).get("count");
 		
 		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
+	}
+    
+    private PageVO pageVO(PageDTO pageDTO) {
+		// 1. 处理PageDTO
+		Long count = pageDTO.getCount();
+		String querySql = pageDTO.getQuerySql();
+		JSONObject paramJson = pageDTO.getParamJson();
+		
+		// 2. 查询数据
+		List<JSONObject> data = new ArrayList<>();
+		if (count == null || count != 0) {
+			ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(querySql, paramJson));
+		}
+		// 3. 分页
+		return PageVO.builder().count(count).data(data).build();
+	}
+	
+    private <T> PageTVO<T> pageTVO(PageDTO pageDTO, Class<T> mappedClass) {
+		// 1. 处理PageDTO
+		Long count = pageDTO.getCount();
+		String querySql = pageDTO.getQuerySql();
+		JSONObject paramJson = pageDTO.getParamJson();
+		
+		// 2. 查询数据
+		List<T> data = new ArrayList<>();
+		if (count != 0) {
+			data = namedParameterJdbcTemplate.query(querySql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+		}
+		// 3. 分页
+		PageTVO<T> pageTVO = new PageTVO<>();
+		return pageTVO.toBuilder().count(count).data(data).build();
 	}
 	
     /**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 表名
@@ -359,7 +359,7 @@ class DBQuery extends DBBase {
 	}
 	
     /**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 表名
@@ -374,7 +374,7 @@ class DBQuery extends DBBase {
 	}
 	
     /**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 ORDER BY id LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 	表名
@@ -388,7 +388,7 @@ class DBQuery extends DBBase {
 	}
 	
     /**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 ORDER BY id LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 	表名
@@ -408,7 +408,7 @@ class DBQuery extends DBBase {
 		paramValidate(tableName, whereSql);
 		
 		// 2. 处理分页参数
-		JSONObject paramJSON = pageIPO(pageIPO);
+		JSONObject paramJson = pageIPO(pageIPO);
 		
 		// 3. 预编译SQL拼接
 		StringBuffer querySql = new StringBuffer();
@@ -426,14 +426,14 @@ class DBQuery extends DBBase {
 		countSql.append(tableName);
 		countSql.append(" ");
 		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJSON).get("count");
+		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJson).get("count");
 		
 		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
 	}
 	
 	/**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 表名
@@ -448,7 +448,7 @@ class DBQuery extends DBBase {
 	}
 	
     /**
-     * <b>单表分页查询SQL语句</b><br><br>
+     * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param <T>
@@ -471,7 +471,7 @@ class DBQuery extends DBBase {
 		}
 		
 		// 2. 处理分页参数
-		JSONObject paramJSON = pageIPO(pageIPO);
+		JSONObject paramJson = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 统计
@@ -492,7 +492,7 @@ class DBQuery extends DBBase {
 		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), conditions).get("count");
 		
 		// 4. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
 	}
 	
 	private PageDTO pageSqlDTO(String countSql, String querySql, PageIPO pageIPO) {
@@ -502,7 +502,7 @@ class DBQuery extends DBBase {
 		}
 		
 		// 2. 处理分页参数
-		JSONObject paramJSON = pageIPO(pageIPO);
+		JSONObject paramJson = pageIPO(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 统计
@@ -512,7 +512,7 @@ class DBQuery extends DBBase {
 		}
 		
 		// 4. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJSON(paramJSON).build();
+		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
 	}
 	
     /**

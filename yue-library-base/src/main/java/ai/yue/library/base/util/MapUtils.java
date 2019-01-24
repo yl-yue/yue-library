@@ -214,14 +214,14 @@ public class MapUtils extends MapUtil {
      * @return
      */
 	public static JSONObject getJSONObject(Map<String, Object> paramMap, String... keys) {
-		JSONObject paramJSON = new JSONObject(paramMap);
-		if (!isContainsOneOfKey(paramJSON, keys)) {
+		JSONObject paramJson = new JSONObject(paramMap);
+		if (!isContainsOneOfKey(paramJson, keys)) {
 			return null;
 		}
 
 		JSONObject resultJSON = new JSONObject();
 		for (String key : keys) {
-			Object value = paramJSON.get(key);
+			Object value = paramJson.get(key);
 			if (value != null) {
 				resultJSON.put(key, value);
 			}

@@ -48,9 +48,9 @@ class DBDelete extends DBUpdate {
 		// 2. 获得SQL
 		String sql = deleteSql(tableName);
 		
-		JSONObject paramJSON = new JSONObject();
-        paramJSON.put("id", id);
-        int updateRowsNumber = namedParameterJdbcTemplate.update(sql.toString(), paramJSON);
+		JSONObject paramJson = new JSONObject();
+        paramJson.put("id", id);
+        int updateRowsNumber = namedParameterJdbcTemplate.update(sql.toString(), paramJson);
         
         if (updateRowsNumber != 1) {
         	throw new DBException(ResultErrorPrompt.DELETE_ERROR);
@@ -62,22 +62,22 @@ class DBDelete extends DBUpdate {
      * <b>相对</b>条件批量删除优化SQL可参照如下编写：<br>
      * <code>DELETE FROM table WHERE id IN (:id)</code><br>
      * @param tableName    	表名
-     * @param paramJSONs     需要删除的Map数组（key=id, value=具体值）
+     * @param paramJsons     需要删除的Map数组（key=id, value=具体值）
      * @return
      */
 	@Transactional
-    public void deleteBatch(String tableName, JSONObject[] paramJSONs) {
+    public void deleteBatch(String tableName, JSONObject[] paramJsons) {
 		// 1.确认条件
-		if (MapUtils.isEmptys(paramJSONs)) {
+		if (MapUtils.isEmptys(paramJsons)) {
 			throw new DBException("删除条件不能为空");
 		}
         
 		// 2. 获得SQL
 		String sql = deleteSql(tableName);
 		
-        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJSONs).length;
+        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons).length;
         
-        if (updateRowsNumber != paramJSONs.length) {
+        if (updateRowsNumber != paramJsons.length) {
         	throw new DBException(ResultErrorPrompt.DELETE_ERROR_BATCH);
         }
     }

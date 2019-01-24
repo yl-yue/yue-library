@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class ParamValidateIPO {
 
 	/** 校验参数 */
-	JSONObject paramJSON;
+	JSONObject paramJson;
 	/** 手机号验证 */
 	String cellphoneKey;
 	/** 邮箱验证 */

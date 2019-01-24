@@ -31,14 +31,14 @@ class DBUpdate extends DBQuery {
 	
 	// Update
 
-    private String updateSql(String tableName, JSONObject paramJSON, String[] conditions, DBUpdateEnum dBUpdateEnum) {
-		paramValidate(tableName, paramJSON, conditions);
+    private String updateSql(String tableName, JSONObject paramJson, String[] conditions, DBUpdateEnum dBUpdateEnum) {
+		paramValidate(tableName, paramJson, conditions);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ");
         sql.append(tableName);
         sql.append(" SET ");
         
-        Set<String> keys = paramJSON.keySet();
+        Set<String> keys = paramJson.keySet();
 		Iterator<String> it = keys.iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -61,11 +61,11 @@ class DBUpdate extends DBQuery {
 			}
 		}
 		sql = StringUtils.deleteLastEqualString(sql, ", ");
-		String whereSql = paramToWhereSql(paramJSON, conditions);
+		String whereSql = paramToWhereSql(paramJson, conditions);
 		sql.append(whereSql);
         
 		if (dBUpdateEnum == DBUpdateEnum.递减_无符号) {// 递减-无符号更新
-			List<String> updateKeys = MapUtils.keyList(paramJSON);
+			List<String> updateKeys = MapUtils.keyList(paramJson);
 			for (String key : updateKeys) {
 				// 排除更新条件
 				if (!ArrayUtil.contains(conditions, key)) {
@@ -91,45 +91,45 @@ class DBUpdate extends DBQuery {
      * <code>paramNumber1 > 0</code><br>
      * <code>AND ...</code>
      * @param tableName    	表名
-     * @param paramJSON      更新所用到的参数（where条件参数不会用于set值的更新）
-     * @param conditions	作为更新条件的参数名，对应paramJSON内的key（注意：作为条件的参数，将不会用于字段值的更新）
+     * @param paramJson      更新所用到的参数（where条件参数不会用于set值的更新）
+     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @return
      */
 	@Transactional
-    public Long update(String tableName, JSONObject paramJSON, String[] conditions) {
-		String sql = updateSql(tableName, paramJSON, conditions, DBUpdateEnum.正常);
-        return (long) namedParameterJdbcTemplate.update(sql, paramJSON);
+    public Long update(String tableName, JSONObject paramJson, String[] conditions) {
+		String sql = updateSql(tableName, paramJson, conditions, DBUpdateEnum.正常);
+        return (long) namedParameterJdbcTemplate.update(sql, paramJson);
     }
 	
 	/**
      * <b>绝对</b>条件更新优化SQL<br><br>
      * @param tableName    	表名
-     * @param paramJSON      更新所用到的参数
-     * @param conditions	作为更新条件的参数名，对应paramJSON内的key（注意：作为条件的参数，将不会用于字段值的更新）
+     * @param paramJson      更新所用到的参数
+     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
      * @return
      */
 	@Transactional
-    public Long update(String tableName, JSONObject paramJSON, String[] conditions, DBUpdateEnum dBUpdateEnum) {
-		String sql = updateSql(tableName, paramJSON, conditions, dBUpdateEnum);
-        return (long) namedParameterJdbcTemplate.update(sql, paramJSON);
+    public Long update(String tableName, JSONObject paramJson, String[] conditions, DBUpdateEnum dBUpdateEnum) {
+		String sql = updateSql(tableName, paramJson, conditions, dBUpdateEnum);
+        return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
 	/**
      * <b>绝对</b>条件更新优化SQL<br><br>
      * @param tableName    		表名
-     * @param paramJSON      	更新所用到的参数
-     * @param conditions		作为更新条件的参数名，对应paramJSON内的key（注意：作为条件的参数，将不会用于字段值的更新）
+     * @param paramJson      	更新所用到的参数
+     * @param conditions		作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum		更新类型 {@linkplain DBUpdateEnum}
      * @param expectedValue				更新所影响的行数预期值
      * @param dBExpectedValueModeEnum	预期值确认方式
      */
 	@Transactional
-    public void update(String tableName, JSONObject paramJSON, String[] conditions, DBUpdateEnum dBUpdateEnum
+    public void update(String tableName, JSONObject paramJson, String[] conditions, DBUpdateEnum dBUpdateEnum
     		, int expectedValue, DBExpectedValueModeEnum dBExpectedValueModeEnum) {
-		String sql = updateSql(tableName, paramJSON, conditions, dBUpdateEnum);
+		String sql = updateSql(tableName, paramJson, conditions, dBUpdateEnum);
 		
-		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJSON);
+		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
 		if (DBExpectedValueModeEnum.等于 == dBExpectedValueModeEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
 		} else if (DBExpectedValueModeEnum.大于等于 == dBExpectedValueModeEnum) {
@@ -146,13 +146,13 @@ class DBUpdate extends DBQuery {
      * 	</p>
      * </blockquote>
      * @param sql						要执行的更新SQL
-     * @param paramJSON					更新所用到的参数
+     * @param paramJson					更新所用到的参数
      * @param expectedValue				更新所影响的行数预期值
      * @param dBExpectedValueModeEnum	预期值确认方式
      */
 	@Transactional
-	public void update(String sql, JSONObject paramJSON, int expectedValue, DBExpectedValueModeEnum dBExpectedValueModeEnum) {
-		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJSON);
+	public void update(String sql, JSONObject paramJson, int expectedValue, DBExpectedValueModeEnum dBExpectedValueModeEnum) {
+		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
 		if (DBExpectedValueModeEnum.等于 == dBExpectedValueModeEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
 		} else if (DBExpectedValueModeEnum.大于等于 == dBExpectedValueModeEnum) {
@@ -160,14 +160,14 @@ class DBUpdate extends DBQuery {
 		}
 	}
 
-    private String updateByIdSql(String tableName, JSONObject paramJSON, DBUpdateEnum dBUpdateEnum) {
-		paramValidate(tableName, paramJSON);
+    private String updateByIdSql(String tableName, JSONObject paramJson, DBUpdateEnum dBUpdateEnum) {
+		paramValidate(tableName, paramJson);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ");
         sql.append(tableName);
         sql.append(" SET ");
         
-        Set<String> keys = paramJSON.keySet();
+        Set<String> keys = paramJson.keySet();
         Iterator<String> it = keys.iterator();
         while (it.hasNext()) {
 			String key = it.next();
@@ -192,7 +192,7 @@ class DBUpdate extends DBQuery {
         sql.append(" WHERE id = :id ");
         
 		if (dBUpdateEnum == DBUpdateEnum.递减_无符号) {// 递减-无符号更新
-			List<String> updateKeys = MapUtils.keyList(paramJSON);
+			List<String> updateKeys = MapUtils.keyList(paramJson);
 			for (String key : updateKeys) {
 				// 排除更新条件
 				if (!key.equals("id")) {
@@ -210,12 +210,12 @@ class DBUpdate extends DBQuery {
 	/**
      * 根据表中ID主键进行更新
      * @param tableName    	表名
-     * @param paramJSON      更新所用到的参数（包含主键ID字段）
+     * @param paramJson      更新所用到的参数（包含主键ID字段）
      */
 	@Transactional
-    public void updateById(String tableName, JSONObject paramJSON) {
-		String sql = updateByIdSql(tableName, paramJSON, DBUpdateEnum.正常);
-        long updateRowsNumber = (long) namedParameterJdbcTemplate.update(sql, paramJSON);
+    public void updateById(String tableName, JSONObject paramJson) {
+		String sql = updateByIdSql(tableName, paramJson, DBUpdateEnum.正常);
+        long updateRowsNumber = (long) namedParameterJdbcTemplate.update(sql, paramJson);
         
         if (!isUpdateAndExpectedEqual(updateRowsNumber, 1)) {
         	throw new DBException(ResultErrorPrompt.DB_ERROR);
@@ -225,13 +225,13 @@ class DBUpdate extends DBQuery {
 	/**
      * 根据表中ID主键进行更新
      * @param tableName    	表名
-     * @param paramJSON      更新所用到的参数（包含主键ID字段）
+     * @param paramJson      更新所用到的参数（包含主键ID字段）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
      */
 	@Transactional
-    public void updateById(String tableName, JSONObject paramJSON, DBUpdateEnum dBUpdateEnum) {
-		String sql = updateByIdSql(tableName, paramJSON, dBUpdateEnum);
-        long updateRowsNumber = (long) namedParameterJdbcTemplate.update(sql, paramJSON);
+    public void updateById(String tableName, JSONObject paramJson, DBUpdateEnum dBUpdateEnum) {
+		String sql = updateByIdSql(tableName, paramJson, dBUpdateEnum);
+        long updateRowsNumber = (long) namedParameterJdbcTemplate.update(sql, paramJson);
         
         if (!isUpdateAndExpectedEqual(updateRowsNumber, 1)) {
         	throw new DBException(ResultErrorPrompt.DB_ERROR);
@@ -241,14 +241,14 @@ class DBUpdate extends DBQuery {
 	/**
      * 根据表中ID主键进行更新-批量
      * @param tableName    	表名
-     * @param paramJSONs     更新所用到的参数（包含主键ID字段）
+     * @param paramJsons     更新所用到的参数（包含主键ID字段）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
      */
 	@Transactional
-    public void updateById(String tableName, JSONObject[] paramJSONs, DBUpdateEnum dBUpdateEnum) {
-		String sql = updateByIdSql(tableName, paramJSONs[0], dBUpdateEnum);
-        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJSONs).length;
-        int expectedValue = paramJSONs.length;
+    public void updateById(String tableName, JSONObject[] paramJsons, DBUpdateEnum dBUpdateEnum) {
+		String sql = updateByIdSql(tableName, paramJsons[0], dBUpdateEnum);
+        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons).length;
+        int expectedValue = paramJsons.length;
         
         updateAndExpectedEqual(updateRowsNumber, expectedValue);
     }
@@ -256,15 +256,15 @@ class DBUpdate extends DBQuery {
 	/**
      * <b>绝对</b> 条件 <b>批量</b> 更新优化SQL<br><br>
      * @param tableName    	表名
-     * @param paramJSONs     更新所用到的参数数组
-     * @param conditions	作为更新条件的参数名，对应paramJSON内的key（注意：作为条件的参数，将不会用于字段值的更新）
+     * @param paramJsons     更新所用到的参数数组
+     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
      */
 	@Transactional
-    public void updateBatch(String tableName, JSONObject[] paramJSONs, String[] conditions, DBUpdateEnum dBUpdateEnum) {
-		String sql = updateSql(tableName, paramJSONs[0], conditions, dBUpdateEnum);
-        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJSONs).length;
-        int expectedValue = paramJSONs.length;
+    public void updateBatch(String tableName, JSONObject[] paramJsons, String[] conditions, DBUpdateEnum dBUpdateEnum) {
+		String sql = updateSql(tableName, paramJsons[0], conditions, dBUpdateEnum);
+        int updateRowsNumber = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons).length;
+        int expectedValue = paramJsons.length;
         
         updateAndExpectedEqual(updateRowsNumber, expectedValue);
 	}
@@ -278,13 +278,13 @@ class DBUpdate extends DBQuery {
      * 	</p>
      * </blockquote>
      * @param sql						要执行的更新SQL
-     * @param paramJSONs					更新所用到的参数数组
+     * @param paramJsons					更新所用到的参数数组
      * @param expectedValue				每组参数更新所影响的行数预期值
      * @param dBExpectedValueModeEnum	预期值确认方式
      */
 	@Transactional
-	public void updateBatch(String sql, JSONObject[] paramJSONs, int expectedValue, DBExpectedValueModeEnum dBExpectedValueModeEnum) {
-		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJSONs);
+	public void updateBatch(String sql, JSONObject[] paramJsons, int expectedValue, DBExpectedValueModeEnum dBExpectedValueModeEnum) {
+		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
 		if (DBExpectedValueModeEnum.等于 == dBExpectedValueModeEnum) {
 			for (int updateRowsNumber : updateRowsNumberArray) {
 				updateAndExpectedEqual(updateRowsNumber, expectedValue);
@@ -338,18 +338,18 @@ class DBUpdate extends DBQuery {
 		}
 		
 		// 4. 查询需要跟随移动的数据ID
-		JSONObject paramJSON = new JSONObject();
+		JSONObject paramJson = new JSONObject();
 		if (ArrayUtil.isNotEmpty(uniqueKeys)) {
 			for (String uniqueKey : uniqueKeys) {
 				var uniqueValue = sortJSON.get(uniqueKey);
-				paramJSON.put(uniqueKey, uniqueValue);
+				paramJson.put(uniqueKey, uniqueValue);
 			}
 		}
-		paramJSON.put(sort_idx_key, updateSortList);
-		List<JSONObject> list = query(tableName, paramJSON);
+		paramJson.put(sort_idx_key, updateSortList);
+		List<JSONObject> list = query(tableName, paramJson);
 		
 		// 5. 组装跟随移动参数到参数列表
-		JSONArray paramJSONArray = new JSONArray();
+		JSONArray paramJsonArray = new JSONArray();
 		for (JSONObject actionJSON : list) {
 			Long actionId = actionJSON.getLong(id_key);
 			Integer actionSort = actionJSON.getInteger(sort_idx_key);
@@ -361,17 +361,17 @@ class DBUpdate extends DBQuery {
 			JSONObject actionParamJSON = new JSONObject();
 			actionParamJSON.put(id_key, actionId);
 			actionParamJSON.put(sort_idx_key, actionSort);
-			paramJSONArray.add(actionParamJSON);
+			paramJsonArray.add(actionParamJSON);
 		}
 		
 		// 6. 添加排序更新参数到参数列表
 		JSONObject updateSortParam = new JSONObject();
 		updateSortParam.put(id_key, id);
 		updateSortParam.put(sort_idx_key, updateSortIdx);
-		paramJSONArray.add(updateSortParam);
+		paramJsonArray.add(updateSortParam);
 		
 		// 7. 排序更新
-		updateById(tableName, ListUtils.toJSONS(paramJSONArray), DBUpdateEnum.正常);
+		updateById(tableName, ListUtils.toJsons(paramJsonArray), DBUpdateEnum.正常);
 	}
 	
 }

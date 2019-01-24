@@ -3,7 +3,6 @@ package ai.yue.library.base.util;
 import java.util.Arrays;
 import java.util.List;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.ParamException;
@@ -29,86 +28,86 @@ public class ParamUtils {
 	
 	/**
 	 * 参数美化-Boolean强类型转换
-	 * @param paramJSON	需要向强类型转换的参数
+	 * @param paramJson	需要向强类型转换的参数
 	 * @param keys		可多个boolean值的key
 	 */
-	public static void paramFormatBoolean(JSONObject paramJSON, String... keys) {
+	public static void paramFormatBoolean(JSONObject paramJson, String... keys) {
 		for (String key : keys) {
-			paramJSON.replace(key, paramJSON.getBoolean(key));
+			paramJson.replace(key, paramJson.getBoolean(key));
 		}
 	}
 	
 	/**
 	 * 参数美化-BigDecimal强类型转换
-	 * @param paramJSON	需要向强类型转换的参数
+	 * @param paramJson	需要向强类型转换的参数
 	 * @param keys		可多个BigDecimal值的key
 	 */
-	public static void paramFormatBigDecimal(JSONObject paramJSON, String... keys) {
+	public static void paramFormatBigDecimal(JSONObject paramJson, String... keys) {
 		for (String key : keys) {
-			paramJSON.replace(key, paramJSON.getBigDecimal(key));
+			paramJson.replace(key, paramJson.getBigDecimal(key));
 		}
 	}
 	
 	/**
 	 * 参数美化-JSONObject强类型转换
-	 * @param paramJSON	需要向强类型转换的参数
+	 * @param paramJson	需要向强类型转换的参数
 	 * @param keys		可多个JSONObject值的key
 	 */
-	public static void paramFormatJSONObject(JSONObject paramJSON, String... keys) {
+	public static void paramFormatJSONObject(JSONObject paramJson, String... keys) {
 		for (String key : keys) {
-			paramJSON.replace(key, paramJSON.getJSONObject(key));
+			paramJson.replace(key, paramJson.getJSONObject(key));
 		}
 	}
 	
 	/**
 	 * 参数美化-JSONArray强类型转换
-	 * @param paramJSON	需要向强类型转换的参数
+	 * @param paramJson	需要向强类型转换的参数
 	 * @param keys		可多个JSONArray值的key
 	 */
-	public static void paramFormatJSONArray(JSONObject paramJSON, String... keys) {
+	public static void paramFormatJSONArray(JSONObject paramJson, String... keys) {
 		for (String key : keys) {
-			paramJSON.replace(key, paramJSON.getJSONArray(key));
+			paramJson.replace(key, paramJson.getJSONArray(key));
 		}
 	}
 	
 	/**
 	 * 参数美化-Object强类型转换
-	 * @param paramJSON				需要向强类型转换的参数
+	 * @param paramJson				需要向强类型转换的参数
 	 * @param paramFormatIPOList	多个参数美化IPO
 	 */
-	public static void paramFormatObject(JSONObject paramJSON, List<ParamFormatIPO> paramFormatIPOList) {
+	public static void paramFormatObject(JSONObject paramJson, List<ParamFormatIPO> paramFormatIPOList) {
 		for (ParamFormatIPO paramFormatIPO : paramFormatIPOList) {
 			String key = paramFormatIPO.getKey();
 			Class<?> clazz = paramFormatIPO.getClazz();
-			paramJSON.replace(key, paramJSON.getObject(key, clazz));
+			paramJson.replace(key, paramJson.getObject(key, clazz));
 		}
 	}
 	
 	/**
 	 * 参数美化--弱类型转强类型
 	 * 
-	 * @param paramJSON			需要向强类型转换的参数
+	 * @param paramJson			需要向强类型转换的参数
 	 * @param booleanKeys		多个boolean值的key（可以为null）
 	 * @param decimalKeys		多个BigDecimal值的key（可以为null）
 	 * @param jsonObjectKeys	多个JSONObject值的key（可以为null）
 	 * @param jsonArrayKeys		多个JSONArray值的key（可以为null）
 	 */
-	public static void paramFormat(JSONObject paramJSON, String[] booleanKeys, String[] decimalKeys
+	public static void paramFormat(JSONObject paramJson, String[] booleanKeys, String[] decimalKeys
 			, String[] jsonObjectKeys, String[] jsonArrayKeys) {
 		if (!StringUtils.isEmptys(booleanKeys)) {
-			paramFormatBoolean(paramJSON, booleanKeys);
+			paramFormatBoolean(paramJson, booleanKeys);
 		}
 		
 		if (!StringUtils.isEmptys(decimalKeys)) {
-			paramFormatBigDecimal(paramJSON, decimalKeys);
+			paramFormatBigDecimal(paramJson, decimalKeys);
 		}
 		
 		if (!StringUtils.isEmptys(jsonObjectKeys)) {
-			paramFormatJSONObject(paramJSON, jsonObjectKeys);
+			paramFormatJSONObject(paramJson, jsonObjectKeys);
 		}
 		
 		if (!StringUtils.isEmptys(jsonArrayKeys)) {
-			paramFormatJSONArray(paramJSON, jsonArrayKeys);
+			paramFormatJSONArray(paramJson, jsonArrayKeys);
 		}
 	}
 	
@@ -132,13 +131,13 @@ public class ParamUtils {
 	 * param参数校验
 	 * <p>
 	 * 判断Map数据结构key的一致性
-	 * @param paramJSON			参数
+	 * @param paramJson			参数
 	 * @param mustContainKeys	必须包含的key（必传）
 	 * @param canContainKeys	可包含的key（非必传）
 	 * @throws ParamException 	不满足条件抛出此异常及其提示信息
 	 */
-	public static void paramValidate(JSONObject paramJSON, String[] mustContainKeys, String... canContainKeys) {
-		if (!MapUtils.isKeys(paramJSON, mustContainKeys, canContainKeys)) {
+	public static void paramValidate(JSONObject paramJson, String[] mustContainKeys, String... canContainKeys) {
+		if (!MapUtils.isKeys(paramJson, mustContainKeys, canContainKeys)) {
 			throw new ParamException(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys) + "，" + PARAM_PREFIX_CAN
 					+ Arrays.toString(canContainKeys));
 		}
@@ -149,21 +148,21 @@ public class ParamUtils {
 	 * <p>
 	 * 判断Map数组数据结构key的一致性
 	 * 
-	 * @param jsonArray       		参数数组
+	 * @param paramList       		参数数组
 	 * @param mustContainKeys 		必须包含的key（必传）
 	 * @param canContainKeys  		可包含的key（非必传）
 	 * @throws ParamVoidException 	参数是否为空抛出此异常
 	 * @throws ParamException     	不满足条件抛出此异常及其提示信息
 	 */
-	public static void paramValidate(JSONArray jsonArray, String[] mustContainKeys, String... canContainKeys) {
+	public static void paramValidate(List<JSONObject> paramList, String[] mustContainKeys, String... canContainKeys) {
 		// 1. 校验参数是否为空
-		if (jsonArray.isEmpty()) {
+		if (paramList.isEmpty()) {
 			throw new ParamVoidException();
 		}
-
+		
 		// 2. 确认参数key
-		for (int i = 0; i < jsonArray.size(); i++) {
-			paramValidate(jsonArray.getJSONObject(i), mustContainKeys, canContainKeys);
+		for (JSONObject paramJson : paramList) {
+			paramValidate(paramJson, mustContainKeys, canContainKeys);
 		}
 	}
 	
@@ -173,13 +172,13 @@ public class ParamUtils {
 	 * @throws ResultException 验证未通过将抛出相应的异常即其提示信息
 	 */
 	public static void paramValidate(ParamValidateIPO paramValidateIPO) {
-		JSONObject paramJSON = paramValidateIPO.getParamJSON();
+		JSONObject paramJson = paramValidateIPO.getParamJson();
 		String cellphoneKey = paramValidateIPO.getCellphoneKey();
 		String emailKey = paramValidateIPO.getEmailKey();
 		String idCardNumberKey = paramValidateIPO.getIdCardNumberKey();
 		
 		// 1. 11位手机号验证
-		String cellphone = paramJSON.getString(cellphoneKey);
+		String cellphone = paramJson.getString(cellphoneKey);
 		if (!StringUtils.isEmpty(cellphone)) {
 			if (!isCellphoneValidate(cellphone)) {
 				throw new ResultException(ResultInfo.cellphone_error());
@@ -187,7 +186,7 @@ public class ParamUtils {
 		}
 		
 		// 2. 邮箱验证
-		String email = paramJSON.getString(emailKey);
+		String email = paramJson.getString(emailKey);
 		if (!StringUtils.isEmpty(email)) {
 			if (!isEmailValidate(email)) {
 				throw new ResultException(ResultInfo.email_error());
@@ -195,7 +194,7 @@ public class ParamUtils {
 		}
 		
 		// 3. 身份证号码验证
-		String idCardNumber = paramJSON.getString(idCardNumberKey);
+		String idCardNumber = paramJson.getString(idCardNumberKey);
 		if (!StringUtils.isEmpty(idCardNumber)) {
 			if (!isIdCardNumberValidate(idCardNumber)) {
 				throw new ResultException(ResultInfo.id_card_number_error());

@@ -15,6 +15,6 @@ public class PageDTO {
 	
 	Long count;
 	String querySql;
-	JSONObject paramJSON;
+	JSONObject paramJson;
 	
 }

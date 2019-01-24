@@ -138,11 +138,11 @@ class DBBase {
     
     // WHERE SQL
     
-	private synchronized void paramToWhereSql(StringBuffer whereSql, final JSONObject paramJSON,
+	private synchronized void paramToWhereSql(StringBuffer whereSql, final JSONObject paramJson,
 			final String condition) {
 		whereSql.append(" AND ");
 		whereSql.append(condition);
-		var value = paramJSON.get(condition);
+		var value = paramJson.get(condition);
 		if (null == value) {
 			whereSql.append(" IS :");
 			whereSql.append(condition);
@@ -176,16 +176,16 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramJSON
+     * @param paramJson
      * @param conditions
      * @return
      */
-	protected String paramToWhereSql(JSONObject paramJSON, String... conditions) {
+	protected String paramToWhereSql(JSONObject paramJson, String... conditions) {
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" WHERE 1 = 1 ");
 		if (ArrayUtil.isNotEmpty(conditions)) {
 			for (String condition : conditions) {
-				paramToWhereSql(whereSql, paramJSON, condition);
+				paramToWhereSql(whereSql, paramJson, condition);
 			}
 		}
 		
@@ -212,14 +212,14 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramJSON
+     * @param paramJson
      * @return
      */
-    public String paramToWhereSql(JSONObject paramJSON) {
+    public String paramToWhereSql(JSONObject paramJson) {
     	StringBuffer whereSql = new StringBuffer();
     	whereSql.append(" WHERE 1 = 1 ");
-		paramJSON.keySet().forEach(condition -> {
-			paramToWhereSql(whereSql, paramJSON, condition);
+		paramJson.keySet().forEach(condition -> {
+			paramToWhereSql(whereSql, paramJson, condition);
 		});
 		return whereSql.toString();
     }
@@ -285,13 +285,13 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramJSON
+	 * @param paramJson
 	 */
-    protected void paramValidate(String tableName, JSONObject paramJSON) {
+    protected void paramValidate(String tableName, JSONObject paramJson) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (MapUtils.isEmpty(paramJSON)) {
+		if (MapUtils.isEmpty(paramJson)) {
 			throw new DBException("参数不能为空");
 		}
 	}
@@ -299,13 +299,13 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramJSONs
+	 * @param paramJsons
 	 */
-    protected void paramValidate(String tableName, JSONObject[] paramJSONs) {
+    protected void paramValidate(String tableName, JSONObject[] paramJsons) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (MapUtils.isEmptys(paramJSONs)) {
+		if (MapUtils.isEmptys(paramJsons)) {
 			throw new DBException("参数不能为空");
 		}
 	}
@@ -313,17 +313,17 @@ class DBBase {
 	/**
 	 * 参数验证
 	 * @param tableName
-	 * @param paramJSON
+	 * @param paramJson
 	 * @param conditions
 	 */
-    protected void paramValidate(String tableName, JSONObject paramJSON, String[] conditions) {
+    protected void paramValidate(String tableName, JSONObject paramJson, String[] conditions) {
 		if (StringUtils.isEmpty(tableName)) {
 			throw new DBException("表名不能为空");
 		}
-		if (MapUtils.isEmpty(paramJSON)) {
+		if (MapUtils.isEmpty(paramJson)) {
 			throw new DBException("参数不能为空");
 		}
-        if (StringUtils.isEmptys(conditions) || !MapUtils.isKeys(paramJSON, conditions)) {
+        if (StringUtils.isEmptys(conditions) || !MapUtils.isKeys(paramJson, conditions)) {
         	throw new DBException("更新条件不能为空");
         }
 	}

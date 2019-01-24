@@ -11,6 +11,8 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.constant.MaxOrMinEnum;
+import ai.yue.library.base.constant.SortEnum;
 import cn.hutool.core.util.ArrayUtil;
 
 /**
@@ -46,18 +48,18 @@ public class ListUtils {
 	 * @param key	分组依据
 	 * @return
 	 */
-	public static JSONArray grouping(List<Map<String, Object>> list, String key) {
-		JSONArray result = new JSONArray();
+	public static List<List<JSONObject>> grouping(List<JSONObject> list, String key) {
+		List<List<JSONObject>> result = new ArrayList<>();
 		toListAndDistinct(list, key).forEach(str -> {
-			JSONArray jsonArray = new JSONArray();
-			list.forEach(map -> {
-				JSONObject paramJSON = new JSONObject(map);
-				if (str.equals(paramJSON.getString(key))) {
-					jsonArray.add(paramJSON);
-				};
+			List<JSONObject> jsonList = new ArrayList<>();
+			list.forEach(json -> {
+				if (str.equals(json.getString(key))) {
+					jsonList.add(json);
+				}
 			});
-			result.add(jsonArray);
+			result.add(jsonList);
 		});
+		
 		return result;
 	}
 	
@@ -147,28 +149,26 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>List-Map集合排序</h1>
-	 * <p>
-	 * &nbsp;rule == 0 （降序）<br>
-	 * &nbsp;rule != 0 （升序）
-	 * </p>
+	 * <h1>List-JSONObject集合排序</h1>
+	 * 
 	 * @param list 需要处理的集合
-	 * @param sortKey 排序依据（Map的key）
-	 * @param rule 排序方式：0（降序）&nbsp;1（升序）
+	 * @param sortKey 排序依据（JSONObject的key）
+	 * @param sortEnum 排序方式
 	 * @return 处理后的List集合
 	 */
-	public static List<Map<String, Object>> sort(List<Map<String, Object>> list, String sortKey, int rule) {
-		Collections.sort(list, new Comparator<Map<?, ?>>() {
-			public int compare(Map<?, ?> o1, Map<?, ?> o2) {
-				int map1value = (Integer) o1.get(sortKey);
-				int map2value = (Integer) o2.get(sortKey);
-				if(rule == 0) {
-					return map2value - map1value;
-				}else {
-					return map1value - map2value;
+	public static List<JSONObject> sort(List<JSONObject> list, String sortKey, SortEnum sortEnum) {
+		Collections.sort(list, new Comparator<JSONObject>() {
+			public int compare(JSONObject o1, JSONObject o2) {
+				int json1value = o1.getInteger(sortKey);
+				int json2value = o2.getInteger(sortKey);
+				if (sortEnum == SortEnum.升序) {
+					return json1value - json2value;
+				} else {
+					return json2value - json1value;
 				}
 			}
 		});
+		
 		return list;
 	}
 	
@@ -198,124 +198,96 @@ public class ListUtils {
 	
 	/**
 	 * <h1>Map集合去重</h1>
-	 * {@link List}>>{@linkplain Map}根据参数distinct_key（Map的key）去重。
+	 * {@link List}>>{@linkplain Map}根据参数distinctKey（Map的key）去重。
 	 * @param list 需要处理的集合
-	 * @param distinct_key 去重的依据（Map的key）
+	 * @param distinctKey 去重的依据（Map的key）
 	 * @return 处理后的List集合
 	 */
-	public static List<Map<String, Object>> distinctMap(List<Map<String, Object>> list, String distinct_key) {
-		for(int i = 0; i < list.size(); i++) {
+	public static List<Map<String, Object>> distinctMap(List<Map<String, Object>> list, String distinctKey) {
+		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> mapi = list.get(i);
 			for (int j = list.size() - 1; j > i; j--) {
 				Map<String, Object> mapj = list.get(j);
-				if(mapi.get(distinct_key).equals(mapj.get(distinct_key))){
+				if (mapi.get(distinctKey).equals(mapj.get(distinctKey))) {
 					list.remove(j);
 				}
 			}
 		}
-		return list;
-	}
-	
-	/**
-	 * <h1>Map集合去重统计与排序</h1>
-	 * {@link List}>>{@linkplain Map}根据参数distinct_key（Map的key），计算元素重复次数。
-	 * <p>并为每个Map添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。<br>
-	 * 示例：<code>map.put("frequency", frequency)</code>
-	 * </p>
-	 * <p><b>根据frequency（重复频率）排序：</b>
-	 * &nbsp;0（降序）
-	 * &nbsp;其他数字（升序）
-	 * </p>
-	 * @param list 需要处理的集合
-	 * @param distinct_key 去重的依据（Map的key）
-	 * @param sort 排序方式：0（降序）&nbsp;1（升序）
-	 * @return 处理后的List集合
-	 */
-	public static List<Map<String, Object>> distinctCount(List<Map<String, Object>> list, String distinct_key, int sort) {
-		for(int i = 0; i < list.size(); i++) {
-			int frequency = 1;
-			Map<String, Object> mapi = list.get(i);
-			for (int j = list.size() - 1; j > i; j--) {
-				Map<String, Object> mapj = list.get(j);
-				if(mapi.get(distinct_key).equals(mapj.get(distinct_key))){
-					list.remove(j);
-					frequency ++;
-				}
-			}
-			mapi.put("frequency", frequency);
-		}
-		
-		Collections.sort(list, new Comparator<Map<?, ?>>() {
-			public int compare(Map<?, ?> o1, Map<?, ?> o2) {
-				int map1value = (Integer) o1.get("frequency");
-				int map2value = (Integer) o2.get("frequency");
-				if(sort == 0) {
-					return map2value - map1value;
-				}else {
-					return map1value - map2value;
-				}
-			}
-		});
 		
 		return list;
 	}
 	
 	/**
-	 * <h1>Map集合——去重、统计、排序与元素选择性保留</h1>
-	 * {@link List}>>{@linkplain Map}根据参数distinct_key（Map的key），计算元素重复次数。
-	 * <p>并为每个Map添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。<br>
-	 * 示例：<code>map.put("frequency", frequency)</code>
+	 * <h1>JSONObject集合去重统计与排序</h1>
+	 * {@link List}>>{@linkplain JSONObject}根据参数distinctKey（JSONObject的key），计算元素重复次数。
+	 * <p>并为每个JSONObject添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。<br>
+	 * 示例：<code>json.put("frequency", frequency)</code>
 	 * </p>
-	 * <p><b>根据frequency（重复频率）排序：</b>
-	 * &nbsp;0（降序）
-	 * &nbsp;其他数字（升序）
-	 * </p>
+	 * <p><b>根据frequency（重复频率）排序</b>
+	 * 
 	 * @param list 需要处理的集合
-	 * @param distinct_key 去重的依据（Map的key）
-	 * @param sort 排序方式：0 或 1
-	 * @param keep_key 需要保留的重复元素（此参数必须为可判断的Number类型:&nbsp;0（最大值）&nbsp;1（最小值））<br>如：根据id去重，保留age为最大或最小的Map
-	 * @param max_or_min 保留的值：0（最大值）&nbsp;1（最小值）
+	 * @param distinctKey 去重的依据（JSONObject的key）
+	 * @param sortEnum 排序方式
 	 * @return 处理后的List集合
 	 */
-	public static List<Map<String, Object>> distinct_count_sort_selectKeep(List<Map<String, Object>> list, String distinct_key, int sort, String keep_key, int max_or_min) {
-		for(int i = 0; i < list.size(); i++) {
+	public static List<JSONObject> distinctCount(List<JSONObject> list, String distinctKey, SortEnum sortEnum) {
+		for (int i = 0; i < list.size(); i++) {
 			int frequency = 1;
-			Map<String, Object> mapi = list.get(i);
+			JSONObject jsoni = list.get(i);
 			for (int j = list.size() - 1; j > i; j--) {
-				Map<String, Object> mapj = list.get(j);
-				if(mapi.get(distinct_key).equals(mapj.get(distinct_key))){
-					//i > j
-					if(Double.parseDouble(mapi.get(keep_key).toString()) > Double.parseDouble(mapj.get(keep_key).toString())) {
-						if(max_or_min != 0){
-							mapi.replace(keep_key, mapj.get(keep_key));
+				JSONObject jsonj = list.get(j);
+				if (jsoni.get(distinctKey).equals(jsonj.get(distinctKey))) {
+					list.remove(j);
+					frequency++;
+				}
+			}
+			jsoni.put("frequency", frequency);
+		}
+		
+		return sort(list, "frequency", sortEnum);
+	}
+	
+	/**
+	 * <h1>JSONObject集合——去重、统计、排序与元素选择性保留</h1>
+	 * {@link List}>>{@linkplain JSONObject}根据参数distinctKey（JSONObject的key），计算元素重复次数。
+	 * <p>并为每个JSONObject添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。<br>
+	 * 示例：<code>json.put("frequency", frequency)</code>
+	 * </p>
+	 * <p><b>根据frequency（重复频率）排序</b>
+	 * @param list 需要处理的集合
+	 * @param distinctKey 去重的依据（JSONObject的key）
+	 * @param sortEnum 排序方式
+	 * @param keepKey 需要保留的重复元素（此参数必须为可判断的Number类型：根据maxOrMinEnum选择保留最大值 <i>或</i> 最小值）<b><i>如：</i></b>根据id去重，保留age为最大或最小的JSONObject
+	 * @param maxOrMinEnum 保留的值：最大值 <i>或</i> 最小值
+	 * @return 处理后的List集合
+	 */
+	public static List<JSONObject> distinctCountSortSelectKeep(List<JSONObject> list, String distinctKey, SortEnum sortEnum, String keepKey, MaxOrMinEnum maxOrMinEnum) {
+		for (int i = 0; i < list.size(); i++) {
+			int frequency = 1;
+			JSONObject jsoni = list.get(i);
+			for (int j = list.size() - 1; j > i; j--) {
+				JSONObject jsonj = list.get(j);
+				if (jsoni.get(distinctKey).equals(jsonj.get(distinctKey))) {
+					// i > j
+					if (Double.parseDouble(jsoni.get(keepKey).toString()) > Double.parseDouble(jsonj.get(keepKey).toString())) {
+						if (maxOrMinEnum == MaxOrMinEnum.最小值) {
+							jsoni.replace(keepKey, jsonj.get(keepKey));
 						}
 						list.remove(j);
-						frequency ++;
-					}else {
-						if(max_or_min == 0){
-							mapi.replace(keep_key, mapj.get(keep_key));
+						frequency++;
+					} else {
+						if (maxOrMinEnum == MaxOrMinEnum.最大值) {
+							jsoni.replace(keepKey, jsonj.get(keepKey));
 						}
 						list.remove(j);
-						frequency ++;
+						frequency++;
 					}
 				}
 			}
-			mapi.put("frequency", frequency);
+			jsoni.put("frequency", frequency);
 		}
 		
-		Collections.sort(list, new Comparator<Map<?, ?>>() {
-			public int compare(Map<?, ?> o1, Map<?, ?> o2) {
-				int map1value = (Integer) o1.get("frequency");
-				int map2value = (Integer) o2.get("frequency");
-				if(sort == 0) {
-					return map2value - map1value;
-				}else {
-					return map1value - map2value;
-				}
-			}
-		});
-		
-		return list;
+		return sort(list, "frequency", sortEnum);
 	}
 	
 	/**
@@ -332,51 +304,16 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} >> {@link Map} 转 {@linkplain List} >> {@link JSONObject}</h1>
-	 * <p>
-	 * 	<b><i>性能测试说明：</i></b><br>
-	 * 	<i>测试CPU：</i>i7-4710MQ<br>
-	 * 	<i>测试结果：</i>百万级数据平均200ms（毫秒）<br>
-	 * </p>
-	 * @param list 		需要转换的List
-	 * @return			转换后的List
-	 */
-	public static List<JSONObject> toList(List<Map<String, Object>> list) {
-		List<JSONObject> jsonList = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			jsonList.add(new JSONObject(list.get(i)));
-		}
-		
-		return jsonList;
-	}
-	
-	/**
 	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link String}</h1>
 	 * @param list 		需要转换的List
-	 * @param keep_key	保留值的key
+	 * @param keepKey	保留值的key
 	 * @return			转换后的List
 	 */
-	public static List<String> toList(List<JSONObject> list, String keep_key) {
+	public static List<String> toList(List<JSONObject> list, String keepKey) {
 		List<String> toList = new ArrayList<> ();
 		for(JSONObject json : list) {
-			String value = json.getString(keep_key);
+			String value = json.getString(keepKey);
 			toList.add(value);
-		}
-		
-		return toList;
-	}
-	
-	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain List}>>{@link String}</h1>
-	 * @param jsonArray 需要转换的JSONArray
-	 * @param keep_key	保留值的key
-	 * @return			转换后的List
-	 */
-	public static List<String> toList(JSONArray jsonArray, String keep_key) {
-		List<String> toList = new ArrayList<> ();
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONObject json = jsonArray.getJSONObject(i);
-			toList.add(json.getString(keep_key));
 		}
 		
 		return toList;
@@ -386,66 +323,34 @@ public class ListUtils {
 	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link T}</h1>
 	 * @param <T>
 	 * @param list 		需要转换的List
-	 * @param keep_key	保留值的key
+	 * @param keepKey	保留值的key
 	 * @param clazz		类型
 	 * @return			转换后的List
 	 */
-	public static <T> List<T> toList(List<JSONObject> list, String keep_key, Class<T> clazz) {
+	public static <T> List<T> toList(List<JSONObject> list, String keepKey, Class<T> clazz) {
 		List<T> toList = new ArrayList<> ();
 		for(JSONObject json : list) {
-			toList.add(ObjectUtils.toObject(json.get(keep_key), clazz));
+			toList.add(ObjectUtils.toObject(json.get(keepKey), clazz));
 		}
 		
 		return toList;
 	}
 	
 	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain List}>>{@link T}</h1>
-	 * @param <T>
-	 * @param jsonArray 需要转换的JSONArray
-	 * @param keep_key	保留值的key
-	 * @param clazz		类型
-	 * @return			转换后的List
-	 */
-	public static <T> List<T> toList(JSONArray jsonArray, String keep_key, Class<T> clazz) {
-		List<T> toList = new ArrayList<> ();
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONObject json = jsonArray.getJSONObject(i);
-			toList.add(ObjectUtils.toObject(json.get(keep_key), clazz));
-		}
-		
-		return toList;
-	}
-	
-	/**
-	 * <h1>{@linkplain List}>>{@link Map} 转 {@linkplain List}>>{@link String}并去除重复元素</h1>
+	 * <h1>{@linkplain List} >> {@link JSONObject} 转 {@linkplain List} >> {@link String}并去除重复元素</h1>
+	 * <p>
 	 * @param list 		需要转换的List
-	 * @param keep_key	保留值的key
+	 * @param keepKey	保留值的key
 	 * @return			处理后的List
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<String> toListAndDistinct(List<Map<String, Object>> list, String keep_key) {
+	public static List<String> toListAndDistinct(List<JSONObject> list, String keepKey) {
 		List<String> toList = new ArrayList<> ();
-		for(Map<String, Object> map : list) {
-			String value = map.get(keep_key).toString();
+		for(JSONObject json : list) {
+			String value = json.getString(keepKey);
 			toList.add(value);
 		}
-		return distinct(toList);
-	}
-	
-	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain List}>>{@link String}并去除重复元素</h1>
-	 * @param array 	需要转换的JSONArray
-	 * @param keep_key	保留值的key
-	 * @return			处理后的List
-	 */
-	@SuppressWarnings("unchecked")
-	public static List<String> toListAndDistinct(JSONArray array, String keep_key) {
-		List<String> toList = new ArrayList<> ();
-		array.forEach(action -> {
-			JSONObject json = (JSONObject) action;
-			toList.add(json.getString(keep_key));
-		});
+		
 		return distinct(toList);
 	}
 	
@@ -453,30 +358,69 @@ public class ListUtils {
 	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link T}并去除重复元素</h1>
 	 * @param <T>
 	 * @param list 		需要转换的List
-	 * @param keep_key	保留值的key
+	 * @param keepKey	保留值的key
 	 * @param clazz		类型
 	 * @return			处理后的List
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> toListAndDistinct(List<JSONObject> list, String keep_key, Class<T> clazz) {
-		return distinct(toList(list, keep_key, clazz));
+	public static <T> List<T> toListAndDistinct(List<JSONObject> list, String keepKey, Class<T> clazz) {
+		return distinct(toList(list, keepKey, clazz));
 	}
 	
 	/**
-	 * <h1>{@linkplain List}>>{@link Map} 转 {@linkplain Map[] maps}</h1>
-	 * <p>对象引用转换，内存指针依旧指向元数据</p>
+	 * <h1>{@linkplain List} >> {@link Map} 转 {@linkplain List} >> {@link JSONObject}</h1>
+	 * <p>
+	 * 	<b><i>性能测试说明：</i></b><br>
+	 * 	<i>测试CPU：</i>i7-4710MQ<br>
+	 * 	<i>测试结果：</i>百万级数据平均200ms（毫秒）<br>
+	 * </p>
 	 * @param list 		需要转换的List
-	 * @return			转换后的maps
+	 * @return			转换后的List
 	 */
-	public static Map<String, Object>[] toMaps(List<Map<String, Object>> list) {
-		@SuppressWarnings("unchecked")
-		Map<String, Object>[] maps = new Map[list.size()];
-		int index = 0;
-		for (Map<String, Object> map : list) {
-			maps[index] = map;
-			index++;
+	public static List<JSONObject> toJsonList(List<Map<String, Object>> list) {
+		List<JSONObject> jsonList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			jsonList.add(new JSONObject(list.get(i)));
 		}
-		return maps;
+		
+		return jsonList;
+	}
+	
+	/**
+	 * <h1>{@linkplain JSONArray} 转 {@linkplain List} >> {@link JSONObject}</h1>
+	 * <p>
+	 * 	<b><i>性能测试报告：</i></b><br>
+	 *  <i>无类型转换（类型推断）：</i>见 {@linkplain #toList(List)}<br>
+	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
+	 * </p>
+	 * @param jsonArray 需要转换的JSONArray
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toJsonList(JSONArray jsonArray) {
+		List<JSONObject> jsonList = new ArrayList<>();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			jsonList.add(jsonArray.getJSONObject(i));
+		}
+		
+		return jsonList;
+	}
+	
+	/**
+	 * <h1>{@linkplain List} >> {@link T} 转 {@linkplain List} >> {@link JSONObject}</h1>
+	 * <p>
+	 * 	<b><i>性能测试报告：</i></b><br>
+	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
+	 * </p>
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toJsonListT(List<T> list) {
+		List<JSONObject> jsonList = new ArrayList<>();
+		for (T obj : list) {
+			jsonList.add(ObjectUtils.toJSONObject(obj));
+		}
+		
+		return jsonList;
 	}
 	
 	/**
@@ -485,7 +429,7 @@ public class ListUtils {
 	 * @param list 		需要转换的List
 	 * @return			转换后的jsons
 	 */
-	public static JSONObject[] toJSONS(List<JSONObject> list) {
+	public static JSONObject[] toJsons(List<JSONObject> list) {
 		JSONObject[] jsons = new JSONObject[list.size()];
 		int index = 0;
 		for (JSONObject json : list) {
@@ -501,7 +445,7 @@ public class ListUtils {
 	 * @param jsonArray 需要转换的JSONArray
 	 * @return			转换后的jsons
 	 */
-	public static JSONObject[] toJSONS(JSONArray jsonArray) {
+	public static JSONObject[] toJsons(JSONArray jsonArray) {
 		int size = jsonArray.size();
 		JSONObject[] jsons = new JSONObject[size];
 		for (int i = 0; i < size; i++) {
@@ -516,8 +460,8 @@ public class ListUtils {
 	 * @param jsonString	需要转换的JSON字符串
 	 * @return
 	 */
-	public static JSONObject[] toJSONS(String jsonString) {
-		return toJSONS(JSONArray.parseArray(jsonString));
+	public static JSONObject[] toJsons(String jsonString) {
+		return toJsons(JSONArray.parseArray(jsonString));
 	}
 	
 	/**
@@ -526,7 +470,7 @@ public class ListUtils {
      * <pre>
      * 	{@code
      * 		String text = "1,3,5,9";
-     * 		JSONObject[] jsons = toJSONS(text, ",", "id");
+     * 		JSONObject[] jsons = toJSONs(text, ",", "id");
      * 		System.out.println(Arrays.toString(jsons));
      * }
      * </pre>
@@ -538,13 +482,13 @@ public class ListUtils {
 	 * @param key		JSON的key名称
 	 * @return			转换后的jsons
 	 */
-	public static JSONObject[] toJSONS(String text, String regex, String key) {
+	public static JSONObject[] toJsons(String text, String regex, String key) {
 		String[] texts = text.split(regex);
 		JSONObject[] jsons = new JSONObject[texts.length];
 		for (int i = 0; i < texts.length; i++) {
-			JSONObject paramJSON = new JSONObject();
-			paramJSON.put(key, texts[i]);
-			jsons[i] = paramJSON;
+			JSONObject paramJson = new JSONObject();
+			paramJson.put(key, texts[i]);
+			jsons[i] = paramJson;
 		}
 		
 		return jsons;
