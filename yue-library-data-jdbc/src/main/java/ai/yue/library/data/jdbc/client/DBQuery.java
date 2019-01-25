@@ -42,11 +42,12 @@ class DBQuery extends DBBase {
 		sql.append(tableName);
 		String whereSql = paramToWhereSql(paramJson);
 		sql.append(whereSql);
-		if (DBSortEnum.升序 == dBSortEnum) {// 升序
+		if (dBSortEnum == DBSortEnum.升序) {// 升序
 			sql.append(" ORDER BY id");
-		} else {// 降序
+		} else if (dBSortEnum == DBSortEnum.降序) {// 降序
 			sql.append(" ORDER BY id DESC");
 		}
+		
 		return sql.toString();
 	}
 	

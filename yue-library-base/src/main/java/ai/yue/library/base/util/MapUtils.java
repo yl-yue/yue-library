@@ -176,7 +176,7 @@ public class MapUtils extends MapUtil {
 	    while (iter.hasNext()) {
 	        Entry<String, Object> entry = iter.next();
 	        Object value = entry.getValue();
-	        if (StringUtils.isEmpty(value)) {
+	        if (ObjectUtils.isNull(value)) {
 	        	iter.remove();
 	        }
 	    }

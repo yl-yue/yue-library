@@ -17,11 +17,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.hutool.core.util.ObjectUtil;
+
 /**
  * @author  孙金川
  * @version 创建时间：2018年7月27日
  */
-public final class ObjectUtils {
+public final class ObjectUtils extends ObjectUtil {
 
 	/**
 	 * 对象克隆方法，实现深拷贝

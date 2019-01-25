@@ -121,7 +121,7 @@ public class ParamUtils {
 	public static void paramValidate(Object ...objects) {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
-			if (StringUtils.isEmpty(object)) {
+			if (ObjectUtils.isNull(object)) {
 				throw new ResultException(ResultInfo.param_check_not_pass());
 			}
 		}

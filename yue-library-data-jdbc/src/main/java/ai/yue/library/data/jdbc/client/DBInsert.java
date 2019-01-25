@@ -27,13 +27,12 @@ class DBInsert extends DBDelete {
 	// Insert
 	
 	/**
-	 * 向表中插入一条数据，主键默认为id时使用。
-	 * @param tableName 表名
-	 * @param paramJson 参数
-	 * @return 返回主键值
+	 * 插入源初始化
+	 * @param tableName
+	 * @param paramJson
+	 * @return
 	 */
-	@Transactional
-	public Long insert(String tableName, JSONObject paramJson) {
+	private SimpleJdbcInsert insertInit(String tableName, JSONObject paramJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		
@@ -43,12 +42,28 @@ class DBInsert extends DBDelete {
 		simpleJdbcInsert.setGeneratedKeyName("id");	// 设置主键名，添加成功后返回主键的值
 		
 		// 3. 设置ColumnNames
+		MapUtils.removeEmptyMap(paramJson);
 		List<String> keys = MapUtils.keyList(paramJson);
 		List<String> columnNames = ListUtils.toList(queryForList("desc " + tableName, MapUtils.FINAL_EMPTY_JSON), "Field");
 		List<String> insertColumn = ListUtils.keepSameValue(keys, columnNames);
 		simpleJdbcInsert.setColumnNames(insertColumn);
 		
-		// 4. 执行
+		// 4. 返回结果
+		return simpleJdbcInsert;
+	}
+	
+	/**
+	 * 向表中插入一条数据，主键默认为id时使用。
+	 * @param tableName 表名
+	 * @param paramJson 参数
+	 * @return 返回主键值
+	 */
+	@Transactional
+	public Long insert(String tableName, JSONObject paramJson) {
+		// 1. 插入源初始化
+		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
+		
+		// 2. 执行
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
 	
@@ -103,21 +118,13 @@ class DBInsert extends DBDelete {
 		// 1. 参数验证
 		paramValidate(tableName, paramJsons);
 		
-		// 2. 创建JdbcInsert实例
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-		simpleJdbcInsert.setTableName(tableName); // 设置表名
-		simpleJdbcInsert.setGeneratedKeyName("id");	// 设置主键名
+		// 2. 插入源初始化
+		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);
 		
-		// 3. 设置ColumnNames
-		List<String> keys = MapUtils.keyList(paramJsons[0]);
-		List<String> columnNames = ListUtils.toList(queryForList("desc " + tableName, MapUtils.FINAL_EMPTY_JSON), "Field");
-		List<String> insertColumn = ListUtils.keepSameValue(keys, columnNames);
-		simpleJdbcInsert.setColumnNames(insertColumn);
-		
-		// 4. 执行
+		// 3. 执行
         int updateRowsNumber = simpleJdbcInsert.executeBatch(paramJsons).length;
         
-        // 5. 确认插入条数
+        // 4. 确认插入条数
         if (updateRowsNumber != paramJsons.length) {
         	throw new DBException(ResultErrorPrompt.INSERT_ERROR_BATCH);
         }

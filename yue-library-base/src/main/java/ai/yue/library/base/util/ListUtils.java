@@ -424,23 +424,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain JSONObject[]}</h1>
-	 * <p>对象引用转换，内存指针依旧指向元数据</p>
-	 * @param list 		需要转换的List
-	 * @return			转换后的jsons
-	 */
-	public static JSONObject[] toJsons(List<JSONObject> list) {
-		JSONObject[] jsons = new JSONObject[list.size()];
-		int index = 0;
-		for (JSONObject json : list) {
-			jsons[index] = json;
-			index++;
-		}
-		return jsons;
-	}
-	
-	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain JSONObject[]}</h1>
+	 * <h1>{@linkplain JSONArray} 转 {@linkplain JSONObject}[]</h1>
 	 * <p>对象引用转换，内存指针依旧指向元数据</p>
 	 * @param jsonArray 需要转换的JSONArray
 	 * @return			转换后的jsons
@@ -456,7 +440,43 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain String} 转 {@linkplain JSONObject[]}</h1>
+	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain JSONObject}[]</h1>
+	 * <p>对象引用转换，内存指针依旧指向元数据</p>
+	 * @param list 		需要转换的List
+	 * @return			转换后的jsons
+	 */
+	public static JSONObject[] toJsons(List<JSONObject> list) {
+		JSONObject[] jsons = new JSONObject[list.size()];
+		int index = 0;
+		for (JSONObject json : list) {
+			jsons[index] = json;
+			index++;
+		}
+		return jsons;
+	}
+	
+	/**
+	 * <h1>{@linkplain List} >> {@link T} 转 {@linkplain JSONObject}[]</h1>
+	 * <p>
+	 * 	<b><i>性能测试报告：</i></b><br>
+	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
+	 * </p>
+	 * @param list 需要转换的List
+	 * @return 转换后的jsons
+	 */
+	public static <T> JSONObject[] toJsonsT(List<T> list) {
+		JSONObject[] jsons = new JSONObject[list.size()];
+		int index = 0;
+		for (T obj : list) {
+			jsons[index] = ObjectUtils.toJSONObject(obj);
+			index++;
+		}
+		
+		return jsons;
+	}
+	
+	/**
+	 * <h1>{@linkplain String} 转 {@linkplain JSONObject}[]</h1>
 	 * @param jsonString	需要转换的JSON字符串
 	 * @return
 	 */
@@ -465,7 +485,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain String} 转 {@linkplain JSONObject[]}</h1>
+	 * <h1>{@linkplain String} 转 {@linkplain JSONObject}[]</h1>
 	 * <blockquote>示例：
      * <pre>
      * 	{@code
