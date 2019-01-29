@@ -28,36 +28,34 @@ public class PageIPO {
 	
 	/**
 	 * 将分页参数转换为分页对象
-	 * <p>
-	 * {@linkplain JSONObject} >> {@linkplain PageIPO}
-	 * @paramJSON paramJSON 最大limit值 = 200
+	 * <p>{@linkplain JSONObject} >> {@linkplain PageIPO}
+	 * @param paramJson 最大limit值 = 200
 	 * @return
 	 */
-	public static PageIPO parsePageIPO(JSONObject paramJSON) {
-		return parsePageIPO(paramJSON, 200);
+	public static PageIPO parsePageIPO(JSONObject paramJson) {
+		return parsePageIPO(paramJson, 200);
 	}
 	
 	/**
 	 * 将分页参数转换为分页对象
-	 * <p>
-	 * {@linkplain JSONObject} >> {@linkplain PageIPO}
-	 * @paramJSON paramJSON
-	 * @paramJSON maxLimit 最大限制
+	 * <p>{@linkplain JSONObject} >> {@linkplain PageIPO}
+	 * @param paramJson 
+	 * @param maxLimit 最大限制
 	 * @return
 	 */
-	public static PageIPO parsePageIPO(JSONObject paramJSON, int maxLimit) {
-		JSONObject conditions = new JSONObject(paramJSON);
-		Integer page = conditions.getInteger("page");
-		Integer limit = conditions.getInteger("limit");
+	public static PageIPO parsePageIPO(JSONObject paramJson, int maxLimit) {
+		Integer page = paramJson.getInteger("page");
+		Integer limit = paramJson.getInteger("limit");
 		if (null == page || null == limit) {
 			throw new ParamException(ResultErrorPrompt.PARAM_CHECK_NOT_PASS);
 		}
-		conditions.remove("page");
-		conditions.remove("limit");
+		paramJson.remove("page");
+		paramJson.remove("limit");
 		if (limit > maxLimit) {
 			throw new ParamException(ResultErrorPrompt.MAX_LIMIT);
 		}
-		return PageIPO.builder().page(page).limit(limit).conditions(conditions).build();
+		
+		return PageIPO.builder().page(page).limit(limit).conditions(paramJson).build();
 	}
 	
 }

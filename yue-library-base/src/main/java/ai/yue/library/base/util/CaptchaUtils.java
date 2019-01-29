@@ -30,6 +30,12 @@ public class CaptchaUtils {
             'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
     
+    static Color getRandomColor() {
+        Random ran = new Random();
+        Color color = new Color(ran.nextInt(256), ran.nextInt(256), ran.nextInt(256));
+        return color;
+    }
+    
     /**
      * 创建验证码
      * @param captchaIPO
@@ -76,12 +82,6 @@ public class CaptchaUtils {
         graphic.dispose();
         // 7.返回验证码和图片
         return CaptchaVO.builder().captcha(captcha.toString()).captchaImage(captchaImage).build();
-    }
-    
-    static Color getRandomColor() {
-        Random ran = new Random();
-        Color color = new Color(ran.nextInt(256), ran.nextInt(256), ran.nextInt(256));
-        return color;
     }
     
     /**

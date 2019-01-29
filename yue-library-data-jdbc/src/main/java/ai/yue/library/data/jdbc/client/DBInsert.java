@@ -42,7 +42,6 @@ class DBInsert extends DBDelete {
 		simpleJdbcInsert.setGeneratedKeyName("id");	// 设置主键名，添加成功后返回主键的值
 		
 		// 3. 设置ColumnNames
-		MapUtils.removeEmptyMap(paramJson);
 		List<String> keys = MapUtils.keyList(paramJson);
 		List<String> columnNames = ListUtils.toList(queryForList("desc " + tableName, MapUtils.FINAL_EMPTY_JSON), "Field");
 		List<String> insertColumn = ListUtils.keepSameValue(keys, columnNames);
@@ -60,10 +59,13 @@ class DBInsert extends DBDelete {
 	 */
 	@Transactional
 	public Long insert(String tableName, JSONObject paramJson) {
-		// 1. 插入源初始化
+		// 1. 移除空Map对象
+		MapUtils.removeEmptyMap(paramJson);
+		
+		// 2. 插入源初始化
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
 		
-		// 2. 执行
+		// 3. 执行
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
 	
@@ -126,7 +128,7 @@ class DBInsert extends DBDelete {
         
         // 4. 确认插入条数
         if (updateRowsNumber != paramJsons.length) {
-        	throw new DBException(ResultErrorPrompt.INSERT_ERROR_BATCH);
+        	throw new DBException(ResultErrorPrompt.INSERT_BATCH_ERROR);
         }
 	}
 	

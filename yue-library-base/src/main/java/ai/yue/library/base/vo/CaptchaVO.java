@@ -5,11 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import ai.yue.library.base.util.CaptchaUtils;
 import ai.yue.library.base.util.HttpUtils;
@@ -34,17 +31,14 @@ public class CaptchaVO {
 	BufferedImage captchaImage;
 	
 	/**
-	 * session- this.captcha<br>
-	 * response- this.captchaImage
-	 * <p>
-	 * 设置验证码到session中<br>
-	 * 设置验证码图片到response中，并设置ContentType为image/png<br>
+	 * {@linkplain #captcha} set session
+	 * <p>{@linkplain #captchaImage} write response
+	 * <p>将验证码设置到session
+	 * <p>将验证码图片写入response，并设置ContentType为image/png
 	 */
-	public void toLocalSessionAndResponse() {
-		ServletRequestAttributes servletRequestAttributes = HttpUtils.getRequestAttributes();
-		HttpServletRequest request = servletRequestAttributes.getRequest();
-		HttpServletResponse response = servletRequestAttributes.getResponse();
-		HttpSession httpSession = request.getSession();
+	public void writeResponseAndSetSession() {
+		HttpSession httpSession = HttpUtils.getSession();
+		HttpServletResponse response = HttpUtils.getResponse();
 		
 		httpSession.setAttribute(CaptchaUtils.CAPTCHA_KEY, captcha);
         response.setContentType("image/png");

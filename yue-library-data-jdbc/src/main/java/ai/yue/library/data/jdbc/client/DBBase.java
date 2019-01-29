@@ -27,20 +27,6 @@ class DBBase {
 	
     // 方法
     
-	/**
-     * 判断更新所影响的行数是否 <b>等于</b> 预期值
-     * <p>
-     * 若不是预期值，那么将会抛出一个{@linkplain DBException}
-     * @param updateRowsNumber	更新所影响的行数
-     * @param expectedValue		预期值
-     */
-	public void updateAndExpectedEqual(long updateRowsNumber, int expectedValue) {
-        if (updateRowsNumber != expectedValue) {
-    		String msg = ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
-        	throw new DBException(msg);
-        }
-	}
-    
     /**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
      * <p>
@@ -64,20 +50,6 @@ class DBBase {
     /**
      * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
      * <p>
-     * 若不是预期结果，那么将会抛出一个{@linkplain DBException}
-     * @param updateRowsNumber	更新所影响的行数
-     * @param expectedValue		预期值
-     */
-	public void updateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
-        if (!(updateRowsNumber >= expectedValue)) {
-        	String msg = ResultErrorPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
-            throw new DBException(msg);
-        }
-	}
-	
-    /**
-     * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
-     * <p>
      * 若不是预期结果，同时 updateRowsNumber < expectedValue 那么将会抛出一个{@linkplain DBException}
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
@@ -94,7 +66,52 @@ class DBBase {
         String msg = ResultErrorPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
         throw new DBException(msg);
 	}
-
+	
+	/**
+     * 判断更新所影响的行数是否 <b>等于</b> 预期值
+     * <p>
+     * 若不是预期值，那么将会抛出一个{@linkplain DBException}
+     * @param updateRowsNumber	更新所影响的行数
+     * @param expectedValue		预期值
+     */
+	public void updateAndExpectedEqual(long updateRowsNumber, int expectedValue) {
+        if (updateRowsNumber != expectedValue) {
+    		String msg = ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
+        	throw new DBException(msg);
+        }
+	}
+	
+    /**
+     * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
+     * <p>
+     * 若不是预期结果，那么将会抛出一个{@linkplain DBException}
+     * @param updateRowsNumber	更新所影响的行数
+     * @param expectedValue		预期值
+     */
+	public void updateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
+        if (!(updateRowsNumber >= expectedValue)) {
+        	String msg = ResultErrorPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
+            throw new DBException(msg);
+        }
+	}
+	
+	/**
+     * 确认批量更新每组参数所影响的行数，是否 <b>全部都等于</b> 同一个预期值
+     * <p>
+     * 若不是预期值，那么将会抛出一个{@linkplain DBException}
+     * @param updateRowsNumberArray	每组参数更新所影响的行数数组
+     * @param expectedValue 预期值
+     */
+	public void updateBatchAndExpectedEqual(int[] updateRowsNumberArray, int expectedValue) {
+		for (int updateRowsNumber : updateRowsNumberArray) {
+			if (updateRowsNumber != expectedValue) {
+				String msg = ResultErrorPrompt.UPDATE_BATCH_ERROR;
+				msg += ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
+				throw new DBException(msg);
+			}
+		}
+	}
+	
     /**
      * 同 {@linkplain DBQuery#queryForJSON(String, JSONObject)} 的安全查询结果获取
      * @param list {@linkplain DBQuery#queryForList(String, JSONObject)} 查询结果
