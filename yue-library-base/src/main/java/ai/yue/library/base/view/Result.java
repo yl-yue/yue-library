@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 /**
  * http请求返回的最外层对象。
  * 
- * @author 孙金川
+ * @author  孙金川
  * @version 创建时间：2017年10月8日
  */
 @Data
@@ -47,9 +47,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result<T> implements Serializable {
-
+	
 	private static final long serialVersionUID = -3830508963654505583L;
-
+	
 	/** 状态码 */
 	private Integer code;
 	/** 提示信息 */
@@ -61,9 +61,9 @@ public class Result<T> implements Serializable {
 	/** count */
 	@JsonInclude(Include.NON_NULL)
 	private Long count;
-
+	
 	/**
-	 * Result结果验证
+	 * 成功校验
 	 * <p>
 	 * 如果此处获得的Result是一个错误提示结果，那么便会抛出一个{@linkplain ResultException}异常，以便于数据回滚并进行异常统一处理。<br>
 	 * 
@@ -74,11 +74,11 @@ public class Result<T> implements Serializable {
 			throw new ResultException(this);
 		}
 	}
-
+	
 	public <D> D getData(Class<D> clazz) {
 		return castToJavaBean(data, clazz);
 	}
-
+	
 	public JSONObject dataToJSONObject() {
 		if (data instanceof JSONObject) {
 			return (JSONObject) data;
@@ -87,10 +87,10 @@ public class Result<T> implements Serializable {
 		if (data instanceof String) {
 			return JSON.parseObject((String) data);
 		}
-
+		
 		return (JSONObject) toJSON(data);
 	}
-
+	
 	public JSONArray dataToJSONArray() {
 		if (data instanceof JSONArray) {
 			return (JSONArray) data;

@@ -154,7 +154,7 @@ public class HttpUtils {
 	    			// 过滤无效参数
 					@SuppressWarnings("unchecked")
 					Map<String, Object> paramMap = (Map<String, Object>) object;
-					MapUtils.removeEmptyMap(paramMap);
+					MapUtils.removeEmpty(paramMap);
 	    		}
 	    	}
 		}

@@ -160,6 +160,7 @@ public class MapUtils extends MapUtil {
 	/**
 	 * 批量移除
 	 * @param paramMap 要操作的Map
+	 * @param keys 被移除的key数组
 	 */
 	public static void remove(Map<String, Object> paramMap, String[] keys) {
 		for (String key : keys) {
@@ -168,10 +169,10 @@ public class MapUtils extends MapUtil {
 	}
 	
 	/**
-	 * 移除空Map对象
+	 * 移除空对象
 	 * @param paramMap 要操作的Map
 	 */
-	public static void removeEmptyMap(Map<String, Object> paramMap) {
+	public static void removeEmpty(Map<String, Object> paramMap) {
 		Iterator<Entry<String, Object>> iter = paramMap.entrySet().iterator();
 	    while (iter.hasNext()) {
 	        Entry<String, Object> entry = iter.next();

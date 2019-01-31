@@ -1,6 +1,5 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -43,37 +42,6 @@ public class StringUtils extends StrUtil {
 		stringBuffer.append(str);
 		stringBuffer.replace(start, end, replacedStr);
 		return stringBuffer.toString();
-	}
-	
-	/**
-	 * 字符串尾部值自动递增
-	 * @param str 尾部值是 {@linkplain Integer} 类型
-	 * @return
-	 */
-	public static String autoIncrement(String str) {
-		int maxIndex = str.length() - 1;
-		Integer autoIncrementValue = Integer.parseInt(CharUtil.toString(str.charAt(maxIndex))) + 1;
-		if (autoIncrementValue == 10) {
-			for (int i = maxIndex - 1; i >= 0; i--) {
-				Integer autoIncrementValueI = Integer.parseInt(CharUtil.toString(str.charAt(i))) + 1;
-				if (autoIncrementValueI != 10) {
-					return replace(str, autoIncrementValueI.toString(), i, i);
-				}
-			}
-		}
-		
-		return str.substring(0, maxIndex) + autoIncrementValue;
-	}
-	
-	/**
-	 * 字符串尾部值自动递减
-	 * @param str 尾部值是 {@linkplain Integer} 类型
-	 * @return
-	 */
-	public static String autoDecr(String str) {
-		int maxIndex = str.length() - 1;
-		Integer autoIncrementValue = Integer.parseInt(CharUtil.toString(str.charAt(maxIndex))) - 1;
-		return str.substring(0, maxIndex) + autoIncrementValue;
 	}
 	
 	/**

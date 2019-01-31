@@ -59,8 +59,8 @@ class DBInsert extends DBDelete {
 	 */
 	@Transactional
 	public Long insert(String tableName, JSONObject paramJson) {
-		// 1. 移除空Map对象
-		MapUtils.removeEmptyMap(paramJson);
+		// 1. 移除空对象
+		MapUtils.removeEmpty(paramJson);
 		
 		// 2. 插入源初始化
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);

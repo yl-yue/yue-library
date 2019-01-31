@@ -476,6 +476,28 @@ public class ListUtils {
 	}
 	
 	/**
+	 * <h1>{@linkplain List} >> {@link T} 转 {@linkplain JSONObject}[] 并移除空对象</h1>
+	 * <p>
+	 * 	<b><i>性能测试报告：</i></b><br>
+	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
+	 * </p>
+	 * @param list 需要转换的List
+	 * @return 转换后的jsons
+	 */
+	public static <T> JSONObject[] toJsonsTAndRemoveEmpty(List<T> list) {
+		JSONObject[] jsons = new JSONObject[list.size()];
+		int index = 0;
+		for (T obj : list) {
+			JSONObject json = ObjectUtils.toJSONObject(obj);
+			MapUtils.removeEmpty(json);
+			jsons[index] = json;
+			index++;
+		}
+		
+		return jsons;
+	}
+	
+	/**
 	 * <h1>{@linkplain String} 转 {@linkplain JSONObject}[]</h1>
 	 * @param jsonString	需要转换的JSON字符串
 	 * @return

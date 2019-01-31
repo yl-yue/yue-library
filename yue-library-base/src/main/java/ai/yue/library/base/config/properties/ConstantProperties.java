@@ -14,9 +14,10 @@ public class ConstantProperties {
 	
 	/**
 	 * Token超时时间（单位：秒）
+	 * <p>默认：36000（10小时）
 	 */
-	private Integer token_timeout;
-
+	private Integer token_timeout = 36000;
+	
 	/**
 	 * AES密钥
 	 */
