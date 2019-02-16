@@ -1,20 +1,15 @@
 package ai.yue.library.base.util;
 
-import java.util.Map;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.exception.ParamVoidException;
 import cn.hutool.core.lang.Console;
 
 /**
@@ -133,31 +128,6 @@ public class HttpUtils {
 			}
 		}
 		Console.error("========结束-打印请求报文========");
-	}
-	
-	/**
-	 * {@linkplain Map} 类型参数空校验，并去除空值
-	 * @param joinPoint
-	 * @throws ParamVoidException
-	 */
-	public static void paramMapVoid(JoinPoint joinPoint) {
-		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-		Class<?>[] parameterTypes = methodSignature.getParameterTypes();
-		
-		if (ClassUtils.isContains(parameterTypes, Map.class)) {
-	    	Object[] objects = joinPoint.getArgs();
-	    	for (Object object : objects) {
-	    		if (object instanceof Map) {
-					if (object == null || ((Map<?, ?>) object).isEmpty()) {
-						throw new ParamVoidException();
-					}
-	    			// 过滤无效参数
-					@SuppressWarnings("unchecked")
-					Map<String, Object> paramMap = (Map<String, Object>) object;
-					MapUtils.removeEmpty(paramMap);
-	    		}
-	    	}
-		}
 	}
 	
 }

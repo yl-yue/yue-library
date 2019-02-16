@@ -23,6 +23,8 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<lombok.version>1.18.4</lombok.version>
 		<hutool.version>4.3.1</hutool.version>
+		<pay.version>2.12.6</pay.version>
+		<easypoi.version>4.0.0</easypoi.version>
 	</properties>
 
 	<modules>
@@ -86,11 +88,39 @@
 				<version>${hutool.version}</version>
 			</dependency>
 
+			<!-- 支付 -->
+			<dependency>
+				<groupId>com.egzosn</groupId>
+				<artifactId>pay-java-ali</artifactId><!-- 支付宝 -->
+				<version>${pay.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egzosn</groupId>
+				<artifactId>pay-java-wx</artifactId><!-- 微信 -->
+				<version>${pay.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egzosn</groupId>
+				<artifactId>pay-java-union</artifactId><!-- 银联 -->
+				<version>${pay.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.egzosn</groupId>
+				<artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
+				<version>${pay.version}</version>
+			</dependency>
+
 			<!-- 其他 -->
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>cn.afterturn</groupId>
+				<artifactId>easypoi-spring-boot-starter</artifactId>
+				<version>${easypoi.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

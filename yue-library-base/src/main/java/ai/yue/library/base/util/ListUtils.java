@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.constant.MaxOrMinEnum;
 import ai.yue.library.base.constant.SortEnum;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 /**
@@ -158,13 +159,39 @@ public class ListUtils {
 	 */
 	public static List<JSONObject> sort(List<JSONObject> list, String sortKey, SortEnum sortEnum) {
 		Collections.sort(list, new Comparator<JSONObject>() {
-			public int compare(JSONObject o1, JSONObject o2) {
-				int json1value = o1.getInteger(sortKey);
-				int json2value = o2.getInteger(sortKey);
+			public int compare(JSONObject json1, JSONObject json2) {
+				var json1value = json1.get(sortKey);
+				var json2value = json2.get(sortKey);
 				if (sortEnum == SortEnum.升序) {
-					return json1value - json2value;
+					return CompareUtil.compare(json1value, json2value, false);
 				} else {
-					return json2value - json1value;
+					return CompareUtil.compare(json2value, json1value, false);
+				}
+			}
+		});
+		
+		return list;
+	}
+	
+	/**
+	 * <h1>List-T集合排序</h1>
+	 * @param <T>
+	 * @param list 需要处理的集合
+	 * @param sortField 排序字段
+	 * @param sortEnum 排序方式
+	 * @return 处理后的List集合
+	 */
+	public static <T> List<T> sortT(List<T> list, String sortField, SortEnum sortEnum) {
+		Collections.sort(list, new Comparator<T>() {
+			public int compare(T o1, T o2) {
+				JSONObject json1 = ObjectUtils.toJSONObject(o1);
+				JSONObject json2 = ObjectUtils.toJSONObject(o2);
+				var json1value = json1.get(sortField);
+				var json2value = json2.get(sortField);
+				if (sortEnum == SortEnum.升序) {
+					return CompareUtil.compare(json1value, json2value, false);
+				} else {
+					return CompareUtil.compare(json2value, json1value, false);
 				}
 			}
 		});
@@ -269,7 +296,7 @@ public class ListUtils {
 				JSONObject jsonj = list.get(j);
 				if (jsoni.get(distinctKey).equals(jsonj.get(distinctKey))) {
 					// i > j
-					if (Double.parseDouble(jsoni.get(keepKey).toString()) > Double.parseDouble(jsonj.get(keepKey).toString())) {
+					if (CompareUtil.compare(jsoni.get(keepKey), jsonj.get(keepKey), false) > 0) {
 						if (maxOrMinEnum == MaxOrMinEnum.最小值) {
 							jsoni.replace(keepKey, jsonj.get(keepKey));
 						}
@@ -300,6 +327,22 @@ public class ListUtils {
 	 */
 	public static <T> ArrayList<T> toList(T[] array) {
 		ArrayList<T> toList = new ArrayList<>(Arrays.asList(array));
+		return toList;
+	}
+	
+	/**
+	 * <h1>{@linkplain List}>>{@link JSONObject} 转 {@linkplain List}>>{@link T}</h1>
+	 * @param <T>
+	 * @param list 		需要转换的List
+	 * @param clazz		json转换的POJO类型
+	 * @return			转换后的List
+	 */
+	public static <T> List<T> toList(List<JSONObject> list, Class<T> clazz) {
+		List<T> toList = new ArrayList<> ();
+		for(JSONObject json : list) {
+			toList.add(ObjectUtils.toJavaObject(json, clazz));
+		}
+		
 		return toList;
 	}
 	

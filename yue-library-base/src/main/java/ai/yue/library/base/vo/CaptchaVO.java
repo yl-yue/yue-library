@@ -43,11 +43,11 @@ public class CaptchaVO {
 		httpSession.setAttribute(CaptchaUtils.CAPTCHA_KEY, captcha);
         response.setContentType("image/png");
         
-        OutputStream out;
+        OutputStream output;
 		try {
-			out = response.getOutputStream();
-			// 响应结束时servlet会自动将out关闭
-			ImageIO.write(captchaImage, "png", out);
+			output = response.getOutputStream();
+			// 响应结束时servlet会自动将output关闭
+			ImageIO.write(captchaImage, "png", output);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
