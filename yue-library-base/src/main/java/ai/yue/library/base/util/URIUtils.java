@@ -21,7 +21,7 @@ public class URIUtils {
 	 * URI前缀或后缀通配符匹配（只能同时存在一种通配）
 	 * @param array 包含通配符的URI的数组
 	 * @param uri 实际的URI
-	 * @return
+	 * @return 是否匹配
 	 */
 	public static boolean isUriArraySuffixOrPrefixWildcard(String[] array, String uri) {
 		for (String url : array) {
@@ -50,7 +50,7 @@ public class URIUtils {
 	/**
 	 * URI编码
 	 * @param source 要编码的字符串
-	 * @return
+	 * @return 编码后的字符串
 	 */
 	public static String encode(String source) {
 		return UriUtils.encode(source, DEFAULT_ENCODING);
@@ -59,7 +59,7 @@ public class URIUtils {
 	/**
 	 * URI解码
 	 * @param source 要解码的字符串
-	 * @return
+	 * @return 解码后的字符串
 	 */
 	public static String decode(String source) {
 		return UriUtils.decode(source, DEFAULT_ENCODING);
@@ -70,7 +70,7 @@ public class URIUtils {
 	 * 2. 将RSA 1024分段加密内容，进行分段解密
 	 * @param text				URI转义后的文本
 	 * @param rsa_private_key	RSA1024私钥
-	 * @return
+	 * @return 解密后的JSON
 	 */
 	public static JSONObject rsaUriDecodingAndDecrypt(String text, String rsa_private_key) {
 		String content = decode(text);

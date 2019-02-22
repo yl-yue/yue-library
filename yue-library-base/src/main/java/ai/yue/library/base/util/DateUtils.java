@@ -42,7 +42,7 @@ public final class DateUtils {
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
-	 * @return
+	 * @return 是否在…之间
 	 */
 	public static boolean isBetween(String startTime, String dateTime, String endTime) {
 		LocalDateTime start = Timestamp.valueOf(startTime).toLocalDateTime();
@@ -60,7 +60,7 @@ public final class DateUtils {
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
-	 * @return
+	 * @return 是否在…之间
 	 */
 	public static boolean isBetween(LocalDateTime startTime, LocalDateTime dateTime, LocalDateTime endTime) {
 		if (dateTime.isBefore(endTime) && dateTime.isAfter(startTime)) {
@@ -74,7 +74,7 @@ public final class DateUtils {
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
-	 * @return
+	 * @return 是否在…之间
 	 */
 	public static boolean isBetween(Date startTime, Date dateTime, Date endTime) {
 		if (dateTime.before(endTime) && dateTime.after(startTime)) {
@@ -85,6 +85,7 @@ public final class DateUtils {
 	
 	/**
 	 * 获得当前时间戳
+	 * @return 时间戳
 	 */
 	public static Long getTimestamp() {
 		return System.currentTimeMillis();
@@ -92,6 +93,7 @@ public final class DateUtils {
 
 	/**
 	 * 获得当前年月日
+	 * @return 年月日
 	 */
 	public static String get_y_M_d() {
 		return y_M_d.format(LocalDate.now());
@@ -99,6 +101,7 @@ public final class DateUtils {
 
 	/**
 	 * 获得当前年月日:时分秒
+	 * @return 年月日:时分秒
 	 */
 	public static String get_y_M_d_H_m_s() {
 		return y_M_d_H_m_s.format(LocalDateTime.now());
@@ -107,7 +110,7 @@ public final class DateUtils {
 	/**
 	 * 获取当天起始时间
 	 * 
-	 * @return
+	 * @return 年-月-日 00:00:00（当天起始时间） 
 	 */
 	public static String getTodayStart() {
 		return TODAY_START.format(LocalDateTime.now());
@@ -116,7 +119,7 @@ public final class DateUtils {
 	/**
 	 * 获得当天结束时间
 	 * 
-	 * @return
+	 * @return 年-月-日 23:59:59（当天结束时间）
 	 */
 	public static String getTodayEnd() {
 		return TODAY_END.format(LocalDateTime.now());
@@ -125,7 +128,7 @@ public final class DateUtils {
 	/**
 	 * 获得本周开始时间
 	 * 
-	 * @return
+	 * @return 年-月-日 时：分：秒
 	 */
 	public static String getWeekmorning() {
 		Calendar cal = Calendar.getInstance();
@@ -143,7 +146,7 @@ public final class DateUtils {
 	/**
 	 * 获得本周日结束时间
 	 * 
-	 * @return Date
+	 * @return 年-月-日 时：分：秒
 	 */
 	public static String getWeeknight() {
 		Calendar cal = Calendar.getInstance();
@@ -161,8 +164,8 @@ public final class DateUtils {
 	/**
 	 * 将日期时间转换成时间戳
 	 * 
-	 * @param dateTime
-	 * @return
+	 * @param dateTime 日期时间
+	 * @return 时间戳
 	 */
 	public static Long toTimestamp(String dateTime) {
 		return Timestamp.valueOf(dateTime).getTime();
@@ -172,8 +175,8 @@ public final class DateUtils {
 	 * 将 {@linkplain Date} 转 {@linkplain LocalDateTime}
 	 * <p>
 	 * 默认使用系统时区转换
-	 * @param date
-	 * @return
+	 * @param date 日期
+	 * @return 本地日期时间
 	 */
 	public static LocalDateTime toLocalDateTime(Date date) {
 		Instant instant = date.toInstant();// 时间线上的一个瞬时点
@@ -184,7 +187,7 @@ public final class DateUtils {
 	/**
 	 * 将毫秒时间转化为年-月-日
 	 * 
-	 * @param timestamp
+	 * @param timestamp 毫秒（时间戳）
 	 * @return 年-月-日
 	 */
 	public static String to_y_M_d(long timestamp) {
@@ -192,9 +195,9 @@ public final class DateUtils {
 	}
 	
 	/**
-	 * 将日期时间转化为年-月-日
+	 * 将日期转化为年-月-日
 	 * 
-	 * @param date
+	 * @param date 日期
 	 * @return 年-月-日
 	 */
 	public static String to_y_M_d(Date date) {
@@ -202,10 +205,10 @@ public final class DateUtils {
 	}
 	
 	/**
-	 * 将毫秒时间转化为年-月-日 时：分：秒
+	 * 将毫秒转化为年-月-日 时：分：秒
 	 * 
-	 * @param timestamp
-	 * @return
+	 * @param timestamp 毫秒
+	 * @return 年-月-日 时：分：秒
 	 */
 	public static String to_y_M_d_H_m_s(long timestamp) {
 		LocalDateTime localDateTime = toLocalDateTime(new Date(timestamp));
@@ -213,10 +216,10 @@ public final class DateUtils {
 	}
 	
 	/**
-	 * 将日期时间转化为年-月-日 时：分：秒
+	 * 将日期转化为年-月-日 时：分：秒
 	 * 
-	 * @param date
-	 * @return
+	 * @param date 日期
+	 * @return 年-月-日 时：分：秒
 	 */
 	public static String to_y_M_d_H_m_s(Date date) {
 		return y_M_d_H_m_s.format(toLocalDateTime(date));
@@ -225,9 +228,9 @@ public final class DateUtils {
 	/**
 	 * 计算日期相差天数
 	 * 
-	 * @param startTime
-	 * @param endTime
-	 * @return
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return 相差天数
 	 */
 	public static long dateDaysDifference(LocalDateTime startTime, LocalDateTime endTime) {
 		return startTime.toLocalDate().toEpochDay() - endTime.toLocalDate().toEpochDay();
@@ -236,9 +239,9 @@ public final class DateUtils {
 	/**
 	 * 计算日期相差天数
 	 * 
-	 * @param startDate
-	 * @param endDate
-	 * @return
+	 * @param startDate 开始日期
+	 * @param endDate 结束日期
+	 * @return 相差天数
 	 */
 	public static long dateDaysDifference(LocalDate startDate, LocalDate endDate) {
 		return startDate.toEpochDay() - endDate.toEpochDay();

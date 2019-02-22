@@ -168,7 +168,7 @@ public class ParamUtils {
 	
 	/**
 	 * 参数验证
-	 * @param paramValidateIPO
+	 * @param paramValidateIPO 需要验证的参数
 	 * @throws ResultException 验证未通过将抛出相应的异常即其提示信息
 	 */
 	public static void paramValidate(ParamValidateIPO paramValidateIPO) {
@@ -256,9 +256,9 @@ public class ParamUtils {
 	}
     
     /**
-     * 11位手机号码加密
-     * @param cellphone
-     * @return
+     * 11位手机号码隐藏加密
+     * @param cellphone 手机号
+     * @return 隐藏加密后的手机号
      */
     public static String cellphoneEncrypt(String cellphone) {
     	if (cellphone.length() == 11) {

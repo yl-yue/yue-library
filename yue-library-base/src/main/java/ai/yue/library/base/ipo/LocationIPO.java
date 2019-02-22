@@ -23,7 +23,7 @@ public class LocationIPO {
 	 * <p>
 	 * {@linkplain JSONObject} 转 {@linkplain LocationIPO}
 	 * @param location 标准的经纬度JSON对象，包含的key有("lng", "lat")
-	 * @return
+	 * @return 经纬度对象
 	 */
 	public static LocationIPO toLocationIPO(JSONObject location) {
 		double lng = location.getDouble("lng");

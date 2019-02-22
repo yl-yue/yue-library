@@ -78,7 +78,6 @@ class DBDelete extends DBUpdate {
      * 
      * @param tableName		表名
      * @param paramJsons	条件数组
-     * @return
      */
 	@Transactional
     public void deleteBatch(String tableName, JSONObject[] paramJsons) {
@@ -102,7 +101,7 @@ class DBDelete extends DBUpdate {
      * <p>示例：<code>DELETE FROM table WHERE id = :id</code><br>
      * @param sql			要执行的删除SQL
      * @param paramJsons	删除所用到的条件数组
-	 * @return 
+	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
      */
 	@Transactional
 	public int[] deleteBatch2(String sql, JSONObject[] paramJsons) {

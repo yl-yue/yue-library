@@ -35,7 +35,7 @@ public class StringUtils extends StrUtil {
 	 * @param replacedStr 替换字符串
 	 * @param start 开始索引，包括此索引
 	 * @param end 结束索引，不包括此索引（结束索引==开始索引：将在开始索引处插入替换字符串）
-	 * @return
+	 * @return 替换后的字符串
 	 */
 	public static String replace(String str, String replacedStr, int start, int end) {
 		StringBuffer stringBuffer = new StringBuffer();
@@ -48,7 +48,7 @@ public class StringUtils extends StrUtil {
 	 * 删除开始相等的字符串
 	 * @param sb 		需要处理的字符串
 	 * @param condition 条件
-	 * @return
+	 * @return 删除后的StringBuffer
 	 */
 	public static StringBuffer deleteFirstEqualString(StringBuffer sb, String condition) {
 		if (sb.toString().startsWith(condition)) {
@@ -61,7 +61,7 @@ public class StringUtils extends StrUtil {
 	 * 删除尾部相等的字符串
 	 * @param sb 		需要处理的字符串
 	 * @param condition 条件
-	 * @return
+	 * @return 删除后的StringBuffer
 	 */
 	public static StringBuffer deleteLastEqualString(StringBuffer sb, String condition) {
 		int end = sb.length();
@@ -78,7 +78,7 @@ public class StringUtils extends StrUtil {
      * @param str		需要处理的字符串
      * @param firstStr	开始字符串
      * @param lastStr	末尾字符串
-     * @return
+     * @return 删除后的字符串
      */
     public static String deleteFirstLastEqualString(String str, String firstStr, String lastStr) {
     	StringBuffer sb = new StringBuffer(str);
@@ -91,7 +91,7 @@ public class StringUtils extends StrUtil {
      * 删除前后字符串
      * @param str		需要处理的字符串
      * @param length	删除长度
-     * @return
+     * @return 删除后的字符串
      */
     public static String deleteFirstLastString(String str, int length) {
     	return str.substring(length, str.length() - length);

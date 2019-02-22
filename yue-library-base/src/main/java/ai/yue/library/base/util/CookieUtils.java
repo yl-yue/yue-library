@@ -16,9 +16,9 @@ public class CookieUtils {
 	
     /**
      * 设置
-     * @param key
-     * @param value
-     * @param timeout
+     * @param key 设置的key
+     * @param value 设置的值
+     * @param timeout 超时时间（单位：秒）
      */
     public static void set(String key, String value, int timeout) {
 		HttpServletResponse response = HttpUtils.getResponse();
@@ -30,8 +30,8 @@ public class CookieUtils {
     
     /**
      * 获取cookie
-     * @param key
-     * @return
+     * @param key cookie的key
+     * @return Cookie
      */
 	public static Cookie get(String key) {
         Map<String, Cookie> cookieMap = readCookieMap();
@@ -44,7 +44,7 @@ public class CookieUtils {
 	
     /**
      * 将cookie封装成Map
-     * @return
+     * @return Map
      */
     private static Map<String, Cookie> readCookieMap() {
     	HttpServletRequest request = HttpUtils.getRequest();

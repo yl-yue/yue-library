@@ -55,9 +55,9 @@ public class RSAUtils {
 	
 	/**
 	 * 加密
-	 * @param content
-	 * @param rsaPublicKey
-	 * @return
+	 * @param content 加密内容
+	 * @param rsaPublicKey RSA公钥
+	 * @return 加密后的字符串
 	 */
 	public static String encrypt(String content, String rsaPublicKey) {
 		// 4.公钥加密、私钥解密 ---- 加密
@@ -98,9 +98,9 @@ public class RSAUtils {
 	
 	/**
 	 * 解密
-	 * @param content
-	 * @param rsaPrivateKey
-	 * @return
+	 * @param content 解密内容
+	 * @param rsaPrivateKey RSA私钥
+	 * @return 解密后的字符串
 	 */
 	public static String decrypt(String content, String rsaPrivateKey) {
 		// 5.私钥解密、公钥加密 ---- 解密

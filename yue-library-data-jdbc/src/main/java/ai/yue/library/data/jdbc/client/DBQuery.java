@@ -55,7 +55,7 @@ class DBQuery extends DBBase {
 	 * 绝对条件查询
 	 * @param tableName 表名
 	 * @param paramJson 查询参数
-	 * @return
+	 * @return 列表数据
 	 */
 	public List<JSONObject> query(String tableName, JSONObject paramJson) {
 		String sql = querySql(tableName, paramJson, null);
@@ -64,10 +64,11 @@ class DBQuery extends DBBase {
     
 	/**
 	 * 绝对条件查询
+	 * @param <T> 泛型
 	 * @param tableName 表名
 	 * @param paramJson 查询参数
 	 * @param mappedClass 映射类
-	 * @return
+	 * @return 列表数据
 	 */
 	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass) {
 		String sql = querySql(tableName, paramJson, null);
@@ -79,7 +80,7 @@ class DBQuery extends DBBase {
 	 * @param tableName 表名
 	 * @param paramJson 查询参数
 	 * @param dBSortEnum 排序方式
-	 * @return
+	 * @return 列表数据
 	 */
 	public List<JSONObject> query(String tableName, JSONObject paramJson, DBSortEnum dBSortEnum) {
 		String sql = querySql(tableName, paramJson, dBSortEnum);
@@ -88,11 +89,12 @@ class DBQuery extends DBBase {
 	
 	/**
 	 * 绝对条件查询
+	 * @param <T> 泛型
 	 * @param tableName 表名
 	 * @param paramJson 查询参数
 	 * @param mappedClass 映射类
 	 * @param dBSortEnum 排序方式
-	 * @return
+	 * @return 列表数据
 	 */
 	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass, DBSortEnum dBSortEnum) {
 		String sql = querySql(tableName, paramJson, dBSortEnum);
@@ -112,7 +114,7 @@ class DBQuery extends DBBase {
 	 * 通过表主键ID查询
 	 * @param tableName	表名
 	 * @param id		表自增ID
-	 * @return
+	 * @return JSON数据
 	 */
     public JSONObject queryById(String tableName, long id) {
     	String sql = queryByIdSql(tableName, id);
@@ -123,10 +125,11 @@ class DBQuery extends DBBase {
     
 	/**
 	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
+	 * @param <T> 泛型
 	 * @param tableName 表名
-	 * @param paramJson 参数（key=id, value=值）
+	 * @param id 主键ID
 	 * @param mappedClass 映射类
-	 * @return
+	 * @return POJO对象
 	 */
     public <T> T queryById(String tableName, Long id, Class<T> mappedClass) {
     	String sql = queryByIdSql(tableName, id);
@@ -152,7 +155,7 @@ class DBQuery extends DBBase {
 	 * @param tableName	表名
 	 * @param id		表自增ID
 	 * @param fieldName	字段名
-	 * @return
+	 * @return JSON对象
 	 */
     public JSONObject queryById(String tableName, Long id, String ... fieldName) {
     	String sql = queryByIdSql(tableName, id, fieldName);
@@ -172,7 +175,7 @@ class DBQuery extends DBBase {
 	/**
 	 * 查询表中所有数据
 	 * @param tableName 表名
-	 * @return
+	 * @return 列表数据
 	 */
     public List<JSONObject> queryAll(String tableName) {
     	String sql = queryAllSql(tableName);
@@ -181,9 +184,10 @@ class DBQuery extends DBBase {
     
 	/**
 	 * 查询表中所有数据
+	 * @param <T> 泛型
 	 * @param tableName 表名
 	 * @param mappedClass 映射类
-	 * @return
+	 * @return 列表数据
 	 */
     public <T> List<T> queryAll(String tableName, Class<T> mappedClass) {
     	String sql = queryAllSql(tableName);
@@ -195,7 +199,7 @@ class DBQuery extends DBBase {
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param sql 要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
-     * @return
+     * @return JSON对象
      */
 	public JSONObject queryForJSON(String sql, JSONObject paramJson) {
 		var list = queryForList(sql, paramJson);
@@ -205,11 +209,11 @@ class DBQuery extends DBBase {
     /**
      * 同{@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
-     * @param <T>
+     * @param <T> 泛型
      * @param sql 要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
      * @param mappedClass 映射类
-     * @return
+     * @return POJO对象
      */
     public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
     	try {
@@ -225,7 +229,7 @@ class DBQuery extends DBBase {
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
      * @param sql 要执行的查询SQL
      * @param paramJson 要绑定到查询的参数映射
-     * @return
+     * @return 列表数据
      */
     public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
     	return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
@@ -234,11 +238,11 @@ class DBQuery extends DBBase {
     /**
      * 同 {@linkplain NamedParameterJdbcTemplate#queryForList(String, Map, Class)}<br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
-     * @param <T>
+     * @param <T> 泛型
      * @param sql 要执行的查询SQL
      * @param paramJson 要绑定到查询的参数映射
      * @param mappedClass 映射类
-     * @return
+     * @return 列表数据
      */
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
     	return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
@@ -363,6 +367,7 @@ class DBQuery extends DBBase {
      * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
+     * @param <T> 泛型
      * @param tableName 表名
      * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
      * @param mappedClass 映射类
@@ -392,6 +397,7 @@ class DBQuery extends DBBase {
      * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 ORDER BY id LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
+     * @param <T> 泛型
      * @param tableName 	表名
      * @param pageIPO 		分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
      * @param mappedClass 	映射类
@@ -452,7 +458,7 @@ class DBQuery extends DBBase {
      * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
-     * @param <T>
+     * @param <T> 泛型
      * @param tableName 表名
      * @param whereSql 自定义WHERE语句，若此参数为空，那么所有的条件参数，都将以等于的形式进行SQL拼接。<br><i>SQL示例：</i>
      * <code> WHERE 条件</code>
@@ -534,7 +540,7 @@ class DBQuery extends DBBase {
      * <b>复杂SQL分页查询</b><br><br>
      * <p>阿里最优查询SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT :page, :limit) b where a.id=b.id</code><br><br>
-     * @param <T>
+     * @param <T> 泛型
      * @param querySql 用于查询数据的sql语句
      * @param pageIPO 分页查询参数 {@linkplain PageIPO}
      * @param mappedClass 映射类
@@ -569,7 +575,7 @@ class DBQuery extends DBBase {
      * <code>SELECT count(*) count FROM 表 1 a, (select id from 表 1 where 条件) b where a.id=b.id</code><br>
      * <p>阿里最优查询SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT :page, :limit) b where a.id=b.id</code><br><br>
-     * @param <T>
+     * @param <T> 泛型
      * @param countSql 用于统计总数的sql语句<i>（注意：count(*)必须拥有count别名）</i>
      * <i>同时countSql可以为null表示不统计</i>
      * @param querySql 用于查询数据的sql语句

@@ -26,7 +26,7 @@ public class User {
 	
 	/**
 	 * 获得用户ID
-	 * @return
+	 * @return 用户ID
 	 */
 	public Long getUserId() {
 		try {
@@ -48,9 +48,9 @@ public class User {
 	
 	/**
 	 * 获得用户相关信息
-	 * @param <T>
-	 * @param clazz
-	 * @return
+	 * @param <T> 泛型
+	 * @param clazz 泛型类型
+	 * @return POJO对象
 	 */
 	public <T> T getUser(Class<T> clazz) {
 		try {

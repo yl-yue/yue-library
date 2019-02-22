@@ -38,8 +38,8 @@ public class CaptchaUtils {
     
     /**
      * 创建验证码
-     * @param captchaIPO
-     * @return
+     * @param captchaIPO 验证码IPO
+     * @return 验证码VO
      */
     public static CaptchaVO createCaptchaImage(CaptchaIPO captchaIPO) {
     	int width = captchaIPO.getWidth();
@@ -86,8 +86,8 @@ public class CaptchaUtils {
     
     /**
      * 验证-验证码
-     * @param captcha
-     * @return 
+     * @param captcha 验证码
+     * @return 是否正确
      */
     public static boolean isValidateCaptcha(String captcha) {
     	HttpSession httpSession = HttpUtils.getSession();

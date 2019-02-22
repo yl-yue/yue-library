@@ -28,9 +28,9 @@ public class PageIPO {
 	
 	/**
 	 * 将分页参数转换为分页对象
-	 * <p>{@linkplain JSONObject} >> {@linkplain PageIPO}
+	 * <p>{@linkplain JSONObject} - {@linkplain PageIPO}
 	 * @param paramJson 最大limit值 = 200
-	 * @return
+	 * @return pageIPO
 	 */
 	public static PageIPO parsePageIPO(JSONObject paramJson) {
 		return parsePageIPO(paramJson, 200);
@@ -38,10 +38,10 @@ public class PageIPO {
 	
 	/**
 	 * 将分页参数转换为分页对象
-	 * <p>{@linkplain JSONObject} >> {@linkplain PageIPO}
-	 * @param paramJson 
+	 * <p>{@linkplain JSONObject} - {@linkplain PageIPO}
+	 * @param paramJson 参数
 	 * @param maxLimit 最大限制
-	 * @return
+	 * @return pageIPO
 	 */
 	public static PageIPO parsePageIPO(JSONObject paramJson, int maxLimit) {
 		Integer page = paramJson.getInteger("page");

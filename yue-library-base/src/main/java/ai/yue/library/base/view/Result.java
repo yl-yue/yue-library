@@ -37,7 +37,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * http请求返回的最外层对象。
+ * HTTP请求，最外层响应对象。
  * 
  * @author  孙金川
  * @version 创建时间：2017年10月8日
@@ -67,7 +67,7 @@ public class Result<T> implements Serializable {
 	 * <p>
 	 * 如果此处获得的Result是一个错误提示结果，那么便会抛出一个{@linkplain ResultException}异常，以便于数据回滚并进行异常统一处理。<br>
 	 * 
-	 * @throws ResultException
+	 * @throws ResultException 返回的请求异常结果
 	 */
 	public void successValidate() {
 		if (!flag) {

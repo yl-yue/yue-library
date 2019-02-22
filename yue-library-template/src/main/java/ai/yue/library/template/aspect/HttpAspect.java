@@ -1,7 +1,5 @@
 package ai.yue.library.template.aspect;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.JoinPoint;
@@ -9,16 +7,12 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import ai.yue.library.base.exception.ParamVoidException;
-import ai.yue.library.base.util.MapUtils;
-import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,23 +48,6 @@ public class HttpAspect {
 		
         // 2. 参数校验
         Signature signature = joinPoint.getSignature();
-        MethodSignature methodSignature = (MethodSignature) signature;
-        String[] array = methodSignature.getParameterNames();
-        String paramName = "paramMap";
-        if (ArrayUtil.contains(array, paramName)) {
-        	Object[] objects = joinPoint.getArgs();
-        	for (Object object : objects) {
-        		if (object instanceof Map) {
-        			if(((Map<?, ?>) object).isEmpty()) {
-        				throw new ParamVoidException();
-        			}
-        			// 过滤无效参数
-        			@SuppressWarnings("unchecked")
-					Map<String, Object> paramMap = (Map<String, Object>) object;
-        			MapUtils.removeEmptyMap(paramMap);
-        		}
-        	}
-        }
         
         // 3. 开发环境-打印日志
 		String ip = request.getRemoteHost();

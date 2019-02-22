@@ -35,8 +35,8 @@ public class PageVO {
 	
 	/**
 	 * 将分页结果转换成最外层响应对象
-	 * <p>
-	 * @return
+	 * 
+	 * @return HTTP请求，最外层响应对象
 	 */
 	public Result<List<JSONObject>> toResult() {
 		return ResultInfo.success(data, count);

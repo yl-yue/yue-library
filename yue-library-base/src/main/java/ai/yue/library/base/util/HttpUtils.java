@@ -33,7 +33,7 @@ public class HttpUtils {
 	
 	/**
 	 * 获得当前请求上下文中的{@linkplain ServletRequestAttributes}
-	 * @return
+	 * @return ServletRequestAttributes
 	 */
 	public static ServletRequestAttributes getRequestAttributes() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
@@ -41,7 +41,7 @@ public class HttpUtils {
 	
 	/**
 	 * 获得当前请求上下文中的{@linkplain HttpServletRequest}
-	 * @return
+	 * @return HttpServletRequest
 	 */
 	public static HttpServletRequest getRequest() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -49,7 +49,7 @@ public class HttpUtils {
 	
 	/**
 	 * 获得当前请求上下文中的{@linkplain HttpServletResponse}
-	 * @return
+	 * @return HttpServletResponse
 	 */
 	public static HttpServletResponse getResponse() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -57,7 +57,7 @@ public class HttpUtils {
 	
 	/**
 	 * 获得当前请求{@linkplain HttpSession}
-	 * @return
+	 * @return HttpSession
 	 */
 	public static HttpSession getSession() {
 		return getRequest().getSession();
@@ -68,7 +68,7 @@ public class HttpUtils {
 	 * <p>
 	 * 示例一：http://localhost:8080<br>
 	 * 示例二：http://localhost:8080/projectName<br>
-	 * @return
+	 * @return 当前请求的服务器的URL地址
 	 */
 	public static String getServerURL() {
 		HttpServletRequest request = getRequest();

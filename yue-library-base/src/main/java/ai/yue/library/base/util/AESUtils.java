@@ -52,9 +52,9 @@ public class AESUtils {
     /**
      * AES 解密操作
      *
-     * @param content
-     * @param keyt
-     * @return
+     * @param content 待解密内容
+     * @param keyt 密钥
+     * @return 解密结果
      */
     public static String decrypt(String content, String keyt) {
         try {
@@ -78,8 +78,8 @@ public class AESUtils {
 
     /**
      * 生成加密秘钥
-     *
-     * @return
+     * @param password 密钥
+     * @return AES密钥
      */
     private static SecretKeySpec getSecretKey(final String password) {
         //返回生成指定算法密钥生成器的 KeyGenerator 对象
@@ -97,7 +97,7 @@ public class AESUtils {
         } catch (NoSuchAlgorithmException e) {
         	log.error("AES生成加密秘钥失败，请检查参数：", e);
         }
-
+        
         return null;
     }
     

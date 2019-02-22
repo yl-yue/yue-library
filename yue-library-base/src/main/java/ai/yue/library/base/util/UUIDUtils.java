@@ -16,7 +16,7 @@ public class UUIDUtils extends IdUtil {
 
 	/**
 	 * 大写32位UUID
-	 * @return
+	 * @return 大写32位UUID
 	 */
 	public static String upperCaseUUID() {
 		return UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -24,7 +24,7 @@ public class UUIDUtils extends IdUtil {
 	
 	/**
 	 * 小写32位UUID
-	 * @return
+	 * @return 小写32位UUID
 	 */
 	public static String lowerCaseUUID() {
 		return UUID.randomUUID().toString().replace("-", "");
@@ -32,7 +32,7 @@ public class UUIDUtils extends IdUtil {
 	
 	/**
 	 * 生成19纯数字随机单号
-	 * @return
+	 * @return 19纯数字随机单号
 	 */
 	public static String getOrderNo_19() {
 		String orderNo = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -43,7 +43,7 @@ public class UUIDUtils extends IdUtil {
 	
 	/**
 	 * 生成16纯数字随机单号
-	 * @return
+	 * @return 16纯数字随机单号
 	 */
 	public static String getOrderNo_16() {
 		Random random = new Random();
@@ -58,7 +58,7 @@ public class UUIDUtils extends IdUtil {
 	/**
 	 * 随机生成n位数字编码（纯数字）
 	 * @param length 长度
-	 * @return
+	 * @return 对应长度的数字编码（纯数字）
 	 */
     public static String randomNumberCode(int length) {
         //字符源，可以根据需要删减
@@ -74,7 +74,7 @@ public class UUIDUtils extends IdUtil {
 	/**
 	 * 随机生成n位大写字母编码（数字+大写字母）
 	 * @param length 长度
-	 * @return
+	 * @return 对应长度的大写字母编码（数字+大写字母）
 	 */
     public static String randomCapitalCode(int length) {
         //字符源，可以根据需要删减
@@ -88,9 +88,9 @@ public class UUIDUtils extends IdUtil {
     }
     
     /**
-	 * 随机生成n位编码（数字+字母）
+	 * 随机生成n位字符编码（数字+字母）
 	 * @param length 长度
-	 * @return
+	 * @return 对应长度的字符编码（数字+字母）
 	 */
     public static String randomCode(int length) {
         //字符源，可以根据需要删减

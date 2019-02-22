@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>ai.yue.library</groupId>
+		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library</artifactId>
-		<version>${revision}</version>
+		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-dependencies</artifactId>
 	<packaging>pom</packaging>

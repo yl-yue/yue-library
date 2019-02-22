@@ -15,7 +15,7 @@ public class CurrentLineInfo {
 
     /**
      * 得到当前线程所在的类名称
-     * @return
+     * @return 类名称
      */
     public static String getClassName() {
         return Thread.currentThread().getStackTrace()[originStackIndex].getClassName();
@@ -23,7 +23,7 @@ public class CurrentLineInfo {
 
     /**
      * 得到当前线程所在的方法名称
-     * @return
+     * @return 方法名称
      */
     public static String getMethodName() {
         return Thread.currentThread().getStackTrace()[originStackIndex].getMethodName();
@@ -31,9 +31,10 @@ public class CurrentLineInfo {
 
     /**
      * 得到当前线程在第几行
-     * @return
+     * @return 第几行
      */
     public static int getLineNumber() {
         return Thread.currentThread().getStackTrace()[originStackIndex].getLineNumber();
     }
+    
 }

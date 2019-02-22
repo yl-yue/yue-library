@@ -61,7 +61,6 @@ public class ResultErrorPrompt {
 	
 	/**
 	 * 无权限异常提示
-	 * @return
 	 */
 	public static final String FORBIDDEN = "code: " + ResultEnum.FORBIDDEN.getCode() + ", message: " + ResultEnum.FORBIDDEN.getMsg();
 	
@@ -69,7 +68,7 @@ public class ResultErrorPrompt {
 	 * 数据结构异常-不正确的结果
 	 * @param expected	预期内容
 	 * @param actual	实际内容
-	 * @return
+	 * @return 提示信息
 	 */
 	public static String dataStructure(Object expected, Object actual) {
 		return ResultEnum.DATA_STRUCTURE.getMsg() + " Incorrect result size: expected " + expected + ", actual " + actual;

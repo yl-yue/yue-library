@@ -7,15 +7,19 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.0.6.RELEASE</version>
 	</parent>
-	<groupId>ai.yue.library</groupId>
+	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
-	<version>${revision}</version>
+	<version>${revision}${sha1}${changelist}</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
-	<description>用于快速构建SpringCloud项目，内置丰富的JDK工具</description>
-
+	<description>用于快速构建SpringCloud项目，内置丰富的JDK工具。版本同步SpringCloud，详细见文档说明：</description>
+	<url></url>
+	
 	<properties>
-		<revision>1.0.0-SNAPSHOT</revision>
+		<spring.cloud.version>Finchley.SR2</spring.cloud.version>
+		<revision>${spring.cloud.version}.SR1</revision>
+		<changelist>-SNAPSHOT</changelist>
+		<sha1 />
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>10</java.version>
@@ -26,41 +30,41 @@
 		<pay.version>2.12.6</pay.version>
 		<easypoi.version>4.0.0</easypoi.version>
 	</properties>
-
+	
 	<modules>
 		<module>yue-library-dependencies</module>
 		<module>yue-library-base</module>
 		<module>yue-library-data-jdbc</module>
 		<module>yue-library-data-redis</module>
 	</modules>
-
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Finchley.SR2</version>
+				<version>${spring.cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
+			
 			<!-- yue-library -->
 			<dependency>
-				<groupId>ai.yue.library</groupId>
+				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-base</artifactId>
-				<version>${revision}</version>
+				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			<dependency>
-				<groupId>ai.yue.library</groupId>
+				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-data-jdbc</artifactId>
-				<version>${revision}</version>
+				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			<dependency>
-				<groupId>ai.yue.library</groupId>
+				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-data-redis</artifactId>
-				<version>${revision}</version>
+				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
-
+			
 			<!-- Hutool工具包 -->
 			<dependency>
 				<groupId>cn.hutool</groupId>
@@ -87,7 +91,7 @@
 				<artifactId>hutool-aop</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
-
+			
 			<!-- 支付 -->
 			<dependency>
 				<groupId>com.egzosn</groupId>
@@ -109,14 +113,14 @@
 				<artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
 				<version>${pay.version}</version>
 			</dependency>
-
+			
 			<!-- 其他 -->
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
 			</dependency>
-
+			
 			<dependency>
 				<groupId>cn.afterturn</groupId>
 				<artifactId>easypoi-spring-boot-starter</artifactId>
@@ -124,33 +128,117 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	
 	<repositories>
 		<repository>
 			<id>aliyun</id>
 			<url>https://maven.aliyun.com/repository/central</url>
 		</repository>
-		<repository>
-			<id>rdc-releases</id>
-			<url>https://repo.rdc.aliyun.com/repository/31558-release-kqeWOi/</url>
-		</repository>
-		<repository>
-			<id>rdc-snapshots</id>
-			<url>https://repo.rdc.aliyun.com/repository/31558-snapshot-j7XaKT/</url>
-		</repository>
 	</repositories>
-
+	
 	<distributionManagement>
-		<repository>
-			<id>rdc-releases</id>
-			<url>https://repo.rdc.aliyun.com/repository/31558-release-kqeWOi/</url>
-		</repository>
 		<snapshotRepository>
 			<id>rdc-snapshots</id>
 			<url>https://repo.rdc.aliyun.com/repository/31558-snapshot-j7XaKT/</url>
 		</snapshotRepository>
+		<repository>
+			<id>oss-releases</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+<!-- 		<snapshotRepository> -->
+<!-- 			<id>oss-snapshots</id> -->
+<!-- 			<url>https://oss.sonatype.org/content/repositories/snapshots</url> -->
+<!-- 		</snapshotRepository> -->
+<!-- 		<repository> -->
+<!-- 			<id>rdc-releases</id> -->
+<!-- 			<url>https://repo.rdc.aliyun.com/repository/31558-release-kqeWOi/</url> -->
+<!-- 		</repository> -->
 	</distributionManagement>
-
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<name>yl-yue</name>
+			<email>yl-yue@qq.com</email>
+			<url>http://ai.ylyue.cn</url>
+		</developer>
+	</developers>
+	
+	<scm>
+		<url>https://gitee.com/yl-yue/yue-library</url>
+		<connection>https://gitee.com/yl-yue/yue-library.git</connection>
+		<developerConnection>https://gitee.com/yl-yue</developerConnection>
+	</scm>
+	
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<!-- Source -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Javadoc -->
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<additionalOptions>-html5</additionalOptions>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Gpg Signature -->
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 自动发布 -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>oss-releases</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -162,7 +250,6 @@
 						<parent>expand</parent>
 						<dependencyManagement>interpolate</dependencyManagement>
 						<properties>interpolate</properties>
-						<distributionManagement>interpolate</distributionManagement>
 						<repositories>interpolate</repositories>
 					</pomElements>
 				</configuration>

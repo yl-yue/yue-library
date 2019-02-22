@@ -41,6 +41,7 @@ public enum FilterModeEnum {
 	 * 加工筛选SQL代码
 	 * <p>需要加工的枚举：{@linkplain #包含}，{@linkplain #不包含}
 	 * @param value 处理的值
+	 * @return 筛选SQL代码
 	 */
 	public String processFilterSqlCode(String value) {
 		return filterSqlCode;

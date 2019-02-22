@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 /**
  * @author  孙金川
  * @version 创建时间：2018年7月18日
- * @param <T>
  */
 @Data
 @Builder(toBuilder = true)
@@ -36,8 +35,8 @@ public class PageTVO<T> {
 	
 	/**
 	 * 将分页结果转换成最外层响应对象
-	 * <p>
-	 * @return
+	 * 
+	 * @return HTTP请求，最外层响应对象
 	 */
 	public Result<List<T>> toResult() {
 		return ResultInfo.success(data, count);

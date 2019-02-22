@@ -27,8 +27,9 @@ public final class ObjectUtils extends ObjectUtil {
 
 	/**
 	 * 对象克隆方法，实现深拷贝
+	 * @param <T> 泛型
 	 * @param obj 需要实现了{@link Serializable}接口的对象才能拷贝
-	 * @return
+	 * @return 克隆后的对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Serializable> T objectClone(T obj) {
@@ -54,9 +55,9 @@ public final class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象比较
-	 * @param obj1
-	 * @param obj2
-	 * @return
+	 * @param obj1 对象1
+	 * @param obj2 对象2
+	 * @return 是否相等
 	 */
 	public static boolean equals(Object obj1, Object obj2) {
 		if (obj1 == obj2 || obj1.equals(obj2)) {
@@ -99,13 +100,12 @@ public final class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象类型转换
-	 * <p>
-	 * <h1>{@linkplain Object} 转 {@linkplain T}</h1><br>
+	 * <h1>对象 转 {@linkplain Class}</h1>
 	 * 
-	 * @param <T>
+	 * @param <T> 泛型
 	 * @param obj 需要转换的对象
-	 * @param clazz
-	 * @return
+	 * @param clazz 泛型类型
+	 * @return 转换后的对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T toObject(Object obj, Class<T> clazz) {
@@ -123,13 +123,12 @@ public final class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象类型转换
-	 * <p>
-	 * <h1>{@linkplain Object} 转 {@linkplain T}</h1><br>
+	 * <h1>{@linkplain Object} 转 {@linkplain Class}</h1>
 	 * 
-	 * @param <T>
+	 * @param <T> 泛型
 	 * @param obj 需要转换的对象
-	 * @param clazz
-	 * @return
+	 * @param clazz 泛型类型
+	 * @return 转换后的POJO
 	 */
 	public static <T> T toJavaObject(Object obj, Class<T> clazz) {
 		return JSONObject.toJavaObject(toJSONObject(obj), clazz);
@@ -137,11 +136,10 @@ public final class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象类型转换
-	 * <p>
-	 * <h1>{@linkplain Object} 转 {@linkplain JSONObject}</h1><br>
+	 * <h1>{@linkplain Object} 转 {@linkplain JSONObject}</h1>
 	 * 
 	 * @param obj 需要转换的对象
-	 * @return
+	 * @return JSON
 	 */
 	public static JSONObject toJSONObject(Object obj) {
 		return (JSONObject) JSONObject.toJSON(obj);
@@ -149,11 +147,10 @@ public final class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象类型转换
-	 * <p>
-	 * <h1>{@linkplain Object} 转 {@linkplain JSONArray}</h1><br>
+	 * <h1>{@linkplain Object} 转 {@linkplain JSONArray}</h1>
 	 * 
 	 * @param obj 需要转换的对象
-	 * @return
+	 * @return JSON数组
 	 */
     public static JSONArray toJSONArray(Object obj) {
         if (obj instanceof JSONArray) {

@@ -26,15 +26,15 @@ public class LocationUtils {
 	 * 29.563761 纬度<br>
 	 * 注：lng 经度<br>
 	 * 注：lat 纬度
-	 * @param location1
-	 * @param location2
+	 * @param locationIPO1 位置1
+	 * @param locationIPO2 位置1
 	 * @return 距离
 	 */
-	public static double getDistance(LocationIPO location1, LocationIPO location2) {
-		double lng1 = location1.getLng();
-		double lat1 = location1.getLat();
-		double lng2 = location2.getLng();
-		double lat2 = location2.getLat();
+	public static double getDistance(LocationIPO locationIPO1, LocationIPO locationIPO2) {
+		double lng1 = locationIPO1.getLng();
+		double lat1 = locationIPO1.getLat();
+		double lng2 = locationIPO2.getLng();
+		double lat2 = locationIPO2.getLat();
 
 		double radLat1 = rad(lat1);
 		double radLat2 = rad(lat2);
@@ -50,14 +50,14 @@ public class LocationUtils {
 	
 	/**
 	 * 通过经纬度获取距离(单位：米)
-	 * @param location
-	 * @param locations
+	 * @param locationIPO 位置
+	 * @param locationIPOList 位置数组
 	 * @return 距离数组
 	 */
-	public static List<Double> getDistance(LocationIPO location, List<LocationIPO> locations) {
+	public static List<Double> getDistance(LocationIPO locationIPO, List<LocationIPO> locationIPOList) {
 		List<Double> list = new ArrayList<>();
-		for (LocationIPO locationIPO : locations) {
-			list.add(getDistance(location, locationIPO));
+		for (LocationIPO location : locationIPOList) {
+			list.add(getDistance(locationIPO, location));
 		}
 		
 		return list;
@@ -67,14 +67,14 @@ public class LocationUtils {
 	 * 获得距离当前位置最近的经纬度
 	 * <p>
 	 * 返回locations数组中最小值的下标
-	 * @param location
-	 * @param locations
+	 * @param locationIPO 位置
+	 * @param locationIPOList 位置数组
 	 * @return minIndex
 	 */
-	public static int getNearestLngAndLat(LocationIPO locationIPO, List<LocationIPO> locations) {
+	public static int getNearestLngAndLat(LocationIPO locationIPO, List<LocationIPO> locationIPOList) {
 		int minIndex = 0;
 		
-		var list = getDistance(locationIPO, locations);
+		var list = getDistance(locationIPO, locationIPOList);
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i) < list.get(minIndex)) {
 				minIndex = i;

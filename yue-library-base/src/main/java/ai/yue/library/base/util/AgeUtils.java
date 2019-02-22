@@ -11,7 +11,7 @@ public class AgeUtils {
 	/**
 	 * 根据年月日计算年龄
 	 * @param birthDate 出生日期（格式：yyyy-MM-dd）
-	 * @return
+	 * @return 年龄
 	 */
 	public static int getAgeFromBirthDate(String birthDate) {
 		// 先截取到字符串中的年、月、日
@@ -44,7 +44,7 @@ public class AgeUtils {
 	/**
 	 * 根据年龄获得生日（默认月份日期-01-01）
 	 * @param age 年龄
-	 * @return 
+	 * @return 生日（日期格式）
 	 */
 	public static String getBirthDateFromAge(int age) {
 		// 得到当前时间的年、月、日

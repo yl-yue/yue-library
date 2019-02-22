@@ -29,11 +29,11 @@ class DBBase {
     
     /**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
-     * <p>
-     * 若不是预期值，同时 updateRowsNumber > 0 那么将会抛出一个{@linkplain DBException}
+     * <p>若不是预期值，同时 updateRowsNumber &gt; 0 那么将会抛出一个 {@linkplain DBException}
+     * 
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
-     * @return
+     * @return 是否 <b>等于</b> 预期值
      */
 	public boolean isUpdateAndExpectedEqual(long updateRowsNumber, int expectedValue) {
         if (updateRowsNumber == expectedValue) {
@@ -50,10 +50,10 @@ class DBBase {
     /**
      * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
      * <p>
-     * 若不是预期结果，同时 updateRowsNumber < expectedValue 那么将会抛出一个{@linkplain DBException}
+     * 若不是预期结果，同时 updateRowsNumber &lt; expectedValue 那么将会抛出一个{@linkplain DBException}
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
-     * @return
+     * @return 是否 <b>大于等于</b> 预期值
      */
 	public boolean isUpdateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
         if (updateRowsNumber >= expectedValue) {
@@ -115,7 +115,7 @@ class DBBase {
     /**
      * 同 {@linkplain DBQuery#queryForJSON(String, JSONObject)} 的安全查询结果获取
      * @param list {@linkplain DBQuery#queryForList(String, JSONObject)} 查询结果
-     * @return
+     * @return JSON数据
      */
     public JSONObject resultToJSON(List<JSONObject> list) {
     	int size = list.size();
@@ -134,9 +134,9 @@ class DBBase {
     
     /**
      * 同 {@linkplain DBQuery#queryForObject(String, JSONObject, Class)} 的安全查询结果获取
-     * @param <T>
+     * @param <T> 泛型
      * @param list {@linkplain DBQuery#queryForList(String, JSONObject, Class)} 查询结果
-     * @return
+     * @return POJO对象
      */
     public <T> T resultToObject(List<T> list) {
     	int size = list.size();
@@ -176,7 +176,7 @@ class DBBase {
     /**
      * <b>绝对条件查询参数whereSql化</b>
      * <p>
-     * <i>已对 {@link NULL} 值进行特殊处理（IS NULL）</i><br><br>
+     * <i>已对 NULL 值进行特殊处理（IS NULL）</i><br><br>
      * <i>已对 {@linkplain List} 类型值进行特殊处理（IN (?, ?)）</i><br><br>
      * 
      * <b>结果示例：</b><br>
@@ -193,9 +193,9 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramJson
-     * @param conditions
-     * @return
+     * @param paramJson 参数
+     * @param conditions where条件（对应paramJson key）
+     * @return whereSql
      */
 	protected String paramToWhereSql(JSONObject paramJson, String... conditions) {
 		StringBuffer whereSql = new StringBuffer();
@@ -212,7 +212,7 @@ class DBBase {
     /**
      * <b>绝对条件查询参数whereSql化</b>
      * <p>
-     * <i>已对 {@link NULL} 值进行特殊处理（IS NULL）</i><br><br>
+     * <i>已对 NULL 值进行特殊处理（IS NULL）</i><br><br>
      * <i>已对 {@linkplain List} 类型值进行特殊处理（IN (?, ?)）</i><br><br>
      * 
      * <b>结果示例：</b><br>
@@ -229,8 +229,8 @@ class DBBase {
      * </pre>
      * </blockquote>
      * 
-     * @param paramJson
-     * @return
+     * @param paramJson 参数
+     * @return whereSql
      */
     public String paramToWhereSql(JSONObject paramJson) {
     	StringBuffer whereSql = new StringBuffer();
@@ -245,7 +245,7 @@ class DBBase {
     
 	/**
 	 * 参数验证
-	 * @param tableName
+	 * @param tableName 表名
 	 */
     protected void paramValidate(String tableName) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -255,8 +255,8 @@ class DBBase {
 	
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param whereSql
+	 * @param tableName 表名
+	 * @param whereSql 条件sql
 	 */
     protected void paramValidate(String tableName, String whereSql) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -269,8 +269,8 @@ class DBBase {
     
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param id
+	 * @param tableName 表名
+	 * @param id 主键ID
 	 */
     protected void paramValidate(String tableName, Long id) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -283,9 +283,9 @@ class DBBase {
     
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param id
-	 * @param fieldName
+	 * @param tableName 表名
+	 * @param id 主键ID
+	 * @param fieldName 字段名称
 	 */
     protected void paramValidate(String tableName, Long id, String[] fieldName) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -301,8 +301,8 @@ class DBBase {
 	
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param paramJson
+	 * @param tableName 表名
+	 * @param paramJson 参数
 	 */
     protected void paramValidate(String tableName, JSONObject paramJson) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -315,8 +315,8 @@ class DBBase {
 	
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param paramJsons
+	 * @param tableName 表名
+	 * @param paramJsons 参数数组
 	 */
     protected void paramValidate(String tableName, JSONObject[] paramJsons) {
 		if (StringUtils.isEmpty(tableName)) {
@@ -329,9 +329,9 @@ class DBBase {
 	
 	/**
 	 * 参数验证
-	 * @param tableName
-	 * @param paramJson
-	 * @param conditions
+	 * @param tableName 表名
+	 * @param paramJson 参数
+	 * @param conditions 条件（对应paramJson key）
 	 */
     protected void paramValidate(String tableName, JSONObject paramJson, String[] conditions) {
 		if (StringUtils.isEmpty(tableName)) {

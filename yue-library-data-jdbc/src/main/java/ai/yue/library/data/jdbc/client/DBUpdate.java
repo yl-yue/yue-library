@@ -87,12 +87,12 @@ class DBUpdate extends DBQuery {
      * <code>WHERE</code><br>
      * <code>id = :id</code><br>
      * <code>AND</code><br>
-     * <code>paramNumber1 > 0</code><br>
+     * <code>paramNumber1 &gt; 0</code><br>
      * <code>AND ...</code>
      * @param tableName    	表名
      * @param paramJson      更新所用到的参数（where条件参数不会用于set值的更新）
      * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
-     * @return
+     * @return 受影响的行数
      */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions) {
@@ -106,7 +106,7 @@ class DBUpdate extends DBQuery {
      * @param paramJson      更新所用到的参数
      * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
-     * @return
+     * @return 受影响的行数
      */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions, DBUpdateEnum dBUpdateEnum) {
@@ -141,7 +141,7 @@ class DBUpdate extends DBQuery {
      * 指定SQL语句以创建预编译执行SQL和绑定更新参数
      * <blockquote>
      * 	<p>
-     * 		将会对更新所影响的行数进行预期判断，若结果不符合预期值：{@linkplain expectedValue}，那么此处便会抛出一个 {@linkplain DBException}
+     * 		将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DBException}
      * 	</p>
      * </blockquote>
      * @param sql						要执行的更新SQL
@@ -229,7 +229,7 @@ class DBUpdate extends DBQuery {
      * 指定SQL语句以创建预编译执行SQL和绑定更新参数
      * @param sql			要执行的更新SQL
      * @param paramJsons	更新所用到的参数数组
-	 * @return 
+	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
      */
 	@Transactional
 	public int[] updateBatch(String sql, JSONObject[] paramJsons) {
@@ -238,7 +238,7 @@ class DBUpdate extends DBQuery {
 	
 	/**
 	 * <h1>更新-排序</h1><br>
-	 * <i>使用限制：见</i> {@linkplain DBInsert#insertWithSortIdxAutoIncrement(String, Map, String...)}
+	 * <i>使用限制：见</i> {@linkplain DBInsert#insertWithSortIdxAutoIncrement(String, JSONObject, String...)}
 	 * <p>
 	 * @param tableName 表名
 	 * @param id 主键ID

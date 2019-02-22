@@ -138,7 +138,7 @@ class DBInsert extends DBDelete {
      * <h1>插入或更新</h1>
      * <i>表中必须存在数据唯一性约束</i>
      * <p>更新触发条件：此数据若存在唯一性约束则更新，否则便执行插入数据
-     * <p><b>SQL示例：</b></br>
+     * <p><b>SQL示例：</b><br>
      * <code>INSERT INTO table (param1, param2, ...)</code><br>
      * <code>VALUES</code><br>
      * <code>(:param1, :param2, ...)</code><br>
@@ -148,7 +148,7 @@ class DBInsert extends DBDelete {
      * @param paramJson		插入或更新所用到的参数
      * @param conditions	更新条件（对应paramJson内的key值）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
-     * @return
+     * @return 受影响的行数
      */
     @Transactional
     public Long insertOrUpdate(String tableName, JSONObject paramJson, String[] conditions, DBUpdateEnum dBUpdateEnum) {

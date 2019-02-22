@@ -34,7 +34,7 @@ public class MapUtils extends MapUtil {
 	 * @param paramMap			参数
 	 * @param mustContainKeys	必须包含的key（必传）
 	 * @param canContainKeys	可包含的key（非必传）
-	 * @return
+	 * @return 是否满足条件
 	 */
 	public static boolean isKeys(Map<String, Object> paramMap, String[] mustContainKeys, String... canContainKeys) {
 		// 1. 必传参数校验
@@ -74,8 +74,8 @@ public class MapUtils extends MapUtil {
 	
 	/**
 	 * 判断Map数据结构所有的key是否与数组完全匹配
-	 * @param paramMap
-	 * @param keys
+	 * @param paramMap 需要确认的Map
+	 * @param keys 条件
 	 * @return 匹配所有的key且大小一致（true）
 	 */
 	public static boolean isKeysEqual(Map<String, Object> paramMap, String[] keys) {
@@ -91,9 +91,9 @@ public class MapUtils extends MapUtil {
 	}
 	
 	/**
-	 * 判断Map数据结构是否包含{@linkplain keys}之一
-	 * @param paramMap
-	 * @param keys
+	 * 判断Map数据结构是否包含 <b>keys</b> 之一
+	 * @param paramMap 需要确认的Map
+	 * @param keys 条件
 	 * @return 只要包含一个key（true）
 	 */
 	public static boolean isContainsOneOfKey(Map<String, Object> paramMap, String[] keys) {
@@ -108,8 +108,8 @@ public class MapUtils extends MapUtil {
 	/**
 	 * 判断Map数组第一个元素，是否包含所有的key<br>
 	 * <p>弱比较，只判断数组中第一个元素是否包含所有的key</p>
-	 * @param paramMaps
-	 * @param keys
+	 * @param paramMaps 需要确认的Map数组
+	 * @param keys 条件数组
 	 * @return Map数组元素0包含所有的key（true）
 	 */
 	public static boolean isMapsKeys(Map<String, Object>[] paramMaps, String[] keys) {
@@ -129,7 +129,7 @@ public class MapUtils extends MapUtil {
 	/**
 	 * 判断Map是否为空，或者Map中String类型的value值是否为空<br>
 	 * @param paramMap 要判断的Map
-	 * @return
+	 * @return value值是否为空
 	 */
 	public static boolean isStringValueEmpty(Map<String, Object> paramMap) {
 		if (paramMap.isEmpty()) {
@@ -145,7 +145,7 @@ public class MapUtils extends MapUtil {
 	
 	/**
 	 * 删除Value字符串前后空格
-	 * @param paramMap
+	 * @param paramMap 需要处理的map
 	 */
 	public static void trimStringValues(Map<String, Object> paramMap) {
 		for (String key : paramMap.keySet()) {
@@ -197,8 +197,8 @@ public class MapUtils extends MapUtil {
 	
     /**
      * 获取所有的key
-     * @param paramMap
-     * @return
+     * @param paramMap 需要获取keys的map
+     * @return keyList
      */
     public static List<String> keyList(Map<String, Object> paramMap) {
 		List<String> list = new ArrayList<>();
@@ -209,10 +209,10 @@ public class MapUtils extends MapUtil {
     }
     
     /**
-     * 以安全的方式从Map中获取一组数据，组合成一个新的Map
-     * @param paramMap
-     * @param keys
-     * @return
+     * 以安全的方式从Map中获取一组数据，组合成一个新的JSONObject
+     * @param paramMap 需要从中获取数据的map
+     * @param keys 获取的keys
+     * @return 结果
      */
 	public static JSONObject getJSONObject(Map<String, Object> paramMap, String... keys) {
 		JSONObject paramJson = new JSONObject(paramMap);
@@ -233,11 +233,11 @@ public class MapUtils extends MapUtil {
 	
 	/**
 	 * 以安全的方式从Map中获取对象
-	 * @param <T>
-	 * @param paramMap
-	 * @param key
-	 * @param clazz
-	 * @return
+	 * @param <T> 泛型
+	 * @param paramMap 参数map
+	 * @param key key
+	 * @param clazz 泛型类型
+	 * @return 结果
 	 */
     public static <T> T getObject(final Map<?, ?> paramMap, final Object key, Class<T> clazz) {
         if (paramMap != null) {
@@ -252,9 +252,9 @@ public class MapUtils extends MapUtil {
     
 	/**
 	 * 以安全的方式从Map中获取Number
-	 * @param paramMap
-	 * @param key
-	 * @return
+	 * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
 	 */
     public static Number getNumber(final Map<?, ?> paramMap, final Object key) {
         if (paramMap != null) {
@@ -279,9 +279,9 @@ public class MapUtils extends MapUtil {
 	
 	/**
 	 * 以安全的方式从Map中获取字符串
-	 * @param paramMap
-	 * @param key
-	 * @return
+	 * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
 	 */
     public static String getString(final Map<?, ?> paramMap, final Object key) {
         if (paramMap != null) {
@@ -295,9 +295,9 @@ public class MapUtils extends MapUtil {
     
     /**
      * 以安全的方式从Map中获取Boolean
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static Boolean getBoolean(final Map<?, ?> paramMap, final Object key) {
         if (paramMap != null) {
@@ -320,9 +320,9 @@ public class MapUtils extends MapUtil {
     
     /**
      * 以安全的方式从Map中获取Integer
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static Integer getInteger(final Map<?, ?> paramMap, final Object key) {
         Number answer = getNumber(paramMap, key);
@@ -336,9 +336,9 @@ public class MapUtils extends MapUtil {
 	
     /**
      * 以安全的方式从Map中获取Long
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static Long getLong(final Map<?, ?> paramMap, final Object key) {
         Number answer = getNumber(paramMap, key);
@@ -352,9 +352,9 @@ public class MapUtils extends MapUtil {
     
     /**
      * 以安全的方式从Map中获取Double
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static Double getDouble(final Map<?, ?> paramMap, final Object key) {
         Number answer = getNumber(paramMap, key);
@@ -368,9 +368,9 @@ public class MapUtils extends MapUtil {
     
     /**
      * 以安全的方式从Map中获取BigDecimal
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static BigDecimal getBigDecimal(final Map<?, ?> paramMap, final Object key) {
         Number answer = getNumber(paramMap, key);
@@ -384,9 +384,9 @@ public class MapUtils extends MapUtil {
     
     /**
      * 以安全的方式从Map中获取JSONObject
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static JSONObject getJSONObject(final Map<?, ?> paramMap, String key) {
         Object value = paramMap.get(key);
@@ -404,9 +404,9 @@ public class MapUtils extends MapUtil {
 	
     /**
      * 以安全的方式从Map中获取JSONArray
-     * @param paramMap
-	 * @param key
-	 * @return
+     * @param paramMap 参数map
+	 * @param key key
+	 * @return 结果
      */
     public static JSONArray getJSONArray(final Map<?, ?> paramMap, String key) {
         Object value = paramMap.get(key);

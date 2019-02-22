@@ -11,9 +11,9 @@ public class ClassUtils extends ClassUtil {
 	
 	/**
 	 * {@linkplain Class} 数组中是否包含此 {@linkplain Class} 或是其子类与子接口
-	 * @param clazzs 
-	 * @param clazz 
-	 * @return
+	 * @param clazzs Class数组
+	 * @param clazz Class
+	 * @return 是否包含
 	 */
 	public static boolean isContains(Class<?>[] clazzs, Class<?> clazz) {
 		for (Class<?> thisClazz : clazzs) {

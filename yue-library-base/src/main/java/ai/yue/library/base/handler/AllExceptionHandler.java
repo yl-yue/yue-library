@@ -34,7 +34,8 @@ public abstract class AllExceptionHandler {
 	
 	/**
 	 * 拦截所有未处理异常
-	 * @return
+	 * @param e 异常
+	 * @return 结果
 	 */
 	@ResponseBody
     @ExceptionHandler(Exception.class)
@@ -45,7 +46,8 @@ public abstract class AllExceptionHandler {
 	
 	/**
 	 * 异常结果处理
-	 * @return
+	 * @param e 结果异常
+	 * @return 结果
 	 */
 	@ResponseBody
     @ExceptionHandler(ResultException.class)
@@ -58,7 +60,8 @@ public abstract class AllExceptionHandler {
 	
 	/**
 	 * 服务降级
-	 * @return
+	 * @param e 服务降级异常
+	 * @return 结果
 	 */
 	@ResponseBody
     @ExceptionHandler(ClientFallbackException.class)
@@ -69,7 +72,8 @@ public abstract class AllExceptionHandler {
 	
     /**
      * 非法请求异常拦截
-     * @return 
+     * @param e 非法请求异常
+     * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(AttackException.class)
@@ -80,7 +84,7 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * 参数效验为空统一处理
-	 * @return
+	 * @return 结果
 	 */
 	@ResponseBody
 	@ExceptionHandler(ParamVoidException.class)
@@ -90,7 +94,8 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * 参数效验未通过统一处理
-	 * @return
+	 * @param e 参数校验未通过异常
+	 * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(ParamException.class)
@@ -101,7 +106,8 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * JSON格式字符串解析异常统一处理
-	 * @return
+	 * @param e JSON格式字符串解析异常
+	 * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(JSONObjectException.class)
@@ -113,7 +119,8 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * 解密异常统一处理
-	 * @return
+	 * @param e 解密异常
+	 * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(DecryptException.class)
@@ -125,7 +132,8 @@ public abstract class AllExceptionHandler {
     
     /**
      * DB异常统一处理
-     * @return 
+     * @param e DB异常
+     * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(DBException.class)
@@ -136,7 +144,8 @@ public abstract class AllExceptionHandler {
     
     /**
      * 无权限异常访问处理
-     * @return 
+     * @param e 无权限异常
+     * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(ForbiddenException.class)
@@ -147,7 +156,8 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * 拦截登录异常（User）
-     * @return 
+	 * @param e 登录异常
+     * @return 结果
 	 */
     @ResponseBody
     @ExceptionHandler(LoginException.class)
@@ -158,7 +168,8 @@ public abstract class AllExceptionHandler {
     
     /**
 	 * 拦截登录异常（Admin）
-	 * @throws IOException 
+	 * @param e 认证异常
+	 * @throws IOException 重定向失败
 	 */
     @ExceptionHandler(AuthorizeException.class)
 	public void authorizeExceptionHandler(AuthorizeException e) throws IOException {

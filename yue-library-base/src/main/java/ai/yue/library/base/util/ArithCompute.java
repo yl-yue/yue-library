@@ -19,7 +19,7 @@ public class ArithCompute {
 	 * 提供精确的加法运算。
 	 * 
 	 * @param augend	被加数
-	 * @param addend	加数
+	 * @param addends	加数
 	 * @return 参数的和
 	 */
 	public static double add(double augend, double ... addends) {
@@ -31,14 +31,12 @@ public class ArithCompute {
 		
 		return bd_augend.doubleValue();
 	}
-
+	
 	/**
 	 * 提供精确的减法运算。
 	 * 
-	 * @param minuend
-	 *            被减数
-	 * @param subtrahend
-	 *            减数
+	 * @param minuend 被减数
+	 * @param subtrahends 减数
 	 * @return 参数的差
 	 */
 	public static double sub(double minuend, double ... subtrahends) {
@@ -49,14 +47,12 @@ public class ArithCompute {
 		}
 		return bd_minuend.doubleValue();
 	}
-
+	
 	/**
 	 * 提供精确的乘法运算。
 	 * 
-	 * @param v1
-	 *            被乘数
-	 * @param v2
-	 *            乘数
+	 * @param v1 被乘数
+	 * @param v2 乘数
 	 * @return 两个参数的积
 	 */
 	public static double mul(double v1, double v2) {
@@ -64,29 +60,24 @@ public class ArithCompute {
 		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.multiply(b2).doubleValue();
 	}
-
+	
 	/**
 	 * 提供（相对）精确的除法运算，当发生除不尽的情况时，精确到小数点后10位，其余的数字四舍五入。
 	 * 
-	 * @param v1
-	 *            被除数
-	 * @param v2
-	 *            除数
+	 * @param v1 被除数
+	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2) {
 		return div(v1, v2, DEF_DIV_SCALE);
 	}
-
+	
 	/**
 	 * 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指定精度，其余的数字四舍五入。
 	 * 
-	 * @param v1
-	 *            被除数
-	 * @param v2
-	 *            除数（除数不能为零）
-	 * @param scale
-	 *            表示表示需要精确到小数点以后几位（如果精确范围小于0，将抛出异常信息）
+	 * @param v1 被除数
+	 * @param v2 除数（除数不能为零）
+	 * @param scale 表示表示需要精确到小数点以后几位（如果精确范围小于0，将抛出异常信息）
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2, int scale) {
@@ -97,11 +88,11 @@ public class ArithCompute {
 		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.divide(b2, scale, RoundingMode.HALF_UP).doubleValue();
 	}
-
+	
 	/**
-	 * 提供精确的小数位<b> 四舍五入 </b>处理。
+	 * 提供精确的小数位 <b>四舍五入</b> 处理。
 	 * 
-	 * @param v		需要四舍五入的数字
+	 * @param v	需要四舍五入的数字
 	 * @param scale	小数点后保留几位
 	 * @return 四舍五入后的结果
 	 */
@@ -115,7 +106,7 @@ public class ArithCompute {
 	 * @param v				需要舍入的数字
 	 * @param scale			小数点后保留几位
 	 * @param roundingMode	舍入模式
-	 * @return
+	 * @return 舍入后的结果
 	 */
 	public static double roundingMode(double v, int scale, RoundingMode roundingMode) {
 		if (scale < 0) {
