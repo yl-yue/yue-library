@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://ylyue.cn/"><img src="https://ylyue.cn/images/logo.jpg" width="400"></a>
+	<a href="https://ylyue.cn/"><img src="https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png" width="400"></a>
 </p>
 <p align="center">
 	<strong>一个基于SpringBoot封装的基础库</strong>
@@ -64,12 +64,13 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 		...
 	</dependencies>
 ```
+yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以SR1、SR2、SR3...这种形式，目的是为了方便区分yue-library所依赖的基础版本。<br>
 更多细节，请查看[中文文档](https://ylyue.cn)
 
 ## 模块说明
 ### yue-library-base（必备）
 　　基础库提供了丰富的Java工具包，它能够帮助我们简化每一行代码（集成[Hutool](https://hutool.cn)工具包）。<br>
-　　同时也自动装配了一系列基础Bean(可在application.yml文件中配置关闭)，默认开启如下几项配置：
+　　同时也自动装配了一系列基础Bean(可在<b>application.yml</b>文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域)，默认开启如下几项配置：
 - RestTemplate-HTTPS客户端
 - CorsConfig-跨域配置
 - ConstantProperties-yue常量配置

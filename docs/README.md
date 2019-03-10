@@ -1,6 +1,5 @@
 <p align="center">
-	<!-- <a href="https://ylyue.cn/"><img src="https://ylyue.cn/images/logo.jpg" width="400"></a> -->
-	<a href="https://ylyue.cn/"><img src="_images/logo.png" width="400"></a>
+	<a href="https://ylyue.cn/"><img src="https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png" width="400"></a>
 </p>
 <p align="center">
 	<strong>一个基于SpringBoot封装的基础库</strong>
