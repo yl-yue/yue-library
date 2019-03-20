@@ -35,7 +35,9 @@
 
 ## 介绍
 
-　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，并且自动装配了一系列的基础Bean，不仅如此，还可以用于快速构建SpringCloud项目，让微服务变得更简单。
+　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，并且自动装配了一系列的基础Bean，不仅如此，还可以用于快速构建SpringCloud项目，让微服务变得更简单。<br>
+
+　　同时yue-library的设计规范也符合“阿里巴巴Java开发手册”，不仅如此这里面对应各类技术栈的挑选相信也符合各种强迫症患者，学习了不至于很快被淘汰掉。这么强大的基础库，那就赶快开始吧，让你的JAVA开发如有神助。
 
 ## 工程结构
 
@@ -64,7 +66,8 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 		...
 	</dependencies>
 ```
-yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以SR1、SR2、SR3...这种形式，目的是为了方便区分yue-library所依赖的基础版本。<br>
+yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.SR1、.SR2、.SR3...这种形式，目的是为了方便区分基础依赖版本。
+当前最新发布版本[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)<br>
 更多细节，请查看[中文文档](https://ylyue.cn)
 
 ## 模块说明
@@ -92,6 +95,11 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 - 拥有原生常用命令对应的方法
 
 　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
+
+## 社区
+
+　　在[Gitter](https://gitter.im/yl-yue/yue-library)的社区里可以找到yue-library的用户和开发者团队。
+
 ## 参与贡献
 
 1. Fork 本仓库并从master或某个版本创建你的分支

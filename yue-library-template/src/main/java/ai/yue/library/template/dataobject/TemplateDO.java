@@ -1,4 +1,4 @@
-package ai.yue.library.template.pojo.dataobject;
+package ai.yue.library.template.dataobject;
 
 /**
  * @author  孙金川

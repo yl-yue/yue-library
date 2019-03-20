@@ -5,20 +5,17 @@
 
 * yue-library-base（必备）
 
-  * [介绍](configuration.md)
-  * [快速开始](themes.md)
-  * [自动配置说明](themes.md)
+  * [介绍](base-介绍.md)
 
 * yue-library-data-jdbc（推荐）
 
-  * [介绍](vue.md)
-  * [快速开始](pwa.md)
-  * [VO](ssr.md)
+  * [介绍](data-jdbc-介绍.md)
+  * [增删改查](data-jdbc-增删改查.md)
+  * [其他](data-jdbc-其他.md)
 
 * yue-library-data-redis
 
-  * [介绍](deploy.md)
-  * [快速开始](helpers.md)
+  * [介绍](data-redis-介绍.md)
 
 * [架构升级](架构升级.md)
 * [Awesome yue](awesome.md)

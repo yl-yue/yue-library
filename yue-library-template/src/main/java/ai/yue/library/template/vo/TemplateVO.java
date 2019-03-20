@@ -1,4 +1,4 @@
-package ai.yue.library.template.pojo.vo;
+package ai.yue.library.template.vo;
 
 import lombok.Data;
 

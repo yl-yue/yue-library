@@ -1,4 +1,4 @@
-package ai.yue.library.template.pojo.ipo;
+package ai.yue.library.template.ipo;
 
 /**
  * @author  孙金川

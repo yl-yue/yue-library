@@ -1,4 +1,4 @@
-package ai.yue.library.template.pojo.dto;
+package ai.yue.library.template.dto;
 
 /**
  * @author  孙金川

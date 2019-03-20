@@ -64,7 +64,8 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 		...
 	</dependencies>
 ```
-yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以SR1、SR2、SR3...这种形式，目的是为了方便区分yue-library所依赖的基础版本。<br>
+yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.SR1、.SR2、.SR3...这种形式，目的是为了方便区分基础依赖版本。
+当前最新发布版本[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)<br>
 更多细节，请查看[中文文档](https://ylyue.cn)
 
 ## 模块说明
