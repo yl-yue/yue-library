@@ -6,6 +6,7 @@
 * yue-library-base（必备）
 
   * [介绍](base-介绍.md)
+  * [常用工具类](base-常用工具类.md)
 
 * yue-library-data-jdbc（推荐）
 
@@ -17,6 +18,5 @@
 
   * [介绍](data-redis-介绍.md)
 
-* [架构升级](架构升级.md)
-* [Awesome yue](awesome.md)
+* [其他](其他.md)
 * [Changelog<sup style="color:red">(new)<sup>](changelog.md)
