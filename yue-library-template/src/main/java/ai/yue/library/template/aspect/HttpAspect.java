@@ -10,9 +10,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+import ai.yue.library.base.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,30 +25,18 @@ public class HttpAspect {
 	
 	@Autowired
 	Redis redis;
+	@Autowired
+	HttpServletRequest request;
 	
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-	public void requestMapping() {}
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
-	public void getMapping() {}
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-	public void postMapping() {}
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
-	public void putMapping() {}
-	@Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
-	public void deleteMapping() {}
-	
-	@Pointcut("requestMapping() || getMapping() || postMapping() || putMapping() || deleteMapping()")
+	@Pointcut(HttpUtils.POINTCUT)
 	public void pointcut() {}
 	
 	@Before("pointcut()")
 	public void doVerifyBefore(JoinPoint joinPoint) {
-		// 1. 获得请求上下文
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		
-        // 2. 参数校验
+        // 1. 参数校验
         Signature signature = joinPoint.getSignature();
         
-        // 3. 开发环境-打印日志
+        // 2. 开发环境-打印日志
 		String ip = request.getRemoteHost();
 		String uri = request.getRequestURI();
 //		UserDTO user_info = null;

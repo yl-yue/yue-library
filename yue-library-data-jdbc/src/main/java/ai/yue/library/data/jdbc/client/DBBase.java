@@ -113,11 +113,11 @@ class DBBase {
 	}
 	
     /**
-     * 同 {@linkplain DBQuery#queryForJSON(String, JSONObject)} 的安全查询结果获取
+     * 同 {@linkplain DBQuery#queryForJson(String, JSONObject)} 的安全查询结果获取
      * @param list {@linkplain DBQuery#queryForList(String, JSONObject)} 查询结果
      * @return JSON数据
      */
-    public JSONObject resultToJSON(List<JSONObject> list) {
+    public JSONObject resultToJson(List<JSONObject> list) {
     	int size = list.size();
     	int expectedValue = 1;
     	if (size != expectedValue) {

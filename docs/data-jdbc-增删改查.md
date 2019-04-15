@@ -62,7 +62,7 @@
 - 批量删除数据，指定SQL语句以创建预编译执行SQL和绑定删除参数
 
 ## 改
-根据ID更新数据：
+根据ID更新：
 ```java
 	/**
 	 * 更新-ById
@@ -71,9 +71,122 @@
 	public void updateById(JSONObject paramJson) {
 		db.updateById("tableName", paramJson);
 	}
+	
+	// ...更多重载方法
 ```
 根据条件更新：
-根据
+```java
+	/**
+	 * 更新-ByName
+	 * @param paramJson
+	 */
+	public void updateByName(JSONObject paramJson) {
+		String[] conditions = {"name"};
+		long updateRowsNumber = db.update("tableName", paramJson, conditions);
+		int expectedValue = 1;
+		db.updateAndExpectedEqual(updateRowsNumber, expectedValue);
+	}
+	
+	// ...更多重载方法
+```
+更新-排序
+```java
+	/**
+	 * 更新-排序
+	 * @param id
+	 * @param move
+	 */
+	public void updateSort(Long id, Integer move) {
+		String uniqueKeys = "name";
+		db.updateSort("tableName", id, move, uniqueKeys);
+	}
+```
+更多方法请参阅API文档...
+
 ## 查
+根据ID查询数据：
+```java
+	/**
+	 * 单个
+	 * @param id
+	 * @return
+	 */
+	public JSONObject get(Long id) {
+		return db.queryById("tableName", id);
+	}
+```
+返回DO实体
+```java
+	/**
+	 * 单个
+	 * @param id
+	 * @return
+	 */
+	public UserDO get(Long id) {
+		return db.queryById("tableName", id, UserDO.class);
+	}
+```
+查询全部：
+```java
+	/**
+	 * 列表-全部
+	 * @return
+	 */
+	public List<JSONObject> listAll() {
+		return db.queryAll("tableName");
+	}
+	
+	// ...更多重载方法
+```
+SQL查询：
+```java
+	/**
+	 * 列表
+	 * @param id
+	 * @return
+	 */
+	public List<JSONObject> list(Long id) {
+		// 1. 处理参数
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+
+		// 2. 查询SQL
+		String sql = "";
+
+		// 3. 返回结果
+		return db.queryForList(sql, paramJson);
+	}
+	
+	// ...更多重载方法
+```
+更多方法请参阅API文档...
 
 ### 分页
+绝对条件查询分页：`PageIPO`类就是一个分页实体类，包含`page`（当前页）、`limit`（每页显示的条数）、`conditions`（查询条件）
+```java
+	/**
+	 * 分页
+	 * @param pageIPO
+	 * @return
+	 */
+	public PageVO page(PageIPO pageIPO) {
+		return db.page("tableName", pageIPO);
+	}
+	
+	// ...更多重载方法
+```
+复杂分页，传入SQL查询语句：
+```java
+	/**
+	 * 分页
+	 * @param pageIPO
+	 * @return
+	 */
+	public PageVO pageSql(PageIPO pageIPO) {
+		String querySql = "";
+		return db.pageSql(querySql, pageIPO);
+	}
+	
+	// ...更多重载方法
+```
+更多方法请参阅API文档...

@@ -139,6 +139,18 @@ class DBUpdate extends DBQuery {
 	/**
      * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
      * 指定SQL语句以创建预编译执行SQL和绑定更新参数
+     * @param sql			要执行的更新SQL
+     * @param paramJson		更新所用到的参数
+	 * @return 
+     */
+	@Transactional
+	public long update(String sql, JSONObject paramJson) {
+		return namedParameterJdbcTemplate.update(sql, paramJson);
+	}
+	
+	/**
+     * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
+     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
      * <blockquote>
      * 	<p>
      * 		将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DBException}

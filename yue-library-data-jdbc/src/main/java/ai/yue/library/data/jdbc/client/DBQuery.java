@@ -120,7 +120,7 @@ class DBQuery extends DBBase {
     	String sql = queryByIdSql(tableName, id);
 		JSONObject paramJson = new JSONObject();
 		paramJson.put("id", id);
-		return queryForJSON(sql, paramJson);
+		return queryForJson(sql, paramJson);
 	}
     
 	/**
@@ -161,7 +161,7 @@ class DBQuery extends DBBase {
     	String sql = queryByIdSql(tableName, id, fieldName);
 		JSONObject paramJson = new JSONObject();
 		paramJson.put("id", id);
-		return queryForJSON(sql, paramJson);
+		return queryForJson(sql, paramJson);
 	}
     
     private String queryAllSql(String tableName) {
@@ -201,9 +201,9 @@ class DBQuery extends DBBase {
      * @param paramJson 要绑定到查询的参数映射
      * @return JSON对象
      */
-	public JSONObject queryForJSON(String sql, JSONObject paramJson) {
+	public JSONObject queryForJson(String sql, JSONObject paramJson) {
 		var list = queryForList(sql, paramJson);
-		return resultToJSON(list);
+		return resultToJson(list);
 	}
     
     /**
@@ -328,8 +328,9 @@ class DBQuery extends DBBase {
 		// 2. 查询数据
 		List<JSONObject> data = new ArrayList<>();
 		if (count == null || count != 0) {
-			ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(querySql, paramJson));
+			data = ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(querySql, paramJson));
 		}
+		
 		// 3. 分页
 		return PageVO.builder().count(count).data(data).build();
 	}

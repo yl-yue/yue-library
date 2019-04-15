@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.data.jdbc.client.DB;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
+import ai.yue.library.template.dataobject.UserDO;
 
 /**
  * @author  孙金川
@@ -65,12 +66,58 @@ public class DataJdbcExampleDAO {
 	}
 	
 	/**
+	 * 更新-ById
+	 * @param paramJson
+	 */
+	public void updateById(JSONObject paramJson) {
+		db.updateById("user_info", paramJson);
+	}
+	
+	/**
+	 * 更新-ByName
+	 * @param paramJson
+	 */
+	public void updateByName(JSONObject paramJson) {
+		String[] conditions = {"name"};
+		long updateRowsNumber = db.update("tableName", paramJson, conditions);
+		int expectedValue = 1;
+		db.updateAndExpectedEqual(updateRowsNumber, expectedValue);
+	}
+	
+	/**
+	 * 更新-排序
+	 * @param id
+	 * @param move
+	 */
+	public void updateSort(Long id, Integer move) {
+		String uniqueKeys = "name";
+		db.updateSort("tableName", id, move, uniqueKeys);
+	}
+	
+//	/**
+//	 * 单个
+//	 * @param id
+//	 * @return
+//	 */
+//	public JSONObject get(Long id) {
+//		return db.queryById("user_info", id);
+//	}
+	
+	/**
 	 * 单个
 	 * @param id
 	 * @return
 	 */
-	public JSONObject get(Long id) {
-		return db.queryById("user_info", id);
+	public UserDO get(Long id) {
+		return db.queryById("user_info", id, UserDO.class);
+	}
+	
+	/**
+	 * 列表-全部
+	 * @return
+	 */
+	public List<JSONObject> listAll() {
+		return db.queryAll("tableName");
 	}
 	
 	/**
@@ -100,11 +147,13 @@ public class DataJdbcExampleDAO {
 	}
 	
 	/**
-	 * 更新-ById
-	 * @param paramJson
+	 * 分页
+	 * @param pageIPO
+	 * @return
 	 */
-	public void updateById(JSONObject paramJson) {
-		db.updateById("user_info", paramJson);
+	public PageVO pageSql(PageIPO pageIPO) {
+		String querySql = "";
+		return db.pageSql(querySql, pageIPO);
 	}
 	
 }

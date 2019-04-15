@@ -1,5 +1,5 @@
 ## 介绍
-　　data-jdbc库基于SpringRedis进行二次封装，特性如下：
+　　data-redis库基于SpringRedis进行二次封装，特性如下：
 - 简化使用
 - 拥有原生常用命令对应的方法
 

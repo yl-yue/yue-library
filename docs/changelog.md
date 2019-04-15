@@ -1,5 +1,14 @@
 # Changelog
 ---
+## Finchley.SR2.SR2【2019-04-22】
+### 新特性
+- jpush 极光推送 依赖支持
+- 【JDBC】DB类queryForJson方法名变更
+- 【JDBC】DB类新增update重载方法
+
+### Bug修复
+
+
 ## Finchley.SR2.SR1【2019-02-22】
 ### 介绍
 　　经过漫长的迭代后，总于迎来了第一个开源版本，并同步maven中央仓库。

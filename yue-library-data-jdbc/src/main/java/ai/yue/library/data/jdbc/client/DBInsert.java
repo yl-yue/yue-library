@@ -98,7 +98,7 @@ class DBInsert extends DBDelete {
 		sql.append(" ORDER BY sort_idx DESC LIMIT 1");
 		
 		// 3. 查询最大sort_idx值
-		JSONObject result = queryForJSON(sql.toString(), paramJson);
+		JSONObject result = queryForJson(sql.toString(), paramJson);
 		if (result != null) {
 			sort_idx = result.getInteger("sort_idx") + 1;
 		}
