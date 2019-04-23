@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.6.RELEASE</version>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-parent</artifactId>
+		<version>Greenwich.SR1</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
@@ -13,42 +13,32 @@
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>用于快速构建SpringCloud项目，内置丰富的JDK工具。版本同步SpringCloud，详细见文档说明：</description>
-	<url></url>
-
+	<url>https://ylyue.cn</url>
+	
 	<properties>
-		<spring.cloud.version>Finchley.SR2</spring.cloud.version>
-		<revision>${spring.cloud.version}.SR2</revision>
+		<revision>${spring-cloud.version}</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<sha1 />
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>10</java.version>
+		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<lombok.version>1.18.4</lombok.version>
-		<hutool.version>4.3.1</hutool.version>
+		<hutool.version>4.5.6</hutool.version>
 		<pay.version>2.12.6</pay.version>
 		<easypoi.version>4.0.0</easypoi.version>
 		<jpush.version>3.3.11</jpush.version>
 	</properties>
-
+	
 	<modules>
 		<module>yue-library-dependencies</module>
 		<module>yue-library-base</module>
 		<module>yue-library-data-jdbc</module>
 		<module>yue-library-data-redis</module>
 	</modules>
-
+	
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring.cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 			<!-- yue-library -->
 			<dependency>
 				<groupId>ai.ylyue</groupId>
@@ -114,20 +104,14 @@
 				<artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
 				<version>${pay.version}</version>
 			</dependency>
-
+			
 			<!-- 其他 -->
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>${lombok.version}</version>
-			</dependency>
-
 			<dependency>
 				<groupId>cn.afterturn</groupId>
 				<artifactId>easypoi-spring-boot-starter</artifactId>
 				<version>${easypoi.version}</version>
 			</dependency>
-
+			
 			<dependency>
 				<groupId>cn.jpush.api</groupId>
 				<artifactId>jpush-client</artifactId>
@@ -135,14 +119,14 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	
 	<repositories>
 		<repository>
 			<id>aliyun</id>
 			<url>https://maven.aliyun.com/repository/central</url>
 		</repository>
 	</repositories>
-
+	
 	<distributionManagement>
 		<snapshotRepository>
 			<id>rdc-snapshots</id>
@@ -152,16 +136,8 @@
 			<id>oss-releases</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
-		<!-- <snapshotRepository> -->
-		<!-- <id>oss-snapshots</id> -->
-		<!-- <url>https://oss.sonatype.org/content/repositories/snapshots</url> -->
-		<!-- </snapshotRepository> -->
-		<!-- <repository> -->
-		<!-- <id>rdc-releases</id> -->
-		<!-- <url>https://repo.rdc.aliyun.com/repository/31558-release-kqeWOi/</url> -->
-		<!-- </repository> -->
 	</distributionManagement>
-
+	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>

@@ -1,13 +1,21 @@
 # Changelog
 ---
-## Finchley.SR2.SR2【2019-04-22】
+## Greenwich.SR1【2019-04-22】
+### 重大升级
+- 升级JDK到长期支持版本`Java SE 11.0.3 (LTS)`
+- 升级SpringCloud版本到`Greenwich.SR1`
+- 升级各项推荐库版本
+
 ### 新特性
 - jpush 极光推送 依赖支持
-- 【JDBC】DB类queryForJson方法名变更
-- 【JDBC】DB类新增update重载方法
+- 【jdbc】DB类queryForJson方法名变更
+- 【jdbc】DB类新增update重载方法
+
+### 变更
+- 【base】ListUtils全面基于JSONObject操作
 
 ### Bug修复
-
+- 【jdbc】DB类分页查询结果PageVO无数据
 
 ## Finchley.SR2.SR1【2019-02-22】
 ### 介绍

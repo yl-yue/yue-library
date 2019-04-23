@@ -2,7 +2,7 @@ package ai.yue.library.base.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 
 /**
  * @author  孙金川

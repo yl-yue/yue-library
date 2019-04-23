@@ -130,17 +130,17 @@ public class ListUtils {
 	 * 将<b> list2 </b>合并到<b> list1 </b>里面
 	 * @param list1		需要合并的列表
 	 * @param list2		被合并的列表
-	 * @param key1		list1中Map所使用的key
-	 * @param key2		list2中Map所使用的key
+	 * @param key1		list1中JSON所使用的key
+	 * @param key2		list2中JSON所使用的key
 	 */
-	public static void merge(List<Map<String, Object>> list1, List<Map<String, Object>> list2, String key1, String key2) {
-		list1.forEach(map1 -> {
-			Object value1 = map1.get(key1);
-			for (Map<String, Object> map2 : list2) {
-				Object value2 = map2.get(key2);
+	public static void merge(List<JSONObject> list1, List<JSONObject> list2, String key1, String key2) {
+		list1.forEach(json1 -> {
+			Object value1 = json1.get(key1);
+			for (JSONObject json2 : list2) {
+				Object value2 = json2.get(key2);
 				if (ObjectUtils.equals(value1, value2)) {
-					map2.remove(key2);
-					map1.putAll(map2);
+					json2.remove(key2);
+					json1.putAll(json2);
 					break;
 				}
 			}
@@ -222,18 +222,18 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>Map集合去重</h1>
-	 * {@linkplain List}-{@linkplain Map}根据参数distinctKey（Map的key）去重。
+	 * {@linkplain List} - {@linkplain JSONObject} value去重
+	 * <p>根据参数distinctKey去重。
 	 * @param list 需要处理的集合
-	 * @param distinctKey 去重的依据（Map的key）
+	 * @param distinctKey 去重的依据（JSON的key）
 	 * @return 处理后的List集合
 	 */
-	public static List<Map<String, Object>> distinctMap(List<Map<String, Object>> list, String distinctKey) {
+	public static List<JSONObject> distinct(List<JSONObject> list, String distinctKey) {
 		for (int i = 0; i < list.size(); i++) {
-			Map<String, Object> mapi = list.get(i);
+			JSONObject jsoni = list.get(i);
 			for (int j = list.size() - 1; j > i; j--) {
-				Map<String, Object> mapj = list.get(j);
-				if (mapi.get(distinctKey).equals(mapj.get(distinctKey))) {
+				JSONObject jsonj = list.get(j);
+				if (jsoni.get(distinctKey).equals(jsonj.get(distinctKey))) {
 					list.remove(j);
 				}
 			}
