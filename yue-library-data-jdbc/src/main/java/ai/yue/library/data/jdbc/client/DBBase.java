@@ -26,7 +26,21 @@ class DBBase {
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
     // 方法
-    
+	
+    /**
+     * 是否有数据
+     * 
+     * @param dataSize 数据大小
+     * @return 是否 <b>&lt;=</b> 0
+     */
+	public boolean isDataSize(long dataSize) {
+		if (dataSize <= 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
     /**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
      * <p>若不是预期值，同时 updateRowsNumber &gt; 0 那么将会抛出一个 {@linkplain DBException}
