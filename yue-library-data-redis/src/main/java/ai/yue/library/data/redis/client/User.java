@@ -1,7 +1,11 @@
 package ai.yue.library.data.redis.client;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +19,14 @@ import ai.yue.library.base.config.properties.ConstantProperties;
 import ai.yue.library.base.constant.TokenConstant;
 import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.ipo.CaptchaIPO;
+import ai.yue.library.base.util.CaptchaUtils;
 import ai.yue.library.base.util.CookieUtils;
+import ai.yue.library.base.util.HttpUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.vo.CaptchaVO;
 import ai.yue.library.data.redis.config.properties.UserProperties;
 import ai.yue.library.data.redis.dto.QqUserDTO;
 import ai.yue.library.data.redis.dto.WxUserDTO;
@@ -109,7 +117,52 @@ public class User {
 
 		return qqUserDTO;
 	}
-	
+    
+    /**
+     * 获得-验证码图片
+     * <p>将验证码设置到redis
+     * <p>将验证码图片写入response，并设置ContentType为image/png
+     */
+    public void getCaptchaImage() {
+    	// 1. 创建图片验证码
+    	CaptchaVO captchaVO = CaptchaUtils.createCaptchaImage(CaptchaIPO.builder().build());
+    	String captcha = captchaVO.getCaptcha();
+    	BufferedImage captchaImage = captchaVO.getCaptchaImage();
+    	
+    	// 2. 设置验证码到Redis
+		String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
+		redis.set(captcha_redis_key, captcha, constantProperties.getToken_timeout());
+		
+		// 3. 设置验证码到响应输出流
+		HttpServletResponse response = HttpUtils.getResponse();
+        response.setContentType("image/png");
+        OutputStream output;
+		try {
+			output = response.getOutputStream();
+			// 响应结束时servlet会自动将output关闭
+			ImageIO.write(captchaImage, "png", output);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    
+    /**
+     * 验证-验证码
+     * <p>验证码错误会抛出一个{@linkplain ResultException}异常，作为结果提示...<br>
+     * 
+     * @param captcha 验证码
+     * @throws ResultException 验证码错误
+     */
+    public void captchaValidate(String captcha) {
+    	String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
+		String randCaptcha = redis.get(captcha_redis_key);
+		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
+			throw new ResultException(ResultInfo.captcha_error());
+		}
+		
+		redis.del(captcha_redis_key);
+    }
+    
 	/**
 	 * 获得请求token
 	 * @return
@@ -224,5 +277,5 @@ public class User {
 		// 5. 返回结果
 		return ResultInfo.success();
     }
-	
+    
 }
