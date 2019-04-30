@@ -10,9 +10,15 @@
 - jpush 极光推送 依赖支持
 - 【jdbc】DB类queryForJson方法名变更
 - 【jdbc】DB类新增update重载方法
+- 【jdbc】新增BaseDO类（DO基础类，对应关系型数据库设计标准）
+- 【jdbc】DB类新增`isDataSize`方法，用于确认查询结果
+- 【redis】User优化
+- 【redis】封装login、logout
+- 【redis】封装第三方登录特性（如：微信、QQ）
 
 ### 变更
 - 【base】ListUtils全面基于JSONObject操作
+- 【base】`ParamUtils.paramValidate()`错误提示增强
 
 ### Bug修复
 - 【jdbc】DB类分页查询结果PageVO无数据

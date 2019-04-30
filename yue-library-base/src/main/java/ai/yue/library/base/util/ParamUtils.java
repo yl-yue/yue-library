@@ -20,9 +20,11 @@ import ai.yue.library.base.view.ResultInfo;
 public class ParamUtils {
 
 	/** 必传参数 */
-	static final String PARAM_PREFIX_MUST = "【必传参数】：";
+	private static final String PARAM_PREFIX_MUST = "【必传参数】：";
 	/** 可选参数 */
-	static final String PARAM_PREFIX_CAN = "【可选参数】：";
+	private static final String PARAM_PREFIX_CAN = "【可选参数】：";
+	/** 收到传参 */
+	private static final String PARAM_PREFIX_RECEIVED = "【收到传参】：";
 	
 	// Format
 	
@@ -138,8 +140,13 @@ public class ParamUtils {
 	 */
 	public static void paramValidate(JSONObject paramJson, String[] mustContainKeys, String... canContainKeys) {
 		if (!MapUtils.isKeys(paramJson, mustContainKeys, canContainKeys)) {
-			throw new ParamException(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys) + "，" + PARAM_PREFIX_CAN
-					+ Arrays.toString(canContainKeys));
+			StringBuffer paramHint = new StringBuffer();
+			paramHint.append(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys));
+			paramHint.append("，");
+			paramHint.append(PARAM_PREFIX_CAN + Arrays.toString(canContainKeys));
+			paramHint.append("，");
+			paramHint.append(PARAM_PREFIX_RECEIVED + paramJson.keySet());
+			throw new ParamException(paramHint.toString());
 		}
 	}
 	

@@ -3,6 +3,7 @@ package ai.yue.library.data.redis.config;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
+import ai.yue.library.data.redis.config.properties.UserProperties;
 
 /**
  * @author  孙金川
@@ -17,6 +19,7 @@ import ai.yue.library.data.redis.client.User;
  */
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
+@EnableConfigurationProperties({UserProperties.class})
 public class RedisAutoConfig {
 	
 	@Bean

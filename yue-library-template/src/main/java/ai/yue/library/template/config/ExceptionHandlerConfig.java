@@ -13,7 +13,7 @@ import ai.yue.library.base.view.ResultInfo;
  * @version 创建时间：2018年6月12日
  */
 @ControllerAdvice
-public class ExceptionHandlerConfig extends AllExceptionHandler{
+public class ExceptionHandlerConfig extends AllExceptionHandler {
 
 	/**
 	 * 拦截所有未处理异常
