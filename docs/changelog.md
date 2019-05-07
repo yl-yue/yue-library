@@ -15,6 +15,8 @@
 - 【redis】User优化
 - 【redis】封装login、logout
 - 【redis】封装第三方登录特性（如：微信、QQ）
+- 【redis】封装分布式图片验证码
+- 【redis】封装基础DAO（DBDAO,DBTDAO）
 
 ### 变更
 - 【base】ListUtils全面基于JSONObject操作
@@ -26,11 +28,13 @@
 ## Finchley.SR2.SR1【2019-02-22】
 ### 介绍
 　　经过漫长的迭代后，总于迎来了第一个开源版本，并同步maven中央仓库。
+
 ### 历史
-　　2016初期此项目仅为一个工具库，封装各种常用特性
-　　2017年迎来一次版本大迭代，迎合SpringBoot
-　　2018年建立标准重构此项目，全面适配SpringCloud。
+　　2016初期此项目仅为一个工具库，封装各种常用特性<br>
+　　2017年迎来一次版本大迭代，迎合SpringBoot<br>
+　　2018年建立标准重构此项目，全面适配SpringCloud。<br>
 　　2019年初项目进行开源迭代直到正式发布第一个Maven版本：Finchley.SR2.SR1
+
 ### 版本变化
 1. 整理各种基础工具类，加入常用库
 2. pom标准建立

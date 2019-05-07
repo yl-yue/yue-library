@@ -18,9 +18,9 @@ import ai.yue.library.data.jdbc.vo.PageTVO;
 public abstract class DBTDAO<T> {
 
 	@Autowired
-	DB db;
+	protected DB db;
     Class<T> mappedClass;
-    abstract String tableName();
+    protected abstract String tableName();
     
 	/**
 	 * 插入数据

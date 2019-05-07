@@ -561,7 +561,7 @@ public class ListUtils {
      * <pre>
      * 	{@code
      * 		String text = "1,3,5,9";
-     * 		JSONObject[] jsons = toJSONs(text, ",", "id");
+     * 		JSONObject[] jsons = toJsons(text, ",", "id");
      * 		System.out.println(Arrays.toString(jsons));
      * }
      * </pre>

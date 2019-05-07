@@ -188,10 +188,15 @@ public class User {
 			// 1. 获得请求token
 			String token = getRequestToken();
 			
-			// 2. 查询Redis中token的值
+			// 2. 确认token
+			if (StringUtils.isEmpty(token)) {
+				throw new LoginException("token == null");
+			}
+			
+			// 3. 查询Redis中token的值
 	        String tokenValue = redis.get(String.format(TokenConstant.REDIS_TOKEN_PREFIX, token));
 	        
-	        // 3. 返回user_id
+	        // 4. 返回user_id
 			return JSONObject.parseObject(tokenValue).getLong("user_id");
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
@@ -208,16 +213,20 @@ public class User {
 		try {
 			// 1. 获得请求token
 			String token = getRequestToken();
-
-			// 2. 查询Redis中token的值
+			
+			// 2. 确认token
+			if (StringUtils.isEmpty(token)) {
+				throw new LoginException("token == null");
+			}
+			
+			// 3. 查询Redis中token的值
 			String tokenValue = redis.get(String.format(TokenConstant.REDIS_TOKEN_PREFIX, token));
 			
-			// 3. 返回POJO
+			// 4. 返回POJO
 			T t = JSONObject.parseObject(tokenValue, clazz);
 			if (t == null) {
 				throw new LoginException(null);
 			}
-			
 			return t;
 		} catch (Exception e) {
 			throw new LoginException(e.getMessage());
@@ -233,8 +242,9 @@ public class User {
 		String token = getRequestToken();
 		
         // 2. 注销会话
-		String redis_token_key = String.format(TokenConstant.REDIS_TOKEN_PREFIX, token);
+		String redis_token_key = null;
         if (StringUtils.isNotEmpty(token)) {
+        	redis_token_key = String.format(TokenConstant.REDIS_TOKEN_PREFIX, token);
         	String tokenValue = redis.get(redis_token_key);
         	if (StringUtils.isNotEmpty(tokenValue)) {
         		redis.del(redis_token_key);
@@ -243,7 +253,8 @@ public class User {
         
         // 3. 生成新的token
         token = UUID.randomUUID().toString();
-
+        redis_token_key = String.format(TokenConstant.REDIS_TOKEN_PREFIX, token);
+        
 		// 4. 登录成功-设置token至Redis
 		Integer tokenTimeout = constantProperties.getToken_timeout();
 		redis.set(redis_token_key, userInfo, tokenTimeout);
