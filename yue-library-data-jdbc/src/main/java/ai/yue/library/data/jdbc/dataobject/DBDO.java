@@ -10,7 +10,7 @@ import lombok.Data;
  * @version 创建时间：2018年7月26日
  */
 @Data
-public abstract class BaseDO {
+public abstract class DBDO {
 	
 	protected Long id;// 表自增ID
 	protected LocalDateTime create_time;// 数据插入时间
