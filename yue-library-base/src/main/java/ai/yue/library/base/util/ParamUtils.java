@@ -11,6 +11,7 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.ParamFormatIPO;
 import ai.yue.library.base.ipo.ParamValidateIPO;
 import ai.yue.library.base.view.ResultInfo;
+import cn.hutool.core.lang.Validator;
 
 /**
  * 参数处理工具类
@@ -187,7 +188,7 @@ public class ParamUtils {
 		// 1. 11位手机号验证
 		String cellphone = paramJson.getString(cellphoneKey);
 		if (!StringUtils.isEmpty(cellphone)) {
-			if (!isCellphoneValidate(cellphone)) {
+			if (!Validator.isMobile(cellphone)) {
 				throw new ResultException(ResultInfo.cellphone_error());
 			}
 		}
@@ -195,7 +196,7 @@ public class ParamUtils {
 		// 2. 邮箱验证
 		String email = paramJson.getString(emailKey);
 		if (!StringUtils.isEmpty(email)) {
-			if (!isEmailValidate(email)) {
+			if (!Validator.isEmail(email)) {
 				throw new ResultException(ResultInfo.email_error());
 			}
 		}
@@ -203,54 +204,11 @@ public class ParamUtils {
 		// 3. 身份证号码验证
 		String idCardNumber = paramJson.getString(idCardNumberKey);
 		if (!StringUtils.isEmpty(idCardNumber)) {
-			if (!isIdCardNumberValidate(idCardNumber)) {
+			if (!Validator.isCitizenId(idCardNumber)) {
 				throw new ResultException(ResultInfo.id_card_number_error());
 			}
 		}
 	}
-	
-	/**
-	 * 邮箱验证
-	 * @param email
-	 * @return
-	 */
-    static boolean isEmailValidate(String email) {
-    	String regex = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
-        return email.matches(regex);
-    }
-    
-	/**
-	 * <h3>身份证号码验证</h3>
-	 * 
-     * 我国公民的身份证号码特点如下：<br>
-     * 1.长度18位<br>
-     * 2.第1-17号只能为数字<br>
-     * 3.第18位只能是数字或者x<br>
-     * 4.第7-14位表示特有人的年月日信息<br>
-     * 
-     * 正则实现如下：<br>
-     * 1.地区：[1-9]\d{5}<br>
-     * 2.年的前两位：(18|19|20)            1800-2099<br>
-     * 3.年的后两位：\d{2}<br>
-     * 4.月份：((0[1-9])|(10|11|12)) <br>
-     * 5.天数：(([0-2][1-9])|10|20|30|31)	闰年不能禁止29+<br>
-     * 6.三位顺序码：\d{3}<br>
-     * 7.校验码：[0-9Xx]
-     */
-	static boolean isIdCardNumberValidate(String id) {
-		String regex = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
-		return id.matches(regex);
-	}
-    
-    /**
-     * 国内11位手机号码验证
-     * @param cellphone
-     * @return
-     */
-    static boolean isCellphoneValidate(String cellphone) {
-    	String regex = "^((13[0-9])|(14[5|7|9])|(15([0-3]|[5-9]))|(17[0-8])|(18[0,1,2,3,5-9]))\\d{8}$";
-        return cellphone.matches(regex);
-    }
     
     /**
      * 验证固话号码
