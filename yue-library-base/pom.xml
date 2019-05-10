@@ -12,7 +12,7 @@
 	<description>yue-基础库</description>
 
 	<properties>
-		<fastjson.version>1.2.57</fastjson.version>
+		<fastjson.version>1.2.58</fastjson.version>
 	</properties>
 
 	<dependencies>

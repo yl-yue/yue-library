@@ -142,7 +142,15 @@ public final class ObjectUtils extends ObjectUtil {
 	 * @return JSON
 	 */
 	public static JSONObject toJSONObject(Object obj) {
-		return (JSONObject) JSONObject.toJSON(obj);
+		if (obj instanceof JSONObject) {
+			return (JSONObject) obj;
+        }
+        
+        if (obj instanceof String) {
+			return JSONObject.parseObject((String) obj);
+        }
+        
+        return (JSONObject) toJSON(obj);
 	}
 	
 	/**

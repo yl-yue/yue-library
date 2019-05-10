@@ -7,7 +7,8 @@
 - 升级各项推荐库版本
 
 ### 新特性
-- jpush 极光推送 依赖支持
+- 【base】jpush 极光推送 依赖支持
+- 【base】IPO校验框架引入、新增`| @IdCard | 身份证校验 || @Phone | 手机号校验 |`
 - 【jdbc】DB类queryForJson方法名变更
 - 【jdbc】DB类新增update重载方法
 - 【jdbc】新增BaseDO类（DO基础类，对应关系型数据库设计标准）
