@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
 	<link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+	<link rel="shortcut icon" href="./_images/favicon.ico?v=2" type="image/x-icon" id="favicon">
 	<!-- 百度统计 -->
 	<script>
 		var _hmt = _hmt || [];
@@ -22,6 +23,8 @@
 </head>
 <body>
   <div id="app">Loading ...</div>
+	<script src="//unpkg.com/docsify-edit-on-github/index.js"></script>
+	
   <script>
     window.$docsify = {
       name: 'yue-library',
@@ -40,12 +43,24 @@
         placeholder: {
           '/': '搜索'
         }
-      }
+      },
+			// docsify-copy-code
+			copyCode: {
+				buttonText : '点击复制',
+				errorText  : '错误',
+				successText: '复制成功'
+			},
+			plugins: [
+				EditOnGithubPlugin.create('https://gitee.com/yl-yue/yue-library/tree/master/docs/',
+				'https://gitee.com/yl-yue/yue-library/tree/master/docs/',
+				'去码云编辑此页')
+			]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
 	<!-- <script src="//unpkg.com/docsify/lib/plugins/disqus.min.js"></script> -->
 	<script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
+	<script src="//unpkg.com/docsify-copy-code"></script>
 	
 	<!-- gitter -->
   <script>

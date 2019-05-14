@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * Map工具类
@@ -178,6 +179,26 @@ public class MapUtils extends MapUtil {
 	        Entry<String, Object> entry = iter.next();
 	        Object value = entry.getValue();
 	        if (ObjectUtils.isNull(value)) {
+	        	iter.remove();
+	        }
+	    }
+	}
+	
+	/**
+	 * 移除空白字符串
+	 * <p>空白的定义如下： <br>
+	 * 1、为null <br>
+	 * 2、为不可见字符（如空格）<br>
+	 * 3、""<br>
+	 * 
+	 * @param paramMap 要操作的Map
+	 */
+	public static void removeBlankStr(Map<String, Object> paramMap) {
+		Iterator<Entry<String, Object>> iter = paramMap.entrySet().iterator();
+	    while (iter.hasNext()) {
+	        Entry<String, Object> entry = iter.next();
+	        Object value = entry.getValue();
+	        if (StrUtil.isBlankIfStr(value)) {
 	        	iter.remove();
 	        }
 	    }

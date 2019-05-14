@@ -1,6 +1,15 @@
 # Changelog
 ---
-## Greenwich.SR1【2019-04-22】
+## TODO LIST
+- 完善文档-更详细的教程，更多的细节介绍和建议。
+- JDBC发展方向，简单便捷+可维护组合（支持全JSON、或全DO）
+- 加入996icu license 协议
+- **多种主键策略**：支持多达4种主键策略（内含分布式唯一ID生成器），可自由配置，完美解决主键问题
+- 更多IPO校验注解
+- JDBC实体类的支持
+- 确认JDBC发展方向，是否需要迭代或重构
+
+## Greenwich.SR1【规划中】
 ### 重大升级
 - 升级JDK到长期支持版本`Java SE 11.0.3 (LTS)`
 - 升级SpringCloud版本到`Greenwich.SR1`
@@ -9,6 +18,7 @@
 ### 新特性
 - 【base】jpush 极光推送 依赖支持
 - 【base】IPO校验框架引入、新增`| @IdCard | 身份证校验 || @Phone | 手机号校验 |`
+- 【base】增强`toJSONObject()`
 - 【jdbc】DB类queryForJson方法名变更
 - 【jdbc】DB类新增update重载方法
 - 【jdbc】新增BaseDO类（DO基础类，对应关系型数据库设计标准）

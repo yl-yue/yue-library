@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.data.jdbc.client.DB;
+import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
@@ -77,6 +78,15 @@ public abstract class DBDAO {
 	 */
 	public PageVO page(PageIPO pageIPO) {
 		return db.page(tableName(), pageIPO);
+	}
+	
+	/**
+	 * 分页-降序
+	 * @param pageIPO
+	 * @return
+	 */
+	public PageVO pageDESC(PageIPO pageIPO) {
+		return db.page(tableName(), pageIPO, DBSortEnum.降序);
 	}
 	
 }

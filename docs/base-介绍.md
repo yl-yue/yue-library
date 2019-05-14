@@ -1,6 +1,10 @@
+## 优点
+- 热加载
+- 跨域
+
 ## 介绍
 
-　　基础库提供了丰富的Java工具包，它能够帮助我们简化每一行代码（集成[Hutool](https://hutool.cn)工具包）。<br>
+　　基础库提供了丰富的Java工具包 为简化开发工作、提高生产率而生    ，它能够帮助我们简化每一行代码（集成[Hutool](https://hutool.cn)工具包）。<br>
 　　同时也自动装配了一系列基础Bean(可在<b>application.yml</b>文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域)，默认开启如下几项配置：
 - RestTemplate-HTTPS客户端
 - CorsConfig-跨域配置
@@ -31,5 +35,5 @@
 
 ```java
 @ControllerAdvice
-public class ExceptionHandlerConfig extends AllExceptionHandler{
+public class ExceptionHandlerConfig extends AllExceptionHandler {
 ```
