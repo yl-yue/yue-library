@@ -10,6 +10,7 @@ import ai.yue.library.data.jdbc.client.DB;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
+import cn.hutool.core.util.ClassUtil;
 
 /**
  * @author  孙金川
@@ -20,7 +21,8 @@ public abstract class DBTDAO<T> {
 
 	@Autowired
 	protected DB db;
-    Class<T> mappedClass;
+	@SuppressWarnings("unchecked")
+	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
     protected abstract String tableName();
     
 	/**

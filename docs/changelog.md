@@ -17,7 +17,7 @@
 
 ### 新特性
 - 【base】jpush 极光推送 依赖支持
-- 【base】IPO校验框架引入、新增`| @IdCard | 身份证校验 || @Phone | 手机号校验 |`
+- 【base】IPO校验框架引入、新增`| @IdCard | 身份证校验 || @Cellphone | 手机号校验 |`
 - 【base】增强`toJSONObject()`
 - 【jdbc】DB类queryForJson方法名变更
 - 【jdbc】DB类新增update重载方法
