@@ -18,7 +18,8 @@
 - 完善文档-更详细的教程，更多的细节介绍和建议。
 - 加入996icu license 协议
 
-## Greenwich.SR1【规划中】
+## Greenwich.SR1.SR1【规划中】
+## Greenwich.SR1
 ### 重大升级
 - 升级JDK到长期支持版本`Java SE 11.0.3 (LTS)`
 - 升级SpringCloud版本到`Greenwich.SR1`
