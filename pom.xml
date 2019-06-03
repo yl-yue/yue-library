@@ -16,7 +16,7 @@
 	<url>https://ylyue.cn</url>
 	
 	<properties>
-		<revision>${spring-cloud.version}</revision>
+		<revision>${spring-cloud.version}.SR1</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<sha1 />
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
