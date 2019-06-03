@@ -11,8 +11,8 @@
 	<a target="_blank" href="https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies">
 		<img src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central"></img>
 	</a>
-	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase10-4425482.html">
-		<img src="https://img.shields.io/badge/JDK-10+-green.svg" ></img>
+	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html">
+		<img src="https://img.shields.io/badge/JDK-11+-green.svg" ></img>
 	</a>
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" ></img>

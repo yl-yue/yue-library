@@ -28,7 +28,7 @@ public @interface Cellphone {
 	
 	/**
 	 * 是否不允许为空 {@linkplain NotNull}
-	 * <p>默认：true
+	 * @return 默认：true
 	 */
 	boolean notNull() default true;
 	

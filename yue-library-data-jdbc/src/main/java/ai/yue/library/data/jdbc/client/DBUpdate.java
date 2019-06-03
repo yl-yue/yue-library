@@ -141,7 +141,7 @@ class DBUpdate extends DBQuery {
      * 指定SQL语句以创建预编译执行SQL和绑定更新参数
      * @param sql			要执行的更新SQL
      * @param paramJson		更新所用到的参数
-	 * @return 
+	 * @return 受影响的行数
      */
 	@Transactional
 	public long update(String sql, JSONObject paramJson) {

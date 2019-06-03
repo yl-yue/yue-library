@@ -11,8 +11,8 @@
 	<a target="_blank" href="https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies">
 		<img src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central"></img>
 	</a>
-	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase10-4425482.html">
-		<img src="https://img.shields.io/badge/JDK-10+-green.svg" ></img>
+	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html">
+		<img src="https://img.shields.io/badge/JDK-11+-green.svg" ></img>
 	</a>
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" ></img>
@@ -93,11 +93,22 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 - 拥有原生常用命令对应的方法
 
 　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
+
+## 社区
+
+　　在[Gitter](https://gitter.im/yl-yue/yue-library)的社区里可以找到yue-library的用户和开发者团队。
+
 ## 参与贡献
 
-1. Fork 本仓库并从master或某个版本创建你的分支
-2. 如果你添加的代码需要测试，请添加测试，确保单元测试通过
-3. 如果你修改了 API，请更新文档
-4. 确保代码风格一致
-5. 提交代码
-6. 新建 Pull Request
+欢迎各路好汉一起来参与完善 yue-library，我们期待你的 PR！
+
+- 贡献代码：代码地址 [yue-library](https://gitee.com/yl-yue/yue-library) ，欢迎提交 Issue 或者 Pull Requests
+
+> 1. Fork 本仓库并从master或某个版本创建你的分支
+> 2. 如果你添加的代码需要测试，请添加测试，确保单元测试通过
+> 3. 如果你修改了 API，请更新文档
+> 4. 确保代码风格一致
+> 5. 提交代码
+> 6. 新建 Pull Request
+
+- 维护文档：文档地址 [yue-library-doc](https://gitee.com/yl-yue/yue-library/tree/master/docs) ，欢迎参与翻译和修订

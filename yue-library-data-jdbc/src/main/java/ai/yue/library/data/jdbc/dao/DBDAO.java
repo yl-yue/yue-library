@@ -23,8 +23,8 @@ public abstract class DBDAO {
     
 	/**
 	 * 插入数据
-	 * @param paramJson
-	 * @return
+	 * @param paramJson 参数
+	 * @return 返回主键值
 	 */
 	public Long insert(JSONObject paramJson) {
 		return db.insert(tableName(), paramJson);
@@ -32,7 +32,7 @@ public abstract class DBDAO {
 	
 	/**
 	 * 插入数据-批量
-	 * @param paramJsons
+	 * @param paramJsons 参数
 	 */
 	public void insertBatch(JSONObject[] paramJsons) {
 		db.insertBatch(tableName(), paramJsons);
@@ -40,7 +40,7 @@ public abstract class DBDAO {
 	
 	/**
 	 * 删除
-	 * @param id
+	 * @param id 主键id
 	 */
 	public void delete(Long id) {
 		db.delete(tableName(), id);
@@ -48,7 +48,7 @@ public abstract class DBDAO {
 	
 	/**
 	 * 更新-ById
-	 * @param paramJson
+	 * @param paramJson 更新所用到的参数（包含主键ID字段）
 	 */
 	public void updateById(JSONObject paramJson) {
 		db.updateById(tableName(), paramJson);
@@ -56,8 +56,8 @@ public abstract class DBDAO {
 	
 	/**
 	 * 单个
-	 * @param id
-	 * @return
+	 * @param id 主键id
+	 * @return JSON数据
 	 */
 	public JSONObject get(Long id) {
 		return db.queryById(tableName(), id);
@@ -65,7 +65,7 @@ public abstract class DBDAO {
 	
 	/**
 	 * 列表-全部
-	 * @return
+	 * @return 列表数据
 	 */
 	public List<JSONObject> listAll() {
 		return db.queryAll(tableName());
@@ -73,8 +73,8 @@ public abstract class DBDAO {
 	
 	/**
 	 * 分页
-	 * @param pageIPO
-	 * @return
+	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
+	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageVO page(PageIPO pageIPO) {
 		return db.page(tableName(), pageIPO);
@@ -82,8 +82,8 @@ public abstract class DBDAO {
 	
 	/**
 	 * 分页-降序
-	 * @param pageIPO
-	 * @return
+	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
+	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageVO pageDESC(PageIPO pageIPO) {
 		return db.page(tableName(), pageIPO, DBSortEnum.降序);

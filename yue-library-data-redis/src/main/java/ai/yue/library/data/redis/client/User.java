@@ -66,8 +66,8 @@ public class User {
 	
 	/**
 	 * 通过code获取access_token
-	 * @param code
-	 * @return
+	 * @param code 微信授权code码
+	 * @return wxAccessToken，参考微信返回说明文档
 	 */
 	public JSONObject getWxAccessToken(String code) {
 		JSONObject paramJson = new JSONObject();
@@ -81,9 +81,9 @@ public class User {
 	
 	/**
 	 * 获取用户个人信息
-	 * @param access_token
-	 * @param openid
-	 * @return
+	 * @param access_token 调用凭证
+	 * @param openid 普通用户的标识，对当前开发者帐号唯一
+	 * @return {@linkplain WxUserDTO}，开发者最好保存unionID信息，以便以后在不同应用之间进行用户信息互通。
 	 */
 	public WxUserDTO getWxUserInfo(String access_token, String openid) {
 		JSONObject paramJson = new JSONObject();
@@ -100,9 +100,9 @@ public class User {
 	
 	/**
 	 * 获取用户个人信息
-	 * @param access_token
-	 * @param openid
-	 * @return
+	 * @param access_token 调用凭证
+	 * @param openid 普通用户的标识，对当前开发者帐号唯一
+	 * @return {@linkplain QqUserDTO}
 	 */
 	public QqUserDTO getQqUserInfo(String access_token, String openid) {
 		JSONObject paramJson = new JSONObject();
@@ -235,7 +235,7 @@ public class User {
 	
 	/**
 	 * 登录
-	 * @param userInfo 用户信息（必须包含：<font color=red>user_id</font>）
+	 * @param userInfo 用户信息（必须包含：<code style="color:red">user_id</code>）
 	 */
 	public void login(Object userInfo) {
 		// 1. 获得请求token
@@ -268,7 +268,7 @@ public class User {
 	
 	/**
 	 * 登出
-	 * @return
+	 * @return 成功
 	 */
     public Result<?> logout() {
 		// 1. 获得请求token
