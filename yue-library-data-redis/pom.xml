@@ -10,7 +10,11 @@
 	<artifactId>yue-library-data-redis</artifactId>
 	<name>yue-library-data-redis</name>
 	<description>yue-library-data-redis</description>
-
+	
+	<properties>
+        <weixin-java-miniapp.version>3.4.0</weixin-java-miniapp.version>
+    </properties>
+    
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
@@ -21,5 +25,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>${weixin-java-miniapp.version}</version>
+        </dependency>
 	</dependencies>
 </project>

@@ -149,7 +149,12 @@
 		<developer>
 			<name>yl-yue</name>
 			<email>yl-yue@qq.com</email>
-			<url>http://ai.ylyue.cn</url>
+			<url>https://ylyue.cn</url>
+			<organization>yue</organization>
+			<organizationUrl>https://gitee.com/yl-yue</organizationUrl>
+			<roles>
+				<role>CA</role>
+			</roles>
 		</developer>
 	</developers>
 
@@ -234,6 +239,8 @@
 						<dependencyManagement>interpolate</dependencyManagement>
 						<properties>interpolate</properties>
 						<repositories>interpolate</repositories>
+						<developers>interpolate</developers>
+						<scm>interpolate</scm>
 					</pomElements>
 				</configuration>
 				<executions>

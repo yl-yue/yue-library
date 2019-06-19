@@ -6,20 +6,25 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
-import ai.yue.library.data.redis.config.properties.UserProperties;
+import ai.yue.library.data.redis.client.WxMaUser;
+import ai.yue.library.data.redis.config.config.WxMaConfig;
+import ai.yue.library.data.redis.config.properties.QqProperties;
+import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 
 /**
  * @author  孙金川
  * @version 创建时间：2018年6月11日
  */
 @Configuration
+@Import({ WxMaConfig.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableConfigurationProperties({UserProperties.class})
+@EnableConfigurationProperties({ WxOpenProperties.class, QqProperties.class })
 public class RedisAutoConfig {
 	
 	@Bean
@@ -34,6 +39,13 @@ public class RedisAutoConfig {
 	@ConditionalOnBean(Redis.class)
 	public User user() {
 		return new User();
+	}
+	
+	@Bean
+	@Primary
+	@ConditionalOnBean(WxMaConfig.class)
+	public WxMaUser wxMaUser() {
+		return new WxMaUser();
 	}
 	
 }

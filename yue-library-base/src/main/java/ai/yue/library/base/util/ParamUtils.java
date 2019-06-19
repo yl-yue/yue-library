@@ -132,15 +132,30 @@ public class ParamUtils {
 	
 	/**
 	 * param参数校验
-	 * <p>
-	 * 判断Map数据结构key的一致性
+	 * <p>1. 判断Map数据结构key的一致性
+	 * <p>2. 必传参数是否为空字符串
+	 * 
 	 * @param paramJson			参数
 	 * @param mustContainKeys	必须包含的key（必传）
 	 * @param canContainKeys	可包含的key（非必传）
 	 * @throws ParamException 	不满足条件抛出此异常及其提示信息
 	 */
 	public static void paramValidate(JSONObject paramJson, String[] mustContainKeys, String... canContainKeys) {
+		// 1. 判断Map数据结构key的一致性
+		boolean isHint = false;
 		if (!MapUtils.isKeys(paramJson, mustContainKeys, canContainKeys)) {
+			isHint = true;
+		}
+		
+		// 2. 必传参数是否为空字符串
+		for (String key : mustContainKeys) {
+			if (StringUtils.isEmptyIfStr(paramJson.get(key))) {
+				isHint = true;
+			}
+		}
+		
+		// 3. 提示
+		if (isHint) {
 			StringBuffer paramHint = new StringBuffer();
 			paramHint.append(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys));
 			paramHint.append("，");
@@ -153,8 +168,8 @@ public class ParamUtils {
 	
 	/**
 	 * param参数校验
-	 * <p>
-	 * 判断Map数组数据结构key的一致性
+	 * <p>1. 判断Map数组数据结构key的一致性
+	 * <p>2. 必传参数是否为空字符串
 	 * 
 	 * @param paramList       		参数数组
 	 * @param mustContainKeys 		必须包含的key（必传）

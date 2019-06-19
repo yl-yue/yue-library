@@ -19,6 +19,12 @@ public class ConstantProperties {
 	private Integer token_timeout = 36000;
 	
 	/**
+	 * 验证码超时时间（单位：秒）
+	 * <p>默认：360（6分钟）
+	 */
+	private Integer captcha_timeout = 360;
+	
+	/**
 	 * AES密钥
 	 */
 	private String aes_keyt;

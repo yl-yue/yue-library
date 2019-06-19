@@ -27,9 +27,11 @@ import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.vo.CaptchaVO;
-import ai.yue.library.data.redis.config.properties.UserProperties;
+import ai.yue.library.data.redis.config.properties.QqProperties;
+import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 import ai.yue.library.data.redis.dto.QqUserDTO;
 import ai.yue.library.data.redis.dto.WxUserDTO;
+import ai.yue.library.data.redis.vo.wx.open.AccessTokenVO;
 import lombok.NoArgsConstructor;
 
 /**
@@ -50,7 +52,9 @@ public class User {
 	@Autowired
 	ConstantProperties constantProperties;
 	@Autowired
-	UserProperties userProperties;
+	WxOpenProperties wxOpenProperties;
+	@Autowired
+	QqProperties qqProperties;
 	
 	// 微信-URI
 	
@@ -65,22 +69,22 @@ public class User {
 	private static final String QQ_URI_USER_INFO = "https://graph.qq.com/user/get_user_info?oauth_consumer_key={oauth_consumer_key}&access_token={access_token}&openid={openid}";
 	
 	/**
-	 * 通过code获取access_token
+	 * 微信-获取access_token
 	 * @param code 微信授权code码
-	 * @return wxAccessToken，参考微信返回说明文档
+	 * @return accessTokenVO，参考微信返回说明文档
 	 */
-	public JSONObject getWxAccessToken(String code) {
+	public AccessTokenVO getWxAccessToken(String code) {
 		JSONObject paramJson = new JSONObject();
-		paramJson.put("appid", userProperties.getWx_appid());
-		paramJson.put("secret", userProperties.getWx_secret());
+		paramJson.put("appid", wxOpenProperties.getAppid());
+		paramJson.put("secret", wxOpenProperties.getSecret());
 		paramJson.put("code", code);
-		String responseString = restTemplate.getForObject(WX_URI_ACCESS_TOKEN, String.class, paramJson);
-		JSONObject wxAccessToken = JSONObject.parseObject(responseString);
-		return wxAccessToken;
+		String result = restTemplate.getForObject(WX_URI_ACCESS_TOKEN, String.class, paramJson);
+		AccessTokenVO accessTokenVO = JSONObject.parseObject(result, AccessTokenVO.class);
+		return accessTokenVO;
 	}
 	
 	/**
-	 * 获取用户个人信息
+	 * 微信-获取用户个人信息
 	 * @param access_token 调用凭证
 	 * @param openid 普通用户的标识，对当前开发者帐号唯一
 	 * @return {@linkplain WxUserDTO}，开发者最好保存unionID信息，以便以后在不同应用之间进行用户信息互通。
@@ -106,7 +110,7 @@ public class User {
 	 */
 	public QqUserDTO getQqUserInfo(String access_token, String openid) {
 		JSONObject paramJson = new JSONObject();
-		paramJson.put("oauth_consumer_key", userProperties.getQq_appid());
+		paramJson.put("oauth_consumer_key", qqProperties.getQq_appid());
 		paramJson.put("access_token", access_token);
 		paramJson.put("openid", openid);
 		String result = restTemplate.getForObject(QQ_URI_USER_INFO, String.class, paramJson);
@@ -131,7 +135,7 @@ public class User {
     	
     	// 2. 设置验证码到Redis
 		String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
-		redis.set(captcha_redis_key, captcha, constantProperties.getToken_timeout());
+		redis.set(captcha_redis_key, captcha, constantProperties.getCaptcha_timeout());
 		
 		// 3. 设置验证码到响应输出流
 		HttpServletResponse response = HttpUtils.getResponse();
