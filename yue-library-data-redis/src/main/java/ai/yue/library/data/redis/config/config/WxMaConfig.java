@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +25,7 @@ import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
  */
 @Configuration
 @EnableConfigurationProperties(WxMaProperties.class)
+@ConditionalOnProperty(prefix = "yue.wx.miniapp", name = "enabled", havingValue = "true")
 public class WxMaConfig {
 	
 	@Autowired
