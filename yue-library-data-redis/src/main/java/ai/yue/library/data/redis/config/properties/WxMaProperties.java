@@ -14,6 +14,16 @@ import lombok.Data;
 @ConfigurationProperties("yue.wx.miniapp")
 public class WxMaProperties {
 	
+	/**
+	 * 是否启用微信小程序自动配置
+	 * <p>
+	 * 默认：false
+	 */
+	private boolean enabled = false;
+	
+	/**
+	 * 配置列表
+	 */
     private List<Config> configs;
     
     @Data

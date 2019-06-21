@@ -2,6 +2,7 @@ package ai.yue.library.data.redis.config;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ public class RedisAutoConfig {
 	@Bean
 	@Primary
 	@ConditionalOnBean(WxMaConfig.class)
+	@ConditionalOnProperty(prefix = "yue.wx.miniapp", name = "enabled", havingValue = "true")
 	public WxMaUser wxMaUser() {
 		return new WxMaUser();
 	}

@@ -19,6 +19,18 @@
 - 加入996icu license 协议
 
 ## Greenwich.SR1.SR1【规划中】
+### 重大升级
+
+### 新特性
+- 【base】 `ParamUtils.paramValidate()` 必传参数增加空字符串校验
+- 【base】 `yue.constant` 常量属性增加验证码超时时间
+- 【redis】新增微信小程序登录方式
+
+### 变更
+- 【redis】标准化微信开发平台登录与QQ登录
+
+### Bug修复
+
 ## Greenwich.SR1
 ### 重大升级
 - 升级JDK到长期支持版本`Java SE 11.0.3 (LTS)`
