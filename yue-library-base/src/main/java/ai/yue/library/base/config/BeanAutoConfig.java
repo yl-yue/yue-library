@@ -18,6 +18,7 @@ import ai.yue.library.base.config.factory.HttpsRequestFactory;
 import ai.yue.library.base.config.properties.ConstantProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.properties.RestProperties;
+import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,6 +52,13 @@ public class BeanAutoConfig {
         return factory;
     }
     
+	@Bean
+	@ConditionalOnMissingBean
+    public Validator validator(){
+		log.info("【初始化配置-校验器】正在初始化Bean：Validator ...");
+        return new Validator();
+    }
+	
 	@Bean
 	@ConditionalOnMissingBean
     public RestTemplate restTemplate(ClientHttpRequestFactory factory){

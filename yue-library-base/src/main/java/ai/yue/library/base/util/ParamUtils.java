@@ -191,9 +191,12 @@ public class ParamUtils {
 	
 	/**
 	 * 参数验证
+	 * 
+	 * @deprecated {@linkplain ai.yue.library.base.validation.Validator}
 	 * @param paramValidateIPO 需要验证的参数
 	 * @throws ResultException 验证未通过将抛出相应的异常即其提示信息
 	 */
+	@Deprecated
 	public static void paramValidate(ParamValidateIPO paramValidateIPO) {
 		JSONObject paramJson = paramValidateIPO.getParamJson();
 		String cellphoneKey = paramValidateIPO.getCellphoneKey();
@@ -230,6 +233,7 @@ public class ParamUtils {
      * @param telephone
      * @return
      */
+	@Deprecated
 	boolean isTelephoneValidate(String telephone) {
 		String regex = "^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$";
 		return telephone.matches(regex);

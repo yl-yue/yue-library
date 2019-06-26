@@ -6,72 +6,146 @@
 主要提供便捷的后台数据校验功能，支持单个字段或参数校验，也支持通过注解校验对象，用法简单。<br>
 提供基本的非空、长度、大小等校验方法，也提供一些特殊的正则校验、身份证、电话、邮箱、IP等校验方法。
 
-## 二、用法介绍
-目前提供以下校验方法，支持后续持续扩展
+## 二、注解介绍
+`@Valid` 被注解的元素是一个POJO对象，用于检查此对象的所有被注解字段的值是否符合预期
 
-  | 注解        | 说明    |
-  | :---------: | :------ |
-  | @NotNull | 非空校验 |
-  | @Max | 最大值校验 |
-  | @Min | 最小值校验 |
-  | @MaxLength | 最大长度校验，支持集合、数组长度校验 |
-  | @MinLength | 最大长度校验，支持集合、数组长度校验 |
-  | @IdCard | 身份证校验 |
-  | @Email | 邮箱格式校验 |
-  | @Phone | 手机号校验 |
-  | @IP | IP地址校验 |
-  | @Chinese | 中文校验 |
-  | @English | 英文校验 |
-  | @Regex | 自定义正则校验 |
-  | @Date | 日期格式校验 |
+**Bean Validation 中内置的 constraint**
 
-### 1. 单个参数验证
+| 注解				| 作用													|
+| :------			| :------												|
+|@Null				|被注解的元素必须为 null									|
+|@NotNull			|被注解的元素必须不为 null								|
+|@NotBlank			|被注解的元素必须不为空，并且必须包含至少一个非空白字符		|
+|@NotEmpty			|被注解的元素必须非空										|
+|@AssertTrue		|被注解的元素必须为 true									|
+|@AssertFalse		|被注解的元素必须为 false									|
+|@Max				|被注解的元素必须是一个数字，其值必须小于等于指定的最大值	|
+|@Min				|被注解的元素必须是一个数字，其值必须大于等于指定的最小值	|
+|@DecimalMax		|被注解的元素必须是一个数字，其值必须小于等于指定的最大值	|
+|@DecimalMin		|被注解的元素必须是一个数字，其值必须大于等于指定的最小值	|
+|@Digits			|被注解的元素必须是一个数字，其值必须在可接受的范围内		|
+|@Positive			|被注解的元素必须是严格意义上的正数							|
+|@PositiveOrZero	|被注解的元素必须是正数或0									|
+|@Negative			|被注解的元素必须是一个严格意义上的负数						|
+|@NegativeOrZero	|被注解的元素必须是负数或0									|
+|@Past				|被注解的元素必须是过去的某个瞬间、日期或时间				|
+|@PastOrPresent		|被注解的元素必须是过去或现在的某个瞬间、日期或时间			|
+|@Future			|被注解的元素必须是将来的某个瞬间、日期或时间。				|
+|@FutureOrPresent	|被注解的元素必须是当前或将来的某个瞬间、日期或时间。			|
+|@Size				|被注解的元素的大小必须在指定的范围内						|
+|@Email				|被注解的元素必须是电子邮箱地址								|
+|@Pattern			|被注解的元素必须符合指定的正则表达式						|
+
+**Hibernate Validator 附加的 constraint**
+
+| 注解					| 作用																	|
+| :------				| :------																|
+|@Length				|被注解的字符串的大小必须在指定的范围内										|
+|@Range					|被注解的元素必须在合适的范围内												|
+|@URL					|验证带注解的字符串是否为URL												|
+|@Currency				|货币金额必须在正确的货币单位												|
+|@CreditCardNumber		|带注解的元素必须表示有效的信用卡号											|
+|@CodePointLength		|验证包含字符序列的代码点长度在min和max之间									|
+|@ConstraintComposition	|布尔运算符，应用于组合约束注解的所有约束									|
+|@SafeHtml				|验证用户提供的富文本值，以确保它不包含恶意代码，例如嵌入的`<script>`元素		|
+|@UniqueElements		|验证所提供集合中的每个对象都是惟一的，即不能在集合中找到两个相等的元素			|
+|@EAN					|检查带注解的字符序列是否是有效的EAN 13号。验证数字的长度和校验数字			|
+|@ISBN					|检查带注解的字符序列是否是有效的ISBN。数字的长度和校验数字都经过验证			|
+|@LuhnCheck				|Luhn算法检查约束															|
+|@Mod10Check			|Modulo 10 检查约束														|
+|@Mod11Check			|Modulo 11 检查约束														|
+|@ParameterScriptAssert	|方法级约束，它根据带注解的方法或构造函数计算脚本表达式						|
+|@ScriptAssert			|类级约束，它根据带注解的元素计算脚本表达式									|
+
+**Yue Validator 附加的 constraint**
+
+| 注解			| 作用			|
+| :------		| :------		|
+|@Cellphone		|手机号校验		|
+|@IdCard		|身份证校验		|
+|@PlateNumber	|中国车牌号校验	|
+|@Birthday		|生日校验		|
+|@Chinese		|中文校验		|
+|@English		|英语校验		|
+|@UUID			|UUID校验		|
+|@IPV4			|IPV4地址校验	|
+|@IPV6			|IPV6地址校验	|
+|@MacAddress	|MAC地址校验		|
+
+## 三、参数验证
+### 单个参数验证
+
+单个参数验证
+
 ```java
-ValidateUtils.is("a").notNull();
- 
-ValidateUtils.is("test").maxLength(20).minLength(4);
- 
-ValidateUtils.is(50).min(20).max(60);
+import ai.yue.library.base.validation.Validator;
+
+@Autowired
+private Validator validator;
+
+validator.is("a").notNull();
+validator.is("test").maxLength(20).minLength(4);
+validator.is(50).min(20).max(60);
 ```
 
-通过and()支持连写（连写直接切换校验对象）
+单个参数校验-通过param()连写（连写直接切换校验对象）
 
 ```java
-ValidateUtils.is("a").notNull().and("test").maxLength(20).minLength(4).and(50).min(20).max(60);
+validator.param("a").notNull().param("test").length(20, 4).param(50).min(20).max(60);
 ```
-支持自定义错误信息
+
+单个参数校验-自定义错误信息
 
 ```java
-ValidateUtils.is("test").maxLength(20,"最大长度不能超过20个字").minLength(4,"最小长度不能少于4个字");
+validator.param("test").length(20, 4, "最大长度不能超过20个字，最小长度不能少于4个字");
 ```
-### 2. 校验整个对象（通过注解）
+
+### POJO对象校验（<font color=red>推荐</font>）
 在类的属性上定义注解，同时支持自定义错误信息
 ```java
-public class User {
+@Data
+public class ValidationIPO {
 
-    @NotNull(msg = "姓名不能为空")
-    @MaxLength(value = 20,msg = "姓名不能超过20个字")
+    @NotEmpty(message = "姓名不能为空")
+    @Length(max = 20, message = "姓名不能超过20个字")
     private String name;
-
+    
     private Date birthday;
-
+    
     @IdCard
     private String idcard;
-
+    
     @Max(30)
     @Min(12)
     private int age;
-
+    
     @Email
-    @MaxLength(50)
+    @Length(max = 50)
     private String email;
-
-    @Phone
-    private String phone;
-
-    @Regex("[1-9]([0-9]{5,11})")
+    
+    @Cellphone
+    private String cellphone;
+    
+    @Pattern(regexp = "[1-9]([0-9]{5,11})")
     private String qq;
     
-    //get... set..
 }
 ```
+
+方式一（<font color=red>推荐</font>）
+
+```java
+@PostMapping("/valid")
+public Result<?> valid(@Valid ValidationIPO validationIPO) {
+```
+
+方式二：通过调用validator.valid()方法
+
+```java
+validator.valid(validationIPO);
+// 同样支持连写
+validator.valid(validationIPO).param("2017-06-05").date("yyyy-MM-dd");
+```
+
+### 校验不通过时处理
+校验不通过会抛出ValidateException（运行时异常），`AllExceptionHandler`类已默认处理，，只需开启即可获得友好提示

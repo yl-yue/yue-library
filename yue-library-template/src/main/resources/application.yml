@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: yue-template
-  profiles:
-    active:
-    - dev
-server:
-  tomcat:
-    port-header: GET, POST, PUT, DELETE

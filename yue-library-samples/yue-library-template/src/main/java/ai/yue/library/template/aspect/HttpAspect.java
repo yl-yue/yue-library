@@ -8,10 +8,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.stereotype.Component;
 
 import ai.yue.library.base.util.HttpUtils;
+import ai.yue.library.data.redis.client.Redis;
 import lombok.extern.slf4j.Slf4j;
 
 /**

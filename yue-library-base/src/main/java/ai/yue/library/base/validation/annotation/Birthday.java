@@ -1,4 +1,4 @@
-package ai.yue.library.base.validation;
+package ai.yue.library.base.validation.annotation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
@@ -23,8 +23,8 @@ import javax.validation.constraints.NotNull;
 @Documented
 @Retention(RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
-@Constraint(validatedBy = { IdCardValidator.class })
-public @interface IdCard {
+@Constraint(validatedBy = { BirthdayValidator.class })
+public @interface Birthday {
 	
 	/**
 	 * 是否不允许为空 {@linkplain NotNull}
@@ -32,7 +32,7 @@ public @interface IdCard {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的身份证号码";
+	String message() default "不是一个合法的生日日期格式";
 	
 	Class<?>[] groups() default {};
 	

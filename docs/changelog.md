@@ -66,7 +66,7 @@
 　　2016初期此项目仅为一个工具库，封装各种常用特性<br>
 　　2017年迎来一次版本大迭代，迎合SpringBoot<br>
 　　2018年建立标准重构此项目，全面适配SpringCloud。<br>
-　　2019年初项目进行开源迭代直到正式发布第一个Maven版本：Finchley.SR2.SR1
+　　2019年初项目进行开源迭代直到正式发布第一个Maven版本：[Finchley.SR2.SR1](https://search.maven.org/artifact/ai.ylyue/yue-library-dependencies/Finchley.SR2.SR1/pom)
 
 ### 版本变化
 1. 整理各种基础工具类，加入常用库
