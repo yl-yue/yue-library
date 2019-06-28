@@ -12,7 +12,7 @@
 	<description>yue-基础库</description>
 	
 	<properties>
-		<fastjson.version>1.2.58</fastjson.version>
+		<fastjson.version>1.2.56</fastjson.version>
 		<jsr305.version>3.0.2</jsr305.version>
 	</properties>
 	
@@ -48,6 +48,7 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 		
+		<!-- @Nullable注解，jsr305标准 -->
 		<dependency>
 		    <groupId>com.google.code.findbugs</groupId>
 		    <artifactId>jsr305</artifactId>
