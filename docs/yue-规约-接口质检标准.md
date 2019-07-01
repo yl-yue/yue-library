@@ -9,18 +9,22 @@
 - DELETE 删除接口（用于删除数据，具有破坏性）
 
 ### GET规范
-- /user/get 用于获得单条数据
-- /user/list 用于获得列表数据
-- /user/isUser 用于获得Boolean值，确认用户是否存在
+- /user/get 用户-单个（获得单条数据）
+- /user/list 用户-列表（获得列表数据）
+- /user/isUser 用户-确认（获得Boolean值）
 
 ### POST规范
-- /user/insert 插入数据
-- /open/login 加密数据接口
+- /user/insert 用户-插入（插入数据）
+- /wxPay/app 微信支付-APP（业务操作或涉及加密等）
+- /aliPay/app 支付宝支付-APP（业务操作或涉及加密等）
+- /open/login 登录（业务操作或涉及加密等）
+- /open/logout 登出（业务操作或涉及加密等）
 
 ### PUT规范
-- /user/updateById 根据id更新用户数据
-- /user/updateNickname 更新用户昵称
+- /user/updateById 用户-更新-ById（更新单条数据）
+- /user/updateNickname 用户-更新-昵称（更新具体值）
+- /user/resetPassword 用户-重置密码（更新业务）
 
 ### DELETE规范
-- /user/delete 根据ID删除数据
-- /user/deleteByNickname 根据用户昵称删除数据
+- /user/delete 用户-删除（删除单条数据）
+- /user/deleteByNickname 用户-删除-ByNickname（删除符合条件数据）

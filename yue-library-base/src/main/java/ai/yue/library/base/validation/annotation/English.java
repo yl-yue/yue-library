@@ -17,6 +17,7 @@ import javax.validation.Payload;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 验证该字符串是否是字母（包括大写和小写字母）
  * @author  孙金川
  * @version 创建时间：2019年5月8日
  */

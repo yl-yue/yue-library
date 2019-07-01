@@ -17,6 +17,16 @@ import javax.validation.Payload;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 验证是否为生日<br>
+ * 只支持以下几种格式：
+ * <ul>
+ * <li>yyyyMMdd</li>
+ * <li>yyyy-MM-dd</li>
+ * <li>yyyy/MM/dd</li>
+ * <li>yyyyMMdd</li>
+ * <li>yyyy年MM月dd日</li>
+ * </ul>
+ * 
  * @author  孙金川
  * @version 创建时间：2019年5月8日
  */
