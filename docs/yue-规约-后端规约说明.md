@@ -20,7 +20,7 @@
 - 一个包中可以包含多个相同业务类
 
 ### POJO
-- IPO（Interface Param Object）：接口入参对象，建议复杂参数使用
+- IPO（Interface Param Object）：接口入参对象，建议复杂入参使用（如：<font color=red>多层次嵌套、多参数、多校验</font>）
 - DO（Data Object）：数据对象一般情况下与数据库表结构一一对应，通过 DAO 层向上传输数据源对象。
 - DTO（Data Transfer Object）：数据传输对象，Service 或 Manager 向外传输的对象。使用场景：第三方接口固定返回对象，多表链接对象、特殊业务固定传输对象
 - VO（View Object）：业务视图对象又称显示层对象，通常是 Web 向模板渲染引擎层传输的对象。

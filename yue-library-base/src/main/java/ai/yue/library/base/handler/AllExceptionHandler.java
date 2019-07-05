@@ -23,6 +23,7 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
+import cn.hutool.core.exceptions.ValidateException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,7 +42,7 @@ public abstract class AllExceptionHandler {
     @ExceptionHandler(Exception.class)
 	public Result<?> exceptionHandler(Exception e) {
     	e.printStackTrace();
-    	return ResultInfo.error();
+    	return ResultInfo.error(e.toString());
 	}
 	
 	/**
@@ -100,6 +101,18 @@ public abstract class AllExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ParamException.class)
 	public Result<?> paramExceptionHandler(ParamException e) {
+    	ExceptionUtils.printException(e);
+		return ResultInfo.param_check_not_pass(e.getMessage());
+	}
+    
+    /**
+	 * 验证异常统一处理
+	 * @param e 验证异常
+	 * @return 结果
+	 */
+    @ResponseBody
+    @ExceptionHandler(ValidateException.class)
+	public Result<?> validateExceptionHandler(ValidateException e) {
     	ExceptionUtils.printException(e);
 		return ResultInfo.param_check_not_pass(e.getMessage());
 	}

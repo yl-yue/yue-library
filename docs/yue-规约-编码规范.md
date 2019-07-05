@@ -5,6 +5,7 @@
 　　服务端编码规范尤为重要，好的编码习惯不光能减少BUG的产生，更能严谨开发人员的逻辑思维，从而减少一些不必要的损失。<br>
 
 - [《阿里巴巴Java开发手册》](http://suo.im/4tsCsN)
+- [《28个Java开发常用规范技巧总结》](https://blog.csdn.net/weixin_38405253/article/details/94690308)
 - [《后端规约说明》](yue-规约-后端规约说明.md#后端规约说明)
 - [STS（eclipse）JAVA代码模版](https://gitee.com/yl-yue/yue-library/raw/master/docs/_media/STS配置.epf)
 
