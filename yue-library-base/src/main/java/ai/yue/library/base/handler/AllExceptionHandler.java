@@ -1,13 +1,19 @@
 package ai.yue.library.base.handler;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.AttackException;
 import ai.yue.library.base.exception.AuthorizeException;
@@ -21,9 +27,12 @@ import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ExceptionUtils;
+import ai.yue.library.base.util.HttpUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -103,6 +112,29 @@ public abstract class AllExceptionHandler {
 	public Result<?> paramExceptionHandler(ParamException e) {
     	ExceptionUtils.printException(e);
 		return ResultInfo.param_check_not_pass(e.getMessage());
+	}
+    
+    /**
+	 * {@linkplain Valid} 验证异常统一处理
+	 * @param e 验证异常
+	 * @return 结果
+	 */
+    @ResponseBody
+    @ExceptionHandler(BindException.class)
+	public Result<?> bindExceptionHandler(BindException e) {
+    	String uri = HttpUtils.getRequest().getRequestURI();
+    	Console.error("uri={}", uri);
+		List<ObjectError> errors = e.getAllErrors();
+		JSONObject paramHint = new JSONObject();
+		errors.forEach(error -> {
+			String str = StrUtil.subAfter(error.getArguments()[0].toString(), "[", true);
+			String key = str.substring(0, str.length() - 1);
+			String msg = error.getDefaultMessage();
+			paramHint.put(key, msg);
+			Console.error(key + " " + msg);
+		});
+		
+		return ResultInfo.param_check_not_pass(paramHint.toString());
 	}
     
     /**

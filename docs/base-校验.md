@@ -132,14 +132,14 @@ public class ValidationIPO {
 }
 ```
 
-方式一（<font color=red>推荐</font>）
+**方式一：**`Controller`层，通过注解`@Valid`校验<font color=red>（推荐）</font>
 
 ```java
 @PostMapping("/valid")
 public Result<?> valid(@Valid ValidationIPO validationIPO) {
 ```
 
-方式二：通过调用validator.valid()方法
+**方式二：**通过调用validator.valid()方法
 
 ```java
 validator.valid(validationIPO);
