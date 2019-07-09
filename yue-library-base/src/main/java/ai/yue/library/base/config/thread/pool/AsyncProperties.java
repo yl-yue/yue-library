@@ -1,0 +1,88 @@
+package ai.yue.library.base.config.thread.pool;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
+
+/**
+ * @author 	 孙金川
+ * @version 创建时间：2018年11月6日
+ */
+@Data
+@ConfigurationProperties("yue.thread-pool.async")
+public class AsyncProperties {
+	
+	/**
+	 * 是否启用异步线程池自动配置
+	 * <p>
+	 * 默认：false
+	 */
+	private boolean enabled = false;
+	
+	/**
+	 * 线程池名的前缀
+	 * <p>
+	 * 设置好了之后可以方便我们定位处理任务所在的线程池
+	 * <p>
+	 * 默认：async-exec-
+	 */
+	private String threadNamePrefix = "async-exec-";
+	
+	/**
+	 * 核心线程数
+	 * <p>
+	 * 线程池创建时候初始化的线程数
+	 * <p>
+	 * 默认：10
+	 */
+	private Integer corePoolSize = 10;
+	
+	/**
+	 * 最大线程数
+	 * <p>
+	 * 线程池最大的线程数，只有在缓冲队列满了之后才会申请超过核心线程数的线程
+	 * <p>
+	 * 默认：20
+	 */
+	private Integer maxPoolSize = 20;
+	
+	/**
+	 * 缓冲队列
+	 * <p>
+	 * 用来缓冲执行任务的队列
+	 * <p>
+	 * 默认：200
+	 */
+	private Integer queueCapacity = 200;
+	
+	/**
+	 * 允许线程的空闲时间（单位：秒）
+	 * <p>
+	 * 当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
+	 * <p>
+	 * 默认：60
+	 */
+	private Integer keepAliveSeconds = 60;
+	
+	/**
+	 * 用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean。
+	 * <p>
+	 * 默认：true
+	 */
+	private Boolean waitForTasksToCompleteOnShutdown = true;
+	
+	/**
+	 * 该方法用来设置线程池中任务的等待时间，如果超过这个时间还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住。
+	 * <p>
+	 * 默认：60
+	 */
+	private Integer awaitTerminationSeconds = 60;
+	
+	/**
+	 * 线程池拒绝策略
+	 * <p>
+	 * 默认：{@linkplain RejectedExecutionHandlerPolicy#CALLER_RUNS_POLICY}
+	 */
+	private RejectedExecutionHandlerPolicy rejectedExecutionHandlerPolicy = RejectedExecutionHandlerPolicy.CALLER_RUNS_POLICY;
+	
+}
