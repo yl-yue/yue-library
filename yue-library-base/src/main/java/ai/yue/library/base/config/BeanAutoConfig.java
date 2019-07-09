@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,6 +19,7 @@ import ai.yue.library.base.config.factory.HttpsRequestFactory;
 import ai.yue.library.base.config.properties.ConstantProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.properties.RestProperties;
+import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
+@Import({ AsyncConfig.class })
 @EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
 public class BeanAutoConfig {
 	
