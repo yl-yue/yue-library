@@ -16,7 +16,7 @@ import lombok.Data;
 public class CorsProperties {
 	
 	/**
-	 * 是否允许跨域
+	 * 是否允许 <code style="color:red">跨域</code>
 	 * <p>
 	 * 默认：true
 	 */

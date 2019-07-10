@@ -15,7 +15,7 @@ import lombok.Data;
 public class WxMaProperties {
 	
 	/**
-	 * 是否启用微信小程序自动配置
+	 * 是否启用 <code style="color:red">微信小程序</code> 自动配置
 	 * <p>
 	 * 默认：false
 	 */

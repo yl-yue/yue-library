@@ -1,4 +1,4 @@
-package ai.yue.library.base.config.factory;
+package ai.yue.library.base.config.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 /**
- * @author 	孙金川
+ * @author 	 孙金川
  * @version 创建时间：2018年11月10日
  */
 public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
@@ -28,7 +28,7 @@ public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
 		}
 		super.prepareConnection(connection, httpMethod);
 	}
-
+	
 	private void prepareHttpsConnection(HttpsURLConnection connection) {
 		connection.setHostnameVerifier(new SkipHostnameVerifier());
 		try {
@@ -37,13 +37,13 @@ public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
 			// Ignore
 		}
 	}
-
+	
 	private SSLSocketFactory createSslSocketFactory() throws Exception {
 		SSLContext context = SSLContext.getInstance("TLS");
 		context.init(null, new TrustManager[] { new SkipX509TrustManager() }, new SecureRandom());
 		return context.getSocketFactory();
 	}
-
+	
 	private class SkipHostnameVerifier implements HostnameVerifier {
 
 		@Override
@@ -52,7 +52,7 @@ public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
 		}
 
 	}
-
+	
 	private static class SkipX509TrustManager implements X509TrustManager {
 
 		@Override
@@ -69,5 +69,5 @@ public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
 		}
 
 	}
-
+	
 }
