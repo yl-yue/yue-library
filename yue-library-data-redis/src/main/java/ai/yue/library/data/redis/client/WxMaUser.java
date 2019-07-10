@@ -1,14 +1,27 @@
 package ai.yue.library.data.redis.client;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import com.google.common.collect.Maps;
 
 import ai.yue.library.base.exception.ParamException;
-import ai.yue.library.data.redis.config.config.WxMaConfig;
+import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.data.redis.config.properties.WxMaProperties;
 import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import lombok.NoArgsConstructor;
+import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 /**
@@ -17,12 +30,42 @@ import me.chanjar.weixin.common.error.WxErrorException;
  * @author  孙金川
  * @version 创建时间：2019年6月18日
  */
-@NoArgsConstructor
+@Configuration
+@EnableConfigurationProperties(WxMaProperties.class)
+@ConditionalOnProperty(prefix = "yue.wx.miniapp", name = "enabled", havingValue = "true")
 public class WxMaUser {
 
 	@Autowired
-	WxMaConfig wxMaConfig;
-	
+	private WxMaProperties wxMaProperties;
+    private Map<String, WxMaService> maServices = Maps.newHashMap();
+    
+    @PostConstruct
+    private void init() {
+        List<WxMaProperties.Config> configs = wxMaProperties.getConfigs();
+        if (ListUtils.isEmpty(configs)) {
+        	throw new RuntimeException("无效的小程序配置...");
+        }
+        
+        maServices = configs.stream()
+            .map(a -> {
+                WxMaInMemoryConfig config = new WxMaInMemoryConfig();
+                config.setAppid(a.getAppid());
+                config.setSecret(a.getSecret());
+                WxMaService service = new WxMaServiceImpl();
+                service.setWxMaConfig(config);
+                return service;
+            }).collect(Collectors.toMap(s -> s.getWxMaConfig().getAppid(), a -> a));
+    }
+    
+    private WxMaService getMaService(String appid) {
+        WxMaService wxService = maServices.get(appid);
+        if (wxService == null) {
+            throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
+        }
+
+        return wxService;
+    }
+    
 	/**
 	 * 登陆
 	 * @param appid APPID
@@ -30,7 +73,7 @@ public class WxMaUser {
 	 * @return
 	 */
     public WxMaJscode2SessionResult login(String appid, String code) {
-        WxMaService wxService = wxMaConfig.getMaService(appid);
+        WxMaService wxService = getMaService(appid);
         WxMaJscode2SessionResult wxMaJscode2SessionResult = null;
 		try {
 			wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
@@ -56,7 +99,7 @@ public class WxMaUser {
      */
     public WxMaUserInfo getInfo(String appid, String sessionKey, String signature, 
                        String rawData, String encryptedData, String iv) {
-        WxMaService wxService = wxMaConfig.getMaService(appid);
+        WxMaService wxService = getMaService(appid);
         
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
@@ -81,7 +124,7 @@ public class WxMaUser {
      * @return
      */
 	public WxMaPhoneNumberInfo getPhone(String appid, String sessionKey, String encryptedData, String iv) {
-        WxMaService wxService = wxMaConfig.getMaService(appid);
+        WxMaService wxService = getMaService(appid);
         
         // 解密
         WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);

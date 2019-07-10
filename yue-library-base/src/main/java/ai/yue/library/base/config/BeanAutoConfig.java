@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -33,11 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
 public class BeanAutoConfig {
 	
-	// restTemplate-HTTPS客户端
+	// RestTemplate-HTTPS客户端
 	
-    @Bean
-    @ConditionalOnMissingBean
-    public ClientHttpRequestFactory httpsRequestFactory(RestProperties restProperties){
+	@Bean
+	@ConditionalOnMissingBean
+    public RestTemplate restTemplate(RestProperties restProperties){
     	HttpsRequestFactory factory = new HttpsRequestFactory();
     	
     	// 设置链接超时时间
@@ -52,20 +51,7 @@ public class BeanAutoConfig {
     		factory.setReadTimeout(readTimeout);
     	}
     	
-        return factory;
-    }
-    
-	@Bean
-	@ConditionalOnMissingBean
-    public Validator validator(){
-		log.info("【初始化配置-校验器】正在初始化Bean：Validator ...");
-        return new Validator();
-    }
-	
-	@Bean
-	@ConditionalOnMissingBean
-    public RestTemplate restTemplate(ClientHttpRequestFactory factory){
-		log.info("【初始化配置-HTTPS客户端】正在初始化Bean：RestTemplate ...");
+		log.info("【初始化配置-HTTPS客户端】Bean：RestTemplate ... 已初始化完毕。");
         return new RestTemplate(factory);
     }
 	
@@ -94,8 +80,17 @@ public class BeanAutoConfig {
 		
 		source.registerCorsConfiguration("/**", config);
 		
-		log.info("【初始化配置-跨域】正在初始化Bean：CorsFilter ...");
+		log.info("【初始化配置-跨域】默认任何情况下都允许跨域访问 ... 已初始化完毕。");
 		return new CorsFilter(source);
 	}
+	
+	// Validator-校验器
+	
+	@Bean
+	@ConditionalOnMissingBean
+    public Validator validator(){
+		log.info("【初始化配置-校验器】Bean：Validator ... 已初始化完毕。");
+        return new Validator();
+    }
 	
 }

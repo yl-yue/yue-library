@@ -47,6 +47,15 @@ public class AsyncProperties {
 	private Integer maxPoolSize = 20;
 	
 	/**
+	 * 允许线程的空闲时间（单位：秒）
+	 * <p>
+	 * 当超过了核心线程数之外的线程在空闲时间到达之后会被销毁
+	 * <p>
+	 * 默认：60
+	 */
+	private Integer keepAliveSeconds = 60;
+	
+	/**
 	 * 缓冲队列
 	 * <p>
 	 * 用来缓冲执行任务的队列
@@ -56,27 +65,29 @@ public class AsyncProperties {
 	private Integer queueCapacity = 200;
 	
 	/**
-	 * 允许线程的空闲时间（单位：秒）
+	 * 是否允许核心线程超时
 	 * <p>
-	 * 当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
-	 * <p>
-	 * 默认：60
+	 * 默认：false
 	 */
-	private Integer keepAliveSeconds = 60;
+	private Boolean allowCoreThreadTimeOut = false;
 	
 	/**
-	 * 用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean。
+	 * 应用关闭时-是否等待未完成任务继续执行，再继续销毁其他的Bean
 	 * <p>
 	 * 默认：true
 	 */
 	private Boolean waitForTasksToCompleteOnShutdown = true;
 	
 	/**
-	 * 该方法用来设置线程池中任务的等待时间，如果超过这个时间还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住。
+	 * 依赖 {@linkplain #waitForTasksToCompleteOnShutdown} 为true
 	 * <p>
-	 * 默认：60
+	 * 应用关闭时-继续等待时间（单位：秒）
+	 * <p>
+	 * 如果超过这个时间还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+	 * <p>
+	 * 默认：10
 	 */
-	private Integer awaitTerminationSeconds = 60;
+	private Integer awaitTerminationSeconds = 10;
 	
 	/**
 	 * 线程池拒绝策略

@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
 import ai.yue.library.data.redis.client.WxMaUser;
-import ai.yue.library.data.redis.config.config.WxMaConfig;
 import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 
@@ -22,7 +21,7 @@ import ai.yue.library.data.redis.config.properties.WxOpenProperties;
  * @version 创建时间：2018年6月11日
  */
 @Configuration
-@Import({ WxMaConfig.class })
+@Import({ WxMaUser.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @EnableConfigurationProperties({ WxOpenProperties.class, QqProperties.class })
 public class RedisAutoConfig {
@@ -39,13 +38,6 @@ public class RedisAutoConfig {
 	@ConditionalOnBean(Redis.class)
 	public User user() {
 		return new User();
-	}
-	
-	@Bean
-	@Primary
-	@ConditionalOnBean(WxMaConfig.class)
-	public WxMaUser wxMaUser() {
-		return new WxMaUser();
 	}
 	
 }

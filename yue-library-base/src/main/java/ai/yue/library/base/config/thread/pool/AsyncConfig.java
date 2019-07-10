@@ -3,6 +3,8 @@ package ai.yue.library.base.config.thread.pool;
 import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,6 +32,11 @@ public class AsyncConfig implements AsyncConfigurer {
 	@Autowired
 	AsyncProperties asyncProperties;
 	
+    @PostConstruct
+    private void init() {
+    	log.info("【初始化配置-异步线程池】异步线程池配置已加载，待使用时初始化 ...");
+    }
+    
 	/**
 	 * 自定义异常处理类
 	 */
@@ -54,15 +61,17 @@ public class AsyncConfig implements AsyncConfigurer {
 	@Override
 	public Executor getAsyncExecutor() {
 		ContextAwareAsyncExecutor executor = new ContextAwareAsyncExecutor();
-		executor.setThreadNamePrefix(asyncProperties.getThreadNamePrefix());// 线程池名的前缀：设置好了之后可以方便我们定位处理任务所在的线程池
-		executor.setCorePoolSize(asyncProperties.getCorePoolSize());// 核心线程数10：线程池创建时候初始化的线程数
-		executor.setMaxPoolSize(asyncProperties.getMaxPoolSize());// 最大线程数20：线程池最大的线程数，只有在缓冲队列满了之后才会申请超过核心线程数的线程
-		executor.setQueueCapacity(asyncProperties.getQueueCapacity());// 缓冲队列200：用来缓冲执行任务的队列
-		executor.setKeepAliveSeconds(asyncProperties.getKeepAliveSeconds());// 允许线程的空闲时间60秒：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
-		executor.setWaitForTasksToCompleteOnShutdown(asyncProperties.getWaitForTasksToCompleteOnShutdown());// 用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean。
-		executor.setAwaitTerminationSeconds(asyncProperties.getAwaitTerminationSeconds());// 该方法用来设置线程池中任务的等待时间，如果超过这个时间还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住。
-		executor.setRejectedExecutionHandler(asyncProperties.getRejectedExecutionHandlerPolicy().getRejectedExecutionHandler());// 线程池拒绝策略：CallerRunsPolicy，当线程池的所有线程都已经被占用时，若原始线程未关闭将由原始线程来执行任务，否则该任务将被丢弃。
+		executor.setThreadNamePrefix(asyncProperties.getThreadNamePrefix());// 线程池名的前缀
+		executor.setCorePoolSize(asyncProperties.getCorePoolSize());// 核心线程数
+		executor.setMaxPoolSize(asyncProperties.getMaxPoolSize());// 最大线程数
+		executor.setKeepAliveSeconds(asyncProperties.getKeepAliveSeconds());// 允许线程的空闲时间
+		executor.setQueueCapacity(asyncProperties.getQueueCapacity());// 缓冲队列数
+		executor.setAllowCoreThreadTimeOut(asyncProperties.getAllowCoreThreadTimeOut());// 是否允许核心线程超时
+		executor.setWaitForTasksToCompleteOnShutdown(asyncProperties.getWaitForTasksToCompleteOnShutdown());// 应用关闭时-是否等待未完成任务继续执行，再继续销毁其他的Bean
+		executor.setAwaitTerminationSeconds(asyncProperties.getAwaitTerminationSeconds());// 应用关闭时-继续等待时间（单位：秒）
+		executor.setRejectedExecutionHandler(asyncProperties.getRejectedExecutionHandlerPolicy().getRejectedExecutionHandler());// 线程池拒绝策略
 		executor.initialize();
+		log.info("【初始化配置-异步线程池】共用父线程上下文环境，异步执行任务时不丢失token ... 已初始化完毕。");
 		return executor;
 	}
 	
