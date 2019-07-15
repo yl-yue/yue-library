@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.lang.Nullable;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -559,13 +560,12 @@ class DBQuery extends DBBase {
      * <p>阿里最优查询SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT :page, :limit) b where a.id=b.id</code><br><br>
      * 
-     * @param countSql 用于统计总数的sql语句<i>（注意：count(*)必须拥有count别名）</i>
-     * <i>同时countSql可以为null表示不统计</i>
+     * @param countSql 用于统计总数的sql语句 <i>（注意：count(*)必须拥有count别名）</i> 同时countSql可以为null表示不统计 <b>可选参数</b>
      * @param querySql 用于查询数据的sql语句
      * @param pageIPO 分页查询参数 {@linkplain PageIPO}
      * @return count（总数），data（分页列表数据）
      */
-	public PageVO pageSql(String countSql, String querySql, PageIPO pageIPO) {
+	public PageVO pageSql(@Nullable String countSql, String querySql, PageIPO pageIPO) {
 		PageDTO pageDTO = pageSqlDTO(countSql, querySql, pageIPO);
 		return pageVO(pageDTO);
 	}
@@ -577,14 +577,13 @@ class DBQuery extends DBBase {
      * <p>阿里最优查询SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT :page, :limit) b where a.id=b.id</code><br><br>
      * @param <T> 泛型
-     * @param countSql 用于统计总数的sql语句<i>（注意：count(*)必须拥有count别名）</i>
-     * <i>同时countSql可以为null表示不统计</i>
+     * @param countSql 用于统计总数的sql语句 <i>（注意：count(*)必须拥有count别名）</i> 同时countSql可以为null表示不统计 <b>可选参数</b>
      * @param querySql 用于查询数据的sql语句
      * @param pageIPO 分页查询参数 {@linkplain PageIPO}
      * @param mappedClass 映射类
      * @return count（总数），data（分页列表数据）
      */
-	public <T> PageTVO<T> pageSql(String countSql, String querySql, PageIPO pageIPO, Class<T> mappedClass) {
+	public <T> PageTVO<T> pageSql(@Nullable String countSql, String querySql, PageIPO pageIPO, Class<T> mappedClass) {
 		PageDTO pageDTO = pageSqlDTO(countSql, querySql, pageIPO);
 		return pageTVO(pageDTO, mappedClass);
 	}

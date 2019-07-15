@@ -10,8 +10,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -40,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 创建时间：2017年10月8日
  */
 @Slf4j
-public abstract class AllExceptionHandler {
+public abstract class GlobalExceptionHandler {
 	
 	/**
 	 * 拦截所有未处理异常
@@ -219,7 +217,7 @@ public abstract class AllExceptionHandler {
     @ExceptionHandler(AuthorizeException.class)
 	public void authorizeExceptionHandler(AuthorizeException e) throws IOException {
     	ExceptionUtils.printException(e);
-    	HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+		HttpServletResponse response = HttpUtils.getResponse();
 		response.sendRedirect("");
 	}
     
