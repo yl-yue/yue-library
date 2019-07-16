@@ -70,7 +70,7 @@ public class WxMaUser {
 	 * 登陆
 	 * @param appid APPID
 	 * @param code 授权CODE码
-	 * @return
+	 * @return {@linkplain WxMaJscode2SessionResult} <code style="color:red">unionid 用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回，详见 <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/union-id.html">UnionID 机制说明</a> 。</code>
 	 */
     public WxMaJscode2SessionResult login(String appid, String code) {
         WxMaService wxService = getMaService(appid);

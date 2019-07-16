@@ -14,8 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>简单Redis</h2>
- * 命令详细说明请参照Redis官方文档进行查阅<br>
- * <a>http://www.redis.net.cn/order/</a>
+ * 命令详细说明请参照 Redis <a href="http://www.redis.net.cn/order">官方文档</a> 进行查阅
  * 
  * @author  孙金川
  * @version 创建时间：2018年3月27日
