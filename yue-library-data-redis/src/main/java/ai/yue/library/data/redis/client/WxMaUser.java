@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.Maps;
 
 import ai.yue.library.base.exception.ParamException;
+import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.data.redis.config.properties.WxMaProperties;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
@@ -67,21 +69,23 @@ public class WxMaUser {
     }
     
 	/**
-	 * 登陆
+	 * 获取登录后的session信息
+	 * 
 	 * @param appid APPID
 	 * @param code 授权CODE码
 	 * @return {@linkplain WxMaJscode2SessionResult} <code style="color:red">unionid 用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回，详见 <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/union-id.html">UnionID 机制说明</a> 。</code>
 	 */
-    public WxMaJscode2SessionResult login(String appid, String code) {
+    public WxMaJscode2SessionResult getSessionInfo(String appid, String code) {
         WxMaService wxService = getMaService(appid);
         WxMaJscode2SessionResult wxMaJscode2SessionResult = null;
 		try {
 			wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
 		} catch (WxErrorException e) {
-			e.printStackTrace();
+			String msg = e.getMessage();
+			throw new ResultException(ResultInfo.dev_defined(msg));
 		}
 		
-        return wxMaJscode2SessionResult;
+		return wxMaJscode2SessionResult;
     }
     
     /**

@@ -1,6 +1,9 @@
 package ai.yue.library.base.validation;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -9,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.util.DateUtils;
+import ai.yue.library.base.view.ResultInfo;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
@@ -30,22 +37,27 @@ public class Validator {
 	private javax.validation.Validator validator;
     
     // 提示
-	private static final String NOT_NULL_HINT_MSG = "参数必须不为 null";
-	private static final String NOT_EMPTY_HINT_MSG = "参数必须不为empty(null 或 \"\")";
-	private static final String ASSERT_TRUE_HINT_MSG = "参数必须为 true";
-	private static final String ASSERT_FALSE_HINT_MSG = "参数必须为 false";
-	private static final String CHINESE_HINT_MSG = "中文校验不通过";
-	private static final String ENGLISH_HINT_MSG = "英文校验不通过";
-	private static final String BIRTHDAY_HINT_MSG = "生日校验不通过";
-	private static final String CELLPHONE_HINT_MSG = "不是一个合法的手机号码";
-	private static final String EMAIL_HINT_MSG = "不是一个合法的邮箱格式";
-	private static final String ID_CARD_HINT_MSG = "不是一个合法的身份证号码";
-	private static final String PLATE_NUMBER_HINT_MSG = "不是一个合法的中国车牌号码";
-	private static final String UUID_HINT_MSG = "不是一个合法的UUID";
-	private static final String URL_HINT_MSG = "不是一个合法的URL";
-	private static final String IPV4_HINT_MSG = "不是一个合法的IPV4地址";
-	private static final String IPV6_HINT_MSG = "不是一个合法的IPV6地址";
-	private static final String MAC_ADDRESS_HINT_MSG = "不是一个合法的MAC地址";
+	private static final String NOT_NULL_HINT_MSG = "参数 {} 必须不为 null";
+	private static final String NOT_EMPTY_HINT_MSG = "参数 {} 必须不为empty(null 或 \"\")";
+	private static final String ASSERT_TRUE_HINT_MSG = "参数 {} 必须为 true";
+	private static final String ASSERT_FALSE_HINT_MSG = "参数 {} 必须为 false";
+	private static final String DIGITS_HINT_MSG = "参数 {} 必须是一个数字，其值必须在 {} - {} 之间（包含）";
+	private static final String MAX_HINT_MSG = "参数 {} 不能超过最大值：{}";
+	private static final String MIN_HINT_MSG = "参数 {} 不能低于最小值：{}";
+	private static final String LENGTH_HINT_MSG = "参数 {} 长度必须在 {} - {} 之间（包含）";
+	private static final String CHINESE_HINT_MSG = "参数 {} 中文校验不通过";
+	private static final String ENGLISH_HINT_MSG = "参数 {} 英文校验不通过";
+	private static final String BIRTHDAY_HINT_MSG = "参数 {} 生日校验不通过";
+	private static final String CELLPHONE_HINT_MSG = "参数 {} 不是一个合法的手机号码";
+	private static final String EMAIL_HINT_MSG = "参数 {} 不是一个合法的邮箱格式";
+	private static final String ID_CARD_HINT_MSG = "参数 {} 不是一个合法的身份证号码";
+	private static final String PLATE_NUMBER_HINT_MSG = "参数 {} 不是一个合法的中国车牌号码";
+	private static final String UUID_HINT_MSG = "参数 {} 不是一个合法的UUID";
+	private static final String URL_HINT_MSG = "参数 {} 不是一个合法的URL";
+	private static final String IPV4_HINT_MSG = "参数 {} 不是一个合法的IPV4地址";
+	private static final String IPV6_HINT_MSG = "参数 {} 不是一个合法的IPV6地址";
+	private static final String MAC_ADDRESS_HINT_MSG = "参数 {} 不是一个合法的MAC地址";
+	private static final String REGEX_HINT_MSG = "参数 {} 不满足正则表达式：{}";
     
     /**
      * 切换校验对象
@@ -60,127 +72,74 @@ public class Validator {
     
     /**
      * 必须不为 {@code null}
-     *
-     * @return Validator
-     */
-    public Validator notNull() {
-        return notNull(NOT_NULL_HINT_MSG);
-    }
-    
-    /**
-     * 必须不为 {@code null}
      * 
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator notNull(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateNotNull(param, errorMsg);
+    public Validator notNull(String paramName) {
+    	cn.hutool.core.lang.Validator.validateNotNull(param, StrUtil.format(NOT_NULL_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 必须不为empty(null 或 "")
-     *
-     * @return Validator
-     */
-    public Validator notEmpty() {
-        return notEmpty(NOT_EMPTY_HINT_MSG);
-    }
-    
-    /**
-     * 必须不为empty(null 或 "")
      * 
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator notEmpty(String errorMsg) {
-		cn.hutool.core.lang.Validator.validateNotEmpty(param, errorMsg);
+    public Validator notEmpty(String paramName) {
+		cn.hutool.core.lang.Validator.validateNotEmpty(param, StrUtil.format(NOT_EMPTY_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 必须为 true
-     *
-     * @return Validator
-     */
-    public Validator assertTrue() {
-        return assertTrue(ASSERT_TRUE_HINT_MSG);
-    }
-    
-    /**
-     * 必须为 true
      * 
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator assertTrue(String errorMsg) {
-		cn.hutool.core.lang.Validator.validateTrue((boolean) param, errorMsg);
+    public Validator assertTrue(String paramName) {
+		cn.hutool.core.lang.Validator.validateTrue((boolean) param, StrUtil.format(ASSERT_TRUE_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 必须为 false
-     *
-     * @return Validator
-     */
-    public Validator assertFalse() {
-        return assertFalse(ASSERT_FALSE_HINT_MSG);
-    }
-    
-    /**
-     * 必须为 false
      * 
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator assertFalse(String errorMsg) {
-		cn.hutool.core.lang.Validator.validateFalse((boolean) param, errorMsg);
+    public Validator assertFalse(String paramName) {
+		cn.hutool.core.lang.Validator.validateFalse((boolean) param, StrUtil.format(ASSERT_FALSE_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 必须是一个数字，其值必须在可接受的范围内（包含）
-     *
-     * @return Validator
-     */
-    public Validator digits(Number max, Number min) {
-		return digits(max, min, StrUtil.format("必须是一个数字，其值必须在{}，{}之间（包含）", max, min));
-    }
-    
-    /**
-     * 必须是一个数字，其值必须在可接受的范围内（包含）
      * 
-     * @param errorMsg 错误信息
+     * @param min 最小值
+     * @param max 最大值
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator digits(Number max, Number min, String errorMsg) {
-		cn.hutool.core.lang.Validator.validateBetween((Number) param, min, max, errorMsg);
-        return this;
-    }
+	public Validator digits(Number min, Number max, String paramName) {
+		cn.hutool.core.lang.Validator.validateBetween((Number) param, min, max,	StrUtil.format(DIGITS_HINT_MSG, paramName, min, max));
+		return this;
+	}
     
     /**
      * 最大值校验
      *
      * @param max 最大值
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator max(Number max) {
-        return max(max, "不能超过最大值：" + max);
-    }
-    
-    /**
-     * 最大值校验
-     *
-     * @param max 最大值
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-	public Validator max(Number max, String errorMsg) {
+	public Validator max(Number max, String paramName) {
 		BigDecimal bigNum1 = NumberUtil.toBigDecimal((Number) param);
 		BigDecimal bigNum2 = NumberUtil.toBigDecimal(max);
 		
     	if (!NumberUtil.isLessOrEqual(bigNum1, bigNum2)) {
-    		throw new ValidateException(errorMsg);
+    		throw new ValidateException(StrUtil.format(MAX_HINT_MSG, paramName, max));
     	}
         return this;
     }
@@ -189,25 +148,15 @@ public class Validator {
      * 最小值校验
      *
      * @param min 最小值
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator min(Number min) {
-        return min(min, "不能低于最小值：" + min);
-    }
-    
-    /**
-     * 最小值校验
-     *
-     * @param min 最小值
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator min(Number min, String errorMsg) {
+    public Validator min(Number min, String paramName) {
 		BigDecimal bigNum1 = NumberUtil.toBigDecimal((Number) param);
 		BigDecimal bigNum2 = NumberUtil.toBigDecimal(min);
 		
     	if (!NumberUtil.isGreaterOrEqual(bigNum1, bigNum2)) {
-    		throw new ValidateException(errorMsg);
+    		throw new ValidateException(StrUtil.format(MIN_HINT_MSG, paramName, min));
     	}
         return this;
     }
@@ -215,26 +164,15 @@ public class Validator {
     /**
      * 长度校验
      *
-     * @param max 最大长度
      * @param min 最小长度
+     * @param max 最大长度
+     * @param paramName 参数名
      * @return Validator
      */
-	public Validator length(int max, int min) {
-		return length(max, min, StrUtil.format("最大长度不能超过{}，最小长度不能少于{}", max, min));
-    }
-    
-    /**
-     * 长度校验
-     *
-     * @param max 最大长度
-     * @param min 最小长度
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-	public Validator length(int max, int min, String errorMsg) {
+	public Validator length(int min, int max, String paramName) {
 		int length = ObjectUtil.length(param);
-		if (false == (length <= max && length >= min)) {
-			throw new ValidateException(errorMsg);
+		if (false == (length >= min && length <= max)) {
+			throw new ValidateException(StrUtil.format(LENGTH_HINT_MSG, paramName, min, max));
 		}
 		
         return this;
@@ -243,262 +181,155 @@ public class Validator {
     /**
      * 中文校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator chinese() {
-        return chinese(CHINESE_HINT_MSG);
-    }
-    
-    /**
-     * 中文校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator chinese(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateChinese((CharSequence) param, errorMsg);
+    public Validator chinese(String paramName) {
+    	cn.hutool.core.lang.Validator.validateChinese((CharSequence) param, StrUtil.format(CHINESE_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 英文校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator english() {
-        return english(ENGLISH_HINT_MSG);
-    }
-    
-    /**
-     * 英文校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator english(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateWord((CharSequence) param, errorMsg);
+    public Validator english(String paramName) {
+    	cn.hutool.core.lang.Validator.validateWord((CharSequence) param, StrUtil.format(ENGLISH_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 生日校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator birthday() {
-        return birthday(BIRTHDAY_HINT_MSG);
-    }
-    
-    /**
-     * 生日校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator birthday(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateBirthday((CharSequence) param, errorMsg);
+    public Validator birthday(String paramName) {
+		String date = null;
+		if (param instanceof String) {
+			date = (String) param;
+		} else if (param instanceof Date) {
+			date = DateUtil.formatDate((Date) param);
+		} else if (param instanceof LocalDate || param instanceof LocalDateTime) {
+			date = DateUtils.y_M_d.format((LocalDate) param);
+		} else {
+			throw new ResultException(ResultInfo.error(StrUtil.format("参数 {} 未知类型，不支持生日校验", paramName)));
+		}
+		
+    	cn.hutool.core.lang.Validator.validateBirthday(date, StrUtil.format(BIRTHDAY_HINT_MSG, paramName));
         return this;
     }
 	
     /**
      * 手机号校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator cellphone() {
-        return cellphone(CELLPHONE_HINT_MSG);
-    }
-    
-    /**
-     * 手机号校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator cellphone(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateMobile((CharSequence) param, errorMsg);
+    public Validator cellphone(String paramName) {
+    	cn.hutool.core.lang.Validator.validateMobile((CharSequence) param, StrUtil.format(CELLPHONE_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 邮箱校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator email() {
-        return email(EMAIL_HINT_MSG);
-    }
-    
-    /**
-     * 邮箱校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator email(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateEmail((CharSequence) param, errorMsg);
+    public Validator email(String paramName) {
+    	cn.hutool.core.lang.Validator.validateEmail((CharSequence) param, StrUtil.format(EMAIL_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 身份证校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator idCard() {
-        return idCard(ID_CARD_HINT_MSG);
-    }
-    
-    /**
-     * 身份证校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator idCard(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateCitizenIdNumber((CharSequence) param, errorMsg);
+    public Validator idCard(String paramName) {
+    	cn.hutool.core.lang.Validator.validateCitizenIdNumber((CharSequence) param, StrUtil.format(ID_CARD_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * 中国车牌号校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator plateNumber() {
-        return plateNumber(PLATE_NUMBER_HINT_MSG);
-    }
-    
-    /**
-     * 中国车牌号校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator plateNumber(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validatePlateNumber((CharSequence) param, errorMsg);
+    public Validator plateNumber(String paramName) {
+    	cn.hutool.core.lang.Validator.validatePlateNumber((CharSequence) param, StrUtil.format(PLATE_NUMBER_HINT_MSG, paramName));
         return this;
     }
     
     /**
      * UUID校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator uuid() {
-        return uuid(UUID_HINT_MSG);
-    }
-    
-    /**
-     * UUID校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator uuid(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateUUID((CharSequence) param, errorMsg);
+    public Validator uuid(String paramName) {
+    	cn.hutool.core.lang.Validator.validateUUID((CharSequence) param, StrUtil.format(UUID_HINT_MSG, paramName));
         return this;
-    }
-	
-    /**
-     * URL校验
-     *
-     * @return Validator
-     */
-    public Validator url() {
-        return url(URL_HINT_MSG);
     }
     
     /**
      * URL校验
      *
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator url(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateUrl((CharSequence) param, errorMsg);
+    public Validator url(String paramName) {
+    	cn.hutool.core.lang.Validator.validateUrl((CharSequence) param, StrUtil.format(URL_HINT_MSG, paramName));
         return this;
-    }
-	
-    /**
-     * IPV4地址校验
-     *
-     * @return Validator
-     */
-    public Validator ipv4() {
-        return ipv4(IPV4_HINT_MSG);
     }
     
     /**
      * IPV4地址校验
      *
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator ipv4(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateIpv4((CharSequence) param, errorMsg);
+    public Validator ipv4(String paramName) {
+    	cn.hutool.core.lang.Validator.validateIpv4((CharSequence) param, StrUtil.format(IPV4_HINT_MSG, paramName));
         return this;
     }
 	
     /**
      * IPV6地址校验
      *
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator ipv6() {
-        return ipv6(IPV6_HINT_MSG);
-    }
-    
-    /**
-     * IPV6地址校验
-     *
-     * @param errorMsg 错误信息
-     * @return Validator
-     */
-    public Validator ipv6(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateIpv6((CharSequence) param, errorMsg);
+    public Validator ipv6(String paramName) {
+    	cn.hutool.core.lang.Validator.validateIpv6((CharSequence) param, StrUtil.format(IPV6_HINT_MSG, paramName));
         return this;
-    }
-	
-    /**
-     * MAC地址校验
-     *
-     * @return Validator
-     */
-    public Validator macAddress() {
-        return macAddress(MAC_ADDRESS_HINT_MSG);
     }
     
     /**
      * MAC地址校验
      *
-     * @param errorMsg 错误信息
+     * @param paramName 参数名
      * @return Validator
      */
-    public Validator macAddress(String errorMsg) {
-    	cn.hutool.core.lang.Validator.validateMac((CharSequence) param, errorMsg);
+    public Validator macAddress(String paramName) {
+    	cn.hutool.core.lang.Validator.validateMac((CharSequence) param, StrUtil.format(MAC_ADDRESS_HINT_MSG, paramName));
         return this;
     }
 	
     /**
      * 正则校验
-     * 
-     * @param regex 正则表达式
-     * @return Validator
-     */
-    public Validator regex(String regex) {
-        return regex(regex, "不满足正则表达式：" + regex);
-    }
-    
-    /**
-     * 正则校验
      *
      * @param regex 正则表达式
-     * @param errorMsg 验证错误的信息
+     * @param paramName 参数名
      * @return Validator
      */
-	public Validator regex(String regex, String errorMsg) {
-		cn.hutool.core.lang.Validator.validateMatchRegex(regex, (CharSequence) param, errorMsg);
+	public Validator regex(String regex, String paramName) {
+		cn.hutool.core.lang.Validator.validateMatchRegex(regex, (CharSequence) param, StrUtil.format(REGEX_HINT_MSG, paramName, regex));
 		return this;
 	}
 	

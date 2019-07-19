@@ -34,6 +34,8 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 全局统一异常处理
+ * 
  * @author  孙金川
  * @version 创建时间：2017年10月8日
  */

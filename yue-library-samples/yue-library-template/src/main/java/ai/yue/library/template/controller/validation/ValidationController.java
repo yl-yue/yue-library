@@ -11,6 +11,7 @@ import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.template.ipo.ValidationIPO;
+import cn.hutool.core.date.DateTime;
 
 /**
  * @author  孙金川
@@ -57,17 +58,23 @@ public class ValidationController {
 		String name = validationIPO.getName();
 		String email = validationIPO.getEmail();
 		String cellphone = validationIPO.getCellphone();
+		int age = validationIPO.getAge();
+		DateTime birthday = validationIPO.getBirthday();
 		
 		// 单个参数校验
-		validator.param(email).email();
-		validator.param(cellphone).cellphone();
-		validator.param(name).notNull().chinese().length(30, 1);
+		validator.param(email).email("email");
+		validator.param(cellphone).cellphone("cellphone");
+		validator.param(name).notNull("name").chinese("name").length(1, 30, "name");
 		
 		// 单个参数校验-通过param()连写（连写直接切换校验对象）
-		validator.param("a").notNull().param("test").length(20, 4).param(50).min(20).max(60);
+		validator.param(name).notNull("name").param(email).length(5, 25, "email").param(age).min(20, "age").max(60, "age");
 		
-		// 单个参数校验-自定义错误信息
-		validator.param("test").length(20, 4, "最大长度不能超过20个字，最小长度不能少于4个字");
+		// POJO对象校验-通过调用validator.valid()方法
+		validator.valid(validationIPO);
+		// 同样支持连写
+		validator.valid(validationIPO).param(birthday).birthday("birthday");
+		
+		// 返回结果
 		return ResultInfo.success(validationIPO);
 	}
 	
