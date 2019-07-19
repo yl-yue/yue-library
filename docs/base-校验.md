@@ -83,21 +83,22 @@ import ai.yue.library.base.validation.Validator;
 @Autowired
 private Validator validator;
 
-validator.is("a").notNull();
-validator.is("test").maxLength(20).minLength(4);
-validator.is(50).min(20).max(60);
+// 参数
+String name = validationIPO.getName();
+String email = validationIPO.getEmail();
+String cellphone = validationIPO.getCellphone();
+int age = validationIPO.getAge();
+
+// 单个参数校验
+validator.param(email).email("email");
+validator.param(cellphone).cellphone("cellphone");
+validator.param(name).notNull("name").chinese("name").length(1, 30, "name");
 ```
 
 单个参数校验-通过param()连写（连写直接切换校验对象）
 
 ```java
-validator.param("a").notNull().param("test").length(20, 4).param(50).min(20).max(60);
-```
-
-单个参数校验-自定义错误信息
-
-```java
-validator.param("test").length(20, 4, "最大长度不能超过20个字，最小长度不能少于4个字");
+validator.param(name).notNull("name").param(email).length(5, 25, "email").param(age).min(20, "age").max(60, "age");
 ```
 
 ### POJO对象校验（<font color=red>推荐</font>）
@@ -148,4 +149,4 @@ validator.valid(validationIPO).param("2017-06-05").date("yyyy-MM-dd");
 ```
 
 ### 校验不通过时处理
-校验不通过会抛出ValidateException（运行时异常），`AllExceptionHandler`类已默认处理，，只需开启即可获得友好提示
+校验不通过会抛出ValidateException（运行时异常），`GlobalExceptionHandler`类已默认处理。
