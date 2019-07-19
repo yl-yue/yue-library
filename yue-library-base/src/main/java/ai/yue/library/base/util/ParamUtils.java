@@ -151,6 +151,7 @@ public class ParamUtils {
 		for (String key : mustContainKeys) {
 			if (StringUtils.isEmptyIfStr(paramJson.get(key))) {
 				isHint = true;
+				break;
 			}
 		}
 		
