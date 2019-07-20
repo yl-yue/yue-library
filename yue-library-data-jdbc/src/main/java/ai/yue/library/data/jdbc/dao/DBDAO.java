@@ -18,8 +18,8 @@ import ai.yue.library.data.jdbc.vo.PageVO;
 public abstract class DBDAO {
 
 	@Autowired
-	DB db;
-    abstract String tableName();
+	protected DB db;
+	protected abstract String tableName();
     
 	/**
 	 * 插入数据

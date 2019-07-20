@@ -34,7 +34,7 @@ spring:
       password: 123456
 ```
 ### 简单使用
-`data-jdbc`所有的CRUD方法都在`DB`类里面，所以使用时只需要直接注入即可。<br>
+`data-jdbc`所有的CRUD方法都在`DB`类里面，所以使用时只需要直接注入即可，推荐采用继承`DBDAO 或 DBTDAO`方式。<br>
 <font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
 ```ddl
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '表自增ID'
@@ -45,22 +45,53 @@ spring:
 说明：其中 id 必为主键，类型为 bigint unsigned、单表时自增、步长为 1。gmt_create,
 gmt_modified 的类型均为 datetime 类型，前者现在时表示主动创建，后者过去分词表示被动更新。
 
-简单的插入一条数据：
+**DBDAO：**
 ```java
 @Repository
-public class DataJdbcExampleDAO {
+public class DataJdbcExampleDAO extends DBDAO {
 
-	@Autowired
-	DB db;
-	
-	/**
-	 * 插入数据
-	 * @param paramJson
-	 * @return
-	 */
-	public Long insert(JSONObject paramJson) {
-		return db.insert("tableName", paramJson);
+	@Override
+	protected String tableName() {
+		return "tableName";
 	}
 	
 }
+```
+
+**DBTDAO：**
+```java
+@Repository
+public class DataJdbcExampleTDAO extends DBTDAO<UserDO> {
+
+	@Override
+	protected String tableName() {
+		return "user";
+	}
+	
+}
+```
+
+## DAO
+`DBDAO`为 JSON 对象提供服务
+
+`DBTDAO`为 DO 对象提供服务（DO 转 JSON 工具类：ObjectUtils.toJSONObject(Object)）
+
+DAO内置实现：
+```java
+// 插入数据
+insert(JSONObject)
+// 插入数据-批量
+insertBatch(JSONObject[])
+// 删除
+delete(Long)
+// 更新-ById
+updateById(JSONObject)
+// 单个
+get(Long)
+// 列表-全部
+listAll()
+// 分页
+page(PageIPO)
+// 分页-降序
+pageDESC(PageIPO)
 ```

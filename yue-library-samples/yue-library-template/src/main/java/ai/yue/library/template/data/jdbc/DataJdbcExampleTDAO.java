@@ -6,20 +6,21 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.dao.DBDAO;
+import ai.yue.library.data.jdbc.dao.DBTDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
+import ai.yue.library.template.dataobject.UserDO;
 
 /**
  * @author  孙金川
  * @version 创建时间：2019年3月12日
  */
 @Repository
-public class DataJdbcExampleDAO extends DBDAO {
+public class DataJdbcExampleTDAO extends DBTDAO<UserDO> {
 
 	@Override
 	protected String tableName() {
-		return "tableName";
+		return "user";
 	}
 	
 	/**

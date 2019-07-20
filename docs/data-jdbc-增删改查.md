@@ -1,4 +1,35 @@
-## 增
+## DAO
+`DBDAO`为 JSON 对象提供服务
+
+`DBTDAO`为 DO 对象提供服务（DO 转 JSON 工具类：ObjectUtils.toJSONObject(Object)）
+
+### <font color=red>DAO内置实现：</font><br>
+实际中可能会用到的工具类提示：
+- 对于List和JSON数组的转换，可以查看`ListUtils`工具类。
+
+```java
+// 插入数据
+insert(JSONObject)
+// 插入数据-批量
+insertBatch(JSONObject[])
+// 删除
+delete(Long)
+// 更新-ById
+updateById(JSONObject)
+// 单个
+get(Long)
+// 列表-全部
+listAll()
+// 分页
+page(PageIPO)
+// 分页-降序
+pageDESC(PageIPO)
+```
+
+## CRUD
+`DAO`类提供了默认实现，也支持我们自由扩展
+
+### 增
 简单的插入一条数据只需要传入表名和要插入的json数据即可：
 ```java
 	/**

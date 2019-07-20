@@ -88,6 +88,7 @@ String name = validationIPO.getName();
 String email = validationIPO.getEmail();
 String cellphone = validationIPO.getCellphone();
 int age = validationIPO.getAge();
+DateTime birthday = validationIPO.getBirthday();
 
 // 单个参数校验
 validator.param(email).email("email");
@@ -111,7 +112,7 @@ public class ValidationIPO {
     @Length(max = 20, message = "姓名不能超过20个字")
     private String name;
     
-    private Date birthday;
+    private DateTime birthday;
     
     @IdCard
     private String idcard;
@@ -145,7 +146,7 @@ public Result<?> valid(@Valid ValidationIPO validationIPO) {
 ```java
 validator.valid(validationIPO);
 // 同样支持连写
-validator.valid(validationIPO).param("2017-06-05").date("yyyy-MM-dd");
+validator.valid(validationIPO).param(birthday).birthday("birthday");
 ```
 
 ### 校验不通过时处理

@@ -66,22 +66,22 @@
 
 ## 快速使用
 maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
-``` pom
-	<parent>
-		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library-dependencies</artifactId>
-		<version>${version}</version>
-	</parent>
+```xml
+<parent>
+	<groupId>ai.ylyue</groupId>
+	<artifactId>yue-library-dependencies</artifactId>
+	<version>${version}</version>
+</parent>
 ```
 随后引入所需要的模块
-``` pom
-	<dependencies>
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-base</artifactId>
-		</dependency>
-		...
-	</dependencies>
+```xml
+<dependencies>
+	<dependency>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library-base</artifactId>
+	</dependency>
+	...
+</dependencies>
 ```
 　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.SR1、.SR2、.SR3...这种形式，目的是为了方便区分基础依赖版本。<br>
 　　同时所有模块皆依赖于基础库，若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不用引入此模块。<br>
@@ -97,6 +97,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 - 默认开启热加载、热部署、支持跨域，一键解决联调问题
 - 基于`validator`扩展IPO增强校验注解，更适合国内校验场景。（如：手机号、身份证号码）
 - 全局统一异常处理，结合`Result`对象，定位异常更轻松，前端显示更贴切
+- 异步线程池：共用父线程上下文环境，异步执行任务时不丢失token
 
 　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
 
