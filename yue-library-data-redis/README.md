@@ -60,25 +60,3 @@ public class DataRedisExampleDAO {
 }
 ```
 更多方法请参阅API文档...
-
-## 其他
-### User
-`User`类封装登录相关特性：
-```java
-getWxAccessToken(String)
-getWxUserInfo(String, String)
-getQqUserInfo(String, String)
-getCaptchaImage()
-captchaValidate(String)
-getUserId()
-getUser(Class<T>)
-login(Object)
-logout()
-```
-
-登录、登出、第三方登录（待分化）、获得token中的用户信息、获得`user_id`、分布式图片验证码等
-
-### 第三方登录
-- QQ登录
-- 微信登录
-- 微信小程序登录

@@ -185,6 +185,8 @@ public class User {
 	
 	/**
 	 * 获得用户ID
+	 * <p><code style="color:red"><b>注意：若 user_id == null ，请先确认 {@linkplain #login(Object)} 方法是否存入 user_id 字段，此处可以传 JSON 与 POJO 对象</b></code>
+	 * 
 	 * @return user_id
 	 */
 	public Long getUserId() {
@@ -239,9 +241,17 @@ public class User {
 	
 	/**
 	 * 登录
+	 * <p>登录成功-设置token至Cookie
+	 * <p>登录成功-设置token至Header
+	 * <p><code style="color:red"><b>注意：登录之后的所有相关操作，都是基于请求报文中所携带的token，若Cookie与Header皆没有token或Redis中匹配不到值，将视为未登录状态
+	 * </b></code>
+	 * 
 	 * @param userInfo 用户信息（必须包含：<code style="color:red">user_id</code>）
+	 * @return <b>token</b> 身份认证令牌 <code style="color:red"><b>（不建议使用，最好是忽略这个返回值，哪怕你只是将他放在响应体里面，也不推荐这样做）</b></code>
+	 * <p>支持Cookie：建议使用默认的机制即可
+	 * <p>不支持Cookie：建议从响应Header中获取token，之后的请求都将token放入请求Header中即可
 	 */
-	public void login(Object userInfo) {
+	public String login(Object userInfo) {
 		// 1. 获得请求token
 		String token = getRequestToken();
 		
@@ -268,10 +278,16 @@ public class User {
 		
 		// 6. 登录成功-设置token至Header
 		response.setHeader(TokenConstant.COOKIE_TOKEN_KEY, token);
+		
+		// 7. 登录成功-返回token
+		return token;
 	}
 	
 	/**
 	 * 登出
+	 * <p>清除Redis-token
+	 * <p>清除Cookie-token
+	 * 
 	 * @return 成功
 	 */
     public Result<?> logout() {
