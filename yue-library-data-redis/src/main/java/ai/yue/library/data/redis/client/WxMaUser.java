@@ -99,9 +99,9 @@ public class WxMaUser {
      * @param rawData 微信用户基本信息
      * @param encryptedData 消息密文
      * @param iv 加密算法的初始向量
-     * @return
+     * @return {@linkplain WxMaUserInfo} 微信小程序用户信息
      */
-    public WxMaUserInfo getInfo(String appid, String sessionKey, String signature, 
+    public WxMaUserInfo getUserInfo(String appid, String sessionKey, String signature, 
                        String rawData, String encryptedData, String iv) {
         WxMaService wxService = getMaService(appid);
         
@@ -125,9 +125,9 @@ public class WxMaUser {
      * @param sessionKey 会话密钥
      * @param encryptedData 消息密文
      * @param iv 加密算法的初始向量
-     * @return
+     * @return {@linkplain WxMaPhoneNumberInfo} 微信小程序手机号信息
      */
-	public WxMaPhoneNumberInfo getPhone(String appid, String sessionKey, String encryptedData, String iv) {
+	public WxMaPhoneNumberInfo getCellphone(String appid, String sessionKey, String encryptedData, String iv) {
         WxMaService wxService = getMaService(appid);
         
         // 解密
