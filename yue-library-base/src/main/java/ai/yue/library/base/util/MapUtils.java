@@ -1,7 +1,5 @@
 package ai.yue.library.base.util;
 
-import static com.alibaba.fastjson.JSON.toJSON;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -11,17 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
  * Map工具类
- * @author  孙金川
- * @version 创建时间：2018年1月26日
+ * 
+ * @author	孙金川
+ * @since	2018年1月26日
  */
 public class MapUtils extends MapUtil {
 	
@@ -241,15 +240,15 @@ public class MapUtils extends MapUtil {
 			return null;
 		}
 
-		JSONObject resultJSON = new JSONObject();
+		JSONObject resultJson = new JSONObject();
 		for (String key : keys) {
 			Object value = paramJson.get(key);
 			if (value != null) {
-				resultJSON.put(key, value);
+				resultJson.put(key, value);
 			}
 		}
 
-		return resultJSON;
+		return resultJson;
 	}
 	
 	/**
@@ -264,7 +263,7 @@ public class MapUtils extends MapUtil {
         if (paramMap != null) {
             Object answer = paramMap.get(key);
             if (answer != null) {
-            	return ObjectUtils.toObject(answer, clazz);
+            	return Convert.toObject(answer, clazz);
             }
         }
         
@@ -411,16 +410,7 @@ public class MapUtils extends MapUtil {
      */
     public static JSONObject getJSONObject(final Map<?, ?> paramMap, String key) {
         Object value = paramMap.get(key);
-
-        if (value instanceof JSONObject) {
-            return (JSONObject) value;
-        }
-
-        if (value instanceof String) {
-            return JSON.parseObject((String) value);
-        }
-
-        return (JSONObject) toJSON(value);
+        return Convert.toJSONObject(value);
     }
 	
     /**
@@ -431,16 +421,7 @@ public class MapUtils extends MapUtil {
      */
     public static JSONArray getJSONArray(final Map<?, ?> paramMap, String key) {
         Object value = paramMap.get(key);
-
-        if (value instanceof JSONArray) {
-            return (JSONArray) value;
-        }
-
-        if (value instanceof String) {
-            return (JSONArray) JSON.parse((String) value);
-        }
-
-        return (JSONArray) toJSON(value);
+        return Convert.toJSONArray(value);
     }
     
 }

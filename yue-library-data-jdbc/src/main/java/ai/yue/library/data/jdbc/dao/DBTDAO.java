@@ -13,8 +13,8 @@ import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
 
 /**
- * @author  孙金川
- * @version 创建时间：2019年4月30日
+ * @author	孙金川
+ * @since	2019年4月30日
  * @param <T> 映射类
  */
 public abstract class DBTDAO<T> {

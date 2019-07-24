@@ -12,8 +12,8 @@ import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
 /**
- * @author  孙金川
- * @version 创建时间：2019年4月30日
+ * @author	孙金川
+ * @since	2019年4月30日
  */
 public abstract class DBDAO {
 

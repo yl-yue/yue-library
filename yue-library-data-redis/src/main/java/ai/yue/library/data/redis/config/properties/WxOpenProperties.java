@@ -6,8 +6,9 @@ import lombok.Data;
 
 /**
  * 微信开放平台
- * @author 	 孙金川
- * @version 创建时间：2018年11月6日
+ * 
+ * @author	孙金川
+ * @since	2018年11月6日
  */
 @Data
 @ConfigurationProperties("yue.wx.open")

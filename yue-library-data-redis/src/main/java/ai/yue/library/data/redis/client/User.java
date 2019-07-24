@@ -35,8 +35,8 @@ import ai.yue.library.data.redis.vo.wx.open.AccessTokenVO;
 import lombok.NoArgsConstructor;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年4月24日
+ * @author	孙金川
+ * @since	2018年4月24日
  */
 @NoArgsConstructor
 public class User {

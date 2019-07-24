@@ -7,8 +7,8 @@ import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Validator;
 
 /**
- * @author  孙金川
- * @version 创建时间：2019年5月8日
+ * @author	孙金川
+ * @since	2019年5月8日
  */
 public class ChineseValidator implements ConstraintValidator<Chinese, String> {
 

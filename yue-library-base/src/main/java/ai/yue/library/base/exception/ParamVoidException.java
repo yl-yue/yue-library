@@ -4,8 +4,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * 参数为空异常
- * @author  孙金川
- * @version 创建时间：2017年10月9日
+ * 
+ * @author	孙金川
+ * @since	2017年10月9日
  */
 @NoArgsConstructor
 public class ParamVoidException extends RuntimeException {

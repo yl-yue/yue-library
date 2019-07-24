@@ -8,8 +8,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.context.request.RequestContextHolder;
 
 /**
- * @author	 孙金川
- * @version 创建时间：2018年11月27日
+ * @author	孙金川
+ * @since	2018年11月27日
  */
 public class ContextAwareAsyncExecutor extends ThreadPoolTaskExecutor {
 	

@@ -1,57 +1,19 @@
 package ai.yue.library.base.util;
 
-import static com.alibaba.fastjson.JSON.toJSON;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年7月27日
+ * @author	孙金川
+ * @since	2018年7月27日
  */
-public final class ObjectUtils extends ObjectUtil {
-
-	/**
-	 * 对象克隆方法，实现深拷贝
-	 * @param <T> 泛型
-	 * @param obj 需要实现了{@link Serializable}接口的对象才能拷贝
-	 * @return 克隆后的对象
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T objectClone(T obj) {
-		T cloneObj = null;
-		try {
-			// 写入字节流
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ObjectOutputStream obs = new ObjectOutputStream(out);
-			obs.writeObject(obj);
-			obs.close();
-
-			// 分配内存，写入原始对象，生成新对象
-			ByteArrayInputStream ios = new ByteArrayInputStream(out.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(ios);
-			// 返回生成的新对象
-			cloneObj = (T) ois.readObject();
-			ois.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return cloneObj;
-	}
+public class ObjectUtils extends ObjectUtil {
 	
 	/**
 	 * 对象比较
@@ -99,77 +61,71 @@ public final class ObjectUtils extends ObjectUtil {
 	}
 	
 	/**
-	 * 对象类型转换
-	 * <h1>对象 转 {@linkplain Class}</h1>
+	 * 转换值为指定类型
 	 * 
 	 * @param <T> 泛型
-	 * @param obj 需要转换的对象
+	 * @param value 被转换的值
 	 * @param clazz 泛型类型
 	 * @return 转换后的对象
+	 * @see Convert#toObject(Object, Class)
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T toObject(Object obj, Class<T> clazz) {
-		if (obj != null && obj instanceof String) {
-			String str = (String) obj;
-			if (clazz == LocalDate.class) {
-				return (T) LocalDate.parse(str);
-			} else if (clazz == LocalDateTime.class) {
-				return (T) LocalDateTime.parse(str);
-			}
-		}
-		
-        return castToJavaBean(obj, clazz);
+	public static <T> T toObject(Object value, Class<T> clazz) {
+		return Convert.toObject(value, clazz);
 	}
 	
 	/**
 	 * 对象类型转换
 	 * <h1>{@linkplain Object} 转 {@linkplain Class}</h1>
 	 * 
+	 * @deprecated 请使用 {@link #toJavaBean(Object, Class)}
 	 * @param <T> 泛型
 	 * @param obj 需要转换的对象
 	 * @param clazz 泛型类型
 	 * @return 转换后的POJO
 	 */
+	@Deprecated
+	@SuppressWarnings("unchecked")
 	public static <T> T toJavaObject(Object obj, Class<T> clazz) {
+		if (clazz == obj.getClass() || clazz.isInstance(obj)) {
+			return (T) obj;
+		}
+		
 		return JSONObject.toJavaObject(toJSONObject(obj), clazz);
 	}
 	
 	/**
-	 * 对象类型转换
-	 * <h1>{@linkplain Object} 转 {@linkplain JSONObject}</h1>
+	 * 转换值为指定 POJO 类型
 	 * 
-	 * @param obj 需要转换的对象
-	 * @return JSON
+	 * @param <T> 泛型
+	 * @param value 被转换的值
+	 * @param clazz 泛型类型
+	 * @return 转换后的POJO
+	 * @see Convert#toJavaBean(Object, Class)
 	 */
-	public static JSONObject toJSONObject(Object obj) {
-		if (obj instanceof JSONObject) {
-			return (JSONObject) obj;
-        }
-        
-        if (obj instanceof String) {
-			return JSONObject.parseObject((String) obj);
-        }
-        
-        return (JSONObject) toJSON(obj);
+	public static <T> T toJavaBean(Object value, Class<T> clazz) {
+		return Convert.toJavaBean(value, clazz);
 	}
 	
 	/**
-	 * 对象类型转换
-	 * <h1>{@linkplain Object} 转 {@linkplain JSONArray}</h1>
+	 * 转换为 {@linkplain JSONObject}
 	 * 
-	 * @param obj 需要转换的对象
-	 * @return JSON数组
+	 * @param value 被转换的值
+	 * @return JSON
+	 * @see Convert#toJSONObject(Object)
 	 */
-    public static JSONArray toJSONArray(Object obj) {
-        if (obj instanceof JSONArray) {
-            return (JSONArray) obj;
-        }
-
-        if (obj instanceof String) {
-            return (JSONArray) JSON.parse((String) obj);
-        }
-
-        return (JSONArray) toJSON(obj);
-    }
+	public static JSONObject toJSONObject(Object value) {
+		return Convert.toJSONObject(value);
+	}
+	
+	/**
+	 * 转换为 {@linkplain JSONArray}
+	 * 
+	 * @param value 被转换的值
+	 * @return JSON数组
+	 * @see Convert#toJSONArray(Object)
+	 */
+	public static JSONArray toJSONArray(Object value) {
+		return Convert.toJSONArray(value);
+	}
     
 }

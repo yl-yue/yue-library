@@ -1,7 +1,9 @@
 package ai.yue.library.base.ipo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 默认值：
@@ -17,11 +19,14 @@ import lombok.Data;
  *  
  *  字体大小（默认值：30） int fontSize = 30;
  * </code>
- * @author  孙金川
- * @version 创建时间：2018年7月23日
+ * 
+ * @author	孙金川
+ * @since	2018年7月23日
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CaptchaIPO {
 	
 	/** 字符数量（默认值：4个字符） */

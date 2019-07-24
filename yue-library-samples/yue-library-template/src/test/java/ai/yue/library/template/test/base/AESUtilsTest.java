@@ -1,4 +1,6 @@
-package ai.yue.library.base.util;
+package ai.yue.library.template.test.base;
+
+import ai.yue.library.base.util.AESUtils;
 
 /**
  * @author  孙金川

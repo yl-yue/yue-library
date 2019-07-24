@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
  * 共用父线程上下文环境，异步执行任务时不丢失token
  * <p>
  * <b style="color:red">注意，@Async异步执行方法，不要和同步调用方法，写在同一个类中，否则异步执行将失效。</b>
- * @author 	 孙金川
- * @version 创建时间：2017年10月13日
+ * @author	孙金川
+ * @since	2017年10月13日
  */
 @Slf4j
 @EnableAsync

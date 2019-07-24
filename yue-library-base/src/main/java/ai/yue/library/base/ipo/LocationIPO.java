@@ -2,15 +2,19 @@ package ai.yue.library.base.ipo;
 
 import com.alibaba.fastjson.JSONObject;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年7月31日
+ * @author	孙金川
+ * @since	2018年7月31日
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LocationIPO {
 
 	/** 经度 */

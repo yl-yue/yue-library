@@ -19,8 +19,9 @@ import javax.validation.constraints.NotNull;
 /**
  * 验证是否为身份证号码（18位中国）<br>
  * 出生日期只支持到到2999年
- * @author  孙金川
- * @version 创建时间：2019年5月8日
+ * 
+ * @author	孙金川
+ * @since	2019年5月8日
  */
 @Documented
 @Retention(RUNTIME)

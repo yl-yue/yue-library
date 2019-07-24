@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ai.yue.library.data.jdbc.client.DB;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年6月11日
+ * @author	孙金川
+ * @since	2018年6月11日
  */
 @Configuration
 @AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)

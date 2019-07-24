@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author 	孙金川
- * @version 创建时间：2018年10月10日
+ * @author	孙金川
+ * @since	2018年10月10日
  */
 @Data
 @Builder

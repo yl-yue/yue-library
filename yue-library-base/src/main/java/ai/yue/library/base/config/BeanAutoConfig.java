@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author	孙金川
- * @version 创建时间：2018年11月26日
+ * @since	2018年11月26日
  */
 @Slf4j
 @Configuration

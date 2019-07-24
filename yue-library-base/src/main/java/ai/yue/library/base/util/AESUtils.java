@@ -15,8 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * AES 加密工具类
- * @author  孙金川
- * @version 创建时间：2018年3月28日
+ * 
+ * @author	孙金川
+ * @since	2018年3月28日
  */
 @Slf4j
 public class AESUtils {

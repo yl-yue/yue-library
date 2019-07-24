@@ -19,8 +19,9 @@ import javax.validation.constraints.NotNull;
 /**
  * 验证是否为UUID<br>
  * 包括带横线标准格式和不带横线的简单模式
- * @author  孙金川
- * @version 创建时间：2019年5月8日
+ * 
+ * @author	孙金川
+ * @since	2019年5月8日
  */
 @Documented
 @Retention(RUNTIME)

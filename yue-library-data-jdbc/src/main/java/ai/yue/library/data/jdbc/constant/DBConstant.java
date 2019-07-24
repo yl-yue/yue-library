@@ -3,9 +3,10 @@ package ai.yue.library.data.jdbc.constant;
 import ai.yue.library.data.jdbc.client.DB;
 
 /**
- * {@linkplain DB}常量类
- * @author  孙金川
- * @version 创建时间：2018年7月18日
+ * {@linkplain DB} 常量类
+ * 
+ * @author	孙金川
+ * @since	2018年7月18日
  */
 public interface DBConstant {
 	

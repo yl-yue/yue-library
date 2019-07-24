@@ -1,9 +1,10 @@
 package ai.yue.library.base.view;
 
 /**
- * 便捷返回-结果信息
- * @author 孙金川 2017/7/31
- *
+ * 便捷返回 - {@code Restful} 风格API结果
+ * 
+ * @author	孙金川
+ * @since	2017年7月31日
  */
 public class ResultInfo {
 	

@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年7月24日
+ * @author	孙金川
+ * @since	2018年7月24日
  */
 @Getter
 @Builder

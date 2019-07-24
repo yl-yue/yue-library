@@ -6,8 +6,15 @@ import lombok.Data;
 
 /**
  * DO基类
- * @author  孙金川
- * @version 创建时间：2018年7月26日
+ * 
+ * <p><b><code style="color:red">注意：继承 {@link DBDO} get set ... 采用 &#064;{@link Data} 注解生成时，需加上：</code></b>
+ * <blockquote>
+ * 	<p>&#064;EqualsAndHashCode(callSuper = true)
+ * 	<p>&#064;ToString(callSuper = true)
+ * </blockquote>
+ * 
+ * @author	孙金川
+ * @since	2018年7月26日
  */
 @Data
 public abstract class DBDO {

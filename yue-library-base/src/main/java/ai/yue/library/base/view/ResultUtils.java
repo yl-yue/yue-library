@@ -1,8 +1,8 @@
 package ai.yue.library.base.view;
 
 /**
- * @author  孙金川
- * @version 创建时间：2017年10月8日
+ * @author	孙金川
+ * @since	2017年10月8日
  */
 class ResultUtils {
 	

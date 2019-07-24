@@ -25,8 +25,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author  孙金川
- * @version 创建时间：2019年6月25日
+ * 参数校验器
+ * 
+ * @author	孙金川
+ * @since	2019年6月25日
  */
 @Slf4j
 @NoArgsConstructor

@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * 条件-对应paramMap的key值
- * @author  孙金川
- * @version 创建时间：2018年6月22日
+ * 
+ * @author	孙金川
+ * @since	2018年6月22日
  */
 @Data
 @Builder

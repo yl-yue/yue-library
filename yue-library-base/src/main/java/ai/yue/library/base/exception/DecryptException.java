@@ -2,8 +2,9 @@ package ai.yue.library.base.exception;
 
 /**
  * 解密异常
- * @author  孙金川
- * @version 创建时间：2018年2月3日
+ * 
+ * @author	孙金川
+ * @since	2018年2月3日
  */
 public class DecryptException extends RuntimeException{
 	

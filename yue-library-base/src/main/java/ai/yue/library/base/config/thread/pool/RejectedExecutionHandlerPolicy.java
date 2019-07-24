@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author  孙金川
- * @version 创建时间：2019年7月9日
+ * @author	孙金川
+ * @since	2019年7月9日
  */
 @Getter
 @AllArgsConstructor

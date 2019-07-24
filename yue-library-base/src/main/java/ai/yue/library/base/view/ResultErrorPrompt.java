@@ -2,8 +2,9 @@ package ai.yue.library.base.view;
 
 /**
  * String类型异常处理提示信息-常量类
- * @author  孙金川
- * @version 创建时间：2018年7月19日
+ * 
+ * @author	孙金川
+ * @since	2018年7月19日
  */
 public class ResultErrorPrompt {
 	

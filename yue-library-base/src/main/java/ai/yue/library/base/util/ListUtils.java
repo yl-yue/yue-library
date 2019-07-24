@@ -13,13 +13,15 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.constant.MaxOrMinEnum;
 import ai.yue.library.base.constant.SortEnum;
+import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 /**
  * List工具类
- * @author  孙金川
- * @version 创建时间：2017年10月27日
+ * 
+ * @author	孙金川
+ * @since	2017年10月27日
  */
 public class ListUtils {
 	
@@ -117,7 +119,7 @@ public class ListUtils {
 	 */
 	public static JSONArray merge(JSONArray array, JSONObject json, String key) {
 		array.forEach(arrayObj -> {
-			JSONObject temp = ObjectUtils.toJSONObject(arrayObj);
+			JSONObject temp = Convert.toJSONObject(arrayObj);
 			String value = temp.getString(key);
 			temp.putAll(json.getJSONObject(value));
 		});
@@ -182,8 +184,8 @@ public class ListUtils {
 	public static <T> List<T> sortT(List<T> list, String sortField, SortEnum sortEnum) {
 		Collections.sort(list, new Comparator<T>() {
 			public int compare(T o1, T o2) {
-				JSONObject json1 = ObjectUtils.toJSONObject(o1);
-				JSONObject json2 = ObjectUtils.toJSONObject(o2);
+				JSONObject json1 = Convert.toJSONObject(o1);
+				JSONObject json2 = Convert.toJSONObject(o2);
 				var json1value = json1.get(sortField);
 				var json2value = json2.get(sortField);
 				if (sortEnum == SortEnum.升序) {
@@ -335,7 +337,7 @@ public class ListUtils {
 	public static <T> List<T> toList(List<JSONObject> list, Class<T> clazz) {
 		List<T> toList = new ArrayList<> ();
 		for(JSONObject json : list) {
-			toList.add(ObjectUtils.toJavaObject(json, clazz));
+			toList.add(Convert.toJavaBean(json, clazz));
 		}
 		
 		return toList;
@@ -370,7 +372,7 @@ public class ListUtils {
 	public static <T> List<T> toList(List<JSONObject> list, String keepKey, Class<T> clazz) {
 		List<T> toList = new ArrayList<> ();
 		for(JSONObject json : list) {
-			toList.add(ObjectUtils.toObject(json.get(keepKey), clazz));
+			toList.add(Convert.toObject(json.get(keepKey), clazz));
 		}
 		
 		return toList;
@@ -459,7 +461,7 @@ public class ListUtils {
 	public static <T> List<JSONObject> toJsonListT(List<T> list) {
 		List<JSONObject> jsonList = new ArrayList<>();
 		for (T obj : list) {
-			jsonList.add(ObjectUtils.toJSONObject(obj));
+			jsonList.add(Convert.toJSONObject(obj));
 		}
 		
 		return jsonList;
@@ -514,7 +516,7 @@ public class ListUtils {
 		JSONObject[] jsons = new JSONObject[list.size()];
 		int index = 0;
 		for (T obj : list) {
-			jsons[index] = ObjectUtils.toJSONObject(obj);
+			jsons[index] = Convert.toJSONObject(obj);
 			index++;
 		}
 		
@@ -536,7 +538,7 @@ public class ListUtils {
 		JSONObject[] jsons = new JSONObject[list.size()];
 		int index = 0;
 		for (T obj : list) {
-			JSONObject json = ObjectUtils.toJSONObject(obj);
+			JSONObject json = Convert.toJSONObject(obj);
 			MapUtils.removeEmpty(json);
 			jsons[index] = json;
 			index++;

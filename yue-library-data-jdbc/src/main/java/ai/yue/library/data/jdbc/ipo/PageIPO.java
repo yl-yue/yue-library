@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年4月13日
+ * @author	孙金川
+ * @since	2018年4月13日
  */
 @Data
 @Builder

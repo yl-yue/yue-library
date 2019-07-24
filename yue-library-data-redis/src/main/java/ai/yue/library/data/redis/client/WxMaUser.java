@@ -29,8 +29,8 @@ import me.chanjar.weixin.common.error.WxErrorException;
 /**
  * 微信小程序用户接口
  * 
- * @author  孙金川
- * @version 创建时间：2019年6月18日
+ * @author	孙金川
+ * @since	2019年6月18日
  */
 @Configuration
 @EnableConfigurationProperties(WxMaProperties.class)

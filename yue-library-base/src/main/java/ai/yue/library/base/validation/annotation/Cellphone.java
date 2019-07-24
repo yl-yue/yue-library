@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 /**
  * 验证是否为手机号码（中国）
  * 
- * @author  孙金川
- * @version 创建时间：2019年5月8日
+ * @author	孙金川
+ * @since	2019年5月8日
  */
 @Documented
 @Retention(RUNTIME)

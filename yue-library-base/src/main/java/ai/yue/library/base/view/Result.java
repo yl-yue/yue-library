@@ -39,8 +39,8 @@ import lombok.NoArgsConstructor;
 /**
  * HTTP请求，最外层响应对象。
  * 
- * @author  孙金川
- * @version 创建时间：2017年10月8日
+ * @author	孙金川
+ * @since	2017年10月8日
  */
 @Data
 @Builder(toBuilder = true)
