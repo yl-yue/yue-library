@@ -83,7 +83,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 	...
 </dependencies>
 ```
-　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.SR1、.SR2、.SR3...这种形式，目的是为了方便区分基础依赖版本。<br>
+　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分基础依赖版本。<br>
 　　同时所有模块皆依赖于基础库，若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不用引入此模块。<br>
 
 　　更多细节，请查看[中文文档](https://ylyue.cn)
