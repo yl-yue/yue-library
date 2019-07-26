@@ -26,12 +26,12 @@
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" >
 	</a>
-	<a target="_blank" href="https://gitee.com/yl-yue/yue-library/stargazers">
+	<a target="_blank" href="https://gitee.com/yl-yue/yue-library">
 		<img src='https://gitee.com/yl-yue/yue-library/badge/star.svg?theme=dark' alt='gitee star'>
 	</a>
-<!-- 	<a target="_blank" href='https://github.com/yl-yue/yue-library'>
+	<a target="_blank" href='https://github.com/yl-yue/yue-library'>
 		<img src="https://img.shields.io/github/stars/yl-yue/yue-library.svg?style=social" alt="github star">
-	</a> -->
+	</a>
 </p>
 <p align="center">
 	-- 主页：<a href="https://ylyue.cn">https://ylyue.cn/</a> --

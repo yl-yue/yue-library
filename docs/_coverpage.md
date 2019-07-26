@@ -8,6 +8,6 @@
 * 自动装配了一系列的基础Bean与环境配置项
 * 快速构建SpringCloud项目，让微服务变得更简单
 
-<!-- [GitHub](https://gitee.com/yl-yue/yue-library) -->
 [Gitee](https://gitee.com/yl-yue/yue-library)
+[Github](https://github.com/yl-yue/yue-library)
 [Get Started](README.md)
