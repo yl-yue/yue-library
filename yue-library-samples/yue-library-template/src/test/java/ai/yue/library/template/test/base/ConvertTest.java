@@ -31,28 +31,20 @@ public class ConvertTest {
 			paramJson.put("localDateTime", LocalDateTime.now());
 			Console.log(paramJson);
 			UserDO userDO = Convert.toJavaBean(paramJson, UserDO.class);
-			UserDO userDO3 = Convert.convert(paramJson, UserDO.class);
+			UserDO userDO2 = Convert.convert(paramJson, UserDO.class);
 			Console.log(userDO);
-			Console.log(userDO3);
+			Console.log(userDO2);
 			Console.log(JSONObject.toJSONString(userDO));
-			Console.log(JSONObject.toJSONString(userDO3));
+			Console.log(JSONObject.toJSONString(userDO2));
 			
 			// String
-//			String str = "{\"dateTime\":\"2019-07-24T16:02:06.566693300\",\"localDateTime\":\"2019-07-24T16:02:06.566693300\",\"nickname\":\"nickname\",\"stringDateTime\":\"2019-07-24 16:02:06\",\"id\":666666,\"age\":66}";
-//			String str = "{\"date\":\"2019-07-24 16:02:06\",\"dateTime\":\"2019-07-24 16:02:06\",\"localDateTime\":\"2019-07-24T16:11:16.274764100\",\"nickname\":\"nickname\",\"id\":666666,\"age\":66}";
-//			String str = "{\"date\":1563955326541,\"localDateTime\":\"2019-07-24T16:02:06.566693300\",\"nickname\":\"nickname\",\"stringDateTime\":\"2019-07-24 16:02:06\",\"id\":666666,\"age\":66}";
 			String str = paramJson.toJSONString();
-//			System.out.println(JSONObject.parseObject(str));
 			UserDO strDO = Convert.toJavaBean(str, UserDO.class);
 			Console.log(strDO);
 			Console.log(JSONObject.toJSONString(strDO));
-//			UserDO strDO1 = JSONObject.parseObject(str, UserDO.class, Feature.AllowISO8601DateFormat);
-//			Console.log(strDO1);
-//			UserDO strDO2 = ObjectUtils.toJavaObject(str, UserDO.class);
-//			Console.log(strDO2);
-//			UserDO strDO3 = Convert.convert(JSONObject.parseObject(str), UserDO.class);
-//			Console.log(strDO3);
-//			Console.log(JSONObject.toJSONString(strDO3));
+			UserDO strDO2 = Convert.convert(str, UserDO.class);
+			Console.log(strDO2);
+			Console.log(JSONObject.toJSONString(strDO2));
 			
 			// null
 //			JSONObject a = null;
@@ -71,13 +63,21 @@ public class ConvertTest {
 	
 	@Test
 	public void convert() {
-		String json = "{\r\n" + 
-				"    \"key\": 666\r\n" + 
-				"}";
-//		JSONObject jsonObject = new JSONObject();
-//		jsonObject.put("key", 666666);
-		JSONObject result = Convert.convert(JSONObject.class, json);
-		System.out.println(result);
+		try {
+			// String - JSONObject
+			String json = "{\r\n" + 
+					"    \"key\": 666\r\n" + 
+					"}";
+//			JSONObject jsonObject = new JSONObject();
+//			jsonObject.put("key", 666666);
+//			ConverterRegistry converterRegistry = ConverterRegistry.getInstance();
+//			converterRegistry.putCustom(JSONObject.class, JSONObjectConverter.class);
+			JSONObject result = Convert.convert(json, JSONObject.class);
+//			JSONObject result = Convert.convert(JSONObject.class, json);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

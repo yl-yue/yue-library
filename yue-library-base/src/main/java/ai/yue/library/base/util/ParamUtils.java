@@ -9,9 +9,7 @@ import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.ParamFormatIPO;
-import ai.yue.library.base.ipo.ParamValidateIPO;
 import ai.yue.library.base.view.ResultInfo;
-import cn.hutool.core.lang.Validator;
 
 /**
  * 参数处理工具类
@@ -190,56 +188,6 @@ public class ParamUtils {
 		}
 	}
 	
-	/**
-	 * 参数验证
-	 * 
-	 * @deprecated {@linkplain ai.yue.library.base.validation.Validator}
-	 * @param paramValidateIPO 需要验证的参数
-	 * @throws ResultException 验证未通过将抛出相应的异常即其提示信息
-	 */
-	@Deprecated
-	public static void paramValidate(ParamValidateIPO paramValidateIPO) {
-		JSONObject paramJson = paramValidateIPO.getParamJson();
-		String cellphoneKey = paramValidateIPO.getCellphoneKey();
-		String emailKey = paramValidateIPO.getEmailKey();
-		String idCardNumberKey = paramValidateIPO.getIdCardNumberKey();
-		
-		// 1. 11位手机号验证
-		String cellphone = paramJson.getString(cellphoneKey);
-		if (!StringUtils.isEmpty(cellphone)) {
-			if (!Validator.isMobile(cellphone)) {
-				throw new ResultException(ResultInfo.cellphone_error());
-			}
-		}
-		
-		// 2. 邮箱验证
-		String email = paramJson.getString(emailKey);
-		if (!StringUtils.isEmpty(email)) {
-			if (!Validator.isEmail(email)) {
-				throw new ResultException(ResultInfo.email_error());
-			}
-		}
-		
-		// 3. 身份证号码验证
-		String idCardNumber = paramJson.getString(idCardNumberKey);
-		if (!StringUtils.isEmpty(idCardNumber)) {
-			if (!Validator.isCitizenId(idCardNumber)) {
-				throw new ResultException(ResultInfo.id_card_number_error());
-			}
-		}
-	}
-    
-    /**
-     * 验证固话号码
-     * @param telephone
-     * @return
-     */
-	@Deprecated
-	boolean isTelephoneValidate(String telephone) {
-		String regex = "^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$";
-		return telephone.matches(regex);
-	}
-    
     /**
      * 11位手机号码隐藏加密
      * @param cellphone 手机号

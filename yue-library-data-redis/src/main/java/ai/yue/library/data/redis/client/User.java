@@ -26,6 +26,7 @@ import ai.yue.library.base.util.HttpUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.base.vo.CaptchaVO;
 import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
@@ -161,7 +162,7 @@ public class User {
     	String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
 		String randCaptcha = redis.get(captcha_redis_key);
 		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
-			throw new ResultException(ResultInfo.captcha_error());
+			throw new ResultException(ResultInfo.dev_defined(ResultPrompt.CAPTCHA_ERROR));
 		}
 		
 		redis.del(captcha_redis_key);

@@ -8,15 +8,92 @@ package ai.yue.library.base.view;
  */
 public class ResultInfo {
 	
-	/* 正确结果 */
-	// 200
+	// ------ Result error builder ------
+	
+    /**
+     * 失败后调用
+     *
+     * @param code 状态码
+     * @param msg  提示消息
+     * @return
+     */
+    private static Result<?> error(Integer code, String msg) {
+    	return Result.builder().code(code).msg(msg).flag(false).build();
+    }
+    
+    /**
+     * 失败后调用
+     * 
+     * @param <T>
+     * @param code	状态码
+     * @param msg	提示消息
+     * @param data	异常数据
+     * @return
+     */
+    private static <T> Result<T> error(Integer code, String msg, T data) {
+    	return new Result<T>().toBuilder().code(code).msg(msg).flag(false).data(data).build();
+    }
+    
+	// 100 - 访问限制
+	
+	/**
+	 * 非法访问-100
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> attack() {
+		return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg());
+	}
+	/**
+	 * 非法访问-100
+	 * @param <T> 泛型
+	 * @param data 异常数据
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<T> attack(T data) {
+		return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg(), data);
+	}
+	/**
+	 * 未登录或登录已失效-101
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> unauthorized() {
+		return error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED.getMsg());
+	}
+	/**
+	 * 会话未注销，无需登录-102
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> logged_in() {
+		return error(ResultEnum.LOGGED_IN.getCode(), ResultEnum.LOGGED_IN.getMsg());
+	}
+	/**
+	 * 无权限-103
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> forbidden() {
+		return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN.getMsg());
+	}
+	/**
+	 * 频繁访问限制，请稍后重试-104
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> frequent_access_restriction() {
+		return error(ResultEnum.FREQUENT_ACCESS_RESTRICTION.getCode(),
+				ResultEnum.FREQUENT_ACCESS_RESTRICTION.getMsg());
+	}
+	
+	// 200 - 正确结果
 	
 	/**
 	 * 成功后调用，返回的data为null
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> success() {
-		return ResultUtils.success();
+    	return Result.builder()
+    	.code(ResultEnum.SUCCESS.getCode())
+    	.msg(ResultEnum.SUCCESS.getMsg())
+    	.flag(true)
+    	.build();
 	}
 	/**
 	 * 成功后调用，返回的data为一个对象
@@ -25,7 +102,12 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static <T> Result<T> success(T data) {
-		return ResultUtils.success(data);
+        return new Result<T>().toBuilder()
+        .code(ResultEnum.SUCCESS.getCode())
+        .msg(ResultEnum.SUCCESS.getMsg())
+        .flag(true)
+        .data(data)
+        .build();
 	}
 	/**
 	 * 成功后调用，分页查询
@@ -35,7 +117,8 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static <T> Result<T> success(T data, Long count) {
-		return ResultUtils.success(data, count);
+        Result<T> result = new Result<T>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), true, data, count);
+        return result;
 	}
 	/**
 	 * 成功后调用，分页查询
@@ -46,97 +129,51 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static <T> Result<T> success(Integer code, T data, Long count) {
-		return ResultUtils.success(code, data, count);
+        Result<T> result = new Result<T>(code, ResultEnum.SUCCESS.getMsg(), true, data, count);
+        return result;
 	}
 	
-	/* 错误提示 */
-	// 100
+    // 300 - 资源、重定向、定位等提示
 	
 	/**
-	 * 非法访问-100
+	 * 资源已失效-300
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> attack() {
-		return ResultUtils.error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg());
+	public static Result<?> resource_already_invalid() {
+		return error(ResultEnum.RESOURCE_ALREADY_INVALID.getCode(), ResultEnum.RESOURCE_ALREADY_INVALID.getMsg());
 	}
 	/**
-	 * 非法访问-100
-	 * @param <T> 泛型
-	 * @param data 异常数据
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static <T> Result<T> attack(T data) {
-		return ResultUtils.error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg(), data);
-	}
-	/**
-	 * 未登录或登录已失效-101
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> unauthorized() {
-		return ResultUtils.error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED.getMsg());
-	}
-	/**
-	 * 会话未注销，无需登录-102
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> logged_in() {
-		return ResultUtils.error(ResultEnum.LOGGED_IN.getCode(), ResultEnum.LOGGED_IN.getMsg());
-	}
-	/**
-	 * 无权限-103
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> forbidden() {
-		return ResultUtils.error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN.getMsg());
-	}
-	/**
-	 * 频繁访问限制，请稍后重试-104
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> frequent_access_restriction() {
-		return ResultUtils.error(ResultEnum.FREQUENT_ACCESS_RESTRICTION.getCode(),
-				ResultEnum.FREQUENT_ACCESS_RESTRICTION.getMsg());
-	}
-	
-	// 300
-	
-	/**
-	 * 参数解密错误-300
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> decrypt_error() {
-		return ResultUtils.error(ResultEnum.DECRYPT_ERROR.getCode(), ResultEnum.DECRYPT_ERROR.getMsg());
-	}
-	/**
-	 * JSON格式字符串解析错误-301
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> json_parse_error() {
-		return ResultUtils.error(ResultEnum.JSON_PARSE_ERROR.getCode(), ResultEnum.JSON_PARSE_ERROR.getMsg());
-	}
-	/**
-	 * 文件上传请求错误，获得文件信息为空，同时文件必须有明确的匹配类型（如文本类型：.txt）-302
+	 * 文件上传请求错误，获得文件信息为空，同时文件必须有明确的匹配类型（如文本类型：.txt）-301
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?>  file_empty() {
-		return ResultUtils.error(ResultEnum.FILE_EMPTY.getCode(), ResultEnum.FILE_EMPTY.getMsg());
+		return error(ResultEnum.FILE_EMPTY.getCode(), ResultEnum.FILE_EMPTY.getMsg());
+	}
+	/**
+	 * 类型转换错误-302
+	 * 
+	 * @param data	提示信息
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> type_convert_error(String data) {
+		return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR.getMsg(), data);
 	}
 	
-	// 400
+    // 400 - 客户端错误
 	
 	/**
 	 * 参数为空-400
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> param_void() {
-		return ResultUtils.error(ResultEnum.PARAM_VOID.getCode(), ResultEnum.PARAM_VOID.getMsg());
+		return error(ResultEnum.PARAM_VOID.getCode(), ResultEnum.PARAM_VOID.getMsg());
 	}
 	/**
 	 * 参数校验未通过，请参照API核对后重试-401
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> param_check_not_pass() {
-		return ResultUtils.error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg());
+		return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg());
 	}
 	/**
 	 * 参数校验未通过，请参照API核对后重试-401
@@ -144,14 +181,14 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<String> param_check_not_pass(String data) {
-		return ResultUtils.error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
+		return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
 	}
 	/**
 	 * 参数校验未通过，无效的value-402
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> param_value_invalid() {
-		return ResultUtils.error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg());
+		return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg());
 	}
 	/**
 	 * 参数校验未通过，无效的value-402
@@ -159,17 +196,24 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<String> param_value_invalid(String data) {
-		return ResultUtils.error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
+		return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
+	}
+	/**
+	 * 参数解密错误-403
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> param_decrypt_error() {
+		return error(ResultEnum.PARAM_DECRYPT_ERROR.getCode(), ResultEnum.PARAM_DECRYPT_ERROR.getMsg());
 	}
 	
-	// 500
+    // 500 - 服务器错误
 	
 	/**
 	 * 请求错误-500
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> error() {
-		return ResultUtils.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
+		return error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
 	}
 	/**
 	 * 请求错误-500
@@ -178,14 +222,14 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static <T> Result<T> error(T data) {
-		return ResultUtils.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg(), data);
+		return error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg(), data);
 	}
 	/**
 	 * 数据结构异常-501
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> data_structure() {
-		return ResultUtils.error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg());
+		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg());
 	}
 	/**
 	 * 数据结构异常-501
@@ -197,31 +241,31 @@ public class ResultInfo {
 	 */
 	public static Result<?> data_structure(int expected, int actual) {
 		String data = "Incorrect result size: expected " + expected + ", actual " + actual;
-		return ResultUtils.error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), data);
+		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), data);
 	}
 	/**
 	 * 数据结构异常，请检查相应数据结构一致性-502
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> db_error() {
-		return ResultUtils.error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg());
+		return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg());
 	}
 	/**
 	 * 哎哟喂！网络开小差了，请稍后重试...-503
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?>  client_fallback() {
-		return ResultUtils.error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg());
+		return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg());
 	}
 	/**
 	 * 哎哟喂！服务都被您挤爆了...-504
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?>  client_fallback_error() {
-		return ResultUtils.error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg());
+		return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg());
 	}
 	
-	// 600
+	// 600 - 自定义错误提示
 	
 	/**
 	 * 自定义类型提示-msg
@@ -229,128 +273,7 @@ public class ResultInfo {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> dev_defined(String msg) {
-		return ResultUtils.error(ResultEnum.DEV_DEFINED.getCode(), msg);
-	}
-	
-	// 610
-	
-	/**
-	 * 用户已存在
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> user_exist() {
-		return ResultUtils.error(ResultEnum.USER_EXIST.getCode(), ResultEnum.USER_EXIST.getMsg());
-	}
-	/**
-	 * 用户不存在
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> user_no_exist() {
-		return ResultUtils.error(ResultEnum.USER_NO_EXIST.getCode(), ResultEnum.USER_NO_EXIST.getMsg());
-	}
-	/**
-	 * 用户已停用
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> user_stop() {
-		return ResultUtils.error(ResultEnum.USER_STOP.getCode(), ResultEnum.USER_STOP.getMsg());
-	}
-	/**
-	 * 无效的用户
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> user_invalid() {
-		return ResultUtils.error(ResultEnum.USER_INVALID.getCode(), ResultEnum.USER_INVALID.getMsg());
-	}
-	/**
-	 * 用户名或密码错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> user_or_password_error() {
-		return ResultUtils.error(ResultEnum.USERNAME_OR_PASSWORD_ERROR.getCode(), ResultEnum.USERNAME_OR_PASSWORD_ERROR.getMsg());
-	}
-	/**
-	 * 原密码错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> original_password_error() {
-		return ResultUtils.error(ResultEnum.ORIGINAL_PASSWORD_ERROR.getCode(), ResultEnum.ORIGINAL_PASSWORD_ERROR.getMsg());
-	}
-	/**
-	 * 手机号已被注册
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> phone_exist() {
-		return ResultUtils.error(ResultEnum.PHONE_EXIST.getCode(), ResultEnum.PHONE_EXIST.getMsg());
-	}
-	
-	// 620
-	
-	/**
-	 * 无效的口令
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> password_invalid() {
-		return ResultUtils.error(ResultEnum.PASSWORD_INVALID.getCode(), ResultEnum.PASSWORD_INVALID.getMsg());
-	}
-	/**
-	 * 验证码错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> captcha_error() {
-		return ResultUtils.error(ResultEnum.CAPTCHA_ERROR.getCode(), ResultEnum.CAPTCHA_ERROR.getMsg());
-	}
-	/**
-	 * 手机号码错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> cellphone_error() {
-		return ResultUtils.error(ResultEnum.CELLPHONE_ERROR.getCode(), ResultEnum.CELLPHONE_ERROR.getMsg());
-	}
-	/**
-	 * 身份证号码错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> id_card_number_error() {
-		return ResultUtils.error(ResultEnum.ID_CARD_NUMBER_ERROR.getCode(), ResultEnum.ID_CARD_NUMBER_ERROR.getMsg());
-	}
-	/**
-	 * 邮箱验证错误
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> email_error() {
-		return ResultUtils.error(ResultEnum.EMAIL_ERROR.getCode(), ResultEnum.EMAIL_ERROR.getMsg());
-	}
-	/**
-	 * 邀请码无效
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> invite_code_invalid() {
-		return ResultUtils.error(ResultEnum.INVITE_CODE_INVALID.getCode(), ResultEnum.INVITE_CODE_INVALID.getMsg());
-	}
-
-	// 630
-
-	/**
-	 * 帐户已被绑定
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> account_exist_binding() {
-		return ResultUtils.error(ResultEnum.ACCOUNT_EXIST_BINDING.getCode(), ResultEnum.ACCOUNT_EXIST_BINDING.getMsg());
-	}
-	/**
-	 * 帐户存在业务，暂时不允许改变状态
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> account_exist_business_not_allow_change() {
-		return ResultUtils.error(ResultEnum.ACCOUNT_EXIST_BUSINESS_NOT_ALLOW_CHANGE.getCode(), ResultEnum.ACCOUNT_EXIST_BUSINESS_NOT_ALLOW_CHANGE.getMsg());
-	}
-	/**
-	 * 帐户余额不足
-	 * @return HTTP请求，最外层响应对象
-	 */
-	public static Result<?> account_balance_not_enough() {
-		return ResultUtils.error(ResultEnum.ACCOUNT_BALANCE_NOT_ENOUGH.getCode(), ResultEnum.ACCOUNT_BALANCE_NOT_ENOUGH.getMsg());
+		return error(ResultEnum.DEV_DEFINED.getCode(), msg);
 	}
 	
 }

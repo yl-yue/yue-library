@@ -176,6 +176,17 @@ class DBUpdate extends DBQuery {
 	 * <p>根据表中主键ID进行更新
      * @param tableName		表名
      * @param paramJson		更新所用到的参数（包含主键ID字段）
+     */
+	@Transactional
+    public void updateById(String tableName, JSONObject paramJson) {
+		updateById(tableName, paramJson, DBUpdateEnum.正常);
+    }
+	
+	/**
+	 * 更新-ById
+	 * <p>根据表中主键ID进行更新
+     * @param tableName		表名
+     * @param paramJson		更新所用到的参数（包含主键ID字段）
      * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
      */
 	@Transactional
@@ -185,17 +196,6 @@ class DBUpdate extends DBQuery {
 		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
         int expectedValue = 1;
 		updateAndExpectedEqual(updateRowsNumber, expectedValue);
-    }
-	
-	/**
-	 * 更新-ById
-	 * <p>根据表中主键ID进行更新
-     * @param tableName		表名
-     * @param paramJson		更新所用到的参数（包含主键ID字段）
-     */
-	@Transactional
-    public void updateById(String tableName, JSONObject paramJson) {
-		updateById(tableName, paramJson, DBUpdateEnum.正常);
     }
 	
 	/**
@@ -213,40 +213,6 @@ class DBUpdate extends DBQuery {
 		int expectedValue = 1;
 		updateBatchAndExpectedEqual(updateRowsNumberArray, expectedValue);
     }
-	
-	/**
-	 * 更新-批量
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
-	 * 
-     * @param tableName    	表名
-     * @param paramJsons	更新所用到的参数数组
-     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
-     * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
-     */
-	@Transactional
-    public void updateBatch(String tableName, JSONObject[] paramJsons, String[] conditions, DBUpdateEnum dBUpdateEnum) {
-		// 1. 获得SQL
-		String sql = updateSql(tableName, paramJsons[0], conditions, dBUpdateEnum);
-		
-		// 2. 执行
-        int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
-        
-        // 3. 确认影响行数
-        int expectedValue = 1;
-        updateBatchAndExpectedEqual(updateRowsNumberArray, expectedValue);
-	}
-	
-	/**
-     * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-     * @param sql			要执行的更新SQL
-     * @param paramJsons	更新所用到的参数数组
-	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
-     */
-	@Transactional
-	public int[] updateBatch(String sql, JSONObject[] paramJsons) {
-		return namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
-	}
 	
 	/**
 	 * <h1>更新-排序</h1><br>
@@ -324,6 +290,40 @@ class DBUpdate extends DBQuery {
 		
 		// 7. 排序更新
 		updateById(tableName, ListUtils.toJsons(paramJsonArray), DBUpdateEnum.正常);
+	}
+	
+	/**
+	 * 更新-批量
+	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * 
+     * @param tableName    	表名
+     * @param paramJsons	更新所用到的参数数组
+     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
+     * @param dBUpdateEnum	更新类型 {@linkplain DBUpdateEnum}
+     */
+	@Transactional
+    public void updateBatch(String tableName, JSONObject[] paramJsons, String[] conditions, DBUpdateEnum dBUpdateEnum) {
+		// 1. 获得SQL
+		String sql = updateSql(tableName, paramJsons[0], conditions, dBUpdateEnum);
+		
+		// 2. 执行
+        int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+        
+        // 3. 确认影响行数
+        int expectedValue = 1;
+        updateBatchAndExpectedEqual(updateRowsNumberArray, expectedValue);
+	}
+	
+	/**
+     * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
+     * @param sql			要执行的更新SQL
+     * @param paramJsons	更新所用到的参数数组
+	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
+     */
+	@Transactional
+	public int[] updateBatch(String sql, JSONObject[] paramJsons) {
+		return namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
 	}
 	
 }

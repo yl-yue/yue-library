@@ -14,7 +14,7 @@ import ai.yue.library.base.exception.DBException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.base.view.ResultErrorPrompt;
+import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.constant.DBUpdateEnum;
 
 /**
@@ -128,7 +128,7 @@ class DBInsert extends DBDelete {
         
         // 4. 确认插入条数
         if (updateRowsNumber != paramJsons.length) {
-        	throw new DBException(ResultErrorPrompt.INSERT_BATCH_ERROR);
+        	throw new DBException(ResultPrompt.INSERT_BATCH_ERROR);
         }
 	}
 	

@@ -6,8 +6,24 @@ package ai.yue.library.base.view;
  * @author	孙金川
  * @since	2018年7月19日
  */
-public class ResultErrorPrompt {
+public class ResultPrompt {
 	
+	//---------------------预定义结果提示---------------------
+	
+	public static final String USER_EXIST = "用户已存在";
+	public static final String USER_NO_EXIST = "用户不存在";
+	public static final String USER_STOP = "用户已停用";
+	public static final String USER_INVALID = "无效的用户";
+	public static final String USERNAME_OR_PASSWORD_ERROR = "用户名或密码错误";
+	public static final String ORIGINAL_PASSWORD_ERROR = "原密码错误";
+	public static final String PHONE_EXIST = "手机号已被注册";
+	public static final String PASSWORD_INVALID = "无效的口令";
+	public static final String CAPTCHA_ERROR = "验证码错误";
+	public static final String INVITE_CODE_INVALID = "邀请码无效";
+	public static final String ACCOUNT_EXIST_BINDING = "此帐户已被绑定";
+	public static final String ACCOUNT_EXIST_BUSINESS_NOT_ALLOW_CHANGE = "帐户存在业务，暂时不允许改变状态";
+	public static final String ACCOUNT_BALANCE_NOT_ENOUGH = "帐户余额不足";
+    
 	//---------------------直接定义异常---------------------
 	
 	/** 超出最大limit限制 */
@@ -29,41 +45,6 @@ public class ResultErrorPrompt {
 	public static final String UPDATE_BATCH_ERROR = "执行批次更新命令失败，可能原因是：数据结构异常或无ID主键。请立即检查数据的一致性、唯一性。";
 	
 	//---------------------引用定义异常---------------------
-	
-	/**
-	 * 非法访问异常提示
-	 */
-	public static final String ATTACK = "code: " + ResultEnum.ATTACK.getCode() + ", message: " + ResultEnum.ATTACK.getMsg();
-	
-	/**
-	 * 参数为空异常提示
-	 */
-	public static final String PARAM_VOID = "code: " + ResultEnum.PARAM_VOID.getCode() + ", message: " + ResultEnum.PARAM_VOID.getMsg();
-	
-	/**
-	 * 参数校验未通过异常提示
-	 */
-	public static final String PARAM_CHECK_NOT_PASS = "code: " + ResultEnum.PARAM_CHECK_NOT_PASS.getCode() + ", message: " + ResultEnum.PARAM_CHECK_NOT_PASS.getMsg();
-	
-	/**
-	 * 服务降级异常提示
-	 */
-	public static final String CLIENT_FALLBACK = "code: " + ResultEnum.CLIENT_FALLBACK.getCode() + ", message: " + ResultEnum.CLIENT_FALLBACK.getMsg();
-	
-	/**
-	 * 数据结构异常提示
-	 */
-	public static final String DB_ERROR = "code: " + ResultEnum.DB_ERROR.getCode() + ", message: " + ResultEnum.DB_ERROR.getMsg();
-	
-	/**
-	 * 未登录或登录已失效异常提示
-	 */
-	public static final String UNAUTHORIZED = "code: " + ResultEnum.UNAUTHORIZED.getCode() + ", message: " + ResultEnum.UNAUTHORIZED.getMsg();
-	
-	/**
-	 * 无权限异常提示
-	 */
-	public static final String FORBIDDEN = "code: " + ResultEnum.FORBIDDEN.getCode() + ", message: " + ResultEnum.FORBIDDEN.getMsg();
 	
 	/**
 	 * 数据结构异常-不正确的结果

@@ -1,6 +1,7 @@
 package ai.yue.library.base.exception;
 
 import ai.yue.library.base.view.Result;
+import ai.yue.library.base.view.ResultInfo;
 import lombok.Getter;
 
 /**
@@ -12,6 +13,10 @@ import lombok.Getter;
 public class ResultException extends RuntimeException{
 	
 	Result<?> result;
+	
+	public <T> ResultException(String msg) {
+		this.result = ResultInfo.dev_defined(msg);
+	}
 	
 	public <T> ResultException(Result<T> result) {
 		this.result = result;

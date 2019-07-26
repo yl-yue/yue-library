@@ -17,10 +17,9 @@ import ai.yue.library.base.exception.AttackException;
 import ai.yue.library.base.exception.AuthorizeException;
 import ai.yue.library.base.exception.ClientFallbackException;
 import ai.yue.library.base.exception.DBException;
-import ai.yue.library.base.exception.DecryptException;
 import ai.yue.library.base.exception.ForbiddenException;
-import ai.yue.library.base.exception.JSONObjectException;
 import ai.yue.library.base.exception.LoginException;
+import ai.yue.library.base.exception.ParamDecryptException;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
@@ -28,6 +27,7 @@ import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.HttpUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
@@ -150,16 +150,17 @@ public abstract class GlobalExceptionHandler {
 	}
     
     /**
-	 * JSON格式字符串解析异常统一处理
-	 * @param e JSON格式字符串解析异常
-	 * @return 结果
-	 */
+     * 类型转换异常统一处理
+     * 
+     * @param e 转换异常
+     * @return 结果
+     */
     @ResponseBody
-    @ExceptionHandler(JSONObjectException.class)
-	public Result<?> jsonObjectExceptionHandler(JSONObjectException e) {
-    	log.error("【JSONObject错误】格式化JSON字符串失败，错误信息如下：{}", e.getMessage());
+    @ExceptionHandler(ConvertException.class)
+	public Result<?> convertExceptionHandler(ConvertException e) {
+    	log.error("【类型转换异常】转换类型失败，错误信息如下：{}", e.getMessage());
     	ExceptionUtils.printException(e);
-		return ResultInfo.json_parse_error();
+    	return ResultInfo.type_convert_error(e.getMessage());
 	}
     
     /**
@@ -168,11 +169,11 @@ public abstract class GlobalExceptionHandler {
 	 * @return 结果
 	 */
     @ResponseBody
-    @ExceptionHandler(DecryptException.class)
-	public Result<?> decryptExceptionHandler(DecryptException e) {
+    @ExceptionHandler(ParamDecryptException.class)
+	public Result<?> paramDecryptExceptionHandler(ParamDecryptException e) {
     	log.error("【解密错误】错误信息如下：{}", e.getMessage());
     	ExceptionUtils.printException(e);
-		return ResultInfo.decrypt_error();
+		return ResultInfo.param_decrypt_error();
 	}
     
     /**

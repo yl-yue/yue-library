@@ -128,8 +128,9 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>List合并</h1><br>
-	 * 将<b> list2 </b>合并到<b> list1 </b>里面
+	 * List合并
+	 * <p>将<b> list2 </b>合并到<b> list1 </b>里面
+	 * 
 	 * @param list1		需要合并的列表
 	 * @param list2		被合并的列表
 	 * @param key1		list1中JSON所使用的key
@@ -150,7 +151,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>List-JSONObject集合排序</h1>
+	 * List-JSONObject集合排序
 	 * 
 	 * @param list 需要处理的集合
 	 * @param sortKey 排序依据（JSONObject的key）
@@ -174,7 +175,8 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>List-T集合排序</h1>
+	 * List-T集合排序
+	 * 
 	 * @param <T> 泛型
 	 * @param list 需要处理的集合
 	 * @param sortField 排序字段
@@ -245,7 +247,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject}集合去重统计与排序</h1>
+	 * {@linkplain List}-{@linkplain JSONObject}集合去重统计与排序
 	 * <p>根据参数distinctKey（JSONObject的key）计算元素重复次数，并为每个JSONObject添加一个 <b>frequency</b>（频率元素），value的值是从整数1开始计数。
 	 * <p>示例：<code>json.put("frequency", frequency)</code>
 	 * <p><b>根据frequency（重复频率）排序</b>
@@ -273,7 +275,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject}集合——去重、统计、排序与元素选择性保留</h1>
+	 * {@linkplain List}-{@linkplain JSONObject}集合——去重、统计、排序与元素选择性保留
 	 * <p>根据参数distinctKey（JSONObject的key），计算元素重复次数。并为每个JSONObject添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。
 	 * <p>示例：<code>json.put("frequency", frequency)</code>
 	 * <p><b>根据frequency（重复频率）排序</b>
@@ -315,8 +317,9 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>数组转List</h1>
+	 * 数组转List
 	 * <p>此方法为 {@linkplain Arrays#asList(Object...)} 的安全实现</p>
+	 * 
 	 * @param <T>	数组中的对象类
 	 * @param array	将被转换的数组
 	 * @return		被转换数组的列表视图
@@ -327,7 +330,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}</h1>
+	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}
 	 * 
 	 * @param <T> 		泛型
 	 * @param list 		需要转换的List
@@ -344,7 +347,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain String}</h1>
+	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain String}
 	 * 
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
@@ -361,7 +364,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}</h1>
+	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}
 	 * 
 	 * @param <T>		泛型
 	 * @param list 		需要转换的List
@@ -379,7 +382,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} - {@linkplain JSONObject} 转 {@linkplain List} - {@linkplain String}并去除重复元素</h1>
+	 * {@linkplain List} - {@linkplain JSONObject} 转 {@linkplain List} - {@linkplain String} 并去除重复元素
 	 * 
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
@@ -396,7 +399,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}并去除重复元素</h1>
+	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class} 并去除重复元素
 	 * 
 	 * @param <T>		泛型
 	 * @param list 		需要转换的List
@@ -409,7 +412,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} - {@linkplain Map} 转 {@linkplain List} - {@linkplain JSONObject}</h1>
+	 * {@linkplain List} - {@linkplain Map} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>
 	 * 	<b><i>性能测试说明：</i></b><br>
 	 * 	<i>测试CPU：</i>i7-4710MQ<br>
@@ -429,12 +432,13 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain List} - {@linkplain JSONObject}</h1>
+	 * {@linkplain JSONArray} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 *  <i>无类型转换（类型推断）：</i>见 {@linkplain #toJsonList(List)}<br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
 	 * </p>
+	 * 
 	 * @param jsonArray 需要转换的JSONArray
 	 * @return 转换后的jsonList
 	 */
@@ -448,7 +452,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} - {@linkplain Class} 转 {@linkplain List} - {@linkplain JSONObject}</h1>
+	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
@@ -468,7 +472,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain JSONArray} 转 {@linkplain JSONObject}[]</h1>
+	 * {@linkplain JSONArray} 转 {@linkplain JSONObject}[]
 	 * <p>对象引用转换，内存指针依旧指向元数据
 	 * 
 	 * @param jsonArray 需要转换的JSONArray
@@ -485,7 +489,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List}-{@linkplain JSONObject} 转 {@linkplain JSONObject}[]</h1>
+	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain JSONObject}[]
 	 * <p>对象引用转换，内存指针依旧指向元数据
 	 * 
 	 * @param list 		需要转换的List
@@ -502,7 +506,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[]</h1>
+	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[]
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
@@ -524,7 +528,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[] 并移除空对象</h1>
+	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[] 并移除空对象
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
@@ -548,7 +552,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain String} 转 {@linkplain JSONObject}[]</h1>
+	 * {@linkplain String} 转 {@linkplain JSONObject}[]
 	 * 
 	 * @param jsonString	需要转换的JSON字符串
 	 * @return JSON数组
@@ -558,7 +562,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * <h1>{@linkplain String} 转 {@linkplain JSONObject}[]</h1>
+	 * {@linkplain String} 转 {@linkplain JSONObject}[]
 	 * <blockquote>示例：
      * <pre>
      * 	{@code

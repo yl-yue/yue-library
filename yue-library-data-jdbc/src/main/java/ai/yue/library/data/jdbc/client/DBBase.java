@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.base.exception.DBException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.base.view.ResultErrorPrompt;
+import ai.yue.library.base.view.ResultPrompt;
 import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,7 +57,7 @@ class DBBase {
         	return false;
         }
         
-        String msg = ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
+        String msg = ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
         throw new DBException(msg);
 	}
 	
@@ -77,7 +77,7 @@ class DBBase {
         	return false;
         }
         
-        String msg = ResultErrorPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
+        String msg = ResultPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
         throw new DBException(msg);
 	}
 	
@@ -90,7 +90,7 @@ class DBBase {
      */
 	public void updateAndExpectedEqual(long updateRowsNumber, int expectedValue) {
         if (updateRowsNumber != expectedValue) {
-    		String msg = ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
+    		String msg = ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
         	throw new DBException(msg);
         }
 	}
@@ -104,7 +104,7 @@ class DBBase {
      */
 	public void updateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
         if (!(updateRowsNumber >= expectedValue)) {
-        	String msg = ResultErrorPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
+        	String msg = ResultPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
             throw new DBException(msg);
         }
 	}
@@ -119,8 +119,8 @@ class DBBase {
 	public void updateBatchAndExpectedEqual(int[] updateRowsNumberArray, int expectedValue) {
 		for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber != expectedValue) {
-				String msg = ResultErrorPrompt.UPDATE_BATCH_ERROR;
-				msg += ResultErrorPrompt.dataStructure(expectedValue, updateRowsNumber);
+				String msg = ResultPrompt.UPDATE_BATCH_ERROR;
+				msg += ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
 				throw new DBException(msg);
 			}
 		}
@@ -136,7 +136,7 @@ class DBBase {
     	int expectedValue = 1;
     	if (size != expectedValue) {
     		if (size > expectedValue) {
-    			String msg = ResultErrorPrompt.dataStructure(expectedValue, size);
+    			String msg = ResultPrompt.dataStructure(expectedValue, size);
     			log.warn(msg);
     		}
     		
@@ -157,7 +157,7 @@ class DBBase {
     	int expectedValue = 1;
     	if (size != expectedValue) {
     		if (size > expectedValue) {
-    			String msg = ResultErrorPrompt.dataStructure(expectedValue, size);
+    			String msg = ResultPrompt.dataStructure(expectedValue, size);
     			log.warn(msg);
     		}
     		

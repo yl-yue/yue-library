@@ -576,6 +576,7 @@ class DBQuery extends DBBase {
      * <code>SELECT count(*) count FROM 表 1 a, (select id from 表 1 where 条件) b where a.id=b.id</code><br>
      * <p>阿里最优查询SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT :page, :limit) b where a.id=b.id</code><br><br>
+     * 
      * @param <T> 泛型
      * @param countSql 用于统计总数的sql语句 <i>（注意：count(*)必须拥有count别名）</i> 同时countSql可以为null表示不统计 <b>可选参数</b>
      * @param querySql 用于查询数据的sql语句
@@ -589,7 +590,8 @@ class DBQuery extends DBBase {
 	}
 	
     /**
-     * <b>根据相同的列表条件，获得上一条与下一条数据</b><br><br>
+     * <b>根据相同的列表条件，获得上一条与下一条数据</b>
+     * 
      * @param querySql 			用于查询数据的sql语句
      * @param pageIPO 			分页查询参数 {@linkplain PageIPO}
      * @param equalsId			做比较的条件ID（将与查询结果的主键ID做比较）

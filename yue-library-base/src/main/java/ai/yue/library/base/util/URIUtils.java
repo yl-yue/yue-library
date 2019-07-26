@@ -4,7 +4,7 @@ import org.springframework.web.util.UriUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.exception.JSONObjectException;
+import cn.hutool.core.convert.ConvertException;
 
 /**
  * @author  孙金川
@@ -79,8 +79,9 @@ public class URIUtils {
 		try {
 			json = JSONObject.parseObject(jsonString);
 		}catch (Exception e) {
-			throw new JSONObjectException(e.getMessage());
+			throw new ConvertException(e.getMessage());
 		}
+		
 		return json;
 	}
 	

@@ -1,6 +1,5 @@
 package ai.yue.library.base.view;
 
-import static com.alibaba.fastjson.JSON.toJSON;
 import static com.alibaba.fastjson.util.TypeUtils.castToBigDecimal;
 import static com.alibaba.fastjson.util.TypeUtils.castToBigInteger;
 import static com.alibaba.fastjson.util.TypeUtils.castToBoolean;
@@ -22,12 +21,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.HttpUtils;
 import ai.yue.library.base.util.ListUtils;
@@ -65,7 +64,7 @@ public class Result<T> implements Serializable {
 	/**
 	 * 成功校验
 	 * <p>
-	 * 如果此处获得的Result是一个错误提示结果，那么便会抛出一个{@linkplain ResultException}异常，以便于数据回滚并进行异常统一处理。<br>
+	 * 如果此处获得的Result是一个错误提示结果，那么便会抛出一个 {@linkplain ResultException} 异常，以便于数据回滚并进行异常统一处理。
 	 * 
 	 * @throws ResultException 返回的请求异常结果
 	 */
@@ -80,31 +79,15 @@ public class Result<T> implements Serializable {
 	}
 	
 	public JSONObject dataToJSONObject() {
-		if (data instanceof JSONObject) {
-			return (JSONObject) data;
-		}
-
-		if (data instanceof String) {
-			return JSON.parseObject((String) data);
-		}
-		
-		return (JSONObject) toJSON(data);
+		return Convert.toJSONObject(data);
 	}
 	
 	public JSONArray dataToJSONArray() {
-		if (data instanceof JSONArray) {
-			return (JSONArray) data;
-		}
-
-		if (data instanceof String) {
-			return (JSONArray) JSON.parse((String) data);
-		}
-
-		return (JSONArray) toJSON(data);
+		return Convert.toJSONArray(data);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<JSONObject> dataToJSONList() {
+	public List<JSONObject> dataToJsonList() {
 		if (data instanceof List) {
 			var dataTemp = (List<?>) data;
 			if (ListUtils.isNotEmpty(dataTemp)) {
@@ -115,6 +98,17 @@ public class Result<T> implements Serializable {
 		}
 		
 		return ListUtils.toJsonList(dataToJSONArray());
+	}
+	
+	/**
+	 * 不建议使用
+	 * 
+	 * @deprecated 请使用 {@link #dataToJsonList()}
+	 * @return jsonList
+	 */
+	@Deprecated
+	public List<JSONObject> dataToJSONList() {
+		return dataToJsonList();
 	}
 	
 	public Boolean dataToBoolean() {
@@ -182,7 +176,7 @@ public class Result<T> implements Serializable {
 
 		return castToTimestamp(data);
 	}
-
+	
 	/**
 	 * HttpServletResponse
 	 */

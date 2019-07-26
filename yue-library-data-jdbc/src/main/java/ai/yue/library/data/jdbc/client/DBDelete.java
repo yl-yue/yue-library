@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.DBException;
-import ai.yue.library.base.view.ResultErrorPrompt;
+import ai.yue.library.base.view.ResultPrompt;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -55,7 +55,7 @@ class DBDelete extends DBUpdate {
         
         // 4. 确认影响的数据条数
         if (updateRowsNumber != 1) {
-        	throw new DBException(ResultErrorPrompt.DELETE_ERROR);
+        	throw new DBException(ResultPrompt.DELETE_ERROR);
         }
     }
 	
@@ -90,7 +90,7 @@ class DBDelete extends DBUpdate {
         // 3. 确认影响行数
         for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber > 1) {
-				throw new DBException(ResultErrorPrompt.DELETE_BATCH_ERROR);
+				throw new DBException(ResultPrompt.DELETE_BATCH_ERROR);
 			}
 		}
     }

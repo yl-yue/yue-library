@@ -8,7 +8,7 @@
 - 全局统一异常处理基类，结合`Result`对象，定位异常更轻松，前端显示更贴切
 - 异步线程池：共用父线程上下文环境，异步执行任务时不丢失token
 
-## 配置
+## 配置项
 　　`yue-library-base`自动装配了一系列的基础Bean与环境配置项，可在<b>application.yml</b>文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
 
 ### 默认配置项
@@ -21,6 +21,17 @@
 - AsyncConfig-异步线程池（共用父线程上下文环境，异步执行任务时不丢失token） `yue.thread-pool.async.*`
 - CorsConfig-跨域配置 `yue.cors.allow`
 
+## 工具类
+依托于`Hutool`工具包等，进行校正与增强，简单强大只有你想不到。
+
+### 类型转换器
+[参考](https://hutool.cn/docs/#/core/类型转换/类型转换工具类-Convert)
+
+提供简单全面的类型转换，适合更多的业务场景，内置hutool、fastjson、yue三种类型转换器，判断精确性能强大，未知类型兼容性更强
+
+### 校验
+全面简单的校验框架，更适合国内校验场景，支持多种校验方式，配合全局异常处理，只为更好的`Restful`
+
 ## 文档说明
 　　基础工具包文档见：[`hutool-core`](https://hutool.cn/docs)<br>
-　　更多工具包文档见本示例说明：[常用工具类](base-常用工具类.md)，[校验](base-校验.md) ...
+　　更多工具包文档见本示例说明：[工具类](base-工具类.md)，[校验](base-校验.md) ...

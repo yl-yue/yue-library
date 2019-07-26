@@ -15,7 +15,7 @@ import javax.crypto.Cipher;
 
 import org.springframework.util.Base64Utils;
 
-import ai.yue.library.base.exception.DecryptException;
+import ai.yue.library.base.exception.ParamDecryptException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -135,7 +135,7 @@ public class RSAUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("【RSA解密错误】解密内容 = {}", content);
-			throw new DecryptException(e.getMessage());
+			throw new ParamDecryptException(e.getMessage());
 		}
 	}
 
