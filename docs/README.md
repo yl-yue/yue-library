@@ -44,7 +44,7 @@
 
 ## 介绍
 
-　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，并且自动装配了一系列的基础Bean，不仅如此，还可以用于快速构建SpringCloud项目，让微服务变得更简单。
+　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。
 
 ## 工程结构
 

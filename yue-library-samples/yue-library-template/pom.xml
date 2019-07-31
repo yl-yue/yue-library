@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>Greenwich.SR1.2-SNAPSHOT</version>
+		<version>Greenwich.SR2-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-template</artifactId>
 	<name>yue-library-template</name>

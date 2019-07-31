@@ -18,6 +18,7 @@
 - 添加pay、短信、OSS等封装
 
 ### 变更
+- 注意SpringBoot lombok 版本和编译环境一致
 
 ### Bug修复
 
