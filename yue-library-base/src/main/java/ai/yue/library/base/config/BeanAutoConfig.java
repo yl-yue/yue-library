@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import ai.yue.library.base.config.argument.resolver.CustomArgumentResolversConfig;
 import ai.yue.library.base.config.handler.ExceptionHandlerConfig;
 import ai.yue.library.base.config.http.HttpsRequestFactory;
 import ai.yue.library.base.config.properties.ConstantProperties;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ ExceptionHandlerConfig.class, AsyncConfig.class })
+@Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class })
 @EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
 public class BeanAutoConfig {
 	

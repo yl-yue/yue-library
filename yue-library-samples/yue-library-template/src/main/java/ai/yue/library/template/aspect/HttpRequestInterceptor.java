@@ -3,8 +3,6 @@ package ai.yue.library.template.aspect;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,9 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpRequestInterceptor implements HandlerInterceptor {
 
-	@Autowired
-	Redis redis;
-	
 	/**
 	 * 在控制器（controller方法）执行之前
 	 * <p>
