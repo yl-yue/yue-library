@@ -19,10 +19,12 @@ import ai.yue.library.base.exception.ParamDecryptException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年3月29日
+ * @deprecated 请使用 yue-library-base-crypto 模块 SecureSingleton
+ * @author	孙金川
+ * @since	2018年3月29日
  */
 @Slf4j
+@Deprecated
 public class RSAUtils {
 	
 	/**

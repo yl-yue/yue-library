@@ -34,6 +34,7 @@
 	<modules>
 		<module>yue-library-dependencies</module>
 		<module>yue-library-base</module>
+		<module>yue-library-base-crypto</module>
 		<module>yue-library-data-jdbc</module>
 		<module>yue-library-data-redis</module>
 	</modules>
@@ -44,6 +45,11 @@
 			<dependency>
 				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-base</artifactId>
+				<version>${revision}${sha1}${changelist}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.ylyue</groupId>
+				<artifactId>yue-library-base-crypto</artifactId>
 				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			<dependency>
@@ -60,7 +66,22 @@
 			<!-- 工具包：Hutool、fastjson -->
 			<dependency>
 				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-aop</artifactId>
+				<version>${hutool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-core</artifactId>
+				<version>${hutool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-crypto</artifactId>
+				<version>${hutool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-extra</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
 			<dependency>
@@ -73,16 +94,7 @@
 				<artifactId>hutool-script</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-extra</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-aop</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
+			
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>

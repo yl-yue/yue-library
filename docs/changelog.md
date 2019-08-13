@@ -10,15 +10,17 @@
 - 权限拦截框架集成
 
 ### 其他
+- JDK8兼容
 - 完善文档-更详细的教程，更多的细节介绍和建议。
 - 加入996icu license 协议
 
 ## Greenwich.SR2【规划中】
 ### 新特性
-- 添加pay、短信、OSS等封装
-
-### 变更
 - 注意SpringBoot lombok 版本和编译环境一致
+- 添加pay、短信、OSS等封装
+- `JSONObject` 参数解析器 `@PostMapping public Result<?> post(JSONObject paramJson) {`
+- ApplicationContextUtils
+- 新增 `yue-library-base-crypto` 模块
 
 ### Bug修复
 

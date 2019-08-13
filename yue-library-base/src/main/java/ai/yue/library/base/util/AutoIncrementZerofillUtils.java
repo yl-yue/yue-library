@@ -5,6 +5,8 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
+ * 自动递增填充零
+ * 
  * @author  孙金川
  * @version 创建时间：2018年12月10日
  */

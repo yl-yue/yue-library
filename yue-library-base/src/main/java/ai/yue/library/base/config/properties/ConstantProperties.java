@@ -26,17 +26,26 @@ public class ConstantProperties {
 	
 	/**
 	 * AES密钥
+	 * 
+	 * @deprecated 请使用 yue-library-base-crypto 模块 CryptoProperties
 	 */
+	@Deprecated
 	private String aes_keyt;
 	
 	/**
 	 * RSA公钥
+	 * 
+	 * @deprecated 请使用 yue-library-base-crypto 模块 CryptoProperties
 	 */
+	@Deprecated
 	private String rsa_public_keyt;
 	
 	/**
 	 * RSA私钥
+	 * 
+	 * @deprecated 请使用 yue-library-base-crypto 模块 CryptoProperties
 	 */
+	@Deprecated
 	private String rsa_private_keyt;
 
 }

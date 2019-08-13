@@ -21,6 +21,7 @@ import ai.yue.library.base.config.properties.ConstantProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.properties.RestProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
+import ai.yue.library.base.util.ApplicationContextUtils;
 import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class })
+@Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class,
+		ApplicationContextUtils.class })
 @EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
 public class BeanAutoConfig {
 	
