@@ -34,7 +34,7 @@ import me.chanjar.weixin.common.error.WxErrorException;
  */
 @Configuration
 @EnableConfigurationProperties(WxMaProperties.class)
-@ConditionalOnProperty(prefix = "yue.wx.miniapp", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "yue.redis.wx.miniapp", name = "enabled", havingValue = "true")
 public class WxMaUser {
 
 	@Autowired

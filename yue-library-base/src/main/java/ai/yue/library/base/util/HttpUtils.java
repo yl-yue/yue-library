@@ -10,12 +10,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.util.servlet.ServletUtil;
 import cn.hutool.core.lang.Console;
 
 /**
+ * @deprecated 请使用 {@linkplain ServletUtil}
  * @author	孙金川
- * @version 创建时间：2018年12月18日
+ * @since	2018年12月18日
  */
+@Deprecated
 public class HttpUtils {
 	
 	public static final String HTTP_TCP_NAME = "http://";

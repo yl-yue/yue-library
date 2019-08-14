@@ -5,10 +5,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
+ * @deprecated 见 yue-library-data-redis 模块 ConstantProperties
  * @author	孙金川
  * @since	2018年11月6日
  */
 @Data
+@Deprecated
 @ConfigurationProperties("yue.constant")
 public class ConstantProperties {
 	

@@ -17,9 +17,8 @@ import org.springframework.web.filter.CorsFilter;
 import ai.yue.library.base.config.argument.resolver.CustomArgumentResolversConfig;
 import ai.yue.library.base.config.handler.ExceptionHandlerConfig;
 import ai.yue.library.base.config.http.HttpsRequestFactory;
-import ai.yue.library.base.config.properties.ConstantProperties;
+import ai.yue.library.base.config.http.RestProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
-import ai.yue.library.base.config.properties.RestProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.util.ApplicationContextUtils;
 import ai.yue.library.base.validation.Validator;
@@ -33,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class,
 		ApplicationContextUtils.class })
-@EnableConfigurationProperties({ConstantProperties.class, RestProperties.class, CorsProperties.class})
+@EnableConfigurationProperties({ RestProperties.class, CorsProperties.class })
 public class BeanAutoConfig {
 	
 	// RestTemplate-HTTPS客户端

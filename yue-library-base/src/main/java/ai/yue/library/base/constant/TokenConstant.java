@@ -3,9 +3,11 @@ package ai.yue.library.base.constant;
 /**
  * Token 常量
  * 
+ * @deprecated 见 yue-library-data-redis 模块 ConstantProperties
  * @author	孙金川
  * @since	2017年10月8日
  */
+@Deprecated
 public interface TokenConstant {
 
 	/**

@@ -11,7 +11,7 @@ import lombok.Data;
  * @since	2018年11月6日
  */
 @Data
-@ConfigurationProperties("yue.wx.open")
+@ConfigurationProperties("yue.redis.wx.open")
 public class WxOpenProperties {
 
 	/**

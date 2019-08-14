@@ -11,7 +11,7 @@ import lombok.Data;
  * @since	2019年6月18日
  */
 @Data
-@ConfigurationProperties("yue.wx.miniapp")
+@ConfigurationProperties("yue.redis.wx.miniapp")
 public class WxMaProperties {
 	
 	/**

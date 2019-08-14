@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ai.yue.library.base.util.CaptchaUtils;
-import ai.yue.library.base.util.HttpUtils;
+import ai.yue.library.base.util.servlet.ServletUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,8 +37,8 @@ public class CaptchaVO {
 	 * <p>将验证码图片写入response，并设置ContentType为image/png
 	 */
 	public void writeResponseAndSetSession() {
-		HttpSession httpSession = HttpUtils.getSession();
-		HttpServletResponse response = HttpUtils.getResponse();
+		HttpSession httpSession = ServletUtil.getSession();
+		HttpServletResponse response = ServletUtil.getResponse();
 		
 		httpSession.setAttribute(CaptchaUtils.CAPTCHA_KEY, captcha);
         response.setContentType("image/png");

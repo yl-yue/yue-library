@@ -7,11 +7,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ai.yue.library.base.util.servlet.ServletUtil;
+
 /**
  * Cookie工具类
+ * 
+ * @deprecated 请使用 {@linkplain ServletUtil}
  * @author  孙金川
  * @version 创建时间：2017年10月8日
  */
+@Deprecated
 public class CookieUtils {
 	
     /**

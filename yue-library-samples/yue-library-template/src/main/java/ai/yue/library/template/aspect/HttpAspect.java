@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ai.yue.library.base.util.HttpUtils;
+import ai.yue.library.base.util.servlet.ServletUtil;
 import ai.yue.library.data.redis.client.Redis;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,7 @@ public class HttpAspect {
 	@Autowired
 	HttpServletRequest request;
 	
-	@Pointcut(HttpUtils.POINTCUT)
+	@Pointcut(ServletUtil.POINTCUT)
 	public void pointcut() {}
 	
 	@Before("pointcut()")
@@ -37,7 +37,7 @@ public class HttpAspect {
         Signature signature = joinPoint.getSignature();
         
         // 2. 开发环境-打印日志
-		String ip = request.getRemoteHost();
+        String ip = ServletUtil.getClientIP();
 		String uri = request.getRequestURI();
 //		UserDTO user_info = null;
 //		if (!uri.startsWith("/open")) {

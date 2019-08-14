@@ -1,4 +1,4 @@
-package ai.yue.library.base.config.properties;
+package ai.yue.library.base.config.http;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

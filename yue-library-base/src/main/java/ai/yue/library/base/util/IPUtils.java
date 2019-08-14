@@ -5,9 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 import cn.hutool.core.net.NetUtil;
 
 /**
+ * @deprecated 请使用 {@linkplain NetUtils}
  * @author  孙金川
  * @version 创建时间：2018年4月4日
  */
+@Deprecated
 public class IPUtils {
 	
 	/**
