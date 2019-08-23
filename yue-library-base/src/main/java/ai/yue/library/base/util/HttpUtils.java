@@ -10,11 +10,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import cn.hutool.core.lang.Console;
 
 /**
- * @deprecated 请使用 {@linkplain ServletUtil}
+ * @deprecated 请使用 {@linkplain ServletUtils}
  * @author	孙金川
  * @since	2018年12月18日
  */

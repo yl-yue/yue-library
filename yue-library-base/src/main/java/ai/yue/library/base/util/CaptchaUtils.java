@@ -9,7 +9,7 @@ import java.util.Random;
 import javax.servlet.http.HttpSession;
 
 import ai.yue.library.base.ipo.CaptchaIPO;
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.vo.CaptchaVO;
 
 /**
@@ -104,7 +104,7 @@ public class CaptchaUtils {
      * @return 是否正确
      */
     public static boolean isValidateCaptcha(String captcha) {
-    	HttpSession httpSession = ServletUtil.getSession();
+    	HttpSession httpSession = ServletUtils.getSession();
 		String randCaptcha = (String) httpSession.getAttribute(CAPTCHA_KEY);
 		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
 			return false;

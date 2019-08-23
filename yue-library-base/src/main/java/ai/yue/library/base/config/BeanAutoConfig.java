@@ -21,6 +21,7 @@ import ai.yue.library.base.config.http.RestProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.util.ApplicationContextUtils;
+import ai.yue.library.base.util.servlet.multipart.UploadProperties;
 import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class,
 		ApplicationContextUtils.class })
-@EnableConfigurationProperties({ RestProperties.class, CorsProperties.class })
+@EnableConfigurationProperties({ RestProperties.class, CorsProperties.class, UploadProperties.class })
 public class BeanAutoConfig {
 	
 	// RestTemplate-HTTPS客户端

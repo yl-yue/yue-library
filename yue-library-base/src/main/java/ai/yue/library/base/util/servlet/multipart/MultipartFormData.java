@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 
 import cn.hutool.core.util.ArrayUtil;
+import lombok.NoArgsConstructor;
 
 /**
  * HttpRequest解析器<br>
@@ -19,6 +20,7 @@ import cn.hutool.core.util.ArrayUtil;
  * @author	孙金川
  * @since	2019年8月14日
  */
+@NoArgsConstructor
 public class MultipartFormData {
 
 	/** 请求参数 */
@@ -28,27 +30,7 @@ public class MultipartFormData {
 
 	/** 是否解析完毕 */
 	private boolean loaded;
-	/** 上传选项 */
-	private UploadSetting setting;
-
-	// --------------------------------------------------------------------- Constructor start
-	/**
-	 * 构造
-	 */
-	public MultipartFormData() {
-		this(null);
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param uploadSetting 上传设定
-	 */
-	public MultipartFormData(UploadSetting uploadSetting) {
-		this.setting = uploadSetting == null ? new UploadSetting() : uploadSetting;
-	}
-	// --------------------------------------------------------------------- Constructor end
-
+	
 	/**
 	 * 解析上传文件和表单数据
 	 * 
@@ -83,7 +65,7 @@ public class MultipartFormData {
 				if (fileName.length() > 0 && header.contentType.contains("application/x-macbinary")) {
 					input.skipBytes(128);
 				}
-				UploadFile newFile = new UploadFile(header, setting);
+				UploadFile newFile = new UploadFile(header);
 				newFile.processStream(input);
 
 				putFile(header.formFieldName, newFile);

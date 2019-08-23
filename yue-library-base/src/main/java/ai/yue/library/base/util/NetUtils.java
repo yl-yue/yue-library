@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import cn.hutool.core.net.NetUtil;
 
 /**
@@ -19,7 +19,7 @@ public class NetUtils extends NetUtil {
 	 */
 	public static Boolean isInnerIP() {
 		// 1. 获取客户端IP地址，考虑反向代理的问题
-		String ip = ServletUtil.getClientIP();
+		String ip = ServletUtils.getClientIP();
 		
 		// 2. 确认是否为内网IP
 		if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {

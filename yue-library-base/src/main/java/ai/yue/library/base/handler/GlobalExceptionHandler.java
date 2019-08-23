@@ -24,7 +24,7 @@ import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ExceptionUtils;
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import cn.hutool.core.convert.ConvertException;
@@ -122,7 +122,7 @@ public abstract class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(BindException.class)
 	public Result<?> bindExceptionHandler(BindException e) {
-    	String uri = ServletUtil.getRequest().getRequestURI();
+    	String uri = ServletUtils.getRequest().getRequestURI();
     	Console.error("uri={}", uri);
 		List<ObjectError> errors = e.getAllErrors();
 		JSONObject paramHint = new JSONObject();
@@ -220,7 +220,7 @@ public abstract class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizeException.class)
 	public void authorizeExceptionHandler(AuthorizeException e) throws IOException {
     	ExceptionUtils.printException(e);
-		HttpServletResponse response = ServletUtil.getResponse();
+		HttpServletResponse response = ServletUtils.getResponse();
 		response.sendRedirect("");
 	}
     

@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -181,7 +181,7 @@ public class Result<T> implements Serializable {
 	 * HttpServletResponse
 	 */
 	public void response() {
-		HttpServletResponse response = ServletUtil.getResponse();
+		HttpServletResponse response = ServletUtils.getResponse();
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter writer;
 		try {

@@ -9,7 +9,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import ai.yue.library.base.util.ApplicationContextUtils;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -29,7 +31,7 @@ public class UploadFile {
 	private static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
 	private UploadFileHeader header;
-	private UploadSetting setting;
+	private UploadProperties uploadProperties;
 	
 	private int size = -1;
 
@@ -42,11 +44,10 @@ public class UploadFile {
 	 * 构造
 	 * 
 	 * @param header 头部信息
-	 * @param setting 上传设置
 	 */
-	public UploadFile(UploadFileHeader header, UploadSetting setting) {
+	public UploadFile(UploadFileHeader header) {
 		this.header = header;
-		this.setting = setting;
+		uploadProperties = ApplicationContextUtils.getBean(UploadProperties.class);
 	}
 
 	// ---------------------------------------------------------------- operations
@@ -191,7 +192,7 @@ public class UploadFile {
 		size = 0;
 
 		// 处理内存文件
-		int memoryThreshold = setting.memoryThreshold;
+		int memoryThreshold = uploadProperties.memoryThreshold;
 		if (memoryThreshold > 0) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
 			int written = input.copy(baos, memoryThreshold);
@@ -204,14 +205,14 @@ public class UploadFile {
 		}
 
 		// 处理硬盘文件
-		tempFile = FileUtil.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, FileUtil.touch(setting.tmpUploadPath), false);
+		tempFile = FileUtil.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, FileUtil.touch(uploadProperties.tmpUploadPath), false);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;
 			out.write(data);
 			data = null; // not needed anymore
 		}
-		int maxFileSize = setting.maxFileSize;
+		int maxFileSize = uploadProperties.maxFileSize;
 		try {
 			if (maxFileSize == -1) {
 				size += input.copy(out);
@@ -240,15 +241,15 @@ public class UploadFile {
 	 * @return 是否为允许的扩展名
 	 */
 	private boolean isAllowedExtension() {
-		String[] exts = setting.fileExts;
-		boolean isAllow = setting.isAllowFileExts;
-		if (exts == null || exts.length == 0) {
+		List<String> exts = uploadProperties.fileExts;
+		boolean isAllow = uploadProperties.isAllowFileExts;
+		if (exts == null || exts.size() == 0) {
 			// 如果给定扩展名列表为空，当允许扩展名时全部允许，否则全部禁止
 			return isAllow;
 		}
 
 		String fileNameExt = FileUtil.extName(this.getFileName());
-		for (String fileExtension : setting.fileExts) {
+		for (String fileExtension : exts) {
 			if (fileNameExt.equalsIgnoreCase(fileExtension)) {
 				return isAllow;
 			}
