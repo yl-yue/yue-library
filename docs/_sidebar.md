@@ -11,7 +11,7 @@
 
 * yue-library-base-crypto
 
-  * [介绍](base/crypto/介绍.md)
+  * [介绍](base-crypto/介绍.md)
 
 * yue-library-data-jdbc（推荐）
 
@@ -28,7 +28,7 @@
 
 * yue-规约
 
-  * [介绍](介绍.md)
+  * [介绍](规约/介绍.md)
   * [编码规范](规约/编码规范.md)
   * [后端规约说明](规约/后端规约说明.md)
   * [接口质检标准](规约/接口质检标准.md)
