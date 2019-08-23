@@ -37,6 +37,7 @@
 		<module>yue-library-base-crypto</module>
 		<module>yue-library-data-jdbc</module>
 		<module>yue-library-data-redis</module>
+		<module>yue-library-pay</module>
 	</modules>
 	
 	<dependencyManagement>
@@ -60,6 +61,11 @@
 			<dependency>
 				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-data-redis</artifactId>
+				<version>${revision}${sha1}${changelist}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.ylyue</groupId>
+				<artifactId>yue-library-pay</artifactId>
 				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			
