@@ -20,7 +20,7 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.CaptchaIPO;
 import ai.yue.library.base.util.CaptchaUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.base.util.servlet.ServletUtil;
+import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
@@ -137,7 +137,7 @@ public class User {
 		redis.set(captcha_redis_key, captcha, constantProperties.getCaptcha_timeout());
 		
 		// 3. 设置验证码到响应输出流
-		HttpServletResponse response = ServletUtil.getResponse();
+		HttpServletResponse response = ServletUtils.getResponse();
         response.setContentType("image/png");
         OutputStream output;
 		try {
@@ -171,7 +171,7 @@ public class User {
 	 * @return
 	 */
 	private String getRequestToken() {
-		Cookie cookie = ServletUtil.getCookie(constantProperties.getCookie_token_key());
+		Cookie cookie = ServletUtils.getCookie(constantProperties.getCookie_token_key());
 		String token = "";
 		if (cookie != null) {
 			token = cookie.getValue();
@@ -273,7 +273,7 @@ public class User {
 		redis.set(redis_token_key, userInfo, tokenTimeout);
 		
 		// 5. 登录成功-设置token至Cookie
-		ServletUtil.addCookie(constantProperties.getCookie_token_key(), token, tokenTimeout);
+		ServletUtils.addCookie(constantProperties.getCookie_token_key(), token, tokenTimeout);
 		
 		// 6. 登录成功-设置token至Header
 		response.setHeader(constantProperties.getCookie_token_key(), token);
@@ -302,7 +302,7 @@ public class User {
 		redis.del(String.format(constantProperties.getRedis_token_prefix(), token));
 		
 		// 4. 清除Cookie-token
-		ServletUtil.addCookie(constantProperties.getCookie_token_key(), null, 0);
+		ServletUtils.addCookie(constantProperties.getCookie_token_key(), null, 0);
 		
 		// 5. 返回结果
 		return ResultInfo.success();

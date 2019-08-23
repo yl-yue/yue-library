@@ -15,7 +15,6 @@
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-base-crypto</artifactId>
-			<version>Greenwich.SR2-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>

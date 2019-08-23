@@ -11,16 +11,18 @@
 
 ### 其他
 - JDK8兼容
+- 添加短信、OSS等封装
 - 完善文档-更详细的教程，更多的细节介绍和建议。
 - 加入996icu license 协议
 
 ## Greenwich.SR2【规划中】
 ### 新特性
-- 注意SpringBoot lombok 版本和编译环境一致
-- 添加pay、短信、OSS等封装
+- 版本升级注意：`lombok` 版本和 `IDE lombok` 版本一致，此版本完善了之前遗留下来的规范，导致部分类与方法失效，但所有失效类与方法都提供了指引说明
+- 新增 `yue-library-base-crypto` 模块，基于hutool提供更完善的加解密、签名等操作。提供自动配置全局单例
+- 新增 `yue-library-pay` 模块，基于pay-java-parent进行二次封装，**让你真正做到一行代码实现支付聚合**，让你可以不用理解支付怎么对接，只需要专注你的业务
 - `JSONObject` 参数解析器 `@PostMapping public Result<?> post(JSONObject paramJson) {`
-- ApplicationContextUtils
-- 新增 `yue-library-base-crypto` 模块
+- `ApplicationContextUtils` 普通类操作Spring上下文，更方面的SpringBean操作
+- `ServletUtils` 对Servlet操作的增强，迁入原有工具类 `HttpUtils` `CookieUtils`
 
 ### Bug修复
 

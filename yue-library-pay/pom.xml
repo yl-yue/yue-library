@@ -7,9 +7,9 @@
 		<artifactId>yue-library</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
-	<artifactId>yue-library-base-crypto</artifactId>
+	<artifactId>yue-library-pay</artifactId>
 	<name>${project.artifactId}</name>
-	<description>yue-library 加密解密</description>
+	<description>yue-library 支付</description>
 	
 	<dependencies>
 		<dependency>
@@ -17,9 +17,17 @@
 			<artifactId>yue-library-base</artifactId>
 		</dependency>
 		
+		<!-- 支付 -->
 		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-crypto</artifactId>
+			<groupId>com.egzosn</groupId>
+			<artifactId>pay-java-ali</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.egzosn</groupId>
+			<artifactId>pay-java-wx</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
