@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
  * @since	2018年3月28日
  */
 @NoArgsConstructor
-@SuppressWarnings("serial")
 public class ForbiddenException extends RuntimeException {
 
+	private static final long serialVersionUID = -477721736529522496L;
+	
 	public ForbiddenException(String message) {
 		super(message);
 	}
+	
 }
