@@ -104,9 +104,9 @@ public class Pay {
      * 支付回调地址
      * 方式二
      * 
-     * @param detailsId    商户列表id
-     * @param parameterMap 请求参数
-     * @param is           请求流
+     * @param listId		列表id
+     * @param parameterMap	请求参数
+     * @param is			请求流
      * @return 支付是否成功
      * @throws IOException IOException
      *                     拦截器相关增加， 详情查看{@link com.egzosn.pay.common.api.PayService#addPayMessageInterceptor(PayMessageInterceptor)}
@@ -123,7 +123,7 @@ public class Pay {
     /**
      * 查询
      *
-     * @param order 订单的请求体
+     * @param queryOrderIPO 订单的请求体
      * @return 返回查询回来的结果集，支付方原值返回
      */
     public Map<String, Object> query(QueryOrderIPO queryOrderIPO) {
@@ -143,7 +143,7 @@ public class Pay {
     /**
      * 申请退款接口
      *
-     * @param detailsId 列表id
+     * @param listId 列表id
      * @param order     订单的请求体
      * @return 返回支付方申请退款后的结果
      */
@@ -154,17 +154,18 @@ public class Pay {
     /**
      * 查询退款
      *
-     * @param order 订单的请求体
+     * @param listId 列表id
+     * @param refundOrder 订单的请求体
      * @return 返回支付方查询退款后的结果
      */
-    public Map<String, Object> refundquery(Integer listId, RefundOrder order) {
-        return getPayService(listId).refundquery(order);
+    public Map<String, Object> refundquery(Integer listId, RefundOrder refundOrder) {
+        return getPayService(listId).refundquery(refundOrder);
     }
     
     /**
      * 下载对账单
      *
-     * @param order 订单的请求体
+     * @param queryOrderIPO 订单的请求体
      * @return 返回支付方下载对账单的结果
      */
     public Object downloadbill(QueryOrderIPO queryOrderIPO) {
@@ -174,7 +175,8 @@ public class Pay {
     /**
      * 通用查询接口，根据 TransactionType 类型进行实现,此接口不包括退款
      *
-     * @param order 订单的请求体
+     * @param queryOrderIPO 订单的请求体
+     * @param transactionType 交易类型
      * @return 返回支付方对应接口的结果
      */
     public Map<String, Object> secondaryInterface(QueryOrderIPO queryOrderIPO, TransactionType transactionType) {
@@ -184,18 +186,18 @@ public class Pay {
     /**
      * 转账
      *
-     * @param detailsId 列表id
-     * @param order     转账订单
+     * @param listId 列表id
+     * @param transferOrder 转账订单
      * @return 对应的转账结果
      */
-    public Map<String, Object> transfer(Integer listId, TransferOrder order) {
-        return getPayService(listId).transfer(order);
+    public Map<String, Object> transfer(Integer listId, TransferOrder transferOrder) {
+        return getPayService(listId).transfer(transferOrder);
     }
     
     /**
      * 转账查询
      *
-     * @param detailsId 列表id
+     * @param listId 列表id
      * @param outNo     商户转账订单号
      * @param tradeNo   支付平台转账订单号
      * @return 对应的转账订单

@@ -304,7 +304,6 @@ public class ServletUtils {
 	 * 3、Proxy-Client-IP
 	 * 4、WL-Proxy-Client-IP
 	 * </pre>
-	 * </p>
 	 * 
 	 * <p>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
@@ -328,7 +327,6 @@ public class ServletUtils {
 	 * 3、Proxy-Client-IP
 	 * 4、WL-Proxy-Client-IP
 	 * </pre>
-	 * </p>
 	 * 
 	 * <p>
 	 * otherHeaderNames参数用于自定义检测的Header<br>

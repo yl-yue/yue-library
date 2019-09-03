@@ -69,7 +69,7 @@ public class UploadFile {
 	 * 写入后原临时文件会被删除
 	 * @param destPath 目标文件路径
 	 * @return 目标文件
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public File write(String destPath) throws IOException {
 		if(data != null || tempFile != null) {
@@ -82,7 +82,9 @@ public class UploadFile {
 	 * 将上传的文件写入目标文件<br>
 	 * 写入后原临时文件会被删除
 	 * 
+	 * @param destination 目的地
 	 * @return 目标文件
+	 * @throws IOException IO异常
 	 */
 	public File write(File destination) throws IOException {
 		assertValid();
@@ -106,7 +108,7 @@ public class UploadFile {
 	 */
 	/**
 	 * @return 获得文件字节流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public byte[] getFileContent() throws IOException {
 		assertValid();
@@ -122,7 +124,7 @@ public class UploadFile {
 
 	/**
 	 * @return 获得文件流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public InputStream getFileInputStream() throws IOException {
 		assertValid();
@@ -155,7 +157,7 @@ public class UploadFile {
 	// ---------------------------------------------------------------- properties
 
 	/**
-	 * @return 上传文件的大小，< 0 表示未上传
+	 * @return 上传文件的大小，&lt; 0 表示未上传
 	 */
 	public int size() {
 		return size;

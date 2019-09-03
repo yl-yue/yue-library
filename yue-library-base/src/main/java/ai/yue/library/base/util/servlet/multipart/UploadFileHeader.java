@@ -32,35 +32,35 @@ public class UploadFileHeader {
 	// ---------------------------------------------------------------- public interface
 
 	/**
-	 * Returns <code>true</code> if uploaded data are correctly marked as a file. This is true if header contains string 'filename'.
+	 * @return <code>true</code> if uploaded data are correctly marked as a file. This is true if header contains string 'filename'.
 	 */
 	public boolean isFile() {
 		return isFile;
 	}
 
 	/**
-	 * Returns form field name.
+	 * @return form field name.
 	 */
 	public String getFormFieldName() {
 		return formFieldName;
 	}
 
 	/**
-	 * Returns complete file name as specified at client side.
+	 * @return complete file name as specified at client side.
 	 */
 	public String getFormFileName() {
 		return formFileName;
 	}
 
 	/**
-	 * Returns file name (base name and extension, without full path data).
+	 * @return file name (base name and extension, without full path data).
 	 */
 	public String getFileName() {
 		return fileName;
 	}
 
 	/**
-	 * Returns uploaded content type. It is usually in the following form:<br>
+	 * @return uploaded content type. It is usually in the following form:<br>
 	 * mime_type/mime_subtype.
 	 * 
 	 * @see #getMimeType()
@@ -71,21 +71,21 @@ public class UploadFileHeader {
 	}
 
 	/**
-	 * Returns file types MIME.
+	 * @return file types MIME.
 	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 
 	/**
-	 * Returns file sub type MIME.
+	 * @return file sub type MIME.
 	 */
 	public String getMimeSubtype() {
 		return mimeSubtype;
 	}
 
 	/**
-	 * Returns content disposition. Usually it is 'form-data'.
+	 * @return content disposition. Usually it is 'form-data'.
 	 */
 	public String getContentDisposition() {
 		return contentDisposition;
