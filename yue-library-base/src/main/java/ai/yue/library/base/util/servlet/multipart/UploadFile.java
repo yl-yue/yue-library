@@ -104,9 +104,6 @@ public class UploadFile {
 	}
 	
 	/**
-	 * Returns the content of file upload item.
-	 */
-	/**
 	 * @return 获得文件字节流
 	 * @throws IOException IO异常
 	 */
@@ -121,7 +118,7 @@ public class UploadFile {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * @return 获得文件流
 	 * @throws IOException IO异常
@@ -182,7 +179,8 @@ public class UploadFile {
 	 * 处理上传表单流，提取出文件
 	 * 
 	 * @param input 上传表单的流
-	 * @throws IOException
+	 * @return 是否处理成功
+	 * @throws IOException IO异常
 	 */
 	protected boolean processStream(MultipartRequestInputStream input) throws IOException {
 		if (!isAllowedExtension()) {
