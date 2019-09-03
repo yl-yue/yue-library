@@ -10,12 +10,12 @@
 ### 引入模块
 `yue-library-dependencies`作为父项目，在`pom.xml`文件中添加：
 ``` pom
-	<dependencies>
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-redis</artifactId>
-		</dependency>
-	</dependencies>
+<dependencies>
+	<dependency>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library-data-redis</artifactId>
+	</dependency>
+</dependencies>
 ```
 ### 配置数据源
 `data-redis`就是SpringRedis的封装，<b>默认</b>数据源配置如下：
@@ -60,3 +60,25 @@ public class DataRedisExampleDAO {
 }
 ```
 更多方法请参阅API文档...
+
+## 其他
+### User
+`User`类封装登录相关特性：
+```java
+getWxAccessToken(String)
+getWxUserInfo(String, String)
+getQqUserInfo(String, String)
+getCaptchaImage()
+captchaValidate(String)
+getUserId()
+getUser(Class<T>)
+login(Object)
+logout()
+```
+
+登录、登出、第三方登录（待分化）、获得token中的用户信息、获得`user_id`、分布式图片验证码等
+
+### 第三方登录
+- QQ登录
+- 微信登录
+- 微信小程序登录

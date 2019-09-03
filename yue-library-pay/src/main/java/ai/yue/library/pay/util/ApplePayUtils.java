@@ -35,7 +35,7 @@ public class ApplePayUtils {
 	 * @param receiptData 验证数据
 	 * @return 验证结果
 	 */
-	public ApplePayVerifyResult verify(String receiptData) {
+	public static ApplePayVerifyResult verify(String receiptData) {
 		return verify(URI_VERIFY, receiptData);
 	}
 	
@@ -46,7 +46,7 @@ public class ApplePayUtils {
 	 * @param receiptData 验证数据
 	 * @return 验证结果
 	 */
-	private ApplePayVerifyResult verify(String uri, String receiptData) {
+	private static ApplePayVerifyResult verify(String uri, String receiptData) {
 		// 1. 发起请求
 		JSONObject requestData = new JSONObject();
 		requestData.put("receipt-data", receiptData);

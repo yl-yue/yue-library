@@ -55,4 +55,26 @@ public class PayExample {
 	
 }
 ```
+
+## 苹果支付验证
+```java
+/**
+ * 验证
+ * 
+ * @param order_id		订单ID
+ * @param receiptData	receipt-data
+ * @return
+ */
+@PostMapping("/verify")
+public Result<?> verify(@RequestParam("order_id") Long order_id, @RequestParam("receipt-data") String receiptData) {
+	// 验证
+	ApplePayVerifyResult applePayVerifyResult = ApplePayUtils.verify(receiptData);
+	
+	// 业务逻辑-可重点校验：金额、凭证是否使用、业务订单状态等
+	Console.log(applePayVerifyResult);
+	
+	// 返回结果信息
+	return ResultInfo.success();
+}
+```
 更多方法请参阅API文档...

@@ -1,7 +1,3 @@
-# yue-library-data-jdbc
-
-yue-库-JDBC封装
----------------------------------------------------------------------------
 ## 介绍
 　　data-jdbc库基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活。特性如下：
 - 比SpringJDBC更方便好用、比SpringJPA更简单灵活
@@ -20,13 +16,14 @@ yue-库-JDBC封装
 ### 引入模块
 `yue-library-dependencies`作为父项目，在`pom.xml`文件中添加：
 ``` pom
-	<dependencies>
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-jdbc</artifactId>
-		</dependency>
-	</dependencies>
+<dependencies>
+	<dependency>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library-data-jdbc</artifactId>
+	</dependency>
+</dependencies>
 ```
+
 ### 配置数据源
 `data-jdbc`就是SpringJDBC的封装，数据源配置如下：
 ```yml
@@ -37,6 +34,7 @@ spring:
       username: root
       password: 123456
 ```
+
 ### 简单使用
 `data-jdbc`所有的CRUD方法都在`DB`类里面，所以使用时只需要直接注入即可，推荐采用继承`DBDAO 或 DBTDAO`方式。<br>
 <font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
@@ -75,12 +73,13 @@ public class DataJdbcExampleTDAO extends DBTDAO<UserDO> {
 }
 ```
 
-## DAO
+### <font color=red>DAO内置实现：</font>
 `DBDAO`为 JSON 对象提供服务
 
-`DBTDAO`为 DO 对象提供服务（DO 转 JSON 工具类：ObjectUtils.toJSONObject(Object)）
+`DBTDAO`为 DO 对象提供服务
 
-DAO内置实现：
+实际中可能会遇到类型转换问题，可使用 `Convert` 类进行转换，支持DO、Json、List等相互转换
+
 ```java
 // 插入数据
 insert(JSONObject)
@@ -98,4 +97,44 @@ listAll()
 page(PageIPO)
 // 分页-降序
 pageDESC(PageIPO)
+```
+
+## 其他
+### 绝对条件查询参数whereSql化
+```java
+paramToWhereSql(JSONObject)
+```
+
+### 预期值判断
+```java
+// 是否有数据
+isDataSize(long)
+
+// ------ 预期值判断 ------
+// 更新所影响的行数
+int updateRowsNumber = 1;
+// 预期值
+int expectedValue = 1;
+
+// 有返回值-布尔
+// 判断更新所影响的行数是否 <b>等于</b> 预期值
+db.isUpdateAndExpectedEqual(updateRowsNumber, expectedValue);
+// 判断更新所影响的行数是否 <b>大于等于</b> 预期值
+db.isUpdateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
+
+// 无返回值-DBException异常
+// 判断更新所影响的行数是否 <b>等于</b> 预期值
+db.updateAndExpectedEqual(updateRowsNumber, expectedValue);
+// 判断更新所影响的行数是否 <b>大于等于</b> 预期值
+db.updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
+// 确认批量更新每组参数所影响的行数，是否 <b>全部都等于</b> 同一个预期值
+int[] updateRowsNumberArray = {1, 1};
+db.updateBatchAndExpectedEqual(updateRowsNumberArray, expectedValue);
+```
+
+### 查询结果转换
+由于原生`SpringJDBC`查询单条数据，若为空将抛出异常。所以一般会采用查询多条数据方式，然后再转换成单条数据对象：
+```java
+resultToJson(List<JSONObject>)
+resultToObject(List<T>)
 ```
