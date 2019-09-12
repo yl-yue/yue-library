@@ -1,3 +1,21 @@
+## 工程结构
+
+```
+. yue-library
+├── yue-library  基础库
+│   ├── yue-library-dependencies  父pom
+│   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
+│   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
+│   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
+│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
+│   ├── yue-library-cloud-oss
+│   ├── yue-library-cloud-sms
+├── yue-library-samples  基础库示例
+│   ├── yue-library-template
+│   └── yue-library-demo
+└── yue
+```
+
 ## 快速开始
 maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
 ```xml

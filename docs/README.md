@@ -55,9 +55,9 @@
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
 │   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
 │   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
+│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
 │   ├── yue-library-cloud-oss
 │   ├── yue-library-cloud-sms
-│   └── yue-library-pay
 ├── yue-library-samples  基础库示例
 │   ├── yue-library-template
 │   └── yue-library-demo
@@ -93,11 +93,12 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 　　`yue-library-base`提供了丰富的Java工具包，它能够帮助我们简化每一行代码（集成[Hutool](https://hutool.cn)工具包）。<br>
 　　同时也自动装配了一系列基础Bean，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
 - 丰富的Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装
-- `Result`Http最外层响应对象，更适应Restful风格API
 - 默认开启热加载、热部署、支持跨域，一键解决联调问题
-- 基于`validator`扩展IPO增强校验注解，更适合国内校验场景。（如：手机号、身份证号码）
-- 全局统一异常处理，结合`Result`对象，定位异常更轻松，前端显示更贴切
+- 全局统一异常处理基类，结合`Result`对象，定位异常更轻松，前端显示更贴切
 - 异步线程池：共用父线程上下文环境，异步执行任务时不丢失token
+- `Result`Http最外层响应对象，更适应Restful风格API
+- `validator`参数校验器，支持单参数连写与POJO对象（注解）校验等，更多的校验规则，更贴切的国内校验场景。（如：手机号、身份证号码）
+- `Convert`类型转换器，内置hutool、fastjson、yue三种类型转换规则，判断精确性能强大，未知类型兼容性更强
 
 　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
 
