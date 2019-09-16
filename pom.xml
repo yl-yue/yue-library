@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Greenwich.SR2</version>
+		<version>Finchley.SR4</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
@@ -16,12 +16,12 @@
 	<url>https://ylyue.cn</url>
 	
 	<properties>
-		<revision>${spring-cloud.version}.1</revision>
+		<revision>${spring-cloud.version}</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<sha1 />
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<hutool.version>4.6.2</hutool.version>

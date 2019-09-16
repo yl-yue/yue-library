@@ -2,10 +2,6 @@ package ai.yue.library.base.util;
 
 import org.springframework.web.util.UriUtils;
 
-import com.alibaba.fastjson.JSONObject;
-
-import cn.hutool.core.convert.ConvertException;
-
 /**
  * @author  孙金川
  * @version 创建时间：2018年4月24日
@@ -63,29 +59,6 @@ public class URIUtils {
 	 */
 	public static String decode(String source) {
 		return UriUtils.decode(source, DEFAULT_ENCODING);
-	}
-	
-	/**
-	 * 1. 将URI转义内容进行解码<br>
-	 * 2. 将RSA 1024分段加密内容，进行分段解密
-	 * 
-	 * @deprecated 请使用 yue-library-base-crypto 模块 SecureSingleton
-	 * @param text				URI转义后的文本
-	 * @param rsa_private_key	RSA1024私钥
-	 * @return 解密后的JSON
-	 */
-	@Deprecated
-	public static JSONObject rsaUriDecodingAndDecrypt(String text, String rsa_private_key) {
-		String content = decode(text);
-		String jsonString = RSAUtils.decrypt(content, rsa_private_key);
-		JSONObject json = null;
-		try {
-			json = JSONObject.parseObject(jsonString);
-		}catch (Exception e) {
-			throw new ConvertException(e.getMessage());
-		}
-		
-		return json;
 	}
 	
 }

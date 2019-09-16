@@ -12,6 +12,7 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import cn.hutool.core.util.ArrayUtil;
+import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**

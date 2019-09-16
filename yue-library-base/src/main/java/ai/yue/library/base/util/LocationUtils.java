@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ai.yue.library.base.ipo.LocationIPO;
+import lombok.var;
 
 /**
  * @author  孙金川
