@@ -1,7 +1,8 @@
-# Eclipse
+# Eclipse and STS
 .project
 .classpath
 .settings/
+.sts4-cache/
 
 # Maven
 target/
