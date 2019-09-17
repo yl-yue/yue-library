@@ -8,6 +8,9 @@
 	<a href="https://ylyue.cn/">
 		<img src="https://img.shields.io/badge/文档-yue-blue.svg?style=flat-square" alt="yue-library官网">
 	</a>
+	<a href="https://apidoc.gitee.com/yl-yue/yue-library/">
+		<img src="https://img.shields.io/badge/文档-javadoc-blue.svg?style=flat-square" alt="yue-library JavaDoc">
+	</a>
 	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="https://img.shields.io/:license-apache-blue.svg" >
 	</a>
@@ -15,13 +18,13 @@
 		<img src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central">
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html">
-		<img src="https://img.shields.io/badge/JDK-11+-green.svg" >
+		<img src="https://img.shields.io/badge/JDK-8+11+-green.svg" >
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-boot">
-		<img src="https://img.shields.io/badge/Spring%20Boot-2.1+-green.svg" alt="Spring%20Boot Version">
+		<img src="https://img.shields.io/badge/Spring%20Boot-2.0+2.1+-green.svg" alt="Spring%20Boot Version">
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-cloud">
-		<img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich+-green.svg" alt="Spring%20Cloud Version">
+		<img src="https://img.shields.io/badge/Spring%20Cloud-Finchley+Greenwich+-green.svg" alt="Spring%20Cloud Version">
 	</a>
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" >
@@ -43,11 +46,9 @@
 -------------------------------------------------------------------------------
 
 ## 介绍
-
 　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。
 
 ## 工程结构
-
 ```
 . yue-library
 ├── yue-library  基础库
@@ -55,16 +56,18 @@
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
 │   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
 │   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
-│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
+│   ├── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
 │   ├── yue-library-cloud-oss
-│   ├── yue-library-cloud-sms
+│   └── yue-library-cloud-sms
 ├── yue-library-samples  基础库示例
-│   ├── yue-library-template
-│   └── yue-library-demo
+│   ├── yue-library-test				yue-library代码测试项目：单元测试、接口测试、代码示例
+│   ├── yue-library-template-simple		yue-library模版：SpringBoot项目模版
+│   └── yue-library-template-ssc		yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
 └── yue
 ```
 
-## 快速使用
+## 快速开始
+### 引入项目依赖
 maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
 ```xml
 <parent>
@@ -73,7 +76,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 	<version>${version}</version>
 </parent>
 ```
-随后引入所需要的模块
+随后引入所需要的模块，如基础库：`yue-library-base`
 ```xml
 <dependencies>
 	<dependency>
@@ -83,10 +86,17 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 	...
 </dependencies>
 ```
-　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分基础依赖版本。<br>
-　　同时所有模块皆依赖于基础库，若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不用引入此模块。<br>
 
-　　更多细节，请查看[中文文档](https://ylyue.cn)
+### 版本说明
+　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分所依赖的`SpringCloud`版本。<br>
+　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不引入`yue-library-base`。
+
+|JDK版本|JDK说明												|SpringCloud版本|版本说明																			|
+|--		|--														|--				|--																					|
+|JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
+|JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
+
+更多细节，请查看[中文文档](https://ylyue.cn)
 
 ## 模块说明
 ### yue-library-base（必备）
@@ -129,17 +139,15 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
 
 ## 社区
-
 　　在[Gitter](https://gitter.im/yl-yue/yue-library)的社区里可以找到yue-library的用户和开发者团队。
 
 ## 参与贡献
-
 欢迎各路好汉一起来参与完善 yue-library，我们期待你的 PR！
 
 - 贡献代码：代码地址 [yue-library](https://gitee.com/yl-yue/yue-library) ，欢迎提交 Issue 或者 Pull Requests
 
-> 1. Fork 本仓库并从master或某个版本创建你的分支
-> 2. 如果你添加的代码需要测试，请添加测试，确保单元测试通过
+> 1. Fork 本仓库并从 <font color=red>JDK对应的分支或对应的某个版本</font> 创建你的分支
+> 2. 如果你添加的代码需要测试，请添加测试，确保单元测试通过（测试代码请放在：`yue-library-test`中）
 > 3. 如果你修改了 API，请更新文档
 > 4. 确保代码风格一致
 > 5. 提交代码
