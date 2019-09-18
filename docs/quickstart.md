@@ -46,11 +46,9 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 |JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
 |JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
 
-## 配置
-　　`yue-library`自动装配了一系列的基础Bean与环境配置项，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
-- ExceptionHandlerConfig-全局统一异常处理 `yue.exception-handler.*`
-- AsyncConfig-异步线程池（共用父线程上下文环境，异步执行任务时不丢失token） `yue.thread-pool.async.*`
-- CorsConfig-跨域配置 `yue.cors.*`
+## 配置与文档说明
+　　`yue-library`自动装配了一系列的基础Bean与环境配置项，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域，更多配置项与细节介绍，可查看 [官方文档](https://ylyue.cn) 中各模块的详细说明。<br>
+　　[官方文档](https://ylyue.cn) 提供各模块的详细介绍与使用示例，类与方法说明可参阅 [API文档](https://apidoc.gitee.com/yl-yue/yue-library/)，SpringBoot项目基础模版可使用 `yue-library-template-simple`，单元测试代码与标准示例可参考：`yue-library-test`
 
 ## 结语
 引用此项目作基础依赖，后续也可很好的对于服务架构进行升级（单体架构、集群架构、微服务、SOA微服务）<br>
