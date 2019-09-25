@@ -2,7 +2,7 @@ package ai.yue.library.base.util;
 
 /**
  * 线程信息获取工具类
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2017年10月24日
  */
 public class CurrentLineInfo {

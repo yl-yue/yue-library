@@ -10,7 +10,7 @@ import ai.yue.library.base.handler.GlobalExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年6月12日
  */
 @Slf4j

@@ -1,7 +1,7 @@
 package ai.yue.library.base.util;
 
 /**
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年9月9日
  */
 public class ExceptionUtils {

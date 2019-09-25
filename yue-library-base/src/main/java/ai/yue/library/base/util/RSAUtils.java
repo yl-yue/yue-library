@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @deprecated 请使用 yue-library-base-crypto 模块 SecureSingleton
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年3月29日
  */
 @Slf4j

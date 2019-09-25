@@ -29,7 +29,7 @@ import me.chanjar.weixin.common.error.WxErrorException;
 /**
  * 微信小程序用户接口
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年6月18日
  */
 @Configuration

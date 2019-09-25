@@ -34,7 +34,7 @@ import ai.yue.library.data.redis.vo.wx.open.AccessTokenVO;
 import lombok.NoArgsConstructor;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年4月24日
  */
 @NoArgsConstructor

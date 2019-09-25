@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月2日
  */
 @Configuration

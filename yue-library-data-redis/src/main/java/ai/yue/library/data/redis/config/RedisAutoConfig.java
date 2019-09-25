@@ -13,17 +13,18 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
 import ai.yue.library.data.redis.client.WxMaUser;
+import ai.yue.library.data.redis.config.properties.ConstantProperties;
 import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年6月11日
  */
 @Configuration
 @Import({ WxMaUser.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableConfigurationProperties({ WxOpenProperties.class, QqProperties.class })
+@EnableConfigurationProperties({ ConstantProperties.class, WxOpenProperties.class, QqProperties.class })
 public class RedisAutoConfig {
 	
 	@Bean

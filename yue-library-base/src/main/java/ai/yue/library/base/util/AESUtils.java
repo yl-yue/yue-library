@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * AES 加密工具类
  * 
  * @deprecated 请使用 yue-library-base-crypto 模块 SecureSingleton
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年3月28日
  */
 @Slf4j

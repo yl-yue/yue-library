@@ -13,7 +13,7 @@ import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.vo.CaptchaVO;
 
 /**
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年4月3日
  */
 public class CaptchaUtils {

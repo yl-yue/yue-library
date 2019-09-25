@@ -12,7 +12,7 @@ import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年4月30日
  */
 public abstract class DBDAO {

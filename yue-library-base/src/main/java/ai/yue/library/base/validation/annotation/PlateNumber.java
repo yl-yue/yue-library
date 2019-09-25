@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 /**
  * 验证是否为中国车牌号
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年5月8日
  */
 @Documented

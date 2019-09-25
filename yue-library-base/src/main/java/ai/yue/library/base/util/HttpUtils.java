@@ -15,7 +15,7 @@ import cn.hutool.core.lang.Console;
 
 /**
  * @deprecated 请使用 {@linkplain ServletUtils}
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年12月18日
  */
 @Deprecated

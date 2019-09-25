@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * @deprecated 见 yue-library-data-redis 模块 ConstantProperties
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年11月6日
  */
 @Data

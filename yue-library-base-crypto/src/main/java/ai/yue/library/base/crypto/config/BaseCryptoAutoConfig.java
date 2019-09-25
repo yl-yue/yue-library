@@ -11,7 +11,7 @@ import cn.hutool.crypto.SecureUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年6月11日
  */
 @Slf4j

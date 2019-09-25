@@ -13,7 +13,7 @@ import ai.yue.library.base.util.servlet.ServletUtils;
  * Cookie工具类
  * 
  * @deprecated 请使用 {@linkplain ServletUtils}
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2017年10月8日
  */
 @Deprecated

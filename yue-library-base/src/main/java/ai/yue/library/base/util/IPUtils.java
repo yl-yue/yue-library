@@ -6,7 +6,7 @@ import cn.hutool.core.net.NetUtil;
 
 /**
  * @deprecated 请使用 {@linkplain NetUtils}
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年4月4日
  */
 @Deprecated

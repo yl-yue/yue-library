@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月9日
  */
 @Slf4j

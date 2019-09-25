@@ -4,7 +4,7 @@ import cn.hutool.core.util.ClassUtil;
 
 /**
  * 类工具类
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年1月19日
  */
 public class ClassUtils extends ClassUtil {

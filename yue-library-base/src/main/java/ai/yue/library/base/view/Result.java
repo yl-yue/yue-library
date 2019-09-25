@@ -6,7 +6,6 @@ import static com.alibaba.fastjson.util.TypeUtils.castToBoolean;
 import static com.alibaba.fastjson.util.TypeUtils.castToDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToDouble;
 import static com.alibaba.fastjson.util.TypeUtils.castToInt;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
 import static com.alibaba.fastjson.util.TypeUtils.castToLong;
 import static com.alibaba.fastjson.util.TypeUtils.castToSqlDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToTimestamp;
@@ -38,7 +37,7 @@ import lombok.NoArgsConstructor;
 /**
  * HTTP请求，最外层响应对象。
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2017年10月8日
  */
 @Data
@@ -75,7 +74,15 @@ public class Result<T> implements Serializable {
 	}
 	
 	public <D> D getData(Class<D> clazz) {
-		return castToJavaBean(data, clazz);
+		return Convert.convert(data, clazz);
+	}
+	
+	public <D> D dataToObject(Class<D> clazz) {
+		return getData(clazz);
+	}
+	
+	public <D> D dataToJavaBean(Class<D> clazz) {
+		return Convert.toJavaBean(data, clazz);
 	}
 	
 	public JSONObject dataToJSONObject() {
@@ -84,6 +91,10 @@ public class Result<T> implements Serializable {
 	
 	public JSONArray dataToJSONArray() {
 		return Convert.toJSONArray(data);
+	}
+	
+	public <D> List<D> dataToList(Class<D> clazz) {
+		return Convert.toList(clazz, data);
 	}
 	
 	@SuppressWarnings("unchecked")

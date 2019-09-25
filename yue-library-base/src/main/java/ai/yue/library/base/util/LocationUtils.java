@@ -6,7 +6,7 @@ import java.util.List;
 import ai.yue.library.base.ipo.LocationIPO;
 
 /**
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年8月1日
  */
 public class LocationUtils {

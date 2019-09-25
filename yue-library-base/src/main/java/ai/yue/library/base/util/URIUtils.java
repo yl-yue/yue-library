@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.hutool.core.convert.ConvertException;
 
 /**
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年4月24日
  */
 public class URIUtils {

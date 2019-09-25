@@ -3,7 +3,7 @@ package ai.yue.library.base.constant;
 /**
  * 最大值 <i>或</i> 最小值
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年8月29日
  */
 public enum MaxOrMinEnum {

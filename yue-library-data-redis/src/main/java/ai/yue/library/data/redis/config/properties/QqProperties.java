@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * QQ
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年11月6日
  */
 @Data
