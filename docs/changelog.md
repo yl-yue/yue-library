@@ -24,8 +24,12 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 
 ## Greenwich.SR2.1【规划中】
 ### 新特性
+- 【base】 `Result` 新增方法 `public <D> List<D> dataToList(Class<D> clazz) {`
+- 【base】 `Result` 新增方法 `public <D> D dataToObject(Class<D> clazz) {`
+- 【base】 `Result` 新增方法 `public <D> D dataToJavaBean(Class<D> clazz) {`
 
 ### Bug修复
+- 【redis】 User 类所依赖的 ConstantProperties 配置未启用，导致的启动异常
 
 ## Finchley.SR4【2019-09-16】
 ### 新特性

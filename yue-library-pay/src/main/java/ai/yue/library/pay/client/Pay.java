@@ -19,7 +19,7 @@ import ai.yue.library.pay.ipo.QueryOrderIPO;
 import lombok.AllArgsConstructor;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月22日
  */
 @AllArgsConstructor

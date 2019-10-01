@@ -9,7 +9,7 @@ import com.egzosn.pay.common.util.sign.SignUtils;
 import lombok.Data;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	创建时间：2018年7月13日
  */
 @Data

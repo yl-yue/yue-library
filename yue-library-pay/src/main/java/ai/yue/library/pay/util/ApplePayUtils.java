@@ -12,7 +12,7 @@ import ai.yue.library.pay.dto.ApplePayVerifyResult;
 /**
  * 苹果内购支付验证
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月20日
  */
 public class ApplePayUtils {

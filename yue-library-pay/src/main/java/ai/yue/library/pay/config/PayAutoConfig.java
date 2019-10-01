@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 支付配置
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月22日
  */
 @Slf4j

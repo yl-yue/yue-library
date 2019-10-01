@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
  * <p>21007 receipt是Sandbox receipt，但却发送至生产系统的验证服务
  * <p>21008 receipt是生产receipt，但却发送至Sandbox环境的验证服务
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月20日
  */
 @Data
