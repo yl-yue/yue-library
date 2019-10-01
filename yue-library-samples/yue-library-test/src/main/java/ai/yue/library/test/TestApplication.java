@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author  ylyue
- * @version 创建时间：2018年6月8日
+ * @author	ylyue
+ * @since	2018年6月8日
  */
 @SpringBootApplication
 public class TestApplication {
