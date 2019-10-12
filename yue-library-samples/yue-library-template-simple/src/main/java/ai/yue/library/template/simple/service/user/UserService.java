@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.crypto.client.SecureSingleton;
+import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
+import ai.yue.library.template.simple.constant.RoleEnum;
 import ai.yue.library.template.simple.dao.user.UserDAO;
 import ai.yue.library.template.simple.dataobject.UserDO;
 
@@ -24,12 +26,24 @@ public class UserService {
 	UserDAO userDAO;
 	
 	/**
-	 * 插入数据
+	 * 注册
 	 * 
 	 * @param paramJson
 	 * @return
 	 */
-	public Result<?> insert(JSONObject paramJson) {
+	public Result<?> register(JSONObject paramJson) {
+		// 1. 校验参数
+		String[] mustContainKeys = {"cellphone", "password"};
+		String[] canContainKeys = {"nickname", "email", "head_img", "sex", "birthday"};
+		ParamUtils.paramValidate(paramJson, mustContainKeys, canContainKeys);
+		
+		// 2. 加密密码
+		String password = paramJson.getString("password");
+		password = SecureSingleton.getAES().encryptBase64(password);
+		paramJson.replace("password", password);
+		
+		// 3. 插入数据
+		paramJson.put("role", RoleEnum.b2c_买家.name());
 		return ResultInfo.success(userDAO.insert(paramJson));
 	}
 	

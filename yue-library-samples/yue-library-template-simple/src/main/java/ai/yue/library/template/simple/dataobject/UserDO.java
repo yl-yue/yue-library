@@ -18,18 +18,15 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class UserDO extends DBDO {
 
-	Long user_id;
-	RoleEnum role;
-	String cellphone;
-	String wx_unionid;
-	String qq_openid;
-	String email;
-	String nickname;
-	String head_img;
-	Character sex;
-	LocalDate birthday;
-	Integer age;
-	UserStatusEnum user_status;
-	String register_source;
+	Long user_id;// 用户ID
+	RoleEnum role;// 用户所属角色
+	String cellphone;// 用户手机号码
+	String password;// 密码
+	String nickname;// 用户昵称
+	String email;// 邮箱
+	String head_img;// 用户头像
+	Character sex;// 用户性别
+	LocalDate birthday;// 用户生日
+	UserStatusEnum user_status;// 用户状态
 	
 }

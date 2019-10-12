@@ -10,4 +10,4 @@ spring:
           statement-prepare-after-log-enabled: false
           statement-execute-query-after-log-enabled: false
           statement-executable-sql-log-enable: true
-yue:  crypto:    aes-keyt: 123456
+yue:  crypto:    aes-keyt: AES/ECB/PKCS5Padding3306

@@ -14,8 +14,8 @@ import ai.yue.library.template.simple.ipo.ValidationIPO;
 import cn.hutool.core.date.DateTime;
 
 /**
- * @author  ylyue
- * @version 创建时间：2019年6月25日
+ * @author	ylyue
+ * @since	2019年10月12日
  */
 @RestController
 @RequestMapping("/validation")

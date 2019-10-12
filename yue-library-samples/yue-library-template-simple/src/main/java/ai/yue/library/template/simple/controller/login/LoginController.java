@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
+
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.data.redis.client.User;
@@ -24,6 +26,17 @@ public class LoginController {
 	User user;
 	@Autowired
 	UserService userService;
+	
+	/**
+	 * 注册
+	 * 
+	 * @param paramJson
+	 * @return
+	 */
+	@PostMapping("/register")
+	public Result<?> register(@RequestParam JSONObject paramJson) {
+		return userService.register(paramJson);
+	}
 	
 	/**
 	 * 登录
