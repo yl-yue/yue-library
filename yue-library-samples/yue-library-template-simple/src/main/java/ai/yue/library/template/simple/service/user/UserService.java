@@ -36,13 +36,19 @@ public class UserService {
 		String[] mustContainKeys = {"cellphone", "password"};
 		String[] canContainKeys = {"nickname", "email", "head_img", "sex", "birthday"};
 		ParamUtils.paramValidate(paramJson, mustContainKeys, canContainKeys);
-		
-		// 2. 加密密码
+
+		// 2. 确认用户是否存在
+		String cellphone = paramJson.getString("cellphone");
+		if (userDAO.isUser(cellphone)) {
+			return ResultInfo.dev_defined(ResultPrompt.USER_EXIST);
+		}
+
+		// 3. 加密密码
 		String password = paramJson.getString("password");
 		password = SecureSingleton.getAES().encryptBase64(password);
 		paramJson.replace("password", password);
 		
-		// 3. 插入数据
+		// 4. 插入数据
 		paramJson.put("role", RoleEnum.b2c_买家.name());
 		return ResultInfo.success(userDAO.insert(paramJson));
 	}
@@ -83,7 +89,7 @@ public class UserService {
 	 * @return
 	 */
 	public Result<?> page(JSONObject paramJson) {
-		return ResultInfo.success(userDAO.page(PageIPO.parsePageIPO(paramJson)));
+		return userDAO.page(PageIPO.parsePageIPO(paramJson)).toResult();
 	}
 	
 	/**
