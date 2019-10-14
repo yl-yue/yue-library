@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * QQ用户信息
+ * 
  * @author	ylyue
  * @since	2018年9月11日
  */

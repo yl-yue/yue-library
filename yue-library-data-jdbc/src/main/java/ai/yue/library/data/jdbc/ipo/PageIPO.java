@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
+ * 分页请求对象，用于SQL分页查询请求
+ * 
  * @author	ylyue
  * @since	2018年4月13日
  */

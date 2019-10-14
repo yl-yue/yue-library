@@ -5,7 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
- * @deprecated 见 yue-library-data-redis 模块 ConstantProperties
+ * @deprecated 见 yue-library-data-redis 模块 ConfigProperties
+ * 
  * @author	ylyue
  * @since	2018年11月6日
  */

@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 分页查询结果
+ * 
  * @author	ylyue
  * @since	2018年7月18日
  */

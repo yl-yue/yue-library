@@ -9,8 +9,10 @@ import com.egzosn.pay.common.util.sign.SignUtils;
 import lombok.Data;
 
 /**
+ * 支付宝支付可配置属性
+ * 
  * @author	ylyue
- * @since	创建时间：2018年7月13日
+ * @since	2018年7月13日
  */
 @Data
 @ConfigurationProperties("yue.pay.ali")

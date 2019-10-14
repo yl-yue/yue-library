@@ -34,5 +34,9 @@
   * [接口质检标准](规约/接口质检标准.md)
   * [数据库设计与交付规约](规约/数据库设计与交付规约.md)
 
+* yue-library-samples
+
+  * [template-simple](samples/template-simple.md)
+
 * [更多](更多.md)
 * [Changelog<sup style="color:red">(new)<sup>](changelog.md)

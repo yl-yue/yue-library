@@ -5,12 +5,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
+ * redis可配置属性
+ * 
  * @author	ylyue
  * @since	2018年11月6日
  */
 @Data
-@ConfigurationProperties("yue.redis.constant")
-public class ConstantProperties {
+@ConfigurationProperties("yue.redis.config")
+public class ConfigProperties {
 	
 	/**
 	 * Cookie Token Key

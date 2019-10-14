@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * Result默认枚举值定义
+ * 
  * @author	ylyue
  * @since	2017年10月8日
  */

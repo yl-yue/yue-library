@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 微信用户信息
+ * 
  * @author	ylyue
  * @since	2018年9月11日
  */
