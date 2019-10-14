@@ -22,11 +22,20 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 |JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
 |JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
 
-## Greenwich.SR2.1【规划中】
+## Greenwich.SR3【规划中】
 ### 新特性
+
+### Bug修复
+
+## Greenwich.SR2.1【2019-10-15】
+### 新特性
+- 完善包注释与类注释，提供更舒爽的javadoc，完善项目文档，提供更多的代码示例与使用说明。同时优化项目部分代码结构与紧急修复redis User类
+- 合并统一异常处理类继承结构，更改redis常量配置属性为可配置属性
+- 【base】增强字段校验器 `Validator` 类型自动识别与错误参数提示，更加强大方便好用
 - 【base】 `Result` 新增方法 `public <D> List<D> dataToList(Class<D> clazz) {`
 - 【base】 `Result` 新增方法 `public <D> D dataToObject(Class<D> clazz) {`
 - 【base】 `Result` 新增方法 `public <D> D dataToJavaBean(Class<D> clazz) {`
+- 【samples】建立示例项目组结构，添加简单的SpringBoot示例项目模版 `template-simple`，用于直接上手开发
 
 ### Bug修复
 - 【redis】 User 类所依赖的 ConstantProperties 配置未启用，导致的启动异常

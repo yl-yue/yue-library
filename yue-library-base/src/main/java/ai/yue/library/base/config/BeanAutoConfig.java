@@ -26,6 +26,8 @@ import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * base bean 自动配置
+ * 
  * @author	ylyue
  * @since	2018年11月26日
  */

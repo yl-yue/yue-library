@@ -12,9 +12,9 @@ import java.util.Locale;
 
 /**
  * 时间工具类（JDK1.8）
- * @author  ylyue
- * @since	JDK1.8
- * @version 创建时间：2017年10月25日
+ * 
+ * @author	ylyue
+ * @since	2017年10月25日（JDK1.8）
  */
 public final class DateUtils {
 	

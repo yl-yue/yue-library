@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 访问授权令牌信息-微信开放平台
+ * 
  * @author	ylyue
  * @since	2018年9月11日
  */

@@ -19,6 +19,8 @@ import ai.yue.library.pay.ipo.QueryOrderIPO;
 import lombok.AllArgsConstructor;
 
 /**
+ * 支付客户端，封装支付接口统一实现，只需一行代码实现支付聚合
+ * 
  * @author	ylyue
  * @since	2019年8月22日
  */

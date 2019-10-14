@@ -10,6 +10,8 @@ import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 
 /**
+ * 对象工具类，包括对象比较与转换等问题
+ * 
  * @author	ylyue
  * @since	2018年7月27日
  */

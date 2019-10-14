@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 应用上下文工具类，用于在普通类中获取Spring容器Bean
+ * 
  * @author	ylyue
  * @since	2019年8月9日
  */
