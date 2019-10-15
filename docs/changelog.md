@@ -24,6 +24,7 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 
 ## Greenwich.SR3【规划中】
 ### 新特性
+- 升级系列依赖版本
 
 ### Bug修复
 
