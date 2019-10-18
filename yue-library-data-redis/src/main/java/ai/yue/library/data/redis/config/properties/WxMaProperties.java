@@ -7,7 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
- * @author	孙金川
+ * 微信小程序可配置属性
+ * 
+ * @author	ylyue
  * @since	2019年6月18日
  */
 @Data

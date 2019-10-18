@@ -3,8 +3,10 @@ package ai.yue.library.base.util;
 import org.springframework.web.util.UriUtils;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年4月24日
+ * URI处理
+ * 
+ * @author	ylyue
+ * @since	2018年4月24日
  */
 public class URIUtils {
 

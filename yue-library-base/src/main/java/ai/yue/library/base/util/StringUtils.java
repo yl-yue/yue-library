@@ -4,8 +4,9 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * String工具类
- * @author  孙金川
- * @version 创建时间：2017年10月28日
+ * 
+ * @author	ylyue
+ * @since	2017年10月28日
  */
 public class StringUtils extends StrUtil {
 	

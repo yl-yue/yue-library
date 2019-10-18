@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年11月10日
  */
 public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {

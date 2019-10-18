@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 筛选方式枚举
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年9月18日
  */
 @Getter

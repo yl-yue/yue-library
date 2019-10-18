@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 /**
  * 服务降级异常
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年2月3日
  */
 @NoArgsConstructor

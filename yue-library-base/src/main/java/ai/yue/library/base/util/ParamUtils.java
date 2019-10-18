@@ -13,8 +13,9 @@ import ai.yue.library.base.view.ResultInfo;
 
 /**
  * 参数处理工具类
- * @author  孙金川
- * @version 创建时间：2018年6月16日
+ * 
+ * @author	ylyue
+ * @since	2018年6月16日
  */
 public class ParamUtils {
 

@@ -6,7 +6,7 @@ import cn.hutool.core.net.NetUtil;
 /**
  * 网络相关工具
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年4月4日
  */
 public class NetUtils extends NetUtil {

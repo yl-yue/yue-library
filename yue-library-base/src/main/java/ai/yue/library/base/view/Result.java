@@ -6,7 +6,6 @@ import static com.alibaba.fastjson.util.TypeUtils.castToBoolean;
 import static com.alibaba.fastjson.util.TypeUtils.castToDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToDouble;
 import static com.alibaba.fastjson.util.TypeUtils.castToInt;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
 import static com.alibaba.fastjson.util.TypeUtils.castToLong;
 import static com.alibaba.fastjson.util.TypeUtils.castToSqlDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToTimestamp;
@@ -37,9 +36,9 @@ import lombok.NoArgsConstructor;
 import lombok.var;
 
 /**
- * HTTP请求，最外层响应对象。
+ * HTTP请求最外层响应对象，更适应Restful风格API
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2017年10月8日
  */
 @Data
@@ -63,9 +62,8 @@ public class Result<T> implements Serializable {
 	private Long count;
 	
 	/**
-	 * 成功校验
-	 * <p>
-	 * 如果此处获得的Result是一个错误提示结果，那么便会抛出一个 {@linkplain ResultException} 异常，以便于数据回滚并进行异常统一处理。
+	 * <b>成功校验</b>
+	 * <p>如果此处获得的Result是一个错误提示结果，那么便会抛出一个 {@linkplain ResultException} 异常，以便于数据回滚并进行异常统一处理。
 	 * 
 	 * @throws ResultException 返回的请求异常结果
 	 */
@@ -76,7 +74,15 @@ public class Result<T> implements Serializable {
 	}
 	
 	public <D> D getData(Class<D> clazz) {
-		return castToJavaBean(data, clazz);
+		return Convert.convert(data, clazz);
+	}
+	
+	public <D> D dataToObject(Class<D> clazz) {
+		return getData(clazz);
+	}
+	
+	public <D> D dataToJavaBean(Class<D> clazz) {
+		return Convert.toJavaBean(data, clazz);
 	}
 	
 	public JSONObject dataToJSONObject() {
@@ -85,6 +91,10 @@ public class Result<T> implements Serializable {
 	
 	public JSONArray dataToJSONArray() {
 		return Convert.toJSONArray(data);
+	}
+	
+	public <D> List<D> dataToList(Class<D> clazz) {
+		return Convert.toList(clazz, data);
 	}
 	
 	@SuppressWarnings("unchecked")

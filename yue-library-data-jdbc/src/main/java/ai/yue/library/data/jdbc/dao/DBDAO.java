@@ -12,7 +12,9 @@ import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
 /**
- * @author	孙金川
+ * DBDAO为 JSON 对象提供服务
+ * 
+ * @author	ylyue
  * @since	2019年4月30日
  */
 public abstract class DBDAO {

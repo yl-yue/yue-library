@@ -20,7 +20,7 @@ import lombok.var;
 /**
  * Map工具类
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年1月26日
  */
 public class MapUtils extends MapUtil {

@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
- * QQ
+ * QQ可配置属性
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年11月6日
  */
 @Data

@@ -2,8 +2,9 @@ package ai.yue.library.base.util;
 
 /**
  * 线程信息获取工具类
- * @author  孙金川
- * @version 创建时间：2017年10月24日
+ * 
+ * @author	ylyue
+ * @since	2017年10月24日
  */
 public class CurrentLineInfo {
 

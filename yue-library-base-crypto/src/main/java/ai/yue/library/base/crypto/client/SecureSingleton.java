@@ -12,7 +12,7 @@ import cn.hutool.crypto.symmetric.AES;
 /**
  * 加解密单例
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月9日
  */
 public class SecureSingleton {

@@ -11,7 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月2日
  */
 public class JSONObjectArgumentResolver implements HandlerMethodArgumentResolver {

@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
- * @author	孙金川
+ * 加解密自动配置属性
+ * 
+ * @author	ylyue
  * @since	2018年11月6日
  */
 @Data

@@ -3,7 +3,7 @@ package ai.yue.library.base.view;
 /**
  * 便捷返回 - {@code Restful} 风格API结果
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2017年7月31日
  */
 public class ResultInfo {

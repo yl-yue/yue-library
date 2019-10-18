@@ -16,7 +16,7 @@
 	<url>https://ylyue.cn</url>
 	
 	<properties>
-		<revision>${spring-cloud.version}</revision>
+		<revision>${spring-cloud.version}.1</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<sha1 />
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,8 +24,8 @@
 		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>4.6.2</hutool.version>
-		<fastjson.version>1.2.60</fastjson.version>
+		<hutool.version>4.6.10</hutool.version>
+		<fastjson.version>1.2.62</fastjson.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.0.0</easypoi.version>
 		<jpush.version>3.3.11</jpush.version>

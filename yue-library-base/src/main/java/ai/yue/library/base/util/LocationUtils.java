@@ -7,8 +7,10 @@ import ai.yue.library.base.ipo.LocationIPO;
 import lombok.var;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年8月1日
+ * 位置工具类，用于处理经纬度等问题
+ * 
+ * @author	ylyue
+ * @since	2018年8月1日
  */
 public class LocationUtils {
 

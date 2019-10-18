@@ -5,7 +5,7 @@ import ai.yue.library.base.view.ResultInfo;
 import lombok.Getter;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年2月3日
  */
 @Getter

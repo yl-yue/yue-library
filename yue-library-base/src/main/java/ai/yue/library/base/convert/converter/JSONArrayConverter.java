@@ -6,7 +6,7 @@ import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.convert.AbstractConverter;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年7月25日
  */
 public class JSONArrayConverter extends AbstractConverter<JSONArray> {

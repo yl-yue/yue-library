@@ -13,8 +13,10 @@ import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.vo.CaptchaVO;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年4月3日
+ * 验证码工具类，用于创建验证码图片与验证验证码
+ * 
+ * @author	ylyue
+ * @since	2018年4月3日
  */
 public class CaptchaUtils {
 	

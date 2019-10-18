@@ -46,7 +46,7 @@ import cn.hutool.core.util.URLUtil;
  * Servlet相关工具类封装<br>
  * 源自 hutool-extra 增强
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月14日
  */
 public class ServletUtils {
