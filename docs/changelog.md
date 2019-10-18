@@ -29,6 +29,11 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 
 ### Bug修复
 
+## Finchley.SR4.1【2019-10-18】
+### 新特性
+- JDK8版本，基于 `Greenwich.SR2.1` 做兼容适配。<font color=red>继此版本之后将采用双版本同时发布模式</font>
+- 版本更新日志同 [Greenwich.SR2.1](#Greenwich.SR2.1【2019-10-15】)
+
 ## Greenwich.SR2.1【2019-10-15】
 ### 新特性
 - 完善包注释与类注释，提供更舒爽的javadoc，完善项目文档，提供更多的代码示例与使用说明。同时优化项目部分代码结构与紧急修复redis User类
