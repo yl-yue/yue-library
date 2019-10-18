@@ -5,7 +5,7 @@ import ai.yue.library.data.jdbc.client.DB;
 /**
  * {@linkplain DB} 常量类
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年7月18日
  */
 public interface DBConstant {

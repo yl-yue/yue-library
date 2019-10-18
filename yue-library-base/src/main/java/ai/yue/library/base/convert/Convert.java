@@ -25,7 +25,10 @@ import cn.hutool.core.lang.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author	孙金川
+ * <b>类型转换器</b>
+ * <p>提供简单全面的类型转换，适合更多的业务场景，内置hutool、fastjson、yue三种类型转换器，判断精确性能强大，未知类型兼容性更强
+ * 
+ * @author	ylyue
  * @since 	2019年7月23日
  */
 @Slf4j

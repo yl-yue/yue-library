@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
  * HttpRequest解析器<br>
  * 源自 hutool-extra
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2019年8月14日
  */
 @NoArgsConstructor

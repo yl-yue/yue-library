@@ -1,8 +1,10 @@
 package ai.yue.library.base.util;
 
 /**
- * @author  孙金川
- * @version 创建时间：2018年9月9日
+ * 异常打印工具类
+ * 
+ * @author	ylyue
+ * @since	2018年9月9日
  */
 public class ExceptionUtils {
 

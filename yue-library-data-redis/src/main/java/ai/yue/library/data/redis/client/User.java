@@ -25,7 +25,7 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.base.vo.CaptchaVO;
-import ai.yue.library.data.redis.config.properties.ConstantProperties;
+import ai.yue.library.data.redis.config.properties.ConfigProperties;
 import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 import ai.yue.library.data.redis.dto.QqUserDTO;
@@ -34,7 +34,10 @@ import ai.yue.library.data.redis.vo.wx.open.AccessTokenVO;
 import lombok.NoArgsConstructor;
 
 /**
- * @author	孙金川
+ * <b>User客户端</b>
+ * <p>登录登出、第三方登录、token自动解析获取用户信息、分布式验证码
+ * 
+ * @author	ylyue
  * @since	2018年4月24日
  */
 @NoArgsConstructor
@@ -49,7 +52,7 @@ public class User {
 	@Autowired
 	HttpServletResponse response;
 	@Autowired
-	ConstantProperties constantProperties;
+	ConfigProperties configProperties;
 	@Autowired
 	WxOpenProperties wxOpenProperties;
 	@Autowired
@@ -134,7 +137,7 @@ public class User {
     	
     	// 2. 设置验证码到Redis
 		String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
-		redis.set(captcha_redis_key, captcha, constantProperties.getCaptcha_timeout());
+		redis.set(captcha_redis_key, captcha, configProperties.getCaptcha_timeout());
 		
 		// 3. 设置验证码到响应输出流
 		HttpServletResponse response = ServletUtils.getResponse();
@@ -171,12 +174,12 @@ public class User {
 	 * @return
 	 */
 	private String getRequestToken() {
-		Cookie cookie = ServletUtils.getCookie(constantProperties.getCookie_token_key());
+		Cookie cookie = ServletUtils.getCookie(configProperties.getCookie_token_key());
 		String token = "";
 		if (cookie != null) {
 			token = cookie.getValue();
 		} else {
-			token = request.getHeader(constantProperties.getCookie_token_key());
+			token = request.getHeader(configProperties.getCookie_token_key());
 		}
 		
 		return token;
@@ -199,7 +202,7 @@ public class User {
 			}
 			
 			// 3. 查询Redis中token的值
-	        String tokenValue = redis.get(String.format(constantProperties.getRedis_token_prefix(), token));
+	        String tokenValue = redis.get(String.format(configProperties.getRedis_token_prefix(), token));
 	        
 	        // 4. 返回user_id
 			return JSONObject.parseObject(tokenValue).getLong("user_id");
@@ -225,7 +228,7 @@ public class User {
 			}
 			
 			// 3. 查询Redis中token的值
-			String tokenValue = redis.get(String.format(constantProperties.getRedis_token_prefix(), token));
+			String tokenValue = redis.get(String.format(configProperties.getRedis_token_prefix(), token));
 			
 			// 4. 返回POJO
 			T t = JSONObject.parseObject(tokenValue, clazz);
@@ -257,7 +260,7 @@ public class User {
         // 2. 注销会话
 		String redis_token_key = null;
         if (StringUtils.isNotEmpty(token)) {
-        	redis_token_key = String.format(constantProperties.getRedis_token_prefix(), token);
+        	redis_token_key = String.format(configProperties.getRedis_token_prefix(), token);
         	String tokenValue = redis.get(redis_token_key);
         	if (StringUtils.isNotEmpty(tokenValue)) {
         		redis.del(redis_token_key);
@@ -266,17 +269,17 @@ public class User {
         
         // 3. 生成新的token
         token = UUID.randomUUID().toString();
-        redis_token_key = String.format(constantProperties.getRedis_token_prefix(), token);
+        redis_token_key = String.format(configProperties.getRedis_token_prefix(), token);
         
 		// 4. 登录成功-设置token至Redis
-		Integer tokenTimeout = constantProperties.getToken_timeout();
+		Integer tokenTimeout = configProperties.getToken_timeout();
 		redis.set(redis_token_key, userInfo, tokenTimeout);
 		
 		// 5. 登录成功-设置token至Cookie
-		ServletUtils.addCookie(constantProperties.getCookie_token_key(), token, tokenTimeout);
+		ServletUtils.addCookie(configProperties.getCookie_token_key(), token, tokenTimeout);
 		
 		// 6. 登录成功-设置token至Header
-		response.setHeader(constantProperties.getCookie_token_key(), token);
+		response.setHeader(configProperties.getCookie_token_key(), token);
 		
 		// 7. 登录成功-返回token
 		return token;
@@ -299,10 +302,10 @@ public class User {
 		}
 		
 		// 3. 清除Redis-token
-		redis.del(String.format(constantProperties.getRedis_token_prefix(), token));
+		redis.del(String.format(configProperties.getRedis_token_prefix(), token));
 		
 		// 4. 清除Cookie-token
-		ServletUtils.addCookie(constantProperties.getCookie_token_key(), null, 0);
+		ServletUtils.addCookie(configProperties.getCookie_token_key(), null, 0);
 		
 		// 5. 返回结果
 		return ResultInfo.success();

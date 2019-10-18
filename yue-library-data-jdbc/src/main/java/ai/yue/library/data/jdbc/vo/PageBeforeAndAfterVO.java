@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author	孙金川
+ * 分页上下条数据VO
+ * 
+ * @author	ylyue
  * @since	2018年10月10日
  */
 @Data

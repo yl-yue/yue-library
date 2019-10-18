@@ -11,7 +11,9 @@ import cn.hutool.crypto.SecureUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author	孙金川
+ * base-crypto配置，提供自动配置项支持与增强
+ * 
+ * @author	ylyue
  * @since	2018年6月11日
  */
 @Slf4j

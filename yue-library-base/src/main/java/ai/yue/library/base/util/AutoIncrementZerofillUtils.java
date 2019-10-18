@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 自动递增填充零
  * 
- * @author  孙金川
+ * @author  ylyue
  * @version 创建时间：2018年12月10日
  */
 public class AutoIncrementZerofillUtils {

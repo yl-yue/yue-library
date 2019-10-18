@@ -13,7 +13,9 @@ import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
 
 /**
- * @author	孙金川
+ * DBTDAO为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
+ * 
+ * @author	ylyue
  * @since	2019年4月30日
  * @param <T> 映射类
  */

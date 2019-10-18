@@ -6,7 +6,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 /**
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年11月27日
  */
 public class ContextAwareCallable<T> implements Callable<T> {

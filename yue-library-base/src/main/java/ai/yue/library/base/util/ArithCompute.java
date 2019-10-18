@@ -8,7 +8,7 @@ import java.math.RoundingMode;
  * <p>
  * 由于Java的简单类型不能够精确的对浮点数进行运算，这个工具类提供精确的浮点数运算，包括加减乘除和四舍五入。
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2017年9月27日
  */
 public class ArithCompute {

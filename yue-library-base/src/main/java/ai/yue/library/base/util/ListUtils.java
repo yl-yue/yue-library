@@ -21,7 +21,7 @@ import lombok.var;
 /**
  * List工具类
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2017年10月27日
  */
 public class ListUtils {

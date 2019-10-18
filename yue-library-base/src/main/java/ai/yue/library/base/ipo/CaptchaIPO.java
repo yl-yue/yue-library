@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
  *  字体大小（默认值：30） int fontSize = 30;
  * </code>
  * 
- * @author	孙金川
+ * @author	ylyue
  * @since	2018年7月23日
  */
 @Data

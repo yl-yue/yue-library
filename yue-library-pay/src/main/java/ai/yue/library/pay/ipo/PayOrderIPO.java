@@ -10,7 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * @author	孙金川
+ * 支付订单IPO
+ * 
+ * @author	ylyue
  * @since	2019年8月22日
  */
 @Data

@@ -16,7 +16,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author	孙金川
+ * 图片验证码VO，可直接将图片验证码写入响应结果中
+ * 
+ * @author	ylyue
  * @since	2018年7月23日
  */
 @Data
