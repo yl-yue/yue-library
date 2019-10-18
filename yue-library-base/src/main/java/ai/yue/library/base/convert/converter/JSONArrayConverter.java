@@ -6,6 +6,8 @@ import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.convert.AbstractConverter;
 
 /**
+ * JSONArray类型转换器
+ * 
  * @author	ylyue
  * @since	2019年7月25日
  */
