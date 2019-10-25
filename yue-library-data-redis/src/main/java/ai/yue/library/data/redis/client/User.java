@@ -125,7 +125,7 @@ public class User {
 	}
     
     /**
-     * 获得-验证码图片
+     * 获得-验证码图片（基于redis解决分布式验证的问题）
      * <p>将验证码设置到redis
      * <p>将验证码图片写入response，并设置ContentType为image/png
      */
@@ -153,7 +153,7 @@ public class User {
 	}
     
     /**
-     * 验证-验证码
+     * 验证-验证码（基于redis解决分布式验证的问题）
      * <p>验证码错误会抛出一个{@linkplain ResultException}异常，作为结果提示...<br>
      * 
      * @param captcha 验证码

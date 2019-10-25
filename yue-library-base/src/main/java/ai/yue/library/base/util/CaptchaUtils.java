@@ -14,6 +14,7 @@ import ai.yue.library.base.vo.CaptchaVO;
 
 /**
  * 验证码工具类，用于创建验证码图片与验证验证码
+ * <p>若需要分布式验证，推荐使用 yue-library-data-redis 模块 User 类所提供的 getCaptchaImage() 方法
  * 
  * @author	ylyue
  * @since	2018年4月3日

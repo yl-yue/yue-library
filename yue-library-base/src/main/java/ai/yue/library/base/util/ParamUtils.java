@@ -5,14 +5,17 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.ParamFormatIPO;
+import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.ResultInfo;
 
 /**
- * 参数处理工具类
+ * 参数处理工具类，用作参数确认与类型美化等场景
+ * <p>参数校验与类型转换参考：{@linkplain Convert}、{@linkplain Validator}
  * 
  * @author	ylyue
  * @since	2018年6月16日
