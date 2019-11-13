@@ -11,6 +11,7 @@
 - 增强第三方登录封装
 
 ### 其他
+- 基于spring-cloud-alibaba体系封装改造
 - 添加短信、OSS等封装
 - 加入996icu license 协议、木兰协议
 
