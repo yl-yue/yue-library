@@ -39,12 +39,11 @@ public class SecureSingleton {
 	 * 1. 将URI转义内容进行解码<br>
 	 * 2. 将RSA分段加密内容，进行分段解密
 	 * 
-	 * @param text				URI转义后的文本
-	 * @param rsa_private_key	RSA私钥
+	 * @param messageBody URI转义后的消息体
 	 * @return 解密后的JSON
 	 */
-	public static JSONObject rsaUriDecodingAndDecrypt(String text, String rsa_private_key) {
-		String content = URIUtils.decode(text);
+	public static JSONObject rsaUriDecodingAndDecrypt(String messageBody) {
+		String content = URIUtils.decode(messageBody);
 		String jsonString = getRSA().decryptStrFromBcd(content, KeyType.PrivateKey);
 		JSONObject json = null;
 		try {
