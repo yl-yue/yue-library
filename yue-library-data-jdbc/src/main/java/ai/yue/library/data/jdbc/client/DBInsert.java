@@ -75,7 +75,7 @@ class DBInsert extends DBDelete {
 	 * <blockquote>
 	 * <b>使用条件：</b>
 	 * <pre>1. id 默认为主键</pre>
-	 * <pre>2. sort_idx 默认为排序字段</pre>
+	 * <pre>2. sort_idx 默认为排序字段，类型为 int unsigned 。DDL示例：<code>`sort_idx` tinyint(2) UNSIGNED NOT NULL COMMENT '排序-索引'</code></pre>
 	 * </blockquote>
 	 * 
 	 * @param tableName 表名

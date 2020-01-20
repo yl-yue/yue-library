@@ -2,9 +2,15 @@
 ---
 ## TODO LIST
 ### base
+- 前后端统一表单验证
 
 ### jdbc
 - **内置全局拦截插件**：提供全表 delete 、 update 操作智能分析阻断，预防误操作
+- JDBC审计支持
+- JDBC框架遵循Java开发手册实现MySQL 数据库规约与框架层面的优化，如：SQL分页优化、表必备三字段、数据修订前先确认数据等规范
+![数据修订前先确认数据](changelog_files/3.jpg)
+![表必备三字段](changelog_files/1.jpg)
+![SQL分页优化](changelog_files/2.jpg)
 
 ### redis
 - 权限拦截框架集成
