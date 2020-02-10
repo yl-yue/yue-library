@@ -1,5 +1,7 @@
 package ai.yue.library.template.simple.ipo;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,7 +12,6 @@ import org.hibernate.validator.constraints.Length;
 
 import ai.yue.library.base.validation.annotation.Cellphone;
 import ai.yue.library.base.validation.annotation.IdCard;
-import cn.hutool.core.date.DateTime;
 import lombok.Data;
 
 /**
@@ -24,7 +25,7 @@ public class ValidationIPO {
     @Length(max = 20, message = "姓名不能超过20个字")
     private String name;
     
-    private DateTime birthday;
+    private LocalDate birthday;
     
     @IdCard
     private String idcard;

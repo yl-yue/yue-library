@@ -51,7 +51,8 @@
 ## 工程结构
 ```
 . yue-library
-├── yue-library  基础库父pom
+├── yue-library  基础库
+│   ├── yue-library-dependencies  父pom
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
 │   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
 │   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等

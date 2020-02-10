@@ -4,6 +4,12 @@
 .settings/
 .sts4-cache/
 
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
 # Maven
 target/
 .factorypath
@@ -21,13 +27,6 @@ buildNumber.properties
 # Gradle
 .gradle/
 build/
-
-#IDEA
-# idea ignore
-.idea/
-*.ipr
-*.iml
-*.iws
 
 # temp ignore
 *.log

@@ -15,6 +15,21 @@
 	<description>yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。</description>
 	<url>https://ylyue.cn</url>
 	
+	<modules>
+		<!-- 基础库-dependencies -->
+		<module>yue-library-dependencies</module>
+		<!-- 基础库 -->
+		<module>yue-library-base</module>
+		<!-- 基础库-加密模块 -->
+		<module>yue-library-base-crypto</module>
+		<!-- 基础库-jdbc模块 -->
+		<module>yue-library-data-jdbc</module>
+		<!-- 基础库-redis模块 -->
+		<module>yue-library-data-redis</module>
+		<!-- 基础库-pay模块 -->
+		<module>yue-library-pay</module>
+	</modules>
+	
 	<properties>
 		<revision>2.1.0</revision>
 		<sha1 />
@@ -25,20 +40,12 @@
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.0.6</hutool.version>
+		<hutool.version>5.1.1</hutool.version>
 		<fastjson.version>1.2.62</fastjson.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.0.0</easypoi.version>
 		<jpush.version>3.3.11</jpush.version>
 	</properties>
-	
-	<modules>
-		<module>yue-library-base</module>
-		<module>yue-library-base-crypto</module>
-		<module>yue-library-data-jdbc</module>
-		<module>yue-library-data-redis</module>
-		<module>yue-library-pay</module>
-	</modules>
 	
 	<dependencyManagement>
 		<dependencies>
