@@ -60,6 +60,24 @@ class DBDelete extends DBUpdate {
     }
 	
 	/**
+	 * 删除-安全的
+     * <p>数据删除前会先进行条数确认
+     * 
+     * @param tableName	表名
+     * @param id     	主键id
+     */
+    public void deleteSafe(String tableName, Long id) {
+		// 1. 确认数据
+		var data = queryById(tableName, id);
+		if (data == null || data.size() != 1) {
+			throw new DBException("执行单行删除命令失败，数据结构异常，可能原因是：数据不存在或存在多条数据", true);
+		}
+		
+		// 2. 删除数据
+		delete(tableName, id);
+    }
+	
+	/**
 	 * 删除
      * 
      * @param tableName		表名

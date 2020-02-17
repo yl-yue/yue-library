@@ -1,4 +1,4 @@
-package ai.yue.library.template.simple.controller.doc.example;
+package ai.yue.library.test.controller.doc.example;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

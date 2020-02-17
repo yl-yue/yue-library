@@ -1,4 +1,4 @@
-package ai.yue.library.template.simple.controller.doc.example;
+package ai.yue.library.test.controller.doc.example;
 
 import javax.validation.Valid;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
-import ai.yue.library.template.simple.ipo.ValidationIPO;
+import ai.yue.library.test.ipo.ValidationIPO;
 
 /**
  * @author	ylyue

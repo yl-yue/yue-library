@@ -6,9 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import cn.hutool.core.date.DateUtil;
 
 /**
  * 时间工具类（JDK1.8）
@@ -16,7 +19,7 @@ import java.util.Locale;
  * @author	ylyue
  * @since	2017年10月25日（JDK1.8）
  */
-public final class DateUtils {
+public final class DateUtils extends DateUtil {
 	
 	/** 年-月-日T时:分:秒 */
 	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -205,6 +208,16 @@ public final class DateUtils {
 	}
 	
 	/**
+	 * 将日期转化为年-月-日
+	 * 
+	 * @param date 日期
+	 * @return 年-月-日
+	 */
+	public static String to_y_M_d(TemporalAccessor date) {
+		return y_M_d.format(date);
+	}
+	
+	/**
 	 * 将毫秒转化为年-月-日 时：分：秒
 	 * 
 	 * @param timestamp 毫秒
@@ -223,6 +236,16 @@ public final class DateUtils {
 	 */
 	public static String to_y_M_d_H_m_s(Date date) {
 		return y_M_d_H_m_s.format(toLocalDateTime(date));
+	}
+	
+	/**
+	 * 将日期转化为年-月-日 时：分：秒
+	 * 
+	 * @param date 日期
+	 * @return 年-月-日 时：分：秒
+	 */
+	public static String to_y_M_d_H_m_s(TemporalAccessor date) {
+		return y_M_d_H_m_s.format(date);
 	}
 	
 	/**

@@ -12,7 +12,7 @@ import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
 /**
- * DBDAO为 JSON 对象提供服务
+ * DBDAO 为 JSON 对象提供服务
  * 
  * @author	ylyue
  * @since	2019年4月30日
@@ -46,6 +46,16 @@ public abstract class DBDAO {
 	 */
 	public void delete(Long id) {
 		db.delete(tableName(), id);
+	}
+	
+	/**
+	 * 删除-安全的
+	 * <p>数据删除前会先进行条数确认
+	 * 
+	 * @param id 主键id
+	 */
+	public void deleteSafe(Long id) {
+		db.deleteSafe(tableName(), id);
 	}
 	
 	/**

@@ -5,12 +5,14 @@ import javax.validation.ConstraintValidatorContext;
 
 import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * @author	ylyue
  * @since	2019年5月8日
  */
-public class ChineseValidator implements ConstraintValidator<Chinese, String> {
+public class ChineseValidator implements ConstraintValidator<Chinese, Object> {
 
 	private boolean notNull;
 	
@@ -20,9 +22,15 @@ public class ChineseValidator implements ConstraintValidator<Chinese, String> {
 	}
 	
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (StringUtils.isNotBlank(value)) {
-			return Validator.isChinese(value);
+	public boolean isValid(Object value, ConstraintValidatorContext context) {
+		String validValue = null;
+		if ((CharUtil.isChar(value) && !CharUtil.isBlankChar((char) value))
+				|| (value instanceof String && StrUtil.isNotBlank((String) value))) {
+			validValue = StrUtil.toString(value);
+		}
+		
+		if (StringUtils.isNotBlank(validValue)) {
+			return Validator.isChinese(validValue);
 		}
 		
 		if (notNull) {

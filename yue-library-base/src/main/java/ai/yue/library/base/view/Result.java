@@ -110,17 +110,6 @@ public class Result<T> implements Serializable {
 		return ListUtils.toJsonList(dataToJSONArray());
 	}
 	
-	/**
-	 * 不建议使用
-	 * 
-	 * @deprecated 请使用 {@link #dataToJsonList()}
-	 * @return jsonList
-	 */
-	@Deprecated
-	public List<JSONObject> dataToJSONList() {
-		return dataToJsonList();
-	}
-	
 	public Boolean dataToBoolean() {
 		if (data == null) {
 			return null;

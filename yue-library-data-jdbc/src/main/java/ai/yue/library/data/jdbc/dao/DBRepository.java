@@ -13,15 +13,13 @@ import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
 
 /**
- * DBTDAO 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
+ * DBRepository 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
  * 
- * @deprecated 请使用 {@link DBRepository}
  * @author	ylyue
  * @since	2019年4月30日
  * @param <T> 映射类
  */
-@Deprecated
-public abstract class DBTDAO<T> {
+public abstract class DBRepository<T> {
 
 	@Autowired
 	protected DB db;

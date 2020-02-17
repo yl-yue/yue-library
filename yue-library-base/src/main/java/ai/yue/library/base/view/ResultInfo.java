@@ -164,7 +164,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数校验未通过，请参照API核对后重试-433
-	 * @param data 数据
+	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<String> param_check_not_pass(String data) {
@@ -179,7 +179,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数校验未通过，无效的value-434
-	 * @param data 数据
+	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<String> param_value_invalid(String data) {
@@ -254,6 +254,15 @@ public class ResultInfo {
 		return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg());
 	}
 	/**
+	 * 数据结构异常，请检查相应数据结构一致性-506
+	 * 
+	 * @param data {@link Result#setData(Object)} 提示信息
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<String> db_error(String data) {
+		return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg(), data);
+	}
+	/**
 	 * 哎哟喂！网络开小差了，请稍后重试...-507
 	 * @return HTTP请求，最外层响应对象
 	 */
@@ -270,10 +279,10 @@ public class ResultInfo {
 	/**
 	 * 类型转换错误-509
 	 * 
-	 * @param data	提示信息
+	 * @param data	{@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> type_convert_error(String data) {
+	public static Result<String> type_convert_error(String data) {
 		return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR.getMsg(), data);
 	}
 	

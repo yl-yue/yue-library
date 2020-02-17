@@ -371,24 +371,32 @@ pre code{
                         <span>yue-library-template-simple</span>
                         <ul class="nav list-group bs_list_group">
                             <li>
-                                <span class="category-lv2">login</span>
+                                <span class="category-lv2">用户</span>
                                     <ul class="nav list-group category-lv2">
                                         <li>
-                                                <a href="#70628d5c1df4485895163bfa62315278">登出</a>
+                                                <a href="#335ca012c15c910ec415f56a2dec2db5">单个</a>
                                             </li><li>
-                                                <a href="#8f275bfdd46742a68e6619d916cc3182">登录</a>
+                                                <a href="#70f756fd621c9096264bfaccd0aa5da9">分页</a>
                                             </li><li>
-                                                <a href="#0410fc80603d4f45b9284bc4dadba97d">注册</a>
-                                            </li>                                    </ul><span class="category-lv2">用户</span>
+                                                <a href="#80308a84002ad059ad0ab68d54f99e7b">列表-全部</a>
+                                            </li><li>
+                                                <a href="#20c0dd0a790d32faa85f72f2ba507ad6">删除</a>
+                                            </li><li>
+                                                <a href="#2f9ca265610e294972a60c0cfe1609dd">插入数据</a>
+                                            </li>                                    </ul><span class="category-lv2">用户-Json</span>
                                     <ul class="nav list-group category-lv2">
                                         <li>
-                                                <a href="#6b39c9ed4fe24892a2667dda522047fa">单个</a>
+                                                <a href="#afcfd6a2b0af2b9c78236120424825a7">分页</a>
                                             </li><li>
-                                                <a href="#3826f0c13c3246ab82240a24afbf2113">分页</a>
+                                                <a href="#c969d2ef7825ab0bce197aca40ad1f3e">插入数据</a>
+                                            </li>                                    </ul><span class="category-lv2">login</span>
+                                    <ul class="nav list-group category-lv2">
+                                        <li>
+                                                <a href="#df11c4ee8a2eadb79147d903210270cc">登出</a>
                                             </li><li>
-                                                <a href="#7df2a834a7014f3fa925d5759b38a3e6">列表-全部</a>
+                                                <a href="#95fe6876d77df79b95ff2b79ba82779a">登录</a>
                                             </li><li>
-                                                <a href="#0856f19964314adfb0c2f94b3b9fcc42">删除</a>
+                                                <a href="#fbf826609d27a823ec1fa268355746a3">注册</a>
                                             </li>                                    </ul>                            </li>
 
                             <ul class="nav list-group">
@@ -397,7 +405,13 @@ pre code{
                         </ul><span>yue-library-test</span>
                         <ul class="nav list-group bs_list_group">
                             <li>
-                                <span class="category-lv2">RequestParam</span>
+                                <span class="category-lv2">文档示例</span>
+                                    <ul class="nav list-group category-lv2">
+                                        <li>
+                                                <a href="#2ff433904f3c49c5bbca0eacc3ce4224">exception</a>
+                                            </li><li>
+                                                <a href="#88be1d0483be48f698bbe7632656d741">restful</a>
+                                            </li>                                    </ul><span class="category-lv2">RequestParam</span>
                                     <ul class="nav list-group category-lv2">
                                         <li>
                                                 <a href="#e35697920b1644e48ef929dc949343c7">requestParam</a>
@@ -428,6 +442,18 @@ pre code{
                                         <a href="#89ac8e3156d44098b04f8ade676f8669">重新部署</a>
                                     </li>                                   
                             </ul>
+                        </ul><span>SEO</span>
+                        <ul class="nav list-group bs_list_group">
+                            <li>
+                                                            </li>
+
+                            <ul class="nav list-group">
+                                <li>
+                                        <a href="#30de743f0cd44ee3801c7d039046de3b">更新数据</a>
+                                    </li><li>
+                                        <a href="#ad04116e34c74889a1ed940a92569c44">推送数据</a>
+                                    </li>                                   
+                            </ul>
                         </ul>
                         <ul class="nav list-group">
                             <span>附录</span>
@@ -446,18 +472,663 @@ pre code{
                 <h1>yue-library-template-simple</h1>
                     <h2>yue-library-template-simple</h2>
                         <div class="api-one">
-                                    <h3 id="70628d5c1df4485895163bfa62315278">登出</h3>
+                                    <h3 id="335ca012c15c910ec415f56a2dec2db5">单个</h3>
                                     <p>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=70628d5c1df4485895163bfa62315278"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=335ca012c15c910ec415f56a2dec2db5"
                                            class="label label-warning">在线测试</a>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=70628d5c1df4485895163bfa62315278"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=335ca012c15c910ec415f56a2dec2db5"
                                            class="label label-warning">在线浏览</a>
                                     </p>
                                     <p>请求方式：GET</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-simple}}/open/logout                                    </p>
+                                        请求地址：http://{{ssc-demo}}/user/get                                    </p>
+
+                                    
+                                    <table class="table table-hover">
+                                            <colgroup>
+                                                <col class="col-xs-2">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-7">
+                                                <col class="col-xs-2">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th><span class="label label-success">Query参数名</span></th>
+                                                <th>类型</th>
+                                                <th>必需</th>
+                                                <th>描述</th>
+                                                <th>示例 e.g.</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                    <td>id</td>
+                                                    <td>string</td>
+                                                    <td>
+                                                        是
+                                                                                                                </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>                                            </tbody>
+                                        </table>
+
+                                    
+                                    
+                                    <p>返回示例：</p>
+                                        <div class="highlight">
+                            <pre>
+                                <code class="json hljs">{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+    "data": {
+        "id": 25,
+        "create_time": "2018-07-31T08:22:32",
+        "update_time": "2019-10-12T22:46:51",
+        "user_id": null,
+        "role": "b2b_卖家",
+        "cellphone": "18523146316",
+        "password": "2eZzUNIsix73h9MmhbmVow==",
+        "nickname": "0123",
+        "email": null,
+        "head_img": null,
+        "sex": null,
+        "birthday": null,
+        "user_status": "正常"
+    }
+}</code>
+                            </pre>
+                                        </div>
+                                    
+                                </div><div class="api-one">
+                                    <h3 id="70f756fd621c9096264bfaccd0aa5da9">分页</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=70f756fd621c9096264bfaccd0aa5da9"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=70f756fd621c9096264bfaccd0aa5da9"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：GET</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/user/page                                    </p>
+
+                                    
+                                    <table class="table table-hover">
+                                            <colgroup>
+                                                <col class="col-xs-2">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-7">
+                                                <col class="col-xs-2">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th><span class="label label-success">Query参数名</span></th>
+                                                <th>类型</th>
+                                                <th>必需</th>
+                                                <th>描述</th>
+                                                <th>示例 e.g.</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                    <td>page</td>
+                                                    <td>string</td>
+                                                    <td>
+                                                        是
+                                                                                                                </td>
+                                                    <td></td>
+                                                    <td>1</td>
+                                                </tr><tr>
+                                                    <td>limit</td>
+                                                    <td>string</td>
+                                                    <td>
+                                                        是
+                                                                                                                </td>
+                                                    <td></td>
+                                                    <td>10</td>
+                                                </tr>                                            </tbody>
+                                        </table>
+
+                                    
+                                    
+                                    <p>返回示例：</p>
+                                        <div class="highlight">
+                            <pre>
+                                <code class="json hljs">{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+    "data": [
+        {
+            "id": 95,
+            "create_time": "2019-07-02T10:12:31",
+            "update_time": "2019-07-22T16:05:40",
+            "user_id": null,
+            "role": "b2c_买家",
+            "cellphone": "15123555303",
+            "password": null,
+            "nickname": "某某",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常"
+        }
+    ],
+    "count": 43
+}</code>
+                            </pre>
+                                        </div>
+                                    
+                                </div><div class="api-one">
+                                    <h3 id="80308a84002ad059ad0ab68d54f99e7b">列表-全部</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=80308a84002ad059ad0ab68d54f99e7b"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=80308a84002ad059ad0ab68d54f99e7b"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：GET</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/user/listAll                                    </p>
+
+                                    
+                                    
+
+                                    
+                                    
+                                    <p>返回示例：</p>
+                                        <div class="highlight">
+                            <pre>
+                                <code class="json hljs">{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+    "data": [
+        {
+            "id": 10,
+            "create_time": "2018-08-07T02:30:48",
+            "update_time": "2019-07-16T16:50:22",
+            "user_id": null,
+            "role": "b2b_买家",
+            "cellphone": "18523146310",
+            "wx_unionid": null,
+            "qq_openid": null,
+            "email": null,
+            "nickname": "张三丰",
+            "head_img": "ss.png",
+            "sex": "男",
+            "birthday": null,
+            "age": null,
+            "user_status": "正常",
+            "register_source": null
+        }
+    ]
+}</code>
+                            </pre>
+                                        </div>
+                                    
+                                </div><div class="api-one">
+                                    <h3 id="20c0dd0a790d32faa85f72f2ba507ad6">删除</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=20c0dd0a790d32faa85f72f2ba507ad6"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=20c0dd0a790d32faa85f72f2ba507ad6"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：DELETE</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/user/delete                                    </p>
+
+                                    
+                                    
+
+                                                                                <table class="table table-hover">
+                                                    <colgroup>
+                                                        <col class="col-xs-2">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-7">
+                                                        <col class="col-xs-2">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><span class="label label-success">Body参数名</span></th>
+                                                        <th>类型</th>
+                                                        <th>必需</th>
+                                                        <th>描述</th>
+                                                        <th>示例 e.g.</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                            <td>id</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>                                                    </tbody>
+                                                </table>
+                                    
+                                    
+                                    
+                                </div><div class="api-one">
+                                    <h3 id="2f9ca265610e294972a60c0cfe1609dd">插入数据</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=2f9ca265610e294972a60c0cfe1609dd"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=2f9ca265610e294972a60c0cfe1609dd"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：POST</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/user/insert                                    </p>
+
+                                    
+                                    
+
+                                                                                <table class="table table-hover">
+                                                    <colgroup>
+                                                        <col class="col-xs-2">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-7">
+                                                        <col class="col-xs-2">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><span class="label label-success">Body参数名</span></th>
+                                                        <th>类型</th>
+                                                        <th>必需</th>
+                                                        <th>描述</th>
+                                                        <th>示例 e.g.</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                            <td>cellphone</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td>18523146311</td>
+                                                        </tr><tr>
+                                                            <td>password</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td>123456</td>
+                                                        </tr><tr>
+                                                            <td>nickname</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>ylyue</td>
+                                                        </tr><tr>
+                                                            <td>email</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>yl-yue@qq.com</td>
+                                                        </tr><tr>
+                                                            <td>head_img</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png</td>
+                                                        </tr><tr>
+                                                            <td>sex</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>男</td>
+                                                        </tr><tr>
+                                                            <td>birthday</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>1996-05-15</td>
+                                                        </tr>                                                    </tbody>
+                                                </table>
+                                    
+                                    
+                                    
+                                </div><h2>yue-library-template-simple</h2>
+                        <div class="api-one">
+                                    <h3 id="afcfd6a2b0af2b9c78236120424825a7">分页</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=afcfd6a2b0af2b9c78236120424825a7"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=afcfd6a2b0af2b9c78236120424825a7"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：GET</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/userJson/page                                    </p>
+
+                                    
+                                    <table class="table table-hover">
+                                            <colgroup>
+                                                <col class="col-xs-2">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-1">
+                                                <col class="col-xs-7">
+                                                <col class="col-xs-2">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th><span class="label label-success">Query参数名</span></th>
+                                                <th>类型</th>
+                                                <th>必需</th>
+                                                <th>描述</th>
+                                                <th>示例 e.g.</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                    <td>page</td>
+                                                    <td>string</td>
+                                                    <td>
+                                                        是
+                                                                                                                </td>
+                                                    <td></td>
+                                                    <td>1</td>
+                                                </tr><tr>
+                                                    <td>limit</td>
+                                                    <td>string</td>
+                                                    <td>
+                                                        是
+                                                                                                                </td>
+                                                    <td></td>
+                                                    <td>10</td>
+                                                </tr>                                            </tbody>
+                                        </table>
+
+                                    
+                                    
+                                    <p>返回示例：</p>
+                                        <div class="highlight">
+                            <pre>
+                                <code class="json hljs">{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+    "data": [
+        {
+            "id": 95,
+            "role": "b2c_买家",
+            "cellphone": "15123555303",
+            "password": null,
+            "nickname": "某某",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2019-07-02T18:12:31.000 0800",
+            "update_time": "2019-07-23T00:05:40.000 0800"
+        },
+        {
+            "id": 134,
+            "role": "b2b_买家",
+            "cellphone": "15723156255",
+            "password": "v0/S0Hi4OZFgycPaQ0JFPg==",
+            "nickname": "abcd",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2019-07-04T18:06:46.000 0800",
+            "update_time": "2019-07-05T22:27:00.000 0800"
+        },
+        {
+            "id": 181,
+            "role": "b2b_买家",
+            "cellphone": "18024649918",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": null,
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2019-07-27T01:05:00.000 0800",
+            "update_time": "2019-07-27T01:05:00.000 0800"
+        },
+        {
+            "id": 10,
+            "role": "b2b_买家",
+            "cellphone": "18523146310",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "张三丰",
+            "email": null,
+            "head_img": "ss.png",
+            "sex": "男",
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2018-08-07T10:30:48.000 0800",
+            "update_time": "2019-07-17T00:50:22.000 0800"
+        },
+        {
+            "id": 18,
+            "role": "b2b_卖家",
+            "cellphone": "18523146311",
+            "password": "8uXhwp4c3mYwizx/FKfY6wQRltvBd6Oc0qZvYZa nfQ=",
+            "nickname": "测试",
+            "email": null,
+            "head_img": "http://www.baidu.com",
+            "sex": "男",
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2018-07-18T17:10:46.000 0800",
+            "update_time": "2019-07-01T18:11:25.000 0800"
+        },
+        {
+            "id": 182,
+            "role": "b2c_买家",
+            "cellphone": "18523146311",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": null,
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2019-10-13T07:45:31.000 0800",
+            "update_time": "2019-10-13T07:45:31.000 0800"
+        },
+        {
+            "id": 20,
+            "role": "b2b_买家",
+            "cellphone": "18523146312",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "宋丹丹",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2018-07-24T11:48:50.000 0800",
+            "update_time": "2019-10-13T06:46:51.000 0800"
+        },
+        {
+            "id": 184,
+            "role": "b2c_买家",
+            "cellphone": "18523146312",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "ylyue",
+            "email": "yl-yue@qq.com",
+            "head_img": "https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png",
+            "sex": "男",
+            "birthday": "1996-05-15",
+            "user_status": "正常",
+            "create_time": "2019-10-13T07:49:02.000 0800",
+            "update_time": "2019-10-13T07:49:02.000 0800"
+        },
+        {
+            "id": 21,
+            "role": "b2b_买家",
+            "cellphone": "18523146313",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "张双双",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2018-07-26T15:25:56.000 0800",
+            "update_time": "2019-10-13T06:46:51.000 0800"
+        },
+        {
+            "id": 23,
+            "role": "b2c_买家",
+            "cellphone": "18523146314",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "白俊毅",
+            "email": null,
+            "head_img": null,
+            "sex": null,
+            "birthday": null,
+            "user_status": "正常",
+            "create_time": "2018-07-31T00:17:45.000 0800",
+            "update_time": "2019-10-13T06:46:51.000 0800"
+        }
+    ],
+    "count": 42
+}</code>
+                            </pre>
+                                        </div>
+                                    
+                                </div><div class="api-one">
+                                    <h3 id="c969d2ef7825ab0bce197aca40ad1f3e">插入数据</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=c969d2ef7825ab0bce197aca40ad1f3e"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=c969d2ef7825ab0bce197aca40ad1f3e"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：POST</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/userJson/insert                                    </p>
+
+                                    
+                                    
+
+                                                                                <table class="table table-hover">
+                                                    <colgroup>
+                                                        <col class="col-xs-2">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-7">
+                                                        <col class="col-xs-2">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><span class="label label-success">Body参数名</span></th>
+                                                        <th>类型</th>
+                                                        <th>必需</th>
+                                                        <th>描述</th>
+                                                        <th>示例 e.g.</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                            <td>cellphone</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td>18523146311</td>
+                                                        </tr><tr>
+                                                            <td>password</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td>123456</td>
+                                                        </tr><tr>
+                                                            <td>nickname</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>ylyue</td>
+                                                        </tr><tr>
+                                                            <td>email</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>yl-yue@qq.com</td>
+                                                        </tr><tr>
+                                                            <td>head_img</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png</td>
+                                                        </tr><tr>
+                                                            <td>sex</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>男</td>
+                                                        </tr><tr>
+                                                            <td>birthday</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                                                                                    否                                                            </td>
+                                                            <td></td>
+                                                            <td>1996-05-15</td>
+                                                        </tr>                                                    </tbody>
+                                                </table>
+                                    
+                                    
+                                    
+                                </div><h2>yue-library-template-simple</h2>
+                        <div class="api-one">
+                                    <h3 id="df11c4ee8a2eadb79147d903210270cc">登出</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=df11c4ee8a2eadb79147d903210270cc"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=df11c4ee8a2eadb79147d903210270cc"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：GET</p>
+                                    <p>
+                                        请求地址：http://{{ssc-demo}}/logout                                    </p>
 
                                     
                                     
@@ -467,18 +1138,18 @@ pre code{
                                     
                                     
                                 </div><div class="api-one">
-                                    <h3 id="8f275bfdd46742a68e6619d916cc3182">登录</h3>
+                                    <h3 id="95fe6876d77df79b95ff2b79ba82779a">登录</h3>
                                     <p>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=8f275bfdd46742a68e6619d916cc3182"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=95fe6876d77df79b95ff2b79ba82779a"
                                            class="label label-warning">在线测试</a>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=8f275bfdd46742a68e6619d916cc3182"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=95fe6876d77df79b95ff2b79ba82779a"
                                            class="label label-warning">在线浏览</a>
                                     </p>
                                     <p>请求方式：POST</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-simple}}/open/login                                    </p>
+                                        请求地址：http://{{ssc-demo}}/open/login                                    </p>
 
                                     
                                     
@@ -550,18 +1221,18 @@ pre code{
                                         </div>
                                     
                                 </div><div class="api-one">
-                                    <h3 id="0410fc80603d4f45b9284bc4dadba97d">注册</h3>
+                                    <h3 id="fbf826609d27a823ec1fa268355746a3">注册</h3>
                                     <p>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=0410fc80603d4f45b9284bc4dadba97d"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=fbf826609d27a823ec1fa268355746a3"
                                            class="label label-warning">在线测试</a>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=0410fc80603d4f45b9284bc4dadba97d"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=fbf826609d27a823ec1fa268355746a3"
                                            class="label label-warning">在线浏览</a>
                                     </p>
                                     <p>请求方式：POST</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-simple}}/open/register                                    </p>
+                                        请求地址：http://{{ssc-demo}}/open/register                                    </p>
 
                                     
                                     
@@ -650,225 +1321,22 @@ pre code{
                             </pre>
                                         </div>
                                     
-                                </div><h2>yue-library-template-simple</h2>
+                                </div>
+                    <h1>yue-library-test</h1>
+                    <h2>yue-library-test</h2>
                         <div class="api-one">
-                                    <h3 id="6b39c9ed4fe24892a2667dda522047fa">单个</h3>
+                                    <h3 id="2ff433904f3c49c5bbca0eacc3ce4224">exception</h3>
                                     <p>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=6b39c9ed4fe24892a2667dda522047fa"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=2ff433904f3c49c5bbca0eacc3ce4224"
                                            class="label label-warning">在线测试</a>
                                         <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=6b39c9ed4fe24892a2667dda522047fa"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=2ff433904f3c49c5bbca0eacc3ce4224"
                                            class="label label-warning">在线浏览</a>
                                     </p>
-                                    <p>请求方式：GET</p>
+                                    <p>请求方式：POST</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-simple}}/user/get                                    </p>
-
-                                    
-                                    <table class="table table-hover">
-                                            <colgroup>
-                                                <col class="col-xs-2">
-                                                <col class="col-xs-1">
-                                                <col class="col-xs-1">
-                                                <col class="col-xs-7">
-                                                <col class="col-xs-2">
-                                            </colgroup>
-                                            <thead>
-                                            <tr>
-                                                <th><span class="label label-success">Query参数名</span></th>
-                                                <th>类型</th>
-                                                <th>必需</th>
-                                                <th>描述</th>
-                                                <th>示例 e.g.</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                    <td>id</td>
-                                                    <td>string</td>
-                                                    <td>
-                                                        是
-                                                                                                                </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>                                            </tbody>
-                                        </table>
-
-                                    
-                                    
-                                    <p>返回示例：</p>
-                                        <div class="highlight">
-                            <pre>
-                                <code class="json hljs">{
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-    "data": {
-        "id": 25,
-        "create_time": "2018-07-31T08:22:32",
-        "update_time": "2019-10-12T22:46:51",
-        "user_id": null,
-        "role": "b2b_卖家",
-        "cellphone": "18523146316",
-        "password": "2eZzUNIsix73h9MmhbmVow==",
-        "nickname": "0123",
-        "email": null,
-        "head_img": null,
-        "sex": null,
-        "birthday": null,
-        "user_status": "正常"
-    }
-}</code>
-                            </pre>
-                                        </div>
-                                    
-                                </div><div class="api-one">
-                                    <h3 id="3826f0c13c3246ab82240a24afbf2113">分页</h3>
-                                    <p>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=3826f0c13c3246ab82240a24afbf2113"
-                                           class="label label-warning">在线测试</a>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=3826f0c13c3246ab82240a24afbf2113"
-                                           class="label label-warning">在线浏览</a>
-                                    </p>
-                                    <p>请求方式：GET</p>
-                                    <p>
-                                        请求地址：http://{{yue-library-template-simple}}/user/page                                    </p>
-
-                                    
-                                    <table class="table table-hover">
-                                            <colgroup>
-                                                <col class="col-xs-2">
-                                                <col class="col-xs-1">
-                                                <col class="col-xs-1">
-                                                <col class="col-xs-7">
-                                                <col class="col-xs-2">
-                                            </colgroup>
-                                            <thead>
-                                            <tr>
-                                                <th><span class="label label-success">Query参数名</span></th>
-                                                <th>类型</th>
-                                                <th>必需</th>
-                                                <th>描述</th>
-                                                <th>示例 e.g.</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                    <td>page</td>
-                                                    <td>string</td>
-                                                    <td>
-                                                        是
-                                                                                                                </td>
-                                                    <td></td>
-                                                    <td>1</td>
-                                                </tr><tr>
-                                                    <td>limit</td>
-                                                    <td>string</td>
-                                                    <td>
-                                                        是
-                                                                                                                </td>
-                                                    <td></td>
-                                                    <td>10</td>
-                                                </tr>                                            </tbody>
-                                        </table>
-
-                                    
-                                    
-                                    <p>返回示例：</p>
-                                        <div class="highlight">
-                            <pre>
-                                <code class="json hljs">{
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-    "data": [
-        {
-            "id": 95,
-            "create_time": "2019-07-02T10:12:31",
-            "update_time": "2019-07-22T16:05:40",
-            "user_id": null,
-            "role": "b2c_买家",
-            "cellphone": "15123555303",
-            "password": null,
-            "nickname": "某某",
-            "email": null,
-            "head_img": null,
-            "sex": null,
-            "birthday": null,
-            "user_status": "正常"
-        }
-    ],
-    "count": 43
-}</code>
-                            </pre>
-                                        </div>
-                                    
-                                </div><div class="api-one">
-                                    <h3 id="7df2a834a7014f3fa925d5759b38a3e6">列表-全部</h3>
-                                    <p>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=7df2a834a7014f3fa925d5759b38a3e6"
-                                           class="label label-warning">在线测试</a>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=7df2a834a7014f3fa925d5759b38a3e6"
-                                           class="label label-warning">在线浏览</a>
-                                    </p>
-                                    <p>请求方式：GET</p>
-                                    <p>
-                                        请求地址：http://{{yue-library-template-simple}}/open/user/listAll                                    </p>
-
-                                    
-                                    
-
-                                    
-                                    
-                                    <p>返回示例：</p>
-                                        <div class="highlight">
-                            <pre>
-                                <code class="json hljs">{
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-    "data": [
-        {
-            "id": 10,
-            "create_time": "2018-08-07T02:30:48",
-            "update_time": "2019-07-16T16:50:22",
-            "user_id": null,
-            "role": "b2b_买家",
-            "cellphone": "18523146310",
-            "wx_unionid": null,
-            "qq_openid": null,
-            "email": null,
-            "nickname": "张三丰",
-            "head_img": "ss.png",
-            "sex": "男",
-            "birthday": null,
-            "age": null,
-            "user_status": "正常",
-            "register_source": null
-        }
-    ]
-}</code>
-                            </pre>
-                                        </div>
-                                    
-                                </div><div class="api-one">
-                                    <h3 id="0856f19964314adfb0c2f94b3b9fcc42">删除</h3>
-                                    <p>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=0856f19964314adfb0c2f94b3b9fcc42"
-                                           class="label label-warning">在线测试</a>
-                                        <a target="_blank"
-                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=0856f19964314adfb0c2f94b3b9fcc42"
-                                           class="label label-warning">在线浏览</a>
-                                    </p>
-                                    <p>请求方式：DELETE</p>
-                                    <p>
-                                        请求地址：http://{{yue-library-template-simple}}/user/delete                                    </p>
+                                        请求地址：http://{{yue-library-template}}/exception/exception                                    </p>
 
                                     
                                     
@@ -892,7 +1360,55 @@ pre code{
                                                     </thead>
                                                     <tbody>
                                                     <tr>
-                                                            <td>id</td>
+                                                            <td>name</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>birthday</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>idcard</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>age</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>email</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>phone</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>qq</td>
                                                             <td>string</td>
                                                             <td>
                                                                 是
@@ -904,9 +1420,103 @@ pre code{
                                     
                                     
                                     
-                                </div>
-                    <h1>yue-library-test</h1>
-                    <h2>yue-library-test</h2>
+                                </div><div class="api-one">
+                                    <h3 id="88be1d0483be48f698bbe7632656d741">restful</h3>
+                                    <p>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=88be1d0483be48f698bbe7632656d741"
+                                           class="label label-warning">在线测试</a>
+                                        <a target="_blank"
+                                           href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=88be1d0483be48f698bbe7632656d741"
+                                           class="label label-warning">在线浏览</a>
+                                    </p>
+                                    <p>请求方式：POST</p>
+                                    <p>
+                                        请求地址：http://{{yue-library-template}}/restful/valid                                    </p>
+
+                                    
+                                    
+
+                                                                                <table class="table table-hover">
+                                                    <colgroup>
+                                                        <col class="col-xs-2">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-1">
+                                                        <col class="col-xs-7">
+                                                        <col class="col-xs-2">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><span class="label label-success">Body参数名</span></th>
+                                                        <th>类型</th>
+                                                        <th>必需</th>
+                                                        <th>描述</th>
+                                                        <th>示例 e.g.</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                            <td>name</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>birthday</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>idcard</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>age</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>email</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>cellphone</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr><tr>
+                                                            <td>qq</td>
+                                                            <td>string</td>
+                                                            <td>
+                                                                是
+                                                                                                                                </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>                                                    </tbody>
+                                                </table>
+                                    
+                                    
+                                    
+                                </div><h2>yue-library-test</h2>
                         <div class="api-one">
                                     <h3 id="e35697920b1644e48ef929dc949343c7">requestParam</h3>
                                     <p>
@@ -1355,6 +1965,85 @@ pre code{
 }</code>
                             </pre>
                                 </div>
+                            
+                        </div><h1>SEO</h1>
+                    
+                    <div class="api-one">
+                            <h3 id="30de743f0cd44ee3801c7d039046de3b">更新数据</h3>
+                            <p>
+                                <a target="_blank"
+                                   href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=30de743f0cd44ee3801c7d039046de3b"
+                                   class="label label-warning">在线测试</a>
+                                <a target="_blank"
+                                   href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=30de743f0cd44ee3801c7d039046de3b"
+                                   class="label label-warning">在线浏览</a>
+                            </p>
+                            <p>请求方式：POST</p>
+                            <p>
+                                请求地址：http://data.zz.baidu.com/update?site=ylyue.cn&amp;token=2YMkzDG7Si4UzDeE                            </p>
+
+                            
+                            
+
+                                                                                                    
+                            
+                            
+                            
+                        </div><div class="api-one">
+                            <h3 id="ad04116e34c74889a1ed940a92569c44">推送数据</h3>
+                            <p>
+                                <a target="_blank"
+                                   href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=ad04116e34c74889a1ed940a92569c44"
+                                   class="label label-warning">在线测试</a>
+                                <a target="_blank"
+                                   href="https://apizza.net/pro/#/project/3432db31feb51dab5ba679e8fb81c145/browse?api=ad04116e34c74889a1ed940a92569c44"
+                                   class="label label-warning">在线浏览</a>
+                            </p>
+                            <p>请求方式：POST</p>
+                            <p>
+                                请求地址：http://data.zz.baidu.com/urls                            </p>
+
+                            
+                            <table class="table table-hover">
+                                    <colgroup>
+                                        <col class="col-xs-2">
+                                        <col class="col-xs-1">
+                                        <col class="col-xs-1">
+                                        <col class="col-xs-7">
+                                        <col class="col-xs-2">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th><span class="label label-success">Query参数名</span></th>
+                                        <th>类型</th>
+                                        <th>必需</th>
+                                        <th>描述</th>
+                                        <th>示例 e.g.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                            <td>site</td>
+                                            <td>string</td>
+                                            <td>
+                                                是
+                                                                                                </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr><tr>
+                                            <td>token</td>
+                                            <td>string</td>
+                                            <td>
+                                                是
+                                                                                                </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>                                    </tbody>
+                                </table>
+
+                                                                                                    
+                            
+                            
                             
                         </div>                
                 <h1 id="t_api_doc">附录</h1>

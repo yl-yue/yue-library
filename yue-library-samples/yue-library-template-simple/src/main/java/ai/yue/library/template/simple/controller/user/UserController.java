@@ -1,8 +1,11 @@
 package ai.yue.library.template.simple.controller.user;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
+import ai.yue.library.template.simple.ipo.user.UserIPO;
 import ai.yue.library.template.simple.service.user.UserService;
 
 /**
@@ -22,6 +26,29 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	/**
+	 * 插入数据
+	 * 
+	 * @param userIPO
+	 * @return
+	 */
+	@PostMapping("/insert")
+	public Result<?> insert(@Valid UserIPO userIPO) {
+		System.out.println(JSONObject.toJSONString(userIPO));
+		return userService.insert(userIPO);
+	}
+	
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DeleteMapping("/delete")
+	public Result<?> delete(@RequestParam("id") Long id) {
+		return userService.delete(id);
+	}
 	
 	/**
 	 * 单个
@@ -46,14 +73,13 @@ public class UserController {
 	}
 	
 	/**
-	 * 删除
+	 * 列表-全部
 	 * 
-	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/delete")
-	public Result<?> delete(@RequestParam("id") Long id) {
-		return userService.delete(id);
+	@GetMapping("/listAll")
+	public Result<?> listAll() {
+		return userService.listAll();
 	}
 	
 }

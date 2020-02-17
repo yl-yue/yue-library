@@ -5,15 +5,18 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.util.ParamUtils;
+import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.template.simple.constant.RoleEnum;
+import ai.yue.library.template.simple.constant.user.RoleEnum;
 import ai.yue.library.template.simple.dao.user.UserDAO;
-import ai.yue.library.template.simple.dataobject.UserDO;
+import ai.yue.library.template.simple.dataobject.user.UserDO;
+import ai.yue.library.template.simple.ipo.user.UserIPO;
 
 /**
  * @author	ylyue
@@ -22,6 +25,8 @@ import ai.yue.library.template.simple.dataobject.UserDO;
 @Service
 public class UserService {
 
+	@Autowired
+	Validator validator;
 	@Autowired
 	UserDAO userDAO;
 	
@@ -39,10 +44,11 @@ public class UserService {
 
 		// 2. 确认用户是否存在
 		String cellphone = paramJson.getString("cellphone");
+		validator.param(cellphone).cellphone("cellphone");
 		if (userDAO.isUser(cellphone)) {
 			return ResultInfo.dev_defined(ResultPrompt.USER_EXIST);
 		}
-
+		
 		// 3. 加密密码
 		String password = paramJson.getString("password");
 		password = SecureSingleton.getAES().encryptBase64(password);
@@ -51,6 +57,33 @@ public class UserService {
 		// 4. 插入数据
 		paramJson.put("role", RoleEnum.b2c_买家.name());
 		return ResultInfo.success(userDAO.insert(paramJson));
+	}
+	
+	/**
+	 * 插入数据
+	 * 
+	 * @param userIPO
+	 * @return
+	 */
+	public Result<?> insert(UserIPO userIPO) {
+		// 1. 确认用户是否存在
+		if (userDAO.isUser(userIPO.getCellphone())) {
+			return ResultInfo.dev_defined(ResultPrompt.USER_EXIST);
+		}
+		
+		// 2. 插入数据并返回结果
+		return ResultInfo.success(userDAO.insert(Convert.toJSONObject(userIPO)));
+	}
+	
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Result<?> delete(Long id) {
+		userDAO.deleteSafe(id);
+		return ResultInfo.success();
 	}
 	
 	/**
@@ -89,6 +122,9 @@ public class UserService {
 	 * @return
 	 */
 	public Result<?> page(JSONObject paramJson) {
+		String[] mustContainKeys = {"page", "limit"};
+		String[] canContainKeys = {"user_status"};
+		ParamUtils.paramValidate(paramJson, mustContainKeys, canContainKeys);
 		return userDAO.page(PageIPO.parsePageIPO(paramJson)).toResult();
 	}
 	
@@ -100,16 +136,5 @@ public class UserService {
 	public Result<?> listAll() {
 		return ResultInfo.success(userDAO.listAll());
 	}
-	
-	/**
-	 * 删除
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Result<?> delete(Long id) {
-		userDAO.delete(id);
-		return ResultInfo.success();
-	}
-	
+
 }

@@ -173,7 +173,7 @@ public class ExceptionHandlerConfig {
 	}
     
     /**
-	 * 解密异常统一处理-409
+	 * 解密异常统一处理-435
 	 * @param e 解密异常
 	 * @return 结果
 	 */
@@ -208,8 +208,12 @@ public class ExceptionHandlerConfig {
     @ResponseStatus(code = HttpStatus.VARIANT_ALSO_NEGOTIATES)
     @ExceptionHandler(DBException.class)
 	public Result<?> dbExceptionHandler(DBException e) {
-    	e.printStackTrace();
-    	return ResultInfo.db_error();
+		e.printStackTrace();
+		if (e.isShowMsg()) {
+			return ResultInfo.db_error(e.getMessage());
+		}
+		
+		return ResultInfo.db_error();
 	}
     
 	/**

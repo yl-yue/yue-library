@@ -4,19 +4,21 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.dao.DBTDAO;
-import ai.yue.library.template.simple.dataobject.UserDO;
+import ai.yue.library.data.jdbc.dao.DBRepository;
+import ai.yue.library.template.simple.dataobject.user.UserDO;
 
 /**
+ * UserDAO基于DO操作示例
+ * 
  * @author	ylyue
  * @since	2019年9月25日
  */
 @Repository
-public class UserDAO extends DBTDAO<UserDO> {
+public class UserDAO extends DBRepository<UserDO> {
 
 	@Override
 	protected String tableName() {
-		return "user_base_info";
+		return "user";
 	}
 	
 	/**

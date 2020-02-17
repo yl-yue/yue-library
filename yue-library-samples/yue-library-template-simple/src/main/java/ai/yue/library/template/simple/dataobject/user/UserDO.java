@@ -1,10 +1,10 @@
-package ai.yue.library.template.simple.dataobject;
+package ai.yue.library.template.simple.dataobject.user;
 
 import java.time.LocalDate;
 
 import ai.yue.library.data.jdbc.dataobject.DBDO;
-import ai.yue.library.template.simple.constant.RoleEnum;
-import ai.yue.library.template.simple.constant.UserStatusEnum;
+import ai.yue.library.template.simple.constant.user.RoleEnum;
+import ai.yue.library.template.simple.constant.user.UserStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

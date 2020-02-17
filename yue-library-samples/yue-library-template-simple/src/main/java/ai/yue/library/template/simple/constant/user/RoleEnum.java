@@ -1,4 +1,4 @@
-package ai.yue.library.template.simple.constant;
+package ai.yue.library.template.simple.constant.user;
 
 /**
  * 角色类型
