@@ -19,6 +19,8 @@
 
   * [介绍](data/jdbc/介绍.md)
   * [增删改查](data/jdbc/增删改查.md)
+  * [DBDAO](data/jdbc/DBDAO.md)
+  * [DBRepository](data/jdbc/DBRepository.md)
 
 * yue-library-data-redis
 
