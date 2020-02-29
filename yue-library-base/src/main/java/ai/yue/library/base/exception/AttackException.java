@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @since	2018年2月3日
  */
 @NoArgsConstructor
-public class AttackException extends RuntimeException{
+public class AttackException extends RuntimeException {
 	
 	private static final long serialVersionUID = 8503754532487989211L;
 	

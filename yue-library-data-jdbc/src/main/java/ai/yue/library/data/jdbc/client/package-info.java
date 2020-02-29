@@ -1,5 +1,5 @@
 /**
- * JDBC客户端DB
+ * JDBC客户端Db
  * 
  * @author	ylyue
  * @since	2019年10月14日

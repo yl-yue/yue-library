@@ -17,16 +17,16 @@ public class CryptoProperties {
 	/**
 	 * AES密钥
 	 */
-	private String aes_keyt;
+	private String aesKeyt;
 	
 	/**
 	 * RSA公钥
 	 */
-	private String rsa_public_keyt;
+	private String rsaPublicKeyt;
 	
 	/**
 	 * RSA私钥
 	 */
-	private String rsa_private_keyt;
+	private String rsaPrivateKeyt;
 
 }

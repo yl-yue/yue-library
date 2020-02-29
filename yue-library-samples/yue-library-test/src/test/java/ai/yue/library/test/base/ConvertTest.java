@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.convert.Convert;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.example.data.jdbc.UserDO;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Console;
 

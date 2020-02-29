@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.exception.ApiVersionDeprecatedException;
 import ai.yue.library.base.exception.AttackException;
 import ai.yue.library.base.exception.AuthorizeException;
 import ai.yue.library.base.exception.ClientFallbackException;
@@ -71,7 +72,7 @@ public class ExceptionHandlerConfig {
     	ExceptionUtils.printException(e);
     	return result;
 	}
-    
+	
     /**
 	 * 拦截登录异常（User）-401
 	 * @param e 登录异常
@@ -112,6 +113,20 @@ public class ExceptionHandlerConfig {
 	}
     
     /**
+	 * 拦截API接口版本弃用异常-410
+	 * 
+	 * @param e API接口版本弃用异常
+     * @return 结果
+	 */
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.GONE)
+    @ExceptionHandler(ApiVersionDeprecatedException.class)
+	public Result<?> apiVersionDeprecatedExceptionHandler(ApiVersionDeprecatedException e) {
+    	ExceptionUtils.printException(e);
+    	return ResultInfo.gone();
+	}
+    
+    /**
 	 * 参数效验为空统一处理-432
 	 * @return 结果
 	 */
@@ -119,7 +134,7 @@ public class ExceptionHandlerConfig {
 	@ExceptionHandler(ParamVoidException.class)
 	public Result<?> paramVoidExceptionHandler() {
 		ServletUtils.getResponse().setStatus(432);
-		return ResultInfo.param_void();
+		return ResultInfo.paramVoid();
 	}
     
     /**
@@ -132,7 +147,7 @@ public class ExceptionHandlerConfig {
 	public Result<?> paramExceptionHandler(ParamException e) {
     	ServletUtils.getResponse().setStatus(433);
     	ExceptionUtils.printException(e);
-		return ResultInfo.param_check_not_pass(e.getMessage());
+		return ResultInfo.paramCheckNotPass(e.getMessage());
 	}
     
     /**
@@ -156,7 +171,7 @@ public class ExceptionHandlerConfig {
 			Console.error(key + " " + msg);
 		});
 		
-		return ResultInfo.param_check_not_pass(paramHint.toString());
+		return ResultInfo.paramCheckNotPass(paramHint.toString());
 	}
     
     /**
@@ -169,7 +184,7 @@ public class ExceptionHandlerConfig {
 	public Result<?> validateExceptionHandler(ValidateException e) {
     	ServletUtils.getResponse().setStatus(433);
     	ExceptionUtils.printException(e);
-		return ResultInfo.param_check_not_pass(e.getMessage());
+		return ResultInfo.paramCheckNotPass(e.getMessage());
 	}
     
     /**
@@ -183,7 +198,7 @@ public class ExceptionHandlerConfig {
 	public Result<?> paramDecryptExceptionHandler(ParamDecryptException e) {
     	log.error("【解密错误】错误信息如下：{}", e.getMessage());
     	ExceptionUtils.printException(e);
-		return ResultInfo.param_decrypt_error();
+		return ResultInfo.paramDecryptError();
 	}
     
 	/**
@@ -196,7 +211,7 @@ public class ExceptionHandlerConfig {
 	@ExceptionHandler(Exception.class)
 	public Result<?> exceptionHandler(Exception e) {
     	e.printStackTrace();
-    	return ResultInfo.internal_server_error(e.toString());
+    	return ResultInfo.internalServerError(e.toString());
 	}
     
     /**
@@ -210,10 +225,10 @@ public class ExceptionHandlerConfig {
 	public Result<?> dbExceptionHandler(DBException e) {
 		e.printStackTrace();
 		if (e.isShowMsg()) {
-			return ResultInfo.db_error(e.getMessage());
+			return ResultInfo.dbError(e.getMessage());
 		}
 		
-		return ResultInfo.db_error();
+		return ResultInfo.dbError();
 	}
     
 	/**
@@ -226,7 +241,7 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(ClientFallbackException.class)
 	public Result<?> clientFallbackExceptionHandler(ClientFallbackException e) {
 		ExceptionUtils.printException(e);
-		return ResultInfo.client_fallback();
+		return ResultInfo.clientFallback();
 	}
 	
     /**
@@ -241,7 +256,7 @@ public class ExceptionHandlerConfig {
 	public Result<?> convertExceptionHandler(ConvertException e) {
     	log.error("【类型转换异常】转换类型失败，错误信息如下：{}", e.getMessage());
     	ExceptionUtils.printException(e);
-    	return ResultInfo.type_convert_error(e.getMessage());
+    	return ResultInfo.typeConvertError(e.getMessage());
 	}
     
     // WEB 异常拦截

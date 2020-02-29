@@ -1,13 +1,10 @@
 server:
   port: 8080
-  tomcat:
-    port-header: GET, POST, PUT, DELETE
 spring:
   application:
-    name: yue-library-template
+    name: yue-library-test
   profiles:
+    include:    - yue-library-web
+    - yue-library-data-jdbc
     active:
     - dev
-logging:
-  level:
-    druid.sql.Statement: DEBUG

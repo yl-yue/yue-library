@@ -32,7 +32,7 @@ public class BirthdayValidator implements ConstraintValidator<Birthday, Object> 
 		} else if (value instanceof Date) {
 			validValue = DateUtil.formatDate((Date) value);
 		} else if (value instanceof TemporalAccessor) {
-			validValue = DateUtils.to_y_M_d((TemporalAccessor) value);
+			validValue = DateUtils.toDateFormatter((TemporalAccessor) value);
 		}
 		
 		if (StringUtils.isNotBlank(validValue)) {

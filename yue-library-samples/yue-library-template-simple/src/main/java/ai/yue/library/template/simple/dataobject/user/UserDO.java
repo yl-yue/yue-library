@@ -2,7 +2,7 @@ package ai.yue.library.template.simple.dataobject.user;
 
 import java.time.LocalDate;
 
-import ai.yue.library.data.jdbc.dataobject.DBDO;
+import ai.yue.library.data.jdbc.dataobject.BaseSnakeCaseDO;
 import ai.yue.library.template.simple.constant.user.RoleEnum;
 import ai.yue.library.template.simple.constant.user.UserStatusEnum;
 import lombok.Data;
@@ -16,8 +16,10 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserDO extends DBDO {
+public class UserDO extends BaseSnakeCaseDO {
 
+	private static final long serialVersionUID = 908912816212643805L;
+	
 	Long user_id;// 用户ID
 	RoleEnum role;// 用户所属角色
 	String cellphone;// 用户手机号码

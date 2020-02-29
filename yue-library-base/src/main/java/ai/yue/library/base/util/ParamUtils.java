@@ -127,7 +127,7 @@ public class ParamUtils {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
 			if (ObjectUtils.isNull(object)) {
-				throw new ResultException(ResultInfo.param_check_not_pass());
+				throw new ResultException(ResultInfo.paramCheckNotPass());
 			}
 		}
 	}

@@ -1,0 +1,28 @@
+server:
+  tomcat:
+    port-header: GET, POST, PUT, DELETE
+spring:
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 1024MB
+  mvc:
+    # 解决传日期参数报400转换错误问题    date-format: yyyy-MM-dd HH:mm:ss
+  jackson:
+    # 设置json日期序列化输出格式相对北京时间与格林尼治时间有八个小时的时差，设置偏移量
+    time-zone: GMT+8
+    # 格式化json输出的时间问题，将格林尼治时间进行转换
+    date-format: yyyy-MM-dd HH:mm:ss
+  devtools: 
+    restart: 
+      log-condition-evaluation-delta: false
+  main:
+    allow-bean-definition-overriding: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

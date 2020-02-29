@@ -17,6 +17,6 @@ public class QqProperties {
 	/**
 	 * QQ-appid
 	 */
-	private String qq_appid;
+	private String qqAppid;
 	
 }

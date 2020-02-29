@@ -216,7 +216,7 @@ public class Validator {
 		} else if (param instanceof Date) {
 			date = DateUtil.formatDate((Date) param);
 		} else if (param instanceof LocalDate || param instanceof LocalDateTime) {
-			date = DateUtils.y_M_d.format((LocalDate) param);
+			date = DateUtils.DATE_FORMATTER.format((LocalDate) param);
 		} else {
 			throw new ResultException(ResultInfo.error(StrUtil.format("参数 {} 未知类型，不支持生日校验", paramName)));
 		}

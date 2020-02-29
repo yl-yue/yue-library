@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.client.DB;
+import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
@@ -15,7 +15,7 @@ import cn.hutool.core.util.ClassUtil;
 /**
  * DBTDAO 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
  * 
- * @deprecated 请使用 {@link DBRepository}
+ * @deprecated 请使用 {@link AbstractRepository}
  * @author	ylyue
  * @since	2019年4月30日
  * @param <T> 映射类
@@ -24,7 +24,7 @@ import cn.hutool.core.util.ClassUtil;
 public abstract class DBTDAO<T> {
 
 	@Autowired
-	protected DB db;
+	protected Db db;
 	@SuppressWarnings("unchecked")
 	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
     protected abstract String tableName();

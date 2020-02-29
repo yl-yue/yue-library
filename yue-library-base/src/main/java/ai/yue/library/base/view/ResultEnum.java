@@ -31,6 +31,12 @@ public enum ResultEnum {
 	FORBIDDEN(403, "无权限（Forbidden）"),
 	NOT_FOUND(404, "Not Found"),
 	METHOD_NOT_ALLOWED(405, "方法不允许（Method Not Allowed）"),
+	/**
+	 * {@code 410 Gone}.
+	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.9">
+	 *     HTTP/1.1: Semantics and Content, section 6.5.9</a>
+	 */
+	GONE(410, "当前API接口版本已弃用，请客户端更新接口调用方式"),
 	UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
 	TOO_MANY_REQUESTS(429, "频繁请求限流，请稍后重试（Too Many Requests）"),
 	PARAM_VOID(432, "参数为空"),
@@ -62,7 +68,7 @@ public enum ResultEnum {
     /**
      * 开发者自定义类型提示，请覆盖： {@linkplain #msg}
      */
-	DEV_DEFINED(600, "开发者自定义类型提示，请覆盖。");
+    DEV_CUSTOM_TYPE_PROMPT(600, "开发者自定义类型提示，请覆盖。");
 	
 	private Integer code;
 	private String msg;

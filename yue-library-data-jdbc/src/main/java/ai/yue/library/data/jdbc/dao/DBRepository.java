@@ -5,9 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 
-import ai.yue.library.data.jdbc.client.DB;
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.data.jdbc.client.Db;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
+import ai.yue.library.data.jdbc.constant.DatabaseFieldNamingStrategyEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
@@ -15,25 +20,61 @@ import cn.hutool.core.util.ClassUtil;
 /**
  * DBRepository 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
  * 
+ * @deprecated 请使用 {@link AbstractRepository}
  * @author	ylyue
  * @since	2019年4月30日
  * @param <T> 映射类
  */
+@Deprecated
 public abstract class DBRepository<T> {
 
 	@Autowired
-	protected DB db;
+	protected Db db;
+	@Autowired
+	private JdbcProperties jdbcProperties;
 	@SuppressWarnings("unchecked")
 	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
-    protected abstract String tableName();
+	protected String tableName = tableName();
+	protected abstract String tableName();
     
 	/**
 	 * 插入数据
+	 * 
 	 * @param paramJson 参数
 	 * @return 返回主键值
 	 */
 	public Long insert(JSONObject paramJson) {
 		return db.insert(tableName(), paramJson);
+	}
+    
+	/**
+	 * 插入数据-实体
+	 * <p>默认进行 {@link DatabaseFieldNamingStrategyEnum#SNAKE_CASE} 数据库字段命名策略转换
+	 * 
+	 * @param paramIPO 参数IPO（POJO-IPO对象）
+	 * @return 返回主键值
+	 */
+	public Long insert(Object paramIPO) {
+		if (jdbcProperties.isDatabaseFieldNamingStrategyRecognitionEnabled()) {
+			return insert(paramIPO, jdbcProperties.getDatabaseFieldNamingStrategy());
+		}
+		
+		return insert(Convert.toJSONObject(paramIPO));
+	}
+    
+	/**
+	 * 插入数据-实体
+	 * 
+	 * @param paramIPO 参数IPO（POJO-IPO对象）
+	 * @param databaseFieldNamingStrategyEnum 数据库字段命名策略
+	 * @return 返回主键值
+	 */
+	public Long insert(Object paramIPO, DatabaseFieldNamingStrategyEnum databaseFieldNamingStrategyEnum) {
+		PropertyNamingStrategy propertyNamingStrategy = databaseFieldNamingStrategyEnum.getPropertyNamingStrategy();
+		SerializeConfig serializeConfig = new SerializeConfig();
+		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
+		JSONObject paramJson = (JSONObject) JSONObject.toJSON(paramIPO, serializeConfig);
+		return insert(paramJson);
 	}
 	
 	/**

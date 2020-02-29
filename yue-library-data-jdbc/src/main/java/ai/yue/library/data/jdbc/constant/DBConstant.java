@@ -1,18 +1,25 @@
 package ai.yue.library.data.jdbc.constant;
 
-import ai.yue.library.data.jdbc.client.DB;
+import ai.yue.library.data.jdbc.client.Db;
 
 /**
- * {@linkplain DB} 常量类
+ * {@linkplain Db} 常量类
  * 
  * @author	ylyue
  * @since	2018年7月18日
  */
 public interface DBConstant {
 	
+	// 字段
+	
+	/**
+	 * 主键
+	 */
+	String PRIMARY_KEY = "id";
+	
 	// SQL
 	
 	/** 分页统计SQL前缀 */
-	public static final String PAGE_COUNT_SQL_PREFIX = "SELECT count(*) count ";
+	String PAGE_COUNT_SQL_PREFIX = "SELECT count(*) count ";
 	
 }

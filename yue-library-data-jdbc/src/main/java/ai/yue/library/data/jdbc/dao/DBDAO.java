@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.client.DB;
+import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.constant.DBSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
@@ -14,13 +14,16 @@ import ai.yue.library.data.jdbc.vo.PageVO;
 /**
  * DBDAO 为 JSON 对象提供服务
  * 
+ * @deprecated 请使用 {@link AbstractDAO}
  * @author	ylyue
  * @since	2019年4月30日
  */
+@Deprecated
 public abstract class DBDAO {
 
 	@Autowired
-	protected DB db;
+	protected Db db;
+	protected String tableName = tableName();
 	protected abstract String tableName();
     
 	/**

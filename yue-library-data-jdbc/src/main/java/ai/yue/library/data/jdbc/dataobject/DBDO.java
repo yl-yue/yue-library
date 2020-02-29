@@ -1,26 +1,32 @@
 package ai.yue.library.data.jdbc.dataobject;
 
-import java.time.LocalDateTime;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 /**
- * DO基类
+ * DO基类-下划线命名法 {@link BaseSnakeCaseDO}
  * 
  * <p><b><code style="color:red">注意：继承 {@link DBDO} get set ... 采用 &#064;{@link Data} 注解生成时，需加上：</code></b>
  * <blockquote>
- * 	<p>&#064;EqualsAndHashCode(callSuper = true)
  * 	<p>&#064;ToString(callSuper = true)
+ * 	<p>&#064;EqualsAndHashCode(callSuper = true)
  * </blockquote>
  * 
+ * @deprecated 请使用 {@link BaseSnakeCaseDO}
  * @author	ylyue
  * @since	2018年7月26日
  */
 @Data
-public abstract class DBDO {
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Deprecated
+public abstract class DBDO extends BaseSnakeCaseDO {
 	
-	protected Long id;// 表自增ID
-	protected LocalDateTime create_time;// 数据插入时间
-	protected LocalDateTime update_time;// 数据更新时间
+	private static final long serialVersionUID = 8878972879297611765L;
 	
 }

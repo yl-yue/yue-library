@@ -82,7 +82,7 @@ public class WxMaUser {
 			wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
 		} catch (WxErrorException e) {
 			String msg = e.getMessage();
-			throw new ResultException(ResultInfo.dev_defined(msg));
+			throw new ResultException(ResultInfo.devCustomTypePrompt(msg));
 		}
 		
 		return wxMaJscode2SessionResult;

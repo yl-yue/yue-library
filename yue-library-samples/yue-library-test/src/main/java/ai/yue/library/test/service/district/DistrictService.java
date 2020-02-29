@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.test.dao.district.DistrictDAO;
-import ai.yue.library.test.dataobject.DistrictDO;
+import ai.yue.library.test.dataobject.district.DistrictDO;
 
 /**
  * @author  孙金川

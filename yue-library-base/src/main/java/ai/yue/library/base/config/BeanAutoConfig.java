@@ -14,7 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import ai.yue.library.base.config.api.version.WebMvcRegistrationsConfig;
 import ai.yue.library.base.config.argument.resolver.CustomArgumentResolversConfig;
+import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.handler.ExceptionHandlerConfig;
 import ai.yue.library.base.config.http.HttpsRequestFactory;
 import ai.yue.library.base.config.http.RestProperties;
@@ -34,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @Import({ ExceptionHandlerConfig.class, AsyncConfig.class, CustomArgumentResolversConfig.class,
-		ApplicationContextUtils.class })
+		ApplicationContextUtils.class, WebMvcRegistrationsConfig.class, DateTimeFormatConfig.class })
 @EnableConfigurationProperties({ RestProperties.class, CorsProperties.class, UploadProperties.class })
 public class BeanAutoConfig {
 	

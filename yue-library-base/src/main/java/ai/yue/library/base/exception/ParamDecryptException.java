@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @since	2018年2月3日
  */
 @NoArgsConstructor
-public class ParamDecryptException extends RuntimeException{
+public class ParamDecryptException extends RuntimeException {
 	
 	private static final long serialVersionUID = 5325379409661261173L;
 

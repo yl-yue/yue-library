@@ -9,14 +9,14 @@ import lombok.Getter;
  * @since	2018年2月3日
  */
 @Getter
-public class ResultException extends RuntimeException{
+public class ResultException extends RuntimeException {
 	
 	private static final long serialVersionUID = -4332073495864145387L;
 	
 	private Result<?> result;
 	
 	public <T> ResultException(String msg) {
-		this.result = ResultInfo.dev_defined(msg);
+		this.result = ResultInfo.devCustomTypePrompt(msg);
 	}
 	
 	public <T> ResultException(Result<T> result) {

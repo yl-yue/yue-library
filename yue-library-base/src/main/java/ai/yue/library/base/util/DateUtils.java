@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import cn.hutool.core.date.DateUtil;
 
@@ -19,29 +18,85 @@ import cn.hutool.core.date.DateUtil;
  * @author	ylyue
  * @since	2017年10月25日（JDK1.8）
  */
-public final class DateUtils extends DateUtil {
+public class DateUtils extends DateUtil {
 	
-	/** 年-月-日T时:分:秒 */
-	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-	/** 年-月-日 时:分:秒（标准北京时间） */
-	public static final DateTimeFormatter y_M_d_H_m_s = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-	/** 年-月-日 时:分:秒:毫秒 */
-	public static final DateTimeFormatter y_M_d_H_m_s_S = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
-	/** 年-月-日 */
-	public static final DateTimeFormatter y_M_d = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	/** 年-月-日 00:00:00（当天起始时间） */
-	public static final DateTimeFormatter TODAY_START = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00");
-	/** 年-月-日 23:59:59（当天结束时间） */
-	public static final DateTimeFormatter TODAY_END = DateTimeFormatter.ofPattern("yyyy-MM-dd 23:59:59");
-	/** 年-月-01 00:00:00（当月起始时间） */
-	public static final DateTimeFormatter MONTH_START = DateTimeFormatter.ofPattern("yyyy-MM-01 00:00:00");
+	// ~ 格式化字符串
+	// ================================================================================================
+    
+	/**
+	 * DateTime 格式化字符串
+	 * <p>年-月-日 时:分:秒（标准北京时间）
+	 */
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
 	/**
+	 * Date 格式化字符串
+	 * <p>年-月-日
+	 */
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	
+	/**
+	 * Time 格式化字符串
+	 * <p>时:分:秒
+	 */
+	public static final String TIME_FORMAT = "HH:mm:ss";
+	
+	// ~ 格式化 DateTimeFormatter 对象
+	// ================================================================================================
+    
+	/**
+	 * DateTime 格式化
+	 * <p>年-月-日 时:分:秒（标准北京时间）
+	 */
+	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	
+	/**
+	 * Date 格式化
+	 * <p>年-月-日
+	 */
+	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	/**
+	 * Time 格式化
+	 * <p>时:分:秒
+	 */
+	public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+	
+//	/** 年-月-日T时:分:秒 */
+//	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	
+	/**
+	 * DateTime 保留毫秒格式化
+	 * <p>年-月-日 时:分:秒:毫秒
+	 */
+	public static final DateTimeFormatter DATE_TIME_KEEP_MS_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
+	
+	/**
+	 * 当天起始时间
+	 * <p>年-月-日 00:00:00
+	 */
+	public static final DateTimeFormatter TODAY_START_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00");
+	
+	/**
+	 * 当天结束时间
+	 * <p>年-月-日 23:59:59
+	 */
+	public static final DateTimeFormatter TODAY_END_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd 23:59:59");
+	
+	/**
+	 * 当月起始时间
+	 * <p>年-月-01 00:00:00
+	 */
+	public static final DateTimeFormatter MONTH_START_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-01 00:00:00");
+	
+	// ~ 工具方法
+	// ================================================================================================
+    
+	/**
 	 * 判断某个时间是否在某个时间段
-	 * <pre>
-	 * 	{@linkplain String} 类型为DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")格式化后的字符串。
-	 * 	若类型不确定请使用{@link #isBetween(LocalDateTime, LocalDateTime, LocalDateTime)}
-	 * </pre>
+	 * <p>{@linkplain String} 类型值应该是一个按照 yyyy-MM-dd HH:mm:ss 规则格式化后的字符串
+	 * <p>若类型不确定请使用 {@link #isBetween(LocalDateTime, LocalDateTime, LocalDateTime)}
+	 * 
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
@@ -60,6 +115,7 @@ public final class DateUtils extends DateUtil {
 	
 	/**
 	 * 判断某个时间是否在某个时间段
+	 * 
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
@@ -74,6 +130,7 @@ public final class DateUtils extends DateUtil {
 	
 	/**
 	 * 判断某个时间是否在某个时间段
+	 * 
 	 * @param startTime 起始时间
 	 * @param dateTime 比较时间
 	 * @param endTime 结束时间
@@ -88,52 +145,55 @@ public final class DateUtils extends DateUtil {
 	
 	/**
 	 * 获得当前时间戳
+	 * 
 	 * @return 时间戳
 	 */
 	public static Long getTimestamp() {
 		return System.currentTimeMillis();
 	}
-
+	
 	/**
-	 * 获得当前年月日
-	 * @return 年月日
+	 * 获得当前日期的标准字符串格式
+	 * 
+	 * @return 年-月-日
 	 */
-	public static String get_y_M_d() {
-		return y_M_d.format(LocalDate.now());
-	}
-
-	/**
-	 * 获得当前年月日:时分秒
-	 * @return 年月日:时分秒
-	 */
-	public static String get_y_M_d_H_m_s() {
-		return y_M_d_H_m_s.format(LocalDateTime.now());
+	public static String getDateFormatter() {
+		return DATE_FORMATTER.format(LocalDate.now());
 	}
 	
 	/**
-	 * 获取当天起始时间
+	 * 获得当前日期时间的标准字符串格式
 	 * 
-	 * @return 年-月-日 00:00:00（当天起始时间） 
+	 * @return 年-月-日 时:分:秒（标准北京时间）
 	 */
-	public static String getTodayStart() {
-		return TODAY_START.format(LocalDateTime.now());
+	public static String getDatetimeFormatter() {
+		return DATE_TIME_FORMATTER.format(LocalDateTime.now());
 	}
 	
 	/**
-	 * 获得当天结束时间
+	 * 获得当天起始时间的标准字符串格式
 	 * 
-	 * @return 年-月-日 23:59:59（当天结束时间）
+	 * @return 年-月-日 00:00:00
 	 */
-	public static String getTodayEnd() {
-		return TODAY_END.format(LocalDateTime.now());
+	public static String getTodayStartFormatter() {
+		return TODAY_START_FORMATTER.format(LocalDateTime.now());
 	}
 	
 	/**
-	 * 获得本周开始时间
+	 * 获得当天结束时间的标准字符串格式
 	 * 
-	 * @return 年-月-日 时：分：秒
+	 * @return 年-月-日 23:59:59
 	 */
-	public static String getWeekmorning() {
+	public static String getTodayEndFormatter() {
+		return TODAY_END_FORMATTER.format(LocalDateTime.now());
+	}
+	
+	/**
+	 * 获得本周开始时间的标准字符串格式
+	 * 
+	 * @return 年-月-日 00:00:00
+	 */
+	public static String getWeekmorningFormatter() {
 		Calendar cal = Calendar.getInstance();
 		// 设置年月日时分秒
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
@@ -143,13 +203,13 @@ public final class DateUtils extends DateUtil {
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 		}
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		return to_y_M_d_H_m_s(cal.getTimeInMillis());
+		return toDateTimeFormatter(cal.getTimeInMillis());
 	}
 	
 	/**
-	 * 获得本周日结束时间
+	 * 获得本周日结束时间的标准字符串格式
 	 * 
-	 * @return 年-月-日 时：分：秒
+	 * @return 年-月-日 23:59:59
 	 */
 	public static String getWeeknight() {
 		Calendar cal = Calendar.getInstance();
@@ -161,7 +221,7 @@ public final class DateUtils extends DateUtil {
 		}
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		cal.add(Calendar.DAY_OF_WEEK, 6);
-		return to_y_M_d_H_m_s(cal.getTimeInMillis());
+		return toDateTimeFormatter(cal.getTimeInMillis());
 	}
 	
 	/**
@@ -176,8 +236,8 @@ public final class DateUtils extends DateUtil {
 	
 	/**
 	 * 将 {@linkplain Date} 转 {@linkplain LocalDateTime}
-	 * <p>
-	 * 默认使用系统时区转换
+	 * <p>默认使用系统时区转换
+	 * 
 	 * @param date 日期
 	 * @return 本地日期时间
 	 */
@@ -188,64 +248,64 @@ public final class DateUtils extends DateUtil {
 	}
 	
 	/**
-	 * 将毫秒时间转化为年-月-日
+	 * 将毫秒时间（时间戳）转化为标准日期字符串格式
 	 * 
 	 * @param timestamp 毫秒（时间戳）
 	 * @return 年-月-日
 	 */
-	public static String to_y_M_d(long timestamp) {
-		return y_M_d.format(LocalDate.ofEpochDay(timestamp));
+	public static String toDateFormatter(long timestamp) {
+		return DATE_FORMATTER.format(LocalDate.ofEpochDay(timestamp));
 	}
 	
 	/**
-	 * 将日期转化为年-月-日
+	 * 将 {@link Date} 类型进行标准日期字符串格式化
 	 * 
 	 * @param date 日期
 	 * @return 年-月-日
 	 */
-	public static String to_y_M_d(Date date) {
-		return y_M_d.format(toLocalDateTime(date));
+	public static String toDateFormatter(Date date) {
+		return DATE_FORMATTER.format(toLocalDateTime(date));
 	}
 	
 	/**
-	 * 将日期转化为年-月-日
+	 * 将 {@link TemporalAccessor} 类型进行标准日期字符串格式化
 	 * 
 	 * @param date 日期
 	 * @return 年-月-日
 	 */
-	public static String to_y_M_d(TemporalAccessor date) {
-		return y_M_d.format(date);
+	public static String toDateFormatter(TemporalAccessor date) {
+		return DATE_FORMATTER.format(date);
 	}
 	
 	/**
-	 * 将毫秒转化为年-月-日 时：分：秒
+	 * 将毫秒时间（时间戳）转化为标准日期时间字符串格式
 	 * 
-	 * @param timestamp 毫秒
-	 * @return 年-月-日 时：分：秒
+	 * @param timestamp 毫秒（时间戳）
+	 * @return 年-月-日 时:分:秒
 	 */
-	public static String to_y_M_d_H_m_s(long timestamp) {
+	public static String toDateTimeFormatter(long timestamp) {
 		LocalDateTime localDateTime = toLocalDateTime(new Date(timestamp));
-		return y_M_d_H_m_s.format(localDateTime);
+		return DATE_TIME_FORMATTER.format(localDateTime);
 	}
 	
 	/**
-	 * 将日期转化为年-月-日 时：分：秒
+	 * 将 {@link Date} 类型进行标准日期时间字符串格式化
 	 * 
 	 * @param date 日期
-	 * @return 年-月-日 时：分：秒
+	 * @return 年-月-日 时:分:秒
 	 */
-	public static String to_y_M_d_H_m_s(Date date) {
-		return y_M_d_H_m_s.format(toLocalDateTime(date));
+	public static String toDateTimeFormatter(Date date) {
+		return DATE_TIME_FORMATTER.format(toLocalDateTime(date));
 	}
 	
 	/**
-	 * 将日期转化为年-月-日 时：分：秒
+	 * 将 {@link TemporalAccessor} 类型进行标准日期时间字符串格式化
 	 * 
 	 * @param date 日期
-	 * @return 年-月-日 时：分：秒
+	 * @return 年-月-日 时:分:秒
 	 */
 	public static String to_y_M_d_H_m_s(TemporalAccessor date) {
-		return y_M_d_H_m_s.format(date);
+		return DATE_TIME_FORMATTER.format(date);
 	}
 	
 	/**

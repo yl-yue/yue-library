@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class PageBeforeAndAfterVO {
 
 	/** 上一条数据ID */
-	Long before_id;
+	Long beforeId;
 	/** 下一条数据ID */
-	Long after_id;
+	Long afterId;
 
 }

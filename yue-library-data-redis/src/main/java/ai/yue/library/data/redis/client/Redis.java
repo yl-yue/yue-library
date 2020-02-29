@@ -28,7 +28,9 @@ public class Redis {
 	// Redis分布式锁
 	
 	/**
-	 * 加锁
+	 * Redis分布式锁-加锁
+	 * <p>可用于实现接口幂等性、秒杀业务等场景需求
+	 * 
 	 * @param lockKey 分布式锁的key（唯一性）
 	 * @param lockTimeout 当前时间戳 + 超时毫秒
 	 * @return 是否成功拿到锁
@@ -55,7 +57,8 @@ public class Redis {
 	}
 	
 	/**
-	 * 解锁
+	 * Redis分布式锁-解锁
+	 * 
 	 * @param lockKey 分布式锁的key（唯一性）
 	 * @param lockTimeout 加锁时使用的超时时间戳
 	 */

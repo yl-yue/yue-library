@@ -46,7 +46,7 @@ public class UserService {
 		String cellphone = paramJson.getString("cellphone");
 		validator.param(cellphone).cellphone("cellphone");
 		if (userDAO.isUser(cellphone)) {
-			return ResultInfo.dev_defined(ResultPrompt.USER_EXIST);
+			return ResultInfo.devCustomTypePrompt(ResultPrompt.USER_EXIST);
 		}
 		
 		// 3. 加密密码
@@ -68,7 +68,7 @@ public class UserService {
 	public Result<?> insert(UserIPO userIPO) {
 		// 1. 确认用户是否存在
 		if (userDAO.isUser(userIPO.getCellphone())) {
-			return ResultInfo.dev_defined(ResultPrompt.USER_EXIST);
+			return ResultInfo.devCustomTypePrompt(ResultPrompt.USER_EXIST);
 		}
 		
 		// 2. 插入数据并返回结果
@@ -108,7 +108,7 @@ public class UserService {
 		password = SecureSingleton.getAES().encryptBase64(password);
 		UserDO userDO = userDAO.get(cellphone, password);
 		if (userDO == null) {
-			return ResultInfo.dev_defined(ResultPrompt.USERNAME_OR_PASSWORD_ERROR);
+			return ResultInfo.devCustomTypePrompt(ResultPrompt.USERNAME_OR_PASSWORD_ERROR);
 		}
 		
 		// 2. 返回结果

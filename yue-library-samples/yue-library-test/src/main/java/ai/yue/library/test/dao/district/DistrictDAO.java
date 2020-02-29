@@ -7,15 +7,15 @@ import org.springframework.stereotype.Repository;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.data.jdbc.dao.DBRepository;
-import ai.yue.library.test.dataobject.DistrictDO;
+import ai.yue.library.data.jdbc.dao.AbstractRepository;
+import ai.yue.library.test.dataobject.district.DistrictDO;
 
 /**
  * @author  孙金川
  * @version 创建时间：2018年7月5日
  */
 @Repository
-public class DistrictDAO extends DBRepository<DistrictDO> {
+public class DistrictDAO extends AbstractRepository<DistrictDO> {
 
 	@Override
 	protected String tableName() {

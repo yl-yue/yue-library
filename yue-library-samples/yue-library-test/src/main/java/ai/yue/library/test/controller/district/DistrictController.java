@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.base.util.ObjectUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
-import ai.yue.library.test.dataobject.DistrictDO;
+import ai.yue.library.test.dataobject.district.DistrictDO;
 import ai.yue.library.test.service.district.DistrictService;
 
 /**

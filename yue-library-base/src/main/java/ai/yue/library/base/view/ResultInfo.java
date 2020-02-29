@@ -95,7 +95,7 @@ public class ResultInfo {
 	 * 会话未注销，无需登录-210
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> logged_in() {
+	public static Result<?> loggedIn() {
 		return success(ResultEnum.LOGGED_IN.getCode(), ResultEnum.LOGGED_IN.getMsg());
 	}
 	
@@ -105,14 +105,14 @@ public class ResultInfo {
 	 * 资源已失效-300
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> resource_already_invalid() {
+	public static Result<?> resourceAlreadyInvalid() {
 		return error(ResultEnum.RESOURCE_ALREADY_INVALID.getCode(), ResultEnum.RESOURCE_ALREADY_INVALID.getMsg());
 	}
 	/**
 	 * 文件上传请求错误，获得文件信息为空，同时文件必须有明确的匹配类型（如文本类型：.txt）-301
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?>  file_empty() {
+	public static Result<?>  fileEmpty() {
 		return error(ResultEnum.FILE_EMPTY.getCode(), ResultEnum.FILE_EMPTY.getMsg());
 	}
 	
@@ -143,23 +143,42 @@ public class ResultInfo {
 	}
 	/**
 	 * 无权限-403
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> forbidden() {
 		return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN.getMsg());
 	}
 	/**
-	 * 参数为空-432
+	 * API接口版本弃用-410
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> param_void() {
+	public static Result<?> gone() {
+		return error(ResultEnum.GONE.getCode(), ResultEnum.GONE.getMsg());
+	}
+	/**
+	 * 频繁请求限流-429
+	 * 
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> tooManyRequests() {
+		return error(ResultEnum.TOO_MANY_REQUESTS.getCode(), ResultEnum.TOO_MANY_REQUESTS.getMsg());
+	}
+	/**
+	 * 参数为空-432
+	 * 
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> paramVoid() {
 		return error(ResultEnum.PARAM_VOID.getCode(), ResultEnum.PARAM_VOID.getMsg());
 	}
 	/**
 	 * 参数校验未通过，请参照API核对后重试-433
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> param_check_not_pass() {
+	public static Result<?> paramCheckNotPass() {
 		return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg());
 	}
 	/**
@@ -167,14 +186,14 @@ public class ResultInfo {
 	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<String> param_check_not_pass(String data) {
+	public static Result<String> paramCheckNotPass(String data) {
 		return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
 	}
 	/**
 	 * 参数校验未通过，无效的value-434
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> param_value_invalid() {
+	public static Result<?> paramValueInvalid() {
 		return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg());
 	}
 	/**
@@ -182,14 +201,14 @@ public class ResultInfo {
 	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<String> param_value_invalid(String data) {
+	public static Result<String> paramValueInvalid(String data) {
 		return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
 	}
 	/**
 	 * 参数解密错误-435
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> param_decrypt_error() {
+	public static Result<?> paramDecryptError() {
 		return error(ResultEnum.PARAM_DECRYPT_ERROR.getCode(), ResultEnum.PARAM_DECRYPT_ERROR.getMsg());
 	}
 	
@@ -199,7 +218,7 @@ public class ResultInfo {
 	 * 服务器内部错误-500
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> internal_server_error() {
+	public static Result<?> internalServerError() {
 		return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR.getMsg());
 	}
 	/**
@@ -208,7 +227,7 @@ public class ResultInfo {
 	 * @param data	异常数据
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static <T> Result<T> internal_server_error(T data) {
+	public static <T> Result<T> internalServerError(T data) {
 		return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR.getMsg(), data);
 	}
 	/**
@@ -231,7 +250,7 @@ public class ResultInfo {
 	 * 数据结构异常-505
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> data_structure() {
+	public static Result<?> dataStructure() {
 		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg());
 	}
 	/**
@@ -242,7 +261,7 @@ public class ResultInfo {
 	 * @param actual	实际值
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> data_structure(int expected, int actual) {
+	public static Result<?> dataStructure(int expected, int actual) {
 		String data = "Incorrect result size: expected " + expected + ", actual " + actual;
 		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), data);
 	}
@@ -250,7 +269,7 @@ public class ResultInfo {
 	 * 数据结构异常，请检查相应数据结构一致性-506
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> db_error() {
+	public static Result<?> dbError() {
 		return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg());
 	}
 	/**
@@ -259,21 +278,21 @@ public class ResultInfo {
 	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<String> db_error(String data) {
+	public static Result<String> dbError(String data) {
 		return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg(), data);
 	}
 	/**
 	 * 哎哟喂！网络开小差了，请稍后重试...-507
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?>  client_fallback() {
+	public static Result<?>  clientFallback() {
 		return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg());
 	}
 	/**
 	 * 哎哟喂！服务都被您挤爆了...-508
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?>  client_fallback_error() {
+	public static Result<?>  clientFallbackError() {
 		return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg());
 	}
 	/**
@@ -282,19 +301,20 @@ public class ResultInfo {
 	 * @param data	{@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<String> type_convert_error(String data) {
+	public static Result<String> typeConvertError(String data) {
 		return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR.getMsg(), data);
 	}
 	
 	// 600 - 自定义错误提示
 	
 	/**
-	 * 自定义类型提示-msg
+	 * 开发者自定义类型提示，请覆盖： {@linkplain Result#setMsg(String)}
+	 * 
 	 * @param msg 提示消息
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static Result<?> dev_defined(String msg) {
-		return error(ResultEnum.DEV_DEFINED.getCode(), msg);
+	public static Result<?> devCustomTypePrompt(String msg) {
+		return error(ResultEnum.DEV_CUSTOM_TYPE_PROMPT.getCode(), msg);
 	}
 	
 }
