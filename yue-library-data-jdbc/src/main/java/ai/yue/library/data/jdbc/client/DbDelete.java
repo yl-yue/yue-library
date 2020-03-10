@@ -68,8 +68,8 @@ class DbDelete extends DbUpdate {
      */
     public void deleteSafe(String tableName, Long id) {
 		// 1. 确认数据
-		var data = queryById(tableName, id);
-		if (data == null || data.size() != 1) {
+    	JSONObject data = queryById(tableName, id);
+		if (data == null || data.isEmpty()) {
 			throw new DBException("执行单行删除命令失败，数据结构异常，可能原因是：数据不存在或存在多条数据", true);
 		}
 		

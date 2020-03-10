@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.map.MapUtil;
@@ -424,4 +426,64 @@ public class MapUtils extends MapUtil {
         return Convert.toJSONArray(value);
     }
     
+	/**
+	 * 属性命名策略转换-驼峰命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 */
+	public static JSONObject toCamelCase(Object param) {
+		return toPropertyNamingStrategy(param, PropertyNamingStrategy.CamelCase);
+	}
+	
+	/**
+	 * 属性命名策略转换-下划线命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 */
+	public static JSONObject toUnderlineCase(Object param) {
+		return toPropertyNamingStrategy(param, PropertyNamingStrategy.SnakeCase);
+	}
+	
+	/**
+	 * 属性命名策略转换-下划线命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 */
+	public static JSONObject toSnakeCase(Object param) {
+		return toPropertyNamingStrategy(param, PropertyNamingStrategy.SnakeCase);
+	}
+	
+	/**
+	 * 属性命名策略转换
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @param propertyNamingStrategy 属性命名策略
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 */
+	public static JSONObject toPropertyNamingStrategy(Object param, PropertyNamingStrategy propertyNamingStrategy) {
+		// Json参数
+		if (param instanceof Map) {
+			JSONObject jsonObject = Convert.toJSONObject(param);
+			if (MapUtils.isEmpty(jsonObject)) {
+				return jsonObject;
+			}
+			
+			JSONObject paramJson = new JSONObject(true);
+			jsonObject.forEach((key, value) -> {
+				paramJson.put(propertyNamingStrategy.translate(key), value);
+			});
+			
+			return paramJson;
+		}
+		
+		// POJO对象
+		SerializeConfig serializeConfig = new SerializeConfig();
+		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
+		JSONObject paramJson = (JSONObject) JSONObject.toJSON(param, serializeConfig);
+		return paramJson;
+	}
+	
 }
