@@ -3,6 +3,7 @@ package ai.yue.library.data.jdbc.dataobject;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import ai.yue.library.data.jdbc.support.FieldName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -26,7 +27,10 @@ public abstract class BaseLowerCamelCaseDO implements Serializable {
 	
 	private static final long serialVersionUID = 2241197545628586478L;
 	
-	protected Long id;// 表自增ID
+	protected Long id;// 主键ID，单表时自增
+	protected Integer sortIdx;// 排序索引
+	@FieldName("deleted")
+	protected boolean deleted;// 是否删除，一般不作查询展示
 	protected LocalDateTime createTime;// 数据插入时间
 	protected LocalDateTime updateTime;// 数据更新时间
 	

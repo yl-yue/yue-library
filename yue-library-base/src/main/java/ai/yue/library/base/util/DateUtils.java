@@ -62,8 +62,8 @@ public class DateUtils extends DateUtil {
 	 */
 	public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 	
-//	/** 年-月-日T时:分:秒 */
-//	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	/** 年-月-日T时:分:秒 */
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 	
 	/**
 	 * DateTime 保留毫秒格式化
