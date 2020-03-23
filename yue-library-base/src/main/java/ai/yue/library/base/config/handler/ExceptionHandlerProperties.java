@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
+ * 全局统一异常处理自动配置属性
+ * 
  * @author	ylyue
  * @since	2018年11月6日
  */

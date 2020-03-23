@@ -1,5 +1,6 @@
 package ai.yue.library.data.jdbc.client;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -177,7 +178,7 @@ class DbBase {
 		if (null == value) {
 			whereSql.append(" IS :");
 			whereSql.append(condition);
-		} else if (value instanceof List) {
+		} else if (value instanceof Collection) {
 			whereSql.append(" IN (:");
 			whereSql.append(condition);
 			whereSql.append(") ");

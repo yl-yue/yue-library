@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Restful API接口版本定义
- * <p>自动为接口增加版本前缀路径，效果如下：
+ * <p>为接口提供优雅的版本路径，效果如下：
  * <blockquote>
  * 	<p>&#064;ApiVersion(1)
- * 	<p>&#064;RequestMapping("/user")
+ * 	<p>&#064;RequestMapping("/{version}/user")
  * </blockquote>
  * 实际请求路径值：/v1/user
  * 

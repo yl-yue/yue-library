@@ -8,6 +8,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import lombok.Data;
 
 /**
+ * 跨域自动配置属性
+ * 
  * @author	ylyue
  * @since	2018年11月6日
  */

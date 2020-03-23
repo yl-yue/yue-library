@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.Data;
 
 /**
+ * Restful API接口版本定义自动配置属性
+ * 
  * @author	ylyue
  * @since	2018年11月6日
  */
@@ -26,9 +28,9 @@ public class ApiVersionProperties {
 	private double minimumVersion;
     
 	/**
-	 * {@link RequestMapping} 版本占位符，采用强标准模式，占位符只允许出现在最前列，如下所示：
+	 * {@link RequestMapping} 版本占位符，如下所示：
 	 * <p>/{version}/user
-	 * <p>/{version}/role
+	 * <p>/user/{version}
 	 */
 	private String versionPlaceholder = "{version}";
 	
