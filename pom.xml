@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Greenwich.SR4</version>
+		<version>Greenwich.SR5</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
@@ -22,6 +22,10 @@
 		<module>yue-library-base</module>
 		<!-- 基础库-加密模块 -->
 		<module>yue-library-base-crypto</module>
+		<!-- 基础库-web模块 -->
+		<module>yue-library-web</module>
+		<!-- 基础库-webflux模块 -->
+		<module>yue-library-webflux</module>
 		<!-- 基础库-jdbc模块 -->
 		<module>yue-library-data-jdbc</module>
 		<!-- 基础库-redis模块 -->
@@ -40,8 +44,8 @@
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.1.1</hutool.version>
-		<fastjson.version>1.2.62</fastjson.version>
+		<hutool.version>5.2.5</hutool.version>
+		<fastjson.version>1.2.68</fastjson.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.0.0</easypoi.version>
 		<jpush.version>3.3.11</jpush.version>
@@ -62,6 +66,16 @@
 			<dependency>
 				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-base</artifactId>
+				<version>${revision}${sha1}${changelist}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.ylyue</groupId>
+				<artifactId>yue-library-web</artifactId>
+				<version>${revision}${sha1}${changelist}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.ylyue</groupId>
+				<artifactId>yue-library-webflux</artifactId>
 				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			<dependency>

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 应用上下文工具类，用于在普通类中获取Spring容器Bean
+ * 应用上下文工具类，用于在普通类中获取Spring IOC容器中的bean对象
  * 
  * @author	ylyue
  * @since	2019年8月9日
@@ -21,8 +21,10 @@ public class ApplicationContextUtils implements ApplicationContextAware {
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		ApplicationContextUtils.applicationContext = applicationContext;
-		log.info("【初始化工具-ApplicationContextUtils】Bean：ApplicationContext ... 已初始化完毕。普通类获取ApplicationContext，ApplicationContextUtils.getApplicationContext()");
+		if (ApplicationContextUtils.applicationContext == null) {
+			ApplicationContextUtils.applicationContext = applicationContext;
+			log.info("【初始化工具-ApplicationContextUtils】Bean：ApplicationContext ... 已初始化完毕。普通类获取ApplicationContext，ApplicationContextUtils.getApplicationContext()");
+		}
 	}
 	
 	/**

@@ -17,20 +17,20 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.exception.ResultException;
-import ai.yue.library.base.ipo.CaptchaIPO;
-import ai.yue.library.base.util.CaptchaUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
-import ai.yue.library.base.vo.CaptchaVO;
-import ai.yue.library.data.redis.config.properties.ConfigProperties;
+import ai.yue.library.data.redis.config.properties.RedisProperties;
 import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 import ai.yue.library.data.redis.dto.QqUserDTO;
 import ai.yue.library.data.redis.dto.WxUserDTO;
 import ai.yue.library.data.redis.vo.wx.open.AccessTokenVO;
+import ai.yue.library.web.ipo.CaptchaIPO;
+import ai.yue.library.web.util.CaptchaUtils;
+import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.vo.CaptchaVO;
 import lombok.NoArgsConstructor;
 
 /**
@@ -52,7 +52,7 @@ public class User {
 	@Autowired
 	HttpServletResponse response;
 	@Autowired
-	ConfigProperties configProperties;
+	RedisProperties configProperties;
 	@Autowired
 	WxOpenProperties wxOpenProperties;
 	@Autowired

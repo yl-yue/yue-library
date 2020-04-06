@@ -18,9 +18,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-base</artifactId>
+			<artifactId>yue-library-web</artifactId>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>

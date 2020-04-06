@@ -71,24 +71,24 @@ public class ResultInfo {
 	/**
 	 * 成功后调用，分页查询
 	 * @param <T> 泛型
-	 * @param data 数据
 	 * @param count 总数
+	 * @param data 数据
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static <T> Result<T> success(T data, Long count) {
-        Result<T> result = new Result<T>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), true, data, count);
+	public static <T> Result<T> success(Long count, T data) {
+        Result<T> result = new Result<T>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), true, count, data);
         return result;
 	}
 	/**
 	 * 成功后调用，分页查询
 	 * @param <T>		泛型
 	 * @param code		自定义code（默认200）
-	 * @param data		数据
 	 * @param count		总数
+	 * @param data		数据
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static <T> Result<T> success(Integer code, T data, Long count) {
-        Result<T> result = new Result<T>(code, ResultEnum.SUCCESS.getMsg(), true, data, count);
+	public static <T> Result<T> success(Integer code, Long count, T data) {
+        Result<T> result = new Result<T>(code, ResultEnum.SUCCESS.getMsg(), true, count, data);
         return result;
 	}
 	/**

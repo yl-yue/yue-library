@@ -41,7 +41,7 @@ public class PageVO {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public Result<List<JSONObject>> toResult() {
-		return ResultInfo.success(data, count);
+		return ResultInfo.success(count, data);
 	}
 	
 }

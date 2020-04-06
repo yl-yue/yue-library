@@ -41,7 +41,7 @@ public class PageTVO<T> {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public Result<List<T>> toResult() {
-		return ResultInfo.success(data, count);
+		return ResultInfo.success(count, data);
 	}
 	
 }

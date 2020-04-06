@@ -2,20 +2,26 @@ package ai.yue.library.data.redis.config;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
 import ai.yue.library.data.redis.client.WxMaUser;
-import ai.yue.library.data.redis.config.properties.ConfigProperties;
 import ai.yue.library.data.redis.config.properties.QqProperties;
+import ai.yue.library.data.redis.config.properties.RedisProperties;
 import ai.yue.library.data.redis.config.properties.WxOpenProperties;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * redis自动配置
@@ -23,17 +29,37 @@ import ai.yue.library.data.redis.config.properties.WxOpenProperties;
  * @author	ylyue
  * @since	2018年6月11日
  */
+@Slf4j
 @Configuration
 @Import({ WxMaUser.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableConfigurationProperties({ ConfigProperties.class, WxOpenProperties.class, QqProperties.class })
+@EnableConfigurationProperties({ RedisProperties.class, WxOpenProperties.class, QqProperties.class })
 public class RedisAutoConfig {
+	
+	/**
+	 * <p>使用FastJson进行Redis存储对象序列/反序列化
+	 * <p>https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
+	 */
+	@Bean
+	@ConditionalOnProperty(prefix = "yue.redis", name = "enabled-fast-json-redis-serializer", havingValue = "true")
+	public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+		RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
+		redisTemplate.setConnectionFactory(redisConnectionFactory);
+		
+		GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
+		redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);// 设置默认的Serialize，包含 keySerializer & valueSerializer
+		
+		// redisTemplate.setKeySerializer(fastJsonRedisSerializer);// 单独设置keySerializer
+		// redisTemplate.setValueSerializer(fastJsonRedisSerializer);// 单独设置valueSerializer
+		log.info("【初始化配置-GenericFastJsonRedisSerializer】默认配置为false，当前环境为true：使用FastJson进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。");
+		return redisTemplate;
+	}
 	
 	@Bean
 	@Primary
-	@ConditionalOnBean(StringRedisTemplate.class)
-	public Redis redis(StringRedisTemplate stringRedisTemplate) {
-		return new Redis(stringRedisTemplate);
+	@ConditionalOnBean({ RedisTemplate.class, StringRedisTemplate.class })
+	public Redis redis(RedisTemplate<Object, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
+		return new Redis(redisTemplate, stringRedisTemplate);
 	}
 	
 	@Bean

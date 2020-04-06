@@ -10,25 +10,19 @@ import static com.alibaba.fastjson.util.TypeUtils.castToLong;
 import static com.alibaba.fastjson.util.TypeUtils.castToSqlDate;
 import static com.alibaba.fastjson.util.TypeUtils.castToTimestamp;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.util.servlet.ServletUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,16 +43,20 @@ public class Result<T> implements Serializable {
 	private static final long serialVersionUID = -3830508963654505583L;
 	
 	/** 状态码 */
+	@JSONField(ordinal = 1)
 	private Integer code;
 	/** 提示信息 */
+	@JSONField(ordinal = 2)
 	private String msg;
 	/** 状态 */
+	@JSONField(ordinal = 3)
 	private Boolean flag;
-	/** 数据 */
-	private T data;
 	/** count */
-	@JsonInclude(Include.NON_NULL)
+	@JSONField(ordinal = 4)
 	private Long count;
+	/** 数据 */
+	@JSONField(ordinal = 5)
+	private T data;
 	
 	/**
 	 * <b>成功校验</b>
@@ -176,21 +174,4 @@ public class Result<T> implements Serializable {
 		return castToTimestamp(data);
 	}
 	
-	/**
-	 * HttpServletResponse
-	 */
-	public void response() {
-		HttpServletResponse response = ServletUtils.getResponse();
-		response.setContentType("application/json; charset=utf-8");
-		PrintWriter writer;
-		try {
-			writer = response.getWriter();
-			writer.print(JSONObject.toJSONString(this));
-			writer.close();
-			response.flushBuffer();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

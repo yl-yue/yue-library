@@ -1,5 +1,7 @@
 package ai.yue.library.test.controller.test.base.validation;
 
+import java.time.LocalDate;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.test.ipo.ValidationIPO;
-import cn.hutool.core.date.DateTime;
 
 /**
  * @author  ylyue
@@ -59,7 +60,7 @@ public class ValidationController {
 		String email = validationIPO.getEmail();
 		String cellphone = validationIPO.getCellphone();
 		int age = validationIPO.getAge();
-		DateTime birthday = validationIPO.getBirthday();
+		LocalDate birthday = validationIPO.getBirthday();
 		
 		// 单个参数校验
 		validator.param(email).email("email");

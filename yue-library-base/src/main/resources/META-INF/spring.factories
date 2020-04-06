@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.base.config.BeanAutoConfig
+ai.yue.library.base.config.BaseAutoConfig

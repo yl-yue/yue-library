@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class Redis {
 
+	RedisTemplate<Object, Object> redisTemplate;
 	StringRedisTemplate stringRedisTemplate;
 	
 	// Redis分布式锁
@@ -127,37 +128,26 @@ public class Redis {
 	}
 	
 	// String（字符串）
-
+	
 	/**
-	 * 实现命令：SET key value，设置一个key-value（将字符串值 value关联到 key）
+	 * 实现命令：SET key value，设置一个key-value（将可序列化对象 value 关联到 key）
 	 * 
 	 * @param key 不能为空
-	 * @param value 设置的字符串
+	 * @param value 可序列化对象
 	 */
-	public void set(String key, String value) {
-		stringRedisTemplate.opsForValue().set(key, value);
-	}
-
-	/**
-	 * 实现命令：SET key value EX seconds，设置key-value和超时时间（秒）
-	 * 
-	 * @param key 不能为空
-	 * @param value 设置的字符串
-	 * @param timeout 超时时间（单位：秒）
-	 */
-	public void set(String key, String value, long timeout) {
-		stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+	public void set(String key, Object value) {
+		redisTemplate.opsForValue().set(key, value);
 	}
 	
 	/**
 	 * 实现命令：SET key value EX seconds，设置key-value和超时时间（秒）
 	 * 
 	 * @param key 不能为空
-	 * @param value POJO对象
+	 * @param value 可序列化对象
 	 * @param timeout 超时时间（单位：秒）
 	 */
 	public void set(String key, Object value, long timeout) {
-		stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(value), timeout, TimeUnit.SECONDS);
+		redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
 	}
 	
 	/**
@@ -168,6 +158,28 @@ public class Redis {
 	 */
 	public String get(String key) {
 		return stringRedisTemplate.opsForValue().get(key);
+	}
+	
+	/**
+	 * 实现命令：GET key，返回 key 所关联的对象。
+	 * 
+	 * @param key 不能为空
+	 * @return 对象
+	 */
+	public Object getObject(String key) {
+		return redisTemplate.opsForValue().get(key);
+	}
+	
+	/**
+	 * 实现命令：GET key，返回 key 所关联的反序列化对象。
+	 * 
+	 * @param <T> 反序列化对象类型
+	 * @param key 不能为空
+	 * @param clazz 反序列化对象类
+	 * @return 反序列化对象
+	 */
+	public <T> T get(String key, Class<T> clazz) {
+		return Convert.convert(redisTemplate.opsForValue().get(key), clazz);
 	}
 	
 	// Hash（哈希表）
@@ -194,6 +206,20 @@ public class Redis {
 	 */
 	public Object hget(String key, String hashKey) {
 		return stringRedisTemplate.opsForHash().get(key, hashKey);
+	}
+	
+	/**
+	 * 实现命令：HGET key field，返回哈希表 key中给定域 field的值
+	 * <p>从hashKey获取值
+	 * 
+	 * @param <T> 反序列化对象类型
+	 * @param key 不能为空
+	 * @param hashKey 不能为空
+	 * @param clazz 反序列化对象类
+	 * @return hashKey的反序列化对象
+	 */
+	public <T> T hget(String key, String hashKey, Class<T> clazz) {
+		return Convert.convert(stringRedisTemplate.opsForHash().get(key, hashKey), clazz);
 	}
 	
 	/**
@@ -249,7 +275,7 @@ public class Redis {
 	 * @return 列表key的头元素。
 	 */
 	public String lpop(String key) {
-		return (String)stringRedisTemplate.opsForList().leftPop(key);
+		return stringRedisTemplate.opsForList().leftPop(key);
 	}
 	
 }
