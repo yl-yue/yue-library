@@ -1,5 +1,6 @@
 package ai.yue.library.template.simple.ipo.user;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.validation.constraints.Email;
@@ -17,7 +18,9 @@ import lombok.Data;
  * @since	2019年9月25日
  */
 @Data
-public class UserIPO {
+public class UserIPO implements Serializable {
+
+	private static final long serialVersionUID = -3892585526805663196L;
 
 	@NotBlank
 	@Cellphone

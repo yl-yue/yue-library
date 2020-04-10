@@ -10,8 +10,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ai.yue.library.base.util.servlet.ServletUtils;
 import ai.yue.library.data.redis.client.User;
+import ai.yue.library.web.util.servlet.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

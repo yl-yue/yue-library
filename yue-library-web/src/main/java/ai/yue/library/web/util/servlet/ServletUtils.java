@@ -76,6 +76,13 @@ public class ServletUtils {
 	/**
 	 * HttpServletResponse
 	 */
+	public static void result(Result<?> result) {
+		response(result);
+	}
+	
+	/**
+	 * HttpServletResponse
+	 */
 	public static void response(Result<?> result) {
 		HttpServletResponse response = getResponse();
 		response.setContentType("application/json; charset=utf-8");
