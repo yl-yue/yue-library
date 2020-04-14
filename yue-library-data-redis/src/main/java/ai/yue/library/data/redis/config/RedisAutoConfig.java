@@ -53,7 +53,27 @@ public class RedisAutoConfig {
 			GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
 			// 设置默认的Serialize，包含 keySerializer & valueSerializer
 			redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);
-			log.info("【初始化配置-GenericFastJsonRedisSerializer】默认配置为false，当前环境为true：使用FastJson进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。");
+			log.info("【初始化配置-GenericFastJsonRedisSerializer】默认配置为true，当前环境为true：使用FastJson进行Redis存储对象序列/反序列化。Bean：RedisTemplate<Object, Object> ... 已初始化完毕。");
+		}
+		
+		return redisTemplate;
+	}
+	
+	/**
+	 * <p>使用FastJson进行Redis存储对象序列/反序列化
+	 * <p>https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
+	 */
+	@Bean
+	public RedisTemplate<String, Object> redisTemplateString(RedisConnectionFactory redisConnectionFactory) {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(redisConnectionFactory);
+		
+		// 使用FastJson进行Redis存储对象序列/反序列化
+		if (redisProperties.isEnabledFastJsonRedisSerializer()) {
+			GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
+			// 设置默认的Serialize，包含 keySerializer & valueSerializer
+			redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);
+			log.info("【初始化配置-GenericFastJsonRedisSerializer】默认配置为false，当前环境为true：使用FastJson进行Redis存储对象序列/反序列化。Bean：RedisTemplate<String, Object> ... 已初始化完毕。");
 		}
 		
 		return redisTemplate;
