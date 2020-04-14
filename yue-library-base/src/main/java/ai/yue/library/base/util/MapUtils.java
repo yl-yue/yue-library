@@ -1,12 +1,15 @@
 package ai.yue.library.base.util;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import com.alibaba.fastjson.JSONArray;
@@ -17,6 +20,7 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Map工具类
@@ -24,6 +28,7 @@ import cn.hutool.core.util.StrUtil;
  * @author	ylyue
  * @since	2018年1月26日
  */
+@Slf4j
 public class MapUtils extends MapUtil {
 	
 	/**
@@ -484,6 +489,128 @@ public class MapUtils extends MapUtil {
 		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
 		JSONObject paramJson = (JSONObject) JSONObject.toJSON(param, serializeConfig);
 		return paramJson;
+	}
+
+	/**
+	 * 将指定值提取出来作为map key,map的值为相同key值的list
+	 * 例：一个用户集合中的对象有key、name、sex
+	 * 数据1：key：1，name：张三，sex：man
+	 * 数据2：key：2，name：李四，sex:woman
+	 * 数据3：key：3，name：王五，sex：man
+	 * 方法调用：ListPOJOExtractKeyToList(list,"sex");
+	 * 处理后返回结果为一个map，值为一个list,json表示为：
+	 * {"man":[{"key":"1","name":"张三","sex":"man"},{"key":"3","name":"王五","sex":"man"}],
+	 * "woman":[{"key":"2","name":"李四","sex":"woman"}]}
+	 *
+	 * @param objectList 对象list
+	 * @return key为map key的键值对
+	 */
+	public static <T> Map<String, List<T>> listPOJOExtractKeyToList(List<T> objectList, String key) {
+		//声明一个返回的map集合
+		Map<String, List<T>> map = new LinkedHashMap<>();
+		//如果需要转换的值是空的，直接返回一个空的集合
+		if (ListUtils.isEmpty(objectList)) {
+			return map;
+		}
+		//循环集合，转换为map
+		for (T item : objectList) {
+			//声明一个object对象接收key 的值
+			Object valueKey = null;
+			try {
+				//通过对象和属性值获取对应的值
+				valueKey = getValue(item, key);
+			} catch (Exception e) {
+				//未找到方法值时不处理，采用默认的null
+				log.error("未找到方法值", e);
+			}
+			//获取需要返回的map中是否已有该值的集合
+			List<T> list = map.get(valueKey == null ? null : valueKey.toString());
+			//如果没有该值的集合，创建一个新的集合插入map中
+			if (list == null) {
+				list = new ArrayList();
+				map.put(valueKey == null ? null : valueKey.toString(), list);
+			}
+			//将该对象插入对应的集合中去
+			list.add(item);
+		}
+		return map;
+	}
+
+	/**
+	 * 将list对象中数据提取为单个map键值对
+	 * 注：如果有相同的key时，后面的值会覆盖第一次出现的key对应的值
+	 * 例：一个用户集合中的对象有key、name、sex
+	 * 数据1：key：1，name：张三，sex：man
+	 * 数据2：key：2，name：李四，sex:woman
+	 * 数据3：key：3，name：王五，sex：man
+	 * 方法调用：ListPOJOExtractKeyToList(list,"key");
+	 * 处理后返回结果为一个map，值为一个对象,json表示为：
+	 * {"1":{"key":"1","name":"张三","sex":"man"},"2":{"key":"2","name":"李四","sex":"woman"},"3":{"key":"3","name":"王五","sex":"man"}}
+	 *
+	 * @param objectList list数据
+	 * @param key        需要提取的key
+	 * @param <T>        泛型对象
+	 * @return Map<String, T>
+	 */
+	public static <T> Map<String, T> listPOJOExtractKeyToPOJO(List<T> objectList, String key) {
+		//声明一个返回的map集合
+		Map<String, T> map = new LinkedHashMap<>();
+		//如果需要转换的值是空的，直接返回一个空的集合
+		if (objectList == null || objectList.isEmpty()) {
+			return map;
+		}
+		//循环集合，转换为map
+		for (T item : objectList) {
+			//声明一个object对象接收key 的值
+			Object mapKey = null;
+			try {
+				//通过对象和属性值获取对应的值
+				mapKey = getValue(item, key);
+			} catch (Exception e) {
+				//未找到方法值时不处理，采用默认的null
+				log.error("未找到方法值", e);
+			}
+			//将取到的值作为key，当前对象作为值，插入map中，如果有相同的key会覆盖之前的值
+			map.put(mapKey == null ? null : mapKey.toString(), item);
+		}
+		return map;
+	}
+
+	/**
+	 * 获取
+	 *
+	 * @param obj
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	private static Object getValue(Object obj, String name) {
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(obj.getClass());
+		} catch (IntrospectionException e) {
+			log.info("获取实体信息错误", e);
+			return null;
+		}
+		//获取所有属性
+		PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+		for (PropertyDescriptor descriptor : descriptors) {
+			//获取get方法
+			Method readMethod = descriptor.getReadMethod();
+			//判断是否是需要的属性的get方法
+			if (!name.equals(descriptor.getName())) {
+				continue;
+			}
+			try {
+				//执行get方法拿到值
+				Object value = readMethod.invoke(obj);
+				return value;
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				log.info("获取值发生错误", e);
+				return null;
+			}
+		}
+		return null;
 	}
 	
 }
