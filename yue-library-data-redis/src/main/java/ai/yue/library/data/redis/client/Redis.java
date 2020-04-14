@@ -127,7 +127,17 @@ public class Redis {
 		stringRedisTemplate.delete(key);
 	}
 	
-	// String（字符串）
+	// get set ...
+	
+	/**
+	 * 实现命令：SET key value，设置一个key-value（将字符串对象 value 关联到 key）
+	 * 
+	 * @param key 不能为空
+	 * @param value 字符串对象
+	 */
+	public void set(String key, String value) {
+		stringRedisTemplate.opsForValue().set(key, value);
+	}
 	
 	/**
 	 * 实现命令：SET key value，设置一个key-value（将可序列化对象 value 关联到 key）
@@ -148,6 +158,17 @@ public class Redis {
 	 */
 	public void set(String key, Object value, long timeout) {
 		redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+	}
+	
+	/**
+	 * 实现命令：SET key value EX seconds，设置key-value和超时时间（秒）
+	 * 
+	 * @param key 不能为空
+	 * @param value 字符串对象
+	 * @param timeout 超时时间（单位：秒）
+	 */
+	public void set(String key, String value, long timeout) {
+		stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
 	}
 	
 	/**
