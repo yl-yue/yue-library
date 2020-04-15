@@ -15,8 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
-
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.client.User;
 import ai.yue.library.data.redis.client.WxMaUser;
@@ -42,7 +40,7 @@ public class RedisAutoConfig {
 	RedisProperties redisProperties;
 	
 	/**
-	 * <p>使用FastJson进行Redis存储对象序列/反序列化
+	 * <p>默认FastJson进行Redis存储对象序列/反序列化
 	 * <p>https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
 	 */
 	@Bean
@@ -50,10 +48,9 @@ public class RedisAutoConfig {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 		
-		// 使用FastJson进行Redis存储对象序列/反序列化
-		GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
+		// 默认使用FastJson进行Redis存储对象序列/反序列化
+//		redisTemplate.setDefaultSerializer(redisProperties.getRedisSerializerEnum().getRedisSerializer());
 		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-		redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);
 		redisTemplate.setKeySerializer(stringRedisSerializer);
 		redisTemplate.setHashKeySerializer(stringRedisSerializer);
 		return redisTemplate;
@@ -63,7 +60,7 @@ public class RedisAutoConfig {
 	@Primary
 	@ConditionalOnBean({ RedisTemplate.class, StringRedisTemplate.class })
 	public Redis redis(@Qualifier("yueRedisTemplate") RedisTemplate<String, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
-		log.info("【初始化配置-Redis客户端】使用FastJson进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。");
+		log.info("【初始化配置-Redis客户端】配置项：yue.redis，默认使用FastJson进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。");
 		return new Redis(redisTemplate, stringRedisTemplate);
 	}
 	

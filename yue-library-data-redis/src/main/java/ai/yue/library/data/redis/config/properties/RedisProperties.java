@@ -2,6 +2,7 @@ package ai.yue.library.data.redis.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import ai.yue.library.data.redis.constant.RedisSerializerEnum;
 import lombok.Data;
 
 /**
@@ -13,6 +14,13 @@ import lombok.Data;
 @Data
 @ConfigurationProperties("yue.redis")
 public class RedisProperties {
+	
+	/**
+	 * <p>Redis存储对象序列/反序列化器
+	 * <p>默认：{@linkplain RedisSerializerEnum#FASTJSON}
+	 */
+//	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.FASTJSON;
+	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.JACKSON;
 	
 	/**
 	 * Cookie Token Key

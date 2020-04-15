@@ -10,5 +10,4 @@ spring:
     port: 30191
     timeout: 3000
 yue:  api-version:    minimum-version: 1
-  redis:    enabled-fast-json-redis-serializer: true
   web:    enabled-fast-json-http-message-converter: true
