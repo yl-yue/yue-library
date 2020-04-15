@@ -17,10 +17,9 @@ public class RedisProperties {
 	
 	/**
 	 * <p>Redis存储对象序列/反序列化器
-	 * <p>默认：{@linkplain RedisSerializerEnum#FASTJSON}
+	 * <p>默认：{@linkplain RedisSerializerEnum#JDK}
 	 */
-//	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.FASTJSON;
-	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.JACKSON;
+	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.JDK;
 	
 	/**
 	 * Cookie Token Key
