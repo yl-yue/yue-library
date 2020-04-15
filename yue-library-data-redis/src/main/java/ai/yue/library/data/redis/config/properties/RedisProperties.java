@@ -15,12 +15,6 @@ import lombok.Data;
 public class RedisProperties {
 	
 	/**
-	 * <p>使用FastJson进行Redis存储对象序列/反序列化
-	 * <p>默认：false
-	 */
-	private boolean enabledFastJsonRedisSerializer = true;
-	
-	/**
 	 * Cookie Token Key
 	 * <p>默认：token
 	 */

@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class Redis {
 
-	RedisTemplate<Object, Object> redisTemplate;
+	RedisTemplate<String, Object> redisTemplate;
 	StringRedisTemplate stringRedisTemplate;
 	
 	// Redis分布式锁
