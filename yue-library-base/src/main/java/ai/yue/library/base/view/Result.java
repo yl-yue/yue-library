@@ -23,6 +23,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.webenv.WebEnv;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -172,6 +174,14 @@ public class Result<T> implements Serializable {
 	public java.sql.Timestamp dataToTimestamp() {
 
 		return castToTimestamp(data);
+	}
+	
+	/**
+	 * 将Result写入当前请求上下文的响应结果中，如：HttpServletResponse等。具体由当前 {@link WebEnv} 环境实现
+	 */
+	public void response() {
+		WebEnv webEnv = SpringUtils.getBean(WebEnv.class);
+		webEnv.resultResponse(this);
 	}
 	
 }

@@ -1,15 +1,7 @@
-server:
-  port: 8080
-  tomcat:
-    port-header: GET, POST, PUT, DELETE
 spring:
   application:
     name: yue-library-template-simple
-  jackson:
-    time-zone: GMT+8
   profiles:
     active:
     - dev
-logging:
-  level:
-    druid.sql.Statement: DEBUG
+    include:    - yue-library-auth-service

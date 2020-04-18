@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library</artifactId>
+		<version>${revision}${sha1}${changelist}</version>
+	</parent>
+	<artifactId>yue-library-auth-service</artifactId>
+	<name>yue-library-auth-service</name>
+	<description>yue-library 认证服务模块</description>
+	
+	<properties>
+        <weixin-java-miniapp.version>3.4.0</weixin-java-miniapp.version>
+    </properties>
+    
+	<dependencies>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-auth-client</artifactId>
+		</dependency>
+		
+		<dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>${weixin-java-miniapp.version}</version>
+        </dependency>
+	</dependencies>
+</project>

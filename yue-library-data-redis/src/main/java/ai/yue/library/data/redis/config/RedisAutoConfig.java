@@ -8,19 +8,15 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.data.redis.client.User;
-import ai.yue.library.data.redis.client.WxMaUser;
-import ai.yue.library.data.redis.config.properties.QqProperties;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
-import ai.yue.library.data.redis.config.properties.WxOpenProperties;
 import ai.yue.library.data.redis.constant.RedisSerializerEnum;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,9 +28,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ WxMaUser.class })
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableConfigurationProperties({ RedisProperties.class, WxOpenProperties.class, QqProperties.class })
+@EnableConfigurationProperties({ RedisProperties.class })
 public class RedisAutoConfig {
 	
 	@Autowired
@@ -64,15 +59,10 @@ public class RedisAutoConfig {
 	@Primary
 	@ConditionalOnBean({ RedisTemplate.class, StringRedisTemplate.class })
 	public Redis redis(@Qualifier("yueRedisTemplate") RedisTemplate<String, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
-		log.info("【初始化配置-Redis客户端】配置项：yue.redis，默认使用 ai.yue.library.data.redis.constant.RedisSerializerEnum.JDK 进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。");
+		log.info("【初始化配置-Redis客户端】配置项：{}，默认使用 {} 进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。", 
+				RedisProperties.PREFIX,
+				ClassUtils.getClassName(RedisSerializerEnum.class, false).concat(".JDK"));
 		return new Redis(redisTemplate, stringRedisTemplate);
-	}
-	
-	@Bean
-	@Primary
-	@ConditionalOnBean(Redis.class)
-	public User user() {
-		return new User();
 	}
 	
 }

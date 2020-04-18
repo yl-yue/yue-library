@@ -112,6 +112,7 @@ public class UserService {
 		}
 		
 		// 2. 返回结果
+		userDO.setUserId(userDO.getId());
 		return ResultInfo.success(userDO);
 	}
 	

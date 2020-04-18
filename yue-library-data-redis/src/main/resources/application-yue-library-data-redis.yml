@@ -1,4 +1,4 @@
 spring:
   profiles:
     include:
-    - yue-library-web
+    - yue-library-base

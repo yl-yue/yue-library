@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: yue-library-test-webflux
+  profiles:
+    include:    - yue-library-data-jdbc
+    - yue-library-data-redis
+    active:
+    - dev
+#yue:#  api-version:#    enabled: false
+#  exception-handler:#    enabled: false

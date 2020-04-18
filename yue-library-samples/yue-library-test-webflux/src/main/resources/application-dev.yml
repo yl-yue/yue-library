@@ -1,0 +1,12 @@
+spring:
+  datasource: 
+    druid: 
+      url: jdbc:mysql://192.168.3.51:3310/yue_library_test?characterEncoding=utf-8&useSSL=false
+#      url: jdbc:mysql://localhost:3306/yue_library_test?characterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123456
+  redis:
+    host: 192.168.3.51
+    port: 30191
+    timeout: 3000
+yue:  api-version:    minimum-version: 1

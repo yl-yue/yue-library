@@ -26,7 +26,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.view.Result;
 import ai.yue.library.web.util.servlet.multipart.MultipartFormData;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -72,30 +71,6 @@ public class ServletUtils {
 			+ " || @annotation(org.springframework.web.bind.annotation.PutMapping)"
 			+ " || @annotation(org.springframework.web.bind.annotation.PatchMapping)"
 			+ " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)";
-	
-	/**
-	 * HttpServletResponse
-	 */
-	public static void result(Result<?> result) {
-		response(result);
-	}
-	
-	/**
-	 * HttpServletResponse
-	 */
-	public static void response(Result<?> result) {
-		HttpServletResponse response = getResponse();
-		response.setContentType("application/json; charset=utf-8");
-		PrintWriter writer;
-		try {
-			writer = response.getWriter();
-			writer.print(JSONObject.toJSONString(result));
-			writer.close();
-			response.flushBuffer();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * 获得当前请求上下文中的{@linkplain ServletRequestAttributes}
