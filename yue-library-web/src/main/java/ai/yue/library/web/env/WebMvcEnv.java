@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.webenv.WebEnv;
+import ai.yue.library.web.util.RequestParamUtils;
 import ai.yue.library.web.util.servlet.ServletUtils;
 
 /**
@@ -20,9 +21,6 @@ import ai.yue.library.web.util.servlet.ServletUtils;
 @Component
 public class WebMvcEnv implements WebEnv {
 	
-	/**
-	 * HttpServletResponse
-	 */
 	@Override
 	public void resultResponse(Result<?> result) {
 		HttpServletResponse response = ServletUtils.getResponse();
@@ -36,6 +34,16 @@ public class WebMvcEnv implements WebEnv {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public JSONObject getParam() {
+		return RequestParamUtils.getParam();
+	}
+
+	@Override
+	public <T> T getParam(Class<T> clazz) {
+		return RequestParamUtils.getParam(clazz);
 	}
 	
 }

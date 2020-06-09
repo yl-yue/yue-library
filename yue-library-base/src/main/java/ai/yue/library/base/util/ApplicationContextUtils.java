@@ -23,7 +23,7 @@ public class ApplicationContextUtils implements ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		if (ApplicationContextUtils.applicationContext == null) {
 			ApplicationContextUtils.applicationContext = applicationContext;
-			log.info("【初始化工具-ApplicationContextUtils】Bean：ApplicationContext ... 已初始化完毕。普通类获取ApplicationContext，ApplicationContextUtils.getApplicationContext()");
+			log.info("【初始化工具-ApplicationContextUtils】用于普通类中获取Spring IOC容器中的Bean对象，ApplicationContextUtils.getBean(Class<T>)");
 		}
 	}
 	

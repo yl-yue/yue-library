@@ -26,7 +26,7 @@ public class SpringUtils implements ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		if (SpringUtils.applicationContext == null) {
 			SpringUtils.applicationContext = applicationContext;
-			log.info("【初始化工具-SpringUtils】Bean：ApplicationContext ... 已初始化完毕。普通类获取ApplicationContext，SpringUtils.getApplicationContext()");
+			log.info("【初始化工具-SpringUtils】用于普通类中获取Spring IOC容器中的Bean对象，SpringUtils.getBean(Class<T>)");
 		}
 	}
 	

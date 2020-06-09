@@ -12,9 +12,12 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.ParamFormatIPO;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.webenv.WebEnv;
 
 /**
- * 参数处理工具类，用作参数确认与类型美化等场景
+ * 参数处理工具类
+ * <p>1. 用于获取 Request 中的请求参数
+ * <p>2. 用于参数确认与类型美化
  * <p>参数校验与类型转换参考：{@linkplain Convert}、{@linkplain Validator}
  * 
  * @author	ylyue
@@ -22,12 +25,44 @@ import ai.yue.library.base.view.ResultInfo;
  */
 public class ParamUtils {
 
+	// Validate
+	
 	/** 必传参数 */
 	private static final String PARAM_PREFIX_MUST = "【必传参数】：";
 	/** 可选参数 */
 	private static final String PARAM_PREFIX_CAN = "【可选参数】：";
 	/** 收到传参 */
 	private static final String PARAM_PREFIX_RECEIVED = "【收到传参】：";
+	
+	// RequestParam
+	
+	/**
+	 * 获取 Request 中的请求参数
+	 * <p>不区分Query或Body传参，只要传参便可获取到
+	 * <p>Query Body 1 + 1，参数整合接收，从根源去除SpringMVC固定方式传参取参带来的烦恼
+	 * <p>此方法逻辑具体由当前 {@link WebEnv} 环境实现
+	 * 
+	 * @return JSON对象
+	 */
+	public static JSONObject getParam() {
+		WebEnv webEnv = SpringUtils.getBean(WebEnv.class);
+		return webEnv.getParam();
+	}
+	
+	/**
+	 * 获取 Request 中的请求参数
+	 * <p>不区分Query或Body传参，只要传参便可获取到
+	 * <p>Query Body 1 + 1，参数整合接收，从根源去除SpringMVC固定方式传参取参带来的烦恼
+	 * <p>此方法逻辑具体由当前 {@link WebEnv} 环境实现
+	 * 
+	 * @param <T> 泛型
+	 * @param clazz 想要的参数类型
+	 * @return 想要的对象实例
+	 */
+	public static <T> T getParam(Class<T> clazz) {
+		WebEnv webEnv = SpringUtils.getBean(WebEnv.class);
+		return webEnv.getParam(clazz);
+	}
 	
 	// Format
 	
