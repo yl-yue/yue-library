@@ -29,12 +29,17 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 |JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
 |JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
 
-## Greenwich.SR3【规划中】
+## 2.1.0【规划中】
 ### 新特性
+- 独立的OAuth认证体系
+- 实用的参数解析器
+- 分离的web、webflux
 - 升级系列依赖版本
 - 删除失效方法
+- redis client 包名标准，规范登录？
 
 ### Bug修复
+- 批量插入优化，容易报错
 
 ## Finchley.SR4.1【2019-10-18】
 ### 新特性
