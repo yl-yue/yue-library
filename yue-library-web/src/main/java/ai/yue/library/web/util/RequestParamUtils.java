@@ -1,19 +1,15 @@
 package ai.yue.library.web.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.web.util.servlet.ServletUtils;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.util.ObjectUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * 请求参数工具栏
@@ -21,6 +17,7 @@ import ai.yue.library.web.util.servlet.ServletUtils;
  * @author: liuyang
  * @Date: 2020/6/5
  */
+@Slf4j
 public class RequestParamUtils {
 
     /**
@@ -32,25 +29,25 @@ public class RequestParamUtils {
     /**
      * 获取请求参数
      *
+     * @Author: liuyang
      * @return JSONObject
      */
     public static JSONObject getParam() {
         HttpServletRequest request = ServletUtils.getRequest();
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
         //判断请求内容类型
-		if (MediaType.APPLICATION_JSON_VALUE.equals(contentType)) {
-			return getRawJson(request);
-//		} else if (StringUtils.isNotEmpty(contentType)// 文件上传
-//				&& RequestContentTypeConstant.FROM_DATA.equals(contentType.split(";")[0])) {
-//			return getMultipartFileJson(request);
-		} else {
-			return getRequestUrlParamJson(request);
-		}
+        if (StringUtils.isNotEmpty(contentType) && MediaType.MULTIPART_FORM_DATA_VALUE.equals(contentType.split(";")[0])) {
+            return getRequestUrlParamJson(request);
+        } else {
+            //TODO html、xml、JavaScript暂时当做json处理，后序有业务需求时再迭代
+            return getRawJson(request);
+        }
     }
-    
+
     /**
      * 获取参数，转换为java对象
      *
+     * @Author: liuyang
      * @param clazz java类
      * @return 实例对象
      */
@@ -62,6 +59,7 @@ public class RequestParamUtils {
     /**
      * 获取url参数
      *
+     * @Author: liuyang
      * @return JSONObject
      */
     private static JSONObject getRequestUrlParamJson(HttpServletRequest request) {
@@ -77,39 +75,25 @@ public class RequestParamUtils {
     /**
      * 获取raw JSON格式
      *
+     * @Author: liuyang
      * @return json对象
      */
     private static JSONObject getRawJson(HttpServletRequest request) {
-        BufferedReader br = null;
         //获取url中的参数
         JSONObject json = getRequestUrlParamJson(request);
+        String body = null;
         try {
-            //读取字符流
-            br = request.getReader();
-            String line = br.readLine();
-            if (line == null) {
-                return null;
-            } 
-
-            //不为空则读取转为字符串
-            StringBuilder ret = new StringBuilder();
-            ret.append(line);
-            while ((line = br.readLine()) != null) {
-                ret.append('\n').append(line);
-            }
-            //将字符串转为json
-            if (ObjectUtils.isNotNull(json)) {
-                JSONObject tempJson = JSONObject.parseObject(ret.toString());
-                for (String key : tempJson.keySet()) {
-                    json.put(key, tempJson.get(key));
-                }
-            } else {
-                json = JSONObject.parseObject(ret.toString());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            body = ServletUtils.getBody(request);
+        }catch (IllegalStateException e){
+            log.warn("获取body读取流异常: {}",e.getMessage());
         }
-        
+        //将字符串转为json
+        if (StringUtils.isNotEmpty(body)) {
+            JSONObject tempJson = Convert.toJSONObject(body);
+            for (String key : tempJson.keySet()) {
+                json.put(key, tempJson.get(key));
+            }
+        }
         return json;
     }
 
