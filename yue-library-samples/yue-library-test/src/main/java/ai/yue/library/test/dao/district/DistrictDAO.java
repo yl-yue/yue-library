@@ -27,7 +27,7 @@ public class DistrictDAO extends AbstractRepository<DistrictDO> {
 	 * @return
 	 */
 	public List<DistrictDO> listProvince() {
-		return db.queryAll("district_province", DistrictDO.class);
+		return db.listAll("district_province", DistrictDO.class);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class DistrictDAO extends AbstractRepository<DistrictDO> {
 	 */
 	public List<DistrictDO> listCity(String provinceId) {
 		if (StringUtils.isEmpty(provinceId)) {
-			return db.queryAll("district_city", DistrictDO.class);
+			return db.listAll("district_city", DistrictDO.class);
 		}
 
 		String adcode = provinceId.substring(0, 2);

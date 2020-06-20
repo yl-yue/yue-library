@@ -2,7 +2,7 @@ package ai.yue.library.data.jdbc.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import ai.yue.library.data.jdbc.constant.DatabaseFieldNamingStrategyEnum;
+import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
 import lombok.Data;
 
 /**
@@ -19,12 +19,12 @@ public class JdbcProperties {
 	 * 数据库字段命名策略
 	 * <p>默认：SNAKE_CASE
 	 */
-	private DatabaseFieldNamingStrategyEnum databaseFieldNamingStrategy = DatabaseFieldNamingStrategyEnum.SNAKE_CASE;
+	private FieldNamingStrategyEnum databaseFieldNamingStrategy = FieldNamingStrategyEnum.SNAKE_CASE;
 	
 	/**
-	 * 数据库字段命名策略识别-是否开启
+	 * 启用数据库字段命名策略识别
 	 * <p>默认：true
 	 */
-	private boolean databaseFieldNamingStrategyRecognitionEnabled = true;
+	private boolean enableFieldNamingStrategyRecognition = true;
 	
 }

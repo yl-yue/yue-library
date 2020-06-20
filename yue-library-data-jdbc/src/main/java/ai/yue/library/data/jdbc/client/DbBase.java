@@ -8,11 +8,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.exception.DBException;
+import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
+import ai.yue.library.data.jdbc.constant.DbConstant;
 import cn.hutool.core.util.ArrayUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,10 +25,31 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.1
  */
 @Slf4j
-class DbBase {
+@Data
+public class DbBase {
+	
+	// 必须初始化变量
 	
 	protected JdbcTemplate jdbcTemplate;
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	protected Dialect dialect;
+	
+	// 默认变量
+	
+	/** 业务唯一键 */
+	String businessUk = "key";
+	/**
+	 * 数据库字段命名策略
+	 * <p>默认：SNAKE_CASE
+	 */
+	FieldNamingStrategyEnum databaseFieldNamingStrategy = FieldNamingStrategyEnum.SNAKE_CASE;
+	/**
+	 * 数据库字段命名策略识别-是否开启
+	 * <p>默认：true
+	 */
+	boolean databaseFieldNamingStrategyRecognitionEnabled = true;
+	/** 启用删除查询过滤 */
+	boolean enableDeleteQueryFilter = true;
 	
     // 方法
 	
@@ -44,7 +69,7 @@ class DbBase {
 	
     /**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
-     * <p>若不是预期值，同时 updateRowsNumber &gt; 0 那么将会抛出一个 {@linkplain DBException}
+     * <p>若不是预期值，同时 updateRowsNumber &gt; 0 那么将会抛出一个 {@linkplain DbException}
      * 
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
@@ -59,13 +84,13 @@ class DbBase {
         }
         
         String msg = ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
-        throw new DBException(msg);
+        throw new DbException(msg);
 	}
 	
     /**
      * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
      * <p>
-     * 若不是预期结果，同时 updateRowsNumber &lt; expectedValue 那么将会抛出一个{@linkplain DBException}
+     * 若不是预期结果，同时 updateRowsNumber &lt; expectedValue 那么将会抛出一个{@linkplain DbException}
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
      * @return 是否 <b>大于等于</b> 预期值
@@ -79,41 +104,41 @@ class DbBase {
         }
         
         String msg = ResultPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
-        throw new DBException(msg);
+        throw new DbException(msg);
 	}
 	
 	/**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
      * <p>
-     * 若不是预期值，那么将会抛出一个{@linkplain DBException}
+     * 若不是预期值，那么将会抛出一个{@linkplain DbException}
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
      */
 	public void updateAndExpectedEqual(long updateRowsNumber, int expectedValue) {
         if (updateRowsNumber != expectedValue) {
     		String msg = ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
-        	throw new DBException(msg);
+        	throw new DbException(msg);
         }
 	}
 	
     /**
      * 判断更新所影响的行数是否 <b>大于等于</b> 预期值
      * <p>
-     * 若不是预期结果，那么将会抛出一个{@linkplain DBException}
+     * 若不是预期结果，那么将会抛出一个{@linkplain DbException}
      * @param updateRowsNumber	更新所影响的行数
      * @param expectedValue		预期值
      */
 	public void updateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
         if (!(updateRowsNumber >= expectedValue)) {
         	String msg = ResultPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
-            throw new DBException(msg);
+            throw new DbException(msg);
         }
 	}
 	
 	/**
      * 确认批量更新每组参数所影响的行数，是否 <b>全部都等于</b> 同一个预期值
      * <p>
-     * 若不是预期值，那么将会抛出一个{@linkplain DBException}
+     * 若不是预期值，那么将会抛出一个{@linkplain DbException}
      * @param updateRowsNumberArray	每组参数更新所影响的行数数组
      * @param expectedValue 预期值
      */
@@ -122,7 +147,7 @@ class DbBase {
 			if (updateRowsNumber != expectedValue) {
 				String msg = ResultPrompt.UPDATE_BATCH_ERROR;
 				msg += ResultPrompt.dataStructure(expectedValue, updateRowsNumber);
-				throw new DBException(msg);
+				throw new DbException(msg);
 			}
 		}
 	}
@@ -170,10 +195,9 @@ class DbBase {
     
     // WHERE SQL
     
-	private synchronized void paramToWhereSql(StringBuffer whereSql, final JSONObject paramJson,
-			final String condition) {
+	private synchronized void paramToWhereSql(StringBuffer whereSql, final JSONObject paramJson, final String condition) {
 		whereSql.append(" AND ");
-		whereSql.append(condition);
+		whereSql.append(dialect.getWrapper().wrap(condition));
 		var value = paramJson.get(condition);
 		if (null == value) {
 			whereSql.append(" IS :");
@@ -249,10 +273,17 @@ class DbBase {
      */
     public String paramToWhereSql(JSONObject paramJson) {
     	StringBuffer whereSql = new StringBuffer();
-    	whereSql.append(" WHERE 1 = 1 ");
+    	if (enableDeleteQueryFilter) {
+    		whereSql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+			.append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+    	} else {
+    		whereSql.append(" WHERE 1 = 1 ");
+    	}
+    	
 		paramJson.keySet().forEach(condition -> {
 			paramToWhereSql(whereSql, paramJson, condition);
 		});
+		
 		return whereSql.toString();
     }
     
@@ -264,7 +295,7 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 	}
 	
@@ -275,24 +306,40 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName, String whereSql) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("whereSql不能为空");
+			throw new DbException("whereSql不能为空");
 		}
 	}
     
 	/**
 	 * 参数验证
+	 * 
 	 * @param tableName 表名
 	 * @param id 主键ID
 	 */
     protected void paramValidate(String tableName, Long id) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (null == id) {
-			throw new DBException("参数id不能为空");
+			throw new DbException("参数id不能为空");
+		}
+	}
+    
+	/**
+	 * 参数验证
+	 * 
+	 * @param tableName 表名
+	 * @param columnNames 列名
+	 */
+    protected void paramValidate(String tableName, String... columnNames) {
+		if (StringUtils.isEmpty(tableName)) {
+			throw new DbException("表名不能为空");
+		}
+		if (StringUtils.isEmptys(columnNames)) {
+			throw new DbException("条件列名不能为空");
 		}
 	}
     
@@ -304,13 +351,13 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName, Long id, String[] fieldName) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (null == id) {
-			throw new DBException("参数id不能为空");
+			throw new DbException("参数id不能为空");
 		}
 		if (StringUtils.isEmptys(fieldName)) {
-			throw new DBException("fieldName不能为空");
+			throw new DbException("fieldName不能为空");
 		}
 	}
 	
@@ -321,10 +368,10 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName, JSONObject paramJson) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (MapUtils.isEmpty(paramJson)) {
-			throw new DBException("参数不能为空");
+			throw new DbException("参数不能为空");
 		}
 	}
 	
@@ -335,10 +382,10 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName, JSONObject[] paramJsons) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (MapUtils.isEmptys(paramJsons)) {
-			throw new DBException("参数不能为空");
+			throw new DbException("参数不能为空");
 		}
 	}
 	
@@ -350,13 +397,13 @@ class DbBase {
 	 */
     protected void paramValidate(String tableName, JSONObject paramJson, String[] conditions) {
 		if (StringUtils.isEmpty(tableName)) {
-			throw new DBException("表名不能为空");
+			throw new DbException("表名不能为空");
 		}
 		if (MapUtils.isEmpty(paramJson)) {
-			throw new DBException("参数不能为空");
+			throw new DbException("参数不能为空");
 		}
         if (StringUtils.isEmptys(conditions) || !MapUtils.isKeys(paramJson, conditions)) {
-        	throw new DBException("更新条件不能为空");
+        	throw new DbException("更新条件不能为空");
         }
 	}
 	

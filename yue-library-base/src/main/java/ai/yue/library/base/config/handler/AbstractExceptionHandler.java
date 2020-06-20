@@ -15,7 +15,7 @@ import ai.yue.library.base.exception.ApiVersionDeprecatedException;
 import ai.yue.library.base.exception.AttackException;
 import ai.yue.library.base.exception.AuthorizeException;
 import ai.yue.library.base.exception.ClientFallbackException;
-import ai.yue.library.base.exception.DBException;
+import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.exception.ForbiddenException;
 import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.exception.ParamDecryptException;
@@ -173,8 +173,8 @@ public abstract class AbstractExceptionHandler {
 	 */
     @ResponseBody
     @ResponseStatus(code = HttpStatus.VARIANT_ALSO_NEGOTIATES)
-    @ExceptionHandler(DBException.class)
-	public Result<?> dbExceptionHandler(DBException e) {
+    @ExceptionHandler(DbException.class)
+	public Result<?> dbExceptionHandler(DbException e) {
 		e.printStackTrace();
 		if (e.isShowMsg()) {
 			return ResultInfo.dbError(e.getMessage());

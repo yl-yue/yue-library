@@ -11,8 +11,8 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
-import ai.yue.library.data.jdbc.constant.DBSortEnum;
-import ai.yue.library.data.jdbc.constant.DatabaseFieldNamingStrategyEnum;
+import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
@@ -47,13 +47,13 @@ public abstract class AbstractRepository<T> {
     
 	/**
 	 * 插入数据-实体
-	 * <p>默认进行 {@link DatabaseFieldNamingStrategyEnum#SNAKE_CASE} 数据库字段命名策略转换
+	 * <p>默认进行 {@link FieldNamingStrategyEnum#SNAKE_CASE} 数据库字段命名策略转换
 	 * 
 	 * @param paramIPO 参数IPO（POJO-IPO对象）
 	 * @return 返回主键值
 	 */
 	public Long insert(Object paramIPO) {
-		if (jdbcProperties.isDatabaseFieldNamingStrategyRecognitionEnabled()) {
+		if (jdbcProperties.isEnableFieldNamingStrategyRecognition()) {
 			return insert(paramIPO, jdbcProperties.getDatabaseFieldNamingStrategy());
 		}
 		
@@ -67,7 +67,7 @@ public abstract class AbstractRepository<T> {
 	 * @param databaseFieldNamingStrategyEnum 数据库字段命名策略
 	 * @return 返回主键值
 	 */
-	public Long insert(Object paramIPO, DatabaseFieldNamingStrategyEnum databaseFieldNamingStrategyEnum) {
+	public Long insert(Object paramIPO, FieldNamingStrategyEnum databaseFieldNamingStrategyEnum) {
 		PropertyNamingStrategy propertyNamingStrategy = databaseFieldNamingStrategyEnum.getPropertyNamingStrategy();
 		SerializeConfig serializeConfig = new SerializeConfig();
 		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
@@ -115,7 +115,7 @@ public abstract class AbstractRepository<T> {
 	 * @return POJO对象
 	 */
 	public T get(Long id) {
-		return db.queryById(tableName(), id, mappedClass);
+		return db.getById(tableName(), id, mappedClass);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public abstract class AbstractRepository<T> {
 	 * @return 列表数据
 	 */
 	public List<T> listAll() {
-		return db.queryAll(tableName(), mappedClass);
+		return db.listAll(tableName(), mappedClass);
 	}
 	
 	/**
@@ -141,7 +141,7 @@ public abstract class AbstractRepository<T> {
 	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageTVO<T> pageDESC(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, mappedClass, DBSortEnum.降序);
+		return db.page(tableName(), pageIPO, mappedClass, DbSortEnum.DESC);
 	}
 	
 }

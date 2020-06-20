@@ -3,6 +3,8 @@ package ai.yue.library.data.jdbc.client;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import ai.yue.library.data.jdbc.client.dialect.Dialect;
+
 /**
  * <h2>SQL优化型数据库操作</h2>
  * Created by sunJinChuan on 2016/6/6
@@ -10,9 +12,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  */
 public class Db extends DbInsert {
 	
-	public Db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public Db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, Dialect dialect) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.dialect = dialect;
 	}
 	
 }

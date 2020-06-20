@@ -3,12 +3,12 @@ package ai.yue.library.base.exception;
 import lombok.NoArgsConstructor;
 
 /**
- * <h3>DB异常</h3><br>
+ * <h3>Db异常</h3><br>
  * 
  * Created by sunJinChuan on 2016/6/8.
  */
 @NoArgsConstructor
-public class DBException extends RuntimeException {
+public class DbException extends RuntimeException {
 	
 	private static final long serialVersionUID = 5869945193750586067L;
 	
@@ -17,7 +17,7 @@ public class DBException extends RuntimeException {
 	 */
 	private boolean showMsg = false;
 	
-	public DBException(String msg) {
+	public DbException(String msg) {
         super(msg);
     }
 	
@@ -27,7 +27,7 @@ public class DBException extends RuntimeException {
 	 * @param msg 异常提示
 	 * @param showMsg 统一异常处理后是否显示异常提示
 	 */
-	public DBException(String msg, boolean showMsg) {
+	public DbException(String msg, boolean showMsg) {
 		super(msg);
 		this.showMsg = showMsg;
 	}

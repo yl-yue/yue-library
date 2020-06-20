@@ -6,9 +6,11 @@ package ai.yue.library.data.jdbc.constant;
  * @author	ylyue
  * @since	2018年9月18日
  */
-public enum DBExpectedValueModeEnum {
+public enum DbExpectedValueModeEnum {
 
-	等于, 
-	大于等于;
+	/** 等于 */
+	EQUAL, 
+	/** 大于等于 */
+	GREATER_THAN_EQUAL;
 
 }

@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum DatabaseFieldNamingStrategyEnum {
+public enum FieldNamingStrategyEnum {
 	
 	/**
 	 * 驼峰命名法，即：小驼峰命名法

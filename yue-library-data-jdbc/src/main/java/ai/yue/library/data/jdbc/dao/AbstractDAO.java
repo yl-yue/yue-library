@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.data.jdbc.client.Db;
-import ai.yue.library.data.jdbc.constant.DBSortEnum;
+import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
@@ -73,7 +73,7 @@ public abstract class AbstractDAO {
 	 * @return JSON数据
 	 */
 	public JSONObject get(Long id) {
-		return db.queryById(tableName(), id);
+		return db.getById(tableName(), id);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public abstract class AbstractDAO {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> listAll() {
-		return db.queryAll(tableName());
+		return db.listAll(tableName());
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public abstract class AbstractDAO {
 	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageVO pageDESC(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, DBSortEnum.降序);
+		return db.page(tableName(), pageIPO, DbSortEnum.DESC);
 	}
 	
 }

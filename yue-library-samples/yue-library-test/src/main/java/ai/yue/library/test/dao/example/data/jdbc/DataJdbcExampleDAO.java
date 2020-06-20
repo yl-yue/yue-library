@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.constant.DBSortEnum;
-import ai.yue.library.data.jdbc.constant.DBUpdateEnum;
+import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dao.AbstractDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
@@ -45,7 +45,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 */
 	public Long insertOrUpdate(JSONObject paramJson) {
 		String[] conditions = {"id"};
-		return db.insertOrUpdate(tableName(), paramJson, conditions, DBUpdateEnum.正常);
+		return db.insertOrUpdate(tableName(), paramJson, conditions, DbUpdateEnum.NORMAL);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 * @param paramJson
 	 */
 	public void updateById2(JSONObject paramJson) {
-		db.updateById(tableName(), paramJson, DBUpdateEnum.递减_无符号);
+		db.updateById(tableName(), paramJson, DbUpdateEnum.DECR_UNSIGNED);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> list(JSONObject paramJson) {
-		return db.query(tableName(), paramJson, DBSortEnum.降序);
+		return db.list(tableName(), paramJson, DbSortEnum.DESC);
 	}
 	
 	public void query(JSONObject paramJson) {

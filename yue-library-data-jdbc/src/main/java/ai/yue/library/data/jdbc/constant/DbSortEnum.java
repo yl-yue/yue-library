@@ -1,16 +1,16 @@
 package ai.yue.library.data.jdbc.constant;
 
 /**
- * 更新类型
+ * 排序方式
  * 
  * @author	ylyue
  * @since	2018年8月29日
  */
-public enum DBUpdateEnum {
+public enum DbSortEnum {
 
-	正常, 
-	递增, 
-	递减, 
-	递减_无符号;
+	/** 升序 */
+	ASC, 
+	/** 降序 */
+	DESC;
 
 }

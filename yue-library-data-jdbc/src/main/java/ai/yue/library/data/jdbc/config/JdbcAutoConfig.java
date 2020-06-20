@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import ai.yue.library.data.jdbc.client.Db;
+import ai.yue.library.data.jdbc.client.dialect.impl.MysqlDialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 
 /**
@@ -28,7 +29,7 @@ public class JdbcAutoConfig {
 	@Primary
 	@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
 	public Db db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		return new Db(jdbcTemplate, namedParameterJdbcTemplate);
+		return new Db(jdbcTemplate, namedParameterJdbcTemplate, new MysqlDialect());
 	}
 	
 }

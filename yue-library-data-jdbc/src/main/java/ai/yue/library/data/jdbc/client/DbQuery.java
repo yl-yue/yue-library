@@ -1,25 +1,24 @@
 package ai.yue.library.data.jdbc.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.lang.Nullable;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.exception.DBException;
-import ai.yue.library.base.util.ArithCompute;
+import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.data.jdbc.constant.DBConstant;
-import ai.yue.library.data.jdbc.constant.DBSortEnum;
+import ai.yue.library.data.jdbc.constant.DbConstant;
+import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
+import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
@@ -35,166 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class DbQuery extends DbBase {
 	
-	// Query
-	
-	private String querySql(String tableName, JSONObject paramJson, DBSortEnum dBSortEnum) {
-		paramValidate(tableName, paramJson);
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM ");
-		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramJson);
-		sql.append(whereSql);
-		if (dBSortEnum == DBSortEnum.升序) {// 升序
-			sql.append(" ORDER BY id");
-		} else if (dBSortEnum == DBSortEnum.降序) {// 降序
-			sql.append(" ORDER BY id DESC");
-		}
-		
-		return sql.toString();
-	}
-	
-	/**
-	 * 绝对条件查询
-	 * @param tableName 表名
-	 * @param paramJson 查询参数
-	 * @return 列表数据
-	 */
-	public List<JSONObject> query(String tableName, JSONObject paramJson) {
-		String sql = querySql(tableName, paramJson, null);
-		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
-	}
-    
-	/**
-	 * 绝对条件查询
-	 * @param <T> 泛型
-	 * @param tableName 表名
-	 * @param paramJson 查询参数
-	 * @param mappedClass 映射类
-	 * @return 列表数据
-	 */
-	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass) {
-		String sql = querySql(tableName, paramJson, null);
-		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
-	}
-	
-	/**
-	 * 绝对条件查询
-	 * @param tableName 表名
-	 * @param paramJson 查询参数
-	 * @param dBSortEnum 排序方式
-	 * @return 列表数据
-	 */
-	public List<JSONObject> query(String tableName, JSONObject paramJson, DBSortEnum dBSortEnum) {
-		String sql = querySql(tableName, paramJson, dBSortEnum);
-		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
-	}
-	
-	/**
-	 * 绝对条件查询
-	 * @param <T> 泛型
-	 * @param tableName 表名
-	 * @param paramJson 查询参数
-	 * @param mappedClass 映射类
-	 * @param dBSortEnum 排序方式
-	 * @return 列表数据
-	 */
-	public <T> List<T> query(String tableName, JSONObject paramJson, Class<T> mappedClass, DBSortEnum dBSortEnum) {
-		String sql = querySql(tableName, paramJson, dBSortEnum);
-		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
-	}
-	
-	private String queryByIdSql(String tableName, Long id) {
-		paramValidate(tableName, id);
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM ");
-		sql.append(tableName);
-		sql.append(" WHERE id = :id ");
-		return sql.toString();
-	}
-	
-	/**
-	 * 通过表主键ID查询
-	 * @param tableName	表名
-	 * @param id		表自增ID
-	 * @return JSON数据
-	 */
-    public JSONObject queryById(String tableName, long id) {
-    	String sql = queryByIdSql(tableName, id);
-		JSONObject paramJson = new JSONObject();
-		paramJson.put("id", id);
-		return queryForJson(sql, paramJson);
-	}
-    
-	/**
-	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
-	 * @param <T> 泛型
-	 * @param tableName 表名
-	 * @param id 主键ID
-	 * @param mappedClass 映射类
-	 * @return POJO对象
-	 */
-    public <T> T queryById(String tableName, Long id, Class<T> mappedClass) {
-    	String sql = queryByIdSql(tableName, id);
-		JSONObject paramJson = new JSONObject();
-		paramJson.put("id", id);
-		return queryForObject(sql, paramJson, mappedClass);
-	}
-    
-    private String queryByIdSql(String tableName, Long id, String[] fieldName) {
-		paramValidate(tableName, id, fieldName);
-		String field = StringUtils.deleteFirstLastString(Arrays.toString(fieldName), 1);
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT ");
-		sql.append(field);
-		sql.append(" FROM ");
-		sql.append(tableName);
-		sql.append(" WHERE id = :id ");
-		return sql.toString();
-	}
-	
-	/**
-	 * 通过表主键ID动态查询字段
-	 * @param tableName	表名
-	 * @param id		表自增ID
-	 * @param fieldName	字段名
-	 * @return JSON对象
-	 */
-    public JSONObject queryById(String tableName, Long id, String ... fieldName) {
-    	String sql = queryByIdSql(tableName, id, fieldName);
-		JSONObject paramJson = new JSONObject();
-		paramJson.put("id", id);
-		return queryForJson(sql, paramJson);
-	}
-    
-    private String queryAllSql(String tableName) {
-		paramValidate(tableName);
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM ");
-		sql.append(tableName);
-		return sql.toString();
-    }
-    
-	/**
-	 * 查询表中所有数据
-	 * @param tableName 表名
-	 * @return 列表数据
-	 */
-    public List<JSONObject> queryAll(String tableName) {
-    	String sql = queryAllSql(tableName);
-    	return queryForList(sql, MapUtils.FINAL_EMPTY_JSON);
-	}
-    
-	/**
-	 * 查询表中所有数据
-	 * @param <T> 泛型
-	 * @param tableName 表名
-	 * @param mappedClass 映射类
-	 * @return 列表数据
-	 */
-    public <T> List<T> queryAll(String tableName, Class<T> mappedClass) {
-    	String sql = queryAllSql(tableName);
-		return namedParameterJdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(mappedClass));
-	}
+	// queryFor
 	
     /**
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
@@ -263,78 +103,246 @@ class DbQuery extends DbBase {
     	return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
-	// Page
-	
-	/**
-	 * 处理分页参数
-	 * @param pageIPO
-	 * @return
-	 */
-    private JSONObject pageIPO(PageIPO pageIPO) {
-		// 1. 处理分页参数
-		int page = pageIPO.getPage();
-		int limit = pageIPO.getLimit();
-		JSONObject conditions = pageIPO.getConditions();
-		page--;
-		if (page >= 1) {
-			page = (int) ArithCompute.mul(page, limit);
-		}
-		
-		// 2. 处理查询条件
-		JSONObject paramJson = new JSONObject();
-		paramJson.put("page", page);
-		paramJson.put("limit", limit);
-		if (null != conditions && !conditions.isEmpty()) {
-			paramJson.putAll(conditions);
-		}
-		
-		// 3. 返回结果
-		return paramJson;
-	}
-	
-    private PageDTO pageDTO(String tableName, PageIPO pageIPO, DBSortEnum dBSortEnum) {
-		// 1. 参数验证
-		paramValidate(tableName);
-		
-		// 2. 处理分页参数
-		JSONObject paramJson = pageIPO(pageIPO);
-		JSONObject conditions = pageIPO.getConditions();
-		
-		// 3. 预编译SQL拼接
-		StringBuffer querySql = new StringBuffer();
-		querySql.append("SELECT a.* FROM ");
-		querySql.append(tableName + " a, ");
-		querySql.append("(SELECT id FROM ");
-		querySql.append(tableName);
-		// 添加查询条件
-		String whereSql = "";
-		if (conditions != null) {
-			whereSql = paramToWhereSql(conditions);
-		}
-		querySql.append(whereSql);
-		// 排序
-		if (dBSortEnum == null) {// 默认（不排序）
-			querySql.append(" LIMIT :page, :limit) b WHERE a.id = b.id");
-		} else {
-			if (DBSortEnum.升序 == dBSortEnum) {// 升序
-				querySql.append(" ORDER BY id LIMIT :page, :limit) b WHERE a.id = b.id");
-			} else {// 降序
-				querySql.append(" ORDER BY id DESC LIMIT :page, :limit) b WHERE a.id = b.id");
-			}
-		}
-		
-		// 4. 统计总数
-		StringBuffer countSql = new StringBuffer();
-		countSql.append("SELECT COUNT(*) count FROM ");
-		countSql.append(tableName);
-		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJson).get("count");
-		
-		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
+    // is
+    
+    /**
+     * 是否有数据
+     * 
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+     * @return 是否有数据
+     */
+	public boolean isDataSize(String tableName, JSONObject paramJson) {
+		return MapUtils.isNotEmpty(get(tableName, paramJson));
 	}
     
-    private PageVO pageVO(PageDTO pageDTO) {
+	// get
+	
+    /**
+     * 获得表的元数据
+     * <p>检索元数据，即此行集合的列的数字、类型和属性。
+     * 
+     * @param tableName
+     * @return
+     */
+	public SqlRowSetMetaData getMetaData(String tableName) {
+		tableName = dialect.getWrapper().wrap(tableName);
+		StringBuffer sql = new StringBuffer("SELECT * FROM ").append(tableName).append(dialect.getPageJoinSql());
+		return queryForRowSet(sql.toString(), Page.builder().offset(0L).limit(0).build().toParamJson()).getMetaData();
+	}
+    
+	private String getByColumnNameSqlBuild(String tableName, String columnName) {
+		paramValidate(tableName);
+		if (StringUtils.isEmpty(columnName)) {
+			throw new DbException("条件列名不能为空");
+		}
+		
+		tableName = dialect.getWrapper().wrap(tableName);
+		columnName = dialect.getWrapper().wrap(columnName);
+		StringBuffer sql = new StringBuffer("SELECT * FROM ");
+		sql.append(tableName);
+		sql.append(" WHERE ").append(columnName).append(" = :").append(columnName);
+		if (enableDeleteQueryFilter) {
+			sql.append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+			.append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+		}
+		
+		return sql.toString();
+	}
+	
+	/**
+	 * 通过表主键ID查询
+	 * 
+	 * @param tableName	表名
+	 * @param id		表自增ID
+	 * @return JSON数据
+	 */
+    public JSONObject getById(String tableName, long id) {
+    	paramValidate(tableName, id);
+    	String sql = getByColumnNameSqlBuild(tableName, DbConstant.PRIMARY_KEY);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put(dialect.getWrapper().wrap(DbConstant.PRIMARY_KEY), id);
+		return queryForJson(sql, paramJson);
+	}
+    
+	/**
+	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
+	 * 
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param id 主键ID
+	 * @param mappedClass 映射类
+	 * @return POJO对象
+	 */
+    public <T> T getById(String tableName, Long id, Class<T> mappedClass) {
+    	paramValidate(tableName, id);
+    	String sql = getByColumnNameSqlBuild(tableName, DbConstant.PRIMARY_KEY);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put(dialect.getWrapper().wrap(DbConstant.PRIMARY_KEY), id);
+		return queryForObject(sql, paramJson, mappedClass);
+	}
+	
+	/**
+	 * 通过表业务键查询
+	 * <p>默认业务键为key
+	 * <p>业务键值推荐使用UUID5
+	 * 
+	 * @param tableName	表名
+	 * @param businessUkValue 业务键的唯一值
+	 * @return JSON数据
+	 */
+    public JSONObject getByBusinessUk(String tableName, Object businessUkValue) {
+    	String sql = getByColumnNameSqlBuild(tableName, businessUk);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put(dialect.getWrapper().wrap(businessUk), businessUkValue);
+		return queryForJson(sql, paramJson);
+	}
+    
+	/**
+	 * 通过表业务键查询
+	 * <p>默认业务键为key
+	 * <p>业务键值推荐使用UUID5
+	 * 
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param businessUkValue 业务键的唯一值
+	 * @param mappedClass 映射类
+	 * @return POJO对象
+	 */
+    public <T> T getByBusinessUk(String tableName, Object businessUkValue, Class<T> mappedClass) {
+    	String sql = getByColumnNameSqlBuild(tableName, businessUk);
+		JSONObject paramJson = new JSONObject();
+		paramJson.put(dialect.getWrapper().wrap(businessUk), businessUkValue);
+		return queryForObject(sql, paramJson, mappedClass);
+	}
+    
+	/**
+	 * 绝对条件查询
+	 * 
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @return JSON数据
+	 */
+	public JSONObject get(String tableName, JSONObject paramJson) {
+		String sql = listSqlBuild(tableName, paramJson, null);
+		return queryForJson(sql, paramJson);
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * 
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @param mappedClass 映射类
+	 * @return POJO对象
+	 */
+	public <T> T get(String tableName, JSONObject paramJson, Class<T> mappedClass) {
+		String sql = listSqlBuild(tableName, paramJson, null);
+		return queryForObject(sql, paramJson, mappedClass);
+	}
+	
+    // list
+    
+	private String listSqlBuild(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
+		paramValidate(tableName, paramJson);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT * FROM ");
+		sql.append(dialect.getWrapper().wrap(tableName));
+		String whereSql = paramToWhereSql(paramJson);
+		sql.append(whereSql);
+		if (dBSortEnum == DbSortEnum.ASC) {// 升序
+			sql.append(" ORDER BY id");
+		} else if (dBSortEnum == DbSortEnum.DESC) {// 降序
+			sql.append(" ORDER BY id DESC");
+		}
+		
+		return sql.toString();
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @return 列表数据
+	 */
+	public List<JSONObject> list(String tableName, JSONObject paramJson) {
+		String sql = listSqlBuild(tableName, paramJson, null);
+		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
+	}
+    
+	/**
+	 * 绝对条件查询
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @param mappedClass 映射类
+	 * @return 列表数据
+	 */
+	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass) {
+		String sql = listSqlBuild(tableName, paramJson, null);
+		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @param dBSortEnum 排序方式
+	 * @return 列表数据
+	 */
+	public List<JSONObject> list(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
+		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
+		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
+	}
+	
+	/**
+	 * 绝对条件查询
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param paramJson 查询参数
+	 * @param mappedClass 映射类
+	 * @param dBSortEnum 排序方式
+	 * @return 列表数据
+	 */
+	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, DbSortEnum dBSortEnum) {
+		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
+		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+	}
+    
+    private String listAllSqlBuild(String tableName) {
+		paramValidate(tableName);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT * FROM ");
+		sql.append(dialect.getWrapper().wrap(tableName));
+		return sql.toString();
+    }
+    
+	/**
+	 * 查询表中所有数据
+	 * @param tableName 表名
+	 * @return 列表数据
+	 */
+    public List<JSONObject> listAll(String tableName) {
+    	String sql = listAllSqlBuild(tableName);
+    	return queryForList(sql, MapUtils.FINAL_EMPTY_JSON);
+	}
+    
+	/**
+	 * 查询表中所有数据
+	 * @param <T> 泛型
+	 * @param tableName 表名
+	 * @param mappedClass 映射类
+	 * @return 列表数据
+	 */
+    public <T> List<T> listAll(String tableName, Class<T> mappedClass) {
+    	String sql = listAllSqlBuild(tableName);
+		return namedParameterJdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(mappedClass));
+	}
+    
+	// Page
+	
+    protected PageVO toPageVO(PageDTO pageDTO) {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
@@ -350,7 +358,7 @@ class DbQuery extends DbBase {
 		return PageVO.builder().count(count).data(data).build();
 	}
 	
-    private <T> PageTVO<T> pageTVO(PageDTO pageDTO, Class<T> mappedClass) {
+    protected <T> PageTVO<T> toPageTVO(PageDTO pageDTO, Class<T> mappedClass) {
 		// 1. 处理PageDTO
 		Long count = pageDTO.getCount();
 		String querySql = pageDTO.getQuerySql();
@@ -361,6 +369,7 @@ class DbQuery extends DbBase {
 		if (count != 0) {
 			data = namedParameterJdbcTemplate.query(querySql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 		}
+		
 		// 3. 分页
 		PageTVO<T> pageTVO = new PageTVO<>();
 		return pageTVO.toBuilder().count(count).data(data).build();
@@ -375,8 +384,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO page(String tableName, PageIPO pageIPO) {
-		PageDTO pageDTO = pageDTO(tableName, pageIPO, null);
-		return pageVO(pageDTO);
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, null);
+		return toPageVO(pageDTO);
 	}
 	
     /**
@@ -391,8 +400,8 @@ class DbQuery extends DbBase {
      */
 	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass) {
 		// 1. 获得PageDTO
-		PageDTO pageDTO = pageDTO(tableName, pageIPO, null);
-		return pageTVO(pageDTO, mappedClass);
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, null);
+		return toPageTVO(pageDTO, mappedClass);
 	}
 	
     /**
@@ -401,12 +410,12 @@ class DbQuery extends DbBase {
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 ORDER BY id LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
      * @param tableName 	表名
      * @param pageIPO 		分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
-     * @param dBSortEnum 	排序方式 {@linkplain DBSortEnum}
+     * @param dBSortEnum 	排序方式 {@linkplain DbSortEnum}
      * @return count（总数），data（分页列表数据）
      */
-	public PageVO page(String tableName, PageIPO pageIPO, DBSortEnum dBSortEnum) {
-		PageDTO pageDTO = pageDTO(tableName, pageIPO, dBSortEnum);
-		return pageVO(pageDTO);
+	public PageVO page(String tableName, PageIPO pageIPO, DbSortEnum dBSortEnum) {
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, dBSortEnum);
+		return toPageVO(pageDTO);
 	}
 	
     /**
@@ -417,42 +426,13 @@ class DbQuery extends DbBase {
      * @param tableName 	表名
      * @param pageIPO 		分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
      * @param mappedClass 	映射类
-     * @param dBSortEnum 	排序方式 {@linkplain DBSortEnum}
+     * @param dBSortEnum 	排序方式 {@linkplain DbSortEnum}
      * @return count（总数），data（分页列表数据）
      */
-	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, DBSortEnum dBSortEnum) {
+	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, DbSortEnum dBSortEnum) {
 		// 1. 获得PageDTO
-		PageDTO pageDTO = pageDTO(tableName, pageIPO, dBSortEnum);
-		return pageTVO(pageDTO, mappedClass);
-	}
-	
-	private PageDTO pageWhereDTO(String tableName, String whereSql, PageIPO pageIPO) {
-		// 1. 参数验证
-		paramValidate(tableName, whereSql);
-		
-		// 2. 处理分页参数
-		JSONObject paramJson = pageIPO(pageIPO);
-		
-		// 3. 预编译SQL拼接
-		StringBuffer querySql = new StringBuffer();
-		querySql.append("SELECT a.* FROM ");
-		querySql.append(tableName + " a, ");
-		querySql.append(" (select id from ");
-		querySql.append(tableName);
-		querySql.append(" ");
-		querySql.append(whereSql);
-		querySql.append(" LIMIT :page, :limit) b WHERE a.id = b.id");
-		
-		// 4. 统计总数
-		StringBuffer countSql = new StringBuffer();
-		countSql.append("SELECT COUNT(*) count FROM ");
-		countSql.append(tableName);
-		countSql.append(" ");
-		countSql.append(whereSql);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), paramJson).get("count");
-		
-		// 5. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, dBSortEnum);
+		return toPageTVO(pageDTO, mappedClass);
 	}
 	
 	/**
@@ -466,8 +446,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO pageWhere(String tableName, String whereSql, PageIPO pageIPO) {
-		PageDTO pageDTO = pageWhereDTO(tableName, whereSql, pageIPO);
-		return pageVO(pageDTO);
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, whereSql, pageIPO);
+		return toPageVO(pageDTO);
 	}
 	
     /**
@@ -483,49 +463,18 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public <T> PageTVO<T> pageWhere(String tableName, String whereSql, PageIPO pageIPO, Class<T> mappedClass) {
-		PageDTO pageDTO = pageWhereDTO(tableName, whereSql, pageIPO);
-		return pageTVO(pageDTO, mappedClass);
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, whereSql, pageIPO);
+		return toPageTVO(pageDTO, mappedClass);
 	}
 	
-	private PageDTO pageSqlDTO(String querySql, PageIPO pageIPO) {
+	private PageDTO pageDTOBuild(String countSql, String querySql, PageIPO pageIPO) {
 		// 1. 参数校验
 		if (StringUtils.isEmpty(querySql)) {
-			throw new DBException("querySql不能为空");
+			throw new DbException("querySql不能为空");
 		}
 		
 		// 2. 处理分页参数
-		JSONObject paramJson = pageIPO(pageIPO);
-		JSONObject conditions = pageIPO.getConditions();
-		
-		// 3. 统计
-		int fromIndex = querySql.toUpperCase().indexOf("FROM");
-		String countStr = DBConstant.PAGE_COUNT_SQL_PREFIX + querySql.substring(fromIndex);
-		int limitIndex = countStr.toUpperCase().indexOf("LIMIT");
-		if (-1 == limitIndex) {
-			throw new DBException("querySql不能没有LIMIT");
-		}
-		int EndIndex = countStr.indexOf(")", limitIndex);
-		if (-1 == EndIndex) {
-			System.err.println("错误的querySql：\n");
-			System.err.println(querySql);
-			throw new DBException("querySql应当是一个优化后的语句，其中LIMIT必须放在子查询内，详细请参照示例语句编写。");
-		}
-		StringBuffer countSql = new StringBuffer(countStr);
-		countSql = countSql.delete(limitIndex, EndIndex);
-		Long count = (Long) namedParameterJdbcTemplate.queryForMap(countSql.toString(), conditions).get("count");
-		
-		// 4. 返回结果
-		return PageDTO.builder().count(count).querySql(querySql.toString()).paramJson(paramJson).build();
-	}
-	
-	private PageDTO pageSqlDTO(String countSql, String querySql, PageIPO pageIPO) {
-		// 1. 参数校验
-		if (StringUtils.isEmpty(querySql)) {
-			throw new DBException("querySql不能为空");
-		}
-		
-		// 2. 处理分页参数
-		JSONObject paramJson = pageIPO(pageIPO);
+		JSONObject paramJson = dialect.toParamJson(pageIPO);
 		JSONObject conditions = pageIPO.getConditions();
 		
 		// 3. 统计
@@ -548,8 +497,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO pageSql(String querySql, PageIPO pageIPO) {
-		PageDTO pageDTO = pageSqlDTO(querySql, pageIPO);
-		return pageVO(pageDTO);
+		PageDTO pageDTO = dialect.pageDTOBuild(querySql, pageIPO);
+		return toPageVO(pageDTO);
 	}
 	
     /**
@@ -563,8 +512,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public <T> PageTVO<T> pageSql(String querySql, PageIPO pageIPO, Class<T> mappedClass) {
-		PageDTO pageDTO = pageSqlDTO(querySql, pageIPO);
-		return pageTVO(pageDTO, mappedClass);
+		PageDTO pageDTO = dialect.pageDTOBuild(querySql, pageIPO);
+		return toPageTVO(pageDTO, mappedClass);
 	}
 	
     /**
@@ -580,8 +529,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO pageSql(@Nullable String countSql, String querySql, PageIPO pageIPO) {
-		PageDTO pageDTO = pageSqlDTO(countSql, querySql, pageIPO);
-		return pageVO(pageDTO);
+		PageDTO pageDTO = pageDTOBuild(countSql, querySql, pageIPO);
+		return toPageVO(pageDTO);
 	}
 	
     /**
@@ -599,8 +548,8 @@ class DbQuery extends DbBase {
      * @return count（总数），data（分页列表数据）
      */
 	public <T> PageTVO<T> pageSql(@Nullable String countSql, String querySql, PageIPO pageIPO, Class<T> mappedClass) {
-		PageDTO pageDTO = pageSqlDTO(countSql, querySql, pageIPO);
-		return pageTVO(pageDTO, mappedClass);
+		PageDTO pageDTO = pageDTOBuild(countSql, querySql, pageIPO);
+		return toPageTVO(pageDTO, mappedClass);
 	}
 	
     /**
@@ -612,55 +561,7 @@ class DbQuery extends DbBase {
      * @return {@linkplain PageBeforeAndAfterVO}
      */
 	public PageBeforeAndAfterVO pageBeforeAndAfter(String querySql, PageIPO pageIPO, Long equalsId) {
-		// 1. 参数校验
-		if (StringUtils.isEmpty(querySql)) {
-			throw new DBException("querySql不能为空");
-		}
-		
-		// 2. 处理分页参数
-		int page = pageIPO.getPage();
-		int limit = pageIPO.getLimit();
-		JSONObject conditions = pageIPO.getConditions();
-		page--;
-		if (page >= 1) {
-			page = (int) ArithCompute.mul(page, limit);
-		}
-		
-		if (page > 0) {
-			page -= 1;
-		}
-		limit += 1;
-		
-		conditions.put("page", page);
-		conditions.put("limit", limit);
-		
-		// 3. 查询数据
-		JSONArray array = new JSONArray();
-		array.addAll(namedParameterJdbcTemplate.queryForList(querySql, conditions));
-		int size = array.size();
-		
-		// 4. 获得前后值
-		Long beforeId = null;
-		Long afterId = null;
-		String key = DBConstant.PRIMARY_KEY;
-		for (int i = 0; i < size; i++) {
-			JSONObject json = array.getJSONObject(i);
-			// 比较列表中相等的值，然后获取前一条与后一条数据
-			if (equalsId.equals(json.getLong(key))) {
-				if (i != 0) {// 不是列表中第一条数据
-					beforeId = array.getJSONObject(i - 1).getLong(key);
-				}
-				if (i != size - 1) {// 不是列表中最后一条数据
-					afterId = array.getJSONObject(i + 1).getLong(key);
-				}
-				break;
-			}
-		}
-		
-		return PageBeforeAndAfterVO.builder()
-		.beforeId(beforeId)
-		.afterId(afterId)
-		.build();
+		return dialect.pageBeforeAndAfter(querySql, pageIPO, equalsId);
 	}
-    
+	
 }
