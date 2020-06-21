@@ -13,8 +13,8 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
-import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
+import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
 import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class DbBase {
 	 */
 	boolean databaseFieldNamingStrategyRecognitionEnabled = true;
 	/** 启用删除查询过滤 */
-	boolean enableDeleteQueryFilter = true;
+	boolean enableDeleteQueryFilter = false;
 	
     // 方法
 	
