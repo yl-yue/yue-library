@@ -34,7 +34,7 @@ public abstract class AnsiSqlDialect extends DbBase implements Dialect {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
 		StringBuffer pageJoinSql = new StringBuffer(" ");
 		return pageJoinSql.append(Page.LIMIT_KEYWORD).append(" ").append(Page.LIMIT_NAMED_PARAMETER).append(" ")
-				.append(Page.OFFSET_NAMED_PARAMETER).toString();
+				.append(Page.PAGE_NAMED_PARAMETER).append(" ").toString();
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public abstract class AnsiSqlDialect extends DbBase implements Dialect {
 		
 		// 2. 返回结果
 		return Page.builder()
-				.offset(page)
+				.page(page)
 				.limit(limit)
 				.conditions(conditions)
 				.build();

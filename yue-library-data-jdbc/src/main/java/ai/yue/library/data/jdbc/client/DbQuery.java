@@ -128,7 +128,7 @@ class DbQuery extends DbBase {
 	public SqlRowSetMetaData getMetaData(String tableName) {
 		tableName = dialect.getWrapper().wrap(tableName);
 		StringBuffer sql = new StringBuffer("SELECT * FROM ").append(tableName).append(dialect.getPageJoinSql());
-		return queryForRowSet(sql.toString(), Page.builder().offset(0L).limit(0).build().toParamJson()).getMetaData();
+		return queryForRowSet(sql.toString(), Page.builder().page(0L).limit(0).build().toParamJson()).getMetaData();
 	}
     
 	private String getByColumnNameSqlBuild(String tableName, String columnName) {

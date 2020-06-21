@@ -29,7 +29,7 @@ public class JdbcAutoConfig {
 	@Primary
 	@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
 	public Db db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		return new Db(jdbcTemplate, namedParameterJdbcTemplate, new MysqlDialect());
+		return new Db(jdbcTemplate, namedParameterJdbcTemplate, new MysqlDialect(namedParameterJdbcTemplate));
 	}
 	
 }

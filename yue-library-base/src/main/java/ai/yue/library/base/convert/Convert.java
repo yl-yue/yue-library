@@ -18,6 +18,7 @@ import com.alibaba.fastjson.parser.ParserConfig;
 
 import ai.yue.library.base.convert.converter.JSONArrayConverter;
 import ai.yue.library.base.convert.converter.JSONObjectConverter;
+import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.ListUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
@@ -207,11 +208,12 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		try {
 			return cast(value, clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
-			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 yue-library 类型转换器转换，错误内容：{}", e.getMessage());
+			ExceptionUtils.printException(e);
+			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
 		}
 		
-		// 采用 yue-library 转换
-		return convert(clazz, value);
+		// 采用 hutool 转换
+		return cn.hutool.core.convert.Convert.convert(clazz, value);
 	}
 	
 	/**
@@ -241,7 +243,8 @@ public class Convert extends cn.hutool.core.convert.Convert {
 			
 			return castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
-			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 yue-library 类型转换器转换，错误内容：{}", e.getMessage());
+			ExceptionUtils.printException(e);
+			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 yue-library 类型转换器转换。");
 		}
 		
 		// 采用 yue-library 转换

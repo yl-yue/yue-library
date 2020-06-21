@@ -4,11 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.DbException;
-import ai.yue.library.base.util.ArithCompute;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.jdbc.client.dialect.AnsiSqlDialect;
@@ -33,15 +34,16 @@ public class MysqlDialect extends AnsiSqlDialect {
 	
 	private static final long serialVersionUID = -3734718212043823636L;
 
-	public MysqlDialect() {
+	public MysqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		wrapper = new Wrapper('`');
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	@Override
 	public String getPageJoinSql() {
 		StringBuffer pageJoinSql = new StringBuffer(" ");
-		return pageJoinSql.append(Page.LIMIT_KEYWORD).append(" ").append(Page.OFFSET_NAMED_PARAMETER).append(" , ")
-				.append(Page.LIMIT_NAMED_PARAMETER).toString();
+		return pageJoinSql.append(Page.LIMIT_KEYWORD).append(" ").append(Page.PAGE_NAMED_PARAMETER).append(" , ")
+				.append(Page.LIMIT_NAMED_PARAMETER).append(" ").toString();
 	}
 	
 	@Override
@@ -103,11 +105,6 @@ public class MysqlDialect extends AnsiSqlDialect {
     	sql = StringUtils.deleteLastEqualString(sql, ", ");
     	
     	return (long) namedParameterJdbcTemplate.update(sql.toString(), paramJson);
-    	
-//    	MapSqlParameterSource paramSource = new MapSqlParameterSource(paramJson);
-//    	GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-//    	namedParameterJdbcTemplate.update(sql.toString(), paramSource, generatedKeyHolder);
-//    	return generatedKeyHolder.getKey().longValue();
 	}
 	
 	// Page
@@ -135,12 +132,12 @@ public class MysqlDialect extends AnsiSqlDialect {
 		querySql.append(whereSql);
 		// 排序
 		if (dBSortEnum == null) {// 默认（不排序）
-			querySql.append(" LIMIT :page, :limit) b WHERE a.id = b.id");
+			querySql.append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 		} else {
 			if (DbSortEnum.ASC == dBSortEnum) {// 升序
-				querySql.append(" ORDER BY id LIMIT :page, :limit) b WHERE a.id = b.id");
+				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			} else {// 降序
-				querySql.append(" ORDER BY id DESC LIMIT :page, :limit) b WHERE a.id = b.id");
+				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			}
 		}
 		
@@ -171,7 +168,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 		querySql.append(tableName);
 		querySql.append(" ");
 		querySql.append(whereSql);
-		querySql.append(" LIMIT :page, :limit) b WHERE a.id = b.id");
+		querySql.append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 		
 		// 4. 统计总数
 		StringBuffer countSql = new StringBuffer();
@@ -224,29 +221,12 @@ public class MysqlDialect extends AnsiSqlDialect {
 			throw new DbException("querySql不能为空");
 		}
 		
-		// 2. 处理分页参数
-		int page = pageIPO.getPage();
-		int limit = pageIPO.getLimit();
-		JSONObject conditions = pageIPO.getConditions();
-		page--;
-		if (page >= 1) {
-			page = (int) ArithCompute.mul(page, limit);
-		}
-		
-		if (page > 0) {
-			page -= 1;
-		}
-		limit += 1;
-		
-		conditions.put("page", page);
-		conditions.put("limit", limit);
-		
-		// 3. 查询数据
+		// 2. 查询数据
 		JSONArray array = new JSONArray();
-		array.addAll(namedParameterJdbcTemplate.queryForList(querySql, conditions));
+		array.addAll(namedParameterJdbcTemplate.queryForList(querySql, toParamJson(pageIPO)));
 		int size = array.size();
 		
-		// 4. 获得前后值
+		// 3. 获得前后值
 		Long beforeId = null;
 		Long afterId = null;
 		String key = DbConstant.PRIMARY_KEY;
@@ -264,6 +244,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 			}
 		}
 		
+		// 4. 返回结果
 		return PageBeforeAndAfterVO.builder()
 		.beforeId(beforeId)
 		.afterId(afterId)

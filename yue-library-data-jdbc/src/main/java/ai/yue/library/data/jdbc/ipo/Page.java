@@ -24,17 +24,23 @@ public class Page {
 	public static final String LIMIT_KEYWORD = "LIMIT";
 	
 	/** 分页查询起始行命名占位符 **/
-	public static final String OFFSET_NAMED_PARAMETER = ":offset";
+	public static final String PAGE_NAMED_PARAMETER = ":page";
 	
 	/** 分页查询限制数量命名占位符 */
 	public static final String LIMIT_NAMED_PARAMETER = ":limit";
+	
+	/** page参数名 **/
+	public static final String PAGE_PARAM_NAME = "page";
+	
+	/** limit参数名 */
+	public static final String LIMIT_PARAM_NAME = "limit";
 	
 	/**
 	 * 查询起始行，从0开始计数，包含关系
 	 * <p>当前条件下，从第几行开始查询
 	 */
 	@NonNull
-	Long offset;
+	Long page;
 	
 	/**
 	 * 查询限制数量
@@ -55,8 +61,8 @@ public class Page {
 	 */
 	public JSONObject toParamJson() {
 		JSONObject paramJson = new JSONObject();
-		paramJson.put("offset", this.offset);
-		paramJson.put("limit", this.limit);
+		paramJson.put(PAGE_PARAM_NAME, this.page);
+		paramJson.put(LIMIT_PARAM_NAME, this.limit);
 		if (null != conditions && !conditions.isEmpty()) {
 			paramJson.putAll(conditions);
 		}
