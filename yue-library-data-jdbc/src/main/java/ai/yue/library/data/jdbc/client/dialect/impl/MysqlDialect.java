@@ -33,12 +33,13 @@ import cn.hutool.core.util.ArrayUtil;
 public class MysqlDialect extends AnsiSqlDialect {
 	
 	private static final long serialVersionUID = -3734718212043823636L;
-
+	
 	public MysqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		wrapper = new Wrapper('`');
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		super.wrapper = new Wrapper('`');
+		super.dialect = this;
+		super.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
-
+	
 	@Override
 	public String getPageJoinSql() {
 		StringBuffer pageJoinSql = new StringBuffer(" ");

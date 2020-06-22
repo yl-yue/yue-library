@@ -11,11 +11,11 @@ import ai.yue.library.data.jdbc.client.dialect.Dialect;
  * @since 0.0.1
  */
 public class Db extends DbInsert {
-	
+
 	public Db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, Dialect dialect) {
-		this.jdbcTemplate = jdbcTemplate;
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-		this.dialect = dialect;
+		super.jdbcTemplate = jdbcTemplate;
+		super.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		super.dialect = dialect;
 	}
 	
 }

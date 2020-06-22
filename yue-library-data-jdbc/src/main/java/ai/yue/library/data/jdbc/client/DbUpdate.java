@@ -31,7 +31,7 @@ import cn.hutool.core.util.ArrayUtil;
 class DbUpdate extends DbQuery {
 	
 	// Spring Update
-	
+
 	/**
      * 同 {@linkplain NamedParameterJdbcTemplate#update(String, SqlParameterSource, KeyHolder)}<br>
      * 指定SQL语句以创建预编译执行SQL和绑定更新参数

@@ -23,7 +23,7 @@ import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 class DbInsert extends DbDelete {
 	
 	// Insert
-	
+
 	/**
 	 * 插入源初始化
 	 * 

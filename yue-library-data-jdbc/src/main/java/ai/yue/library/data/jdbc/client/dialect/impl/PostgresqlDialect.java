@@ -1,5 +1,7 @@
 package ai.yue.library.data.jdbc.client.dialect.impl;
 
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
 import ai.yue.library.data.jdbc.client.dialect.AnsiSqlDialect;
 import ai.yue.library.data.jdbc.client.dialect.DialectName;
 import ai.yue.library.data.jdbc.client.dialect.Wrapper;
@@ -14,9 +16,11 @@ import ai.yue.library.data.jdbc.client.dialect.Wrapper;
 public abstract class PostgresqlDialect extends AnsiSqlDialect {
 	
 	private static final long serialVersionUID = 3889210427543389642L;
-
-	public PostgresqlDialect() {
-		wrapper = new Wrapper('"');
+	
+	public PostgresqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		super.wrapper = new Wrapper('"');
+		super.dialect = this;
+		super.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
 	@Override

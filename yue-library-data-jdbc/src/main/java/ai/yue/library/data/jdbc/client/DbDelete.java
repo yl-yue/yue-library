@@ -21,7 +21,7 @@ import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 class DbDelete extends DbUpdate {
 	
 	// Delete
-	
+
 	private String deleteSqlBuild(String tableName, JSONObject paramJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);

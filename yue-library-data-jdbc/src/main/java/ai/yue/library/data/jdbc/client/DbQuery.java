@@ -34,9 +34,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class DbQuery extends DbBase {
 	
-	// queryFor
-	
-    /**
+    // queryFor
+
+	/**
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * @param sql 要执行的SQL查询
