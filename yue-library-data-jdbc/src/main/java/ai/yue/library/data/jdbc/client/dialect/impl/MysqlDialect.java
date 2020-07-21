@@ -103,7 +103,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 			}
 			sql.append(", ");
 		}
-    	sql = StringUtils.deleteLastEqualString(sql, ", ");
+		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
     	
     	return (long) namedParameterJdbcTemplate.update(sql.toString(), paramJson);
 	}
@@ -259,7 +259,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 		paramValidate(tableName, paramJson, conditions);
         StringBuffer sql = new StringBuffer();
         sql.append("UPDATE ");
-        sql.append(tableName);
+        sql.append(wrapper.wrap(tableName));
         sql.append(" SET ");
         
         Set<String> keys = paramJson.keySet();
@@ -268,14 +268,14 @@ public class MysqlDialect extends AnsiSqlDialect {
 			String key = it.next();
 			// 排除更新条件
 			if (!ArrayUtil.contains(conditions, key)) {
-				sql.append(key);
+				sql.append(wrapper.wrap(key));
 				sql.append(" = ");
 				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {// 递增更新
-					sql.append(key);
+					sql.append(wrapper.wrap(key));
 					sql.append(" + :");
 				} else if (dBUpdateEnum == DbUpdateEnum.DECR // 递减更新
 						|| dBUpdateEnum == DbUpdateEnum.DECR_UNSIGNED) {// 递减-无符号更新
-					sql.append(key);
+					sql.append(wrapper.wrap(key));
 					sql.append(" - :");
 				} else {// 正常更新
 					sql.append(":");
@@ -284,7 +284,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 				sql.append(", ");
 			}
 		}
-		sql = StringUtils.deleteLastEqualString(sql, ", ");
+		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
 		String whereSql = paramToWhereSql(paramJson, conditions);
 		sql.append(whereSql);
         
@@ -294,7 +294,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 				// 排除更新条件
 				if (!ArrayUtil.contains(conditions, key)) {
 					sql.append(" AND ");
-					sql.append(key);
+					sql.append(wrapper.wrap(key));
 					sql.append(" >= :");
 					sql.append(key);
 				}

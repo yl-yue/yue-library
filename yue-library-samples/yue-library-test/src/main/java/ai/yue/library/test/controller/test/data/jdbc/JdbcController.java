@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -32,6 +34,7 @@ public class JdbcController {
 	JdbcDAO jdbcDAO;
 	@Autowired
 	Db db;
+	String tableName = "user";
 	
 	@GetMapping("/getMetaData")
 	public Result<?> getMetaData() {
@@ -92,6 +95,29 @@ public class JdbcController {
 		paramJsons[2].put("user_status", UserStatusEnum.正常.name());
 		jdbcDAO.insertBatch(paramJsons);
 		return ResultInfo.success();
+	}
+	
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DeleteMapping("/delete")
+	public Result<?> delete(@RequestParam("id") Long id) {
+		jdbcDAO.delete(id);
+		return ResultInfo.success();
+	}
+	
+	/**
+	 * 删除
+	 * 
+	 * @param deleteParamJson
+	 * @return
+	 */
+	@DeleteMapping("/deleteParamJson")
+	public Result<?> delete(JSONObject paramJson) {
+		return ResultInfo.success(db.delete(tableName, paramJson));
 	}
 	
 }

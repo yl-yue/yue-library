@@ -30,8 +30,7 @@ class DbDelete extends DbUpdate {
 		StringBuffer sql = new StringBuffer();
         sql.append("DELETE FROM ");
 		sql.append(dialect.getWrapper().wrap(tableName));
-		String whereSql = paramToWhereSql(paramJson);
-		sql.append(whereSql);
+		sql.append(paramToWhereSql(paramJson));
 		
 		// 3. 返回结果
 		return sql.toString();
@@ -50,7 +49,7 @@ class DbDelete extends DbUpdate {
 		
 		// 2. 获得SQL
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(dialect.getWrapper().wrap(DbConstant.PRIMARY_KEY), id);
+		paramJson.put(DbConstant.PRIMARY_KEY, id);
 		String sql = deleteSqlBuild(tableName, paramJson);
 		
 		// 3. 执行删除
@@ -90,7 +89,6 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public long delete(String tableName, JSONObject paramJson) {
 		String sql = deleteSqlBuild(tableName, paramJson);
-		paramJson = dialect.getWrapper().wrap(paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -107,7 +105,6 @@ class DbDelete extends DbUpdate {
 		String sql = deleteSqlBuild(tableName, paramJsons[0]);
 		
 		// 2. 执行
-		paramJsons = dialect.getWrapper().wrap(paramJsons);
         int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
         
         // 3. 确认影响行数
@@ -160,7 +157,7 @@ class DbDelete extends DbUpdate {
 		
 		// 2. 获得SQL
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(dialect.getWrapper().wrap(DbConstant.PRIMARY_KEY), id);
+		paramJson.put(DbConstant.PRIMARY_KEY, id);
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
 		
 		// 3. 执行删除
@@ -183,7 +180,6 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
-		paramJson = dialect.getWrapper().wrap(paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -201,7 +197,6 @@ class DbDelete extends DbUpdate {
 		String sql = deleteLogicSqlBuild(tableName, paramJsons[0]);
 		
 		// 2. 执行
-		paramJsons = dialect.getWrapper().wrap(paramJsons);
         int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
         
         // 3. 确认影响行数

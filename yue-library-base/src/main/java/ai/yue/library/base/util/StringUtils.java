@@ -51,27 +51,27 @@ public class StringUtils extends StrUtil {
 	 * @param condition 条件
 	 * @return 删除后的StringBuffer
 	 */
-	public static StringBuffer deleteFirstEqualString(StringBuffer sb, String condition) {
-		if (sb.toString().startsWith(condition)) {
-			return sb.delete(0, sb.length());
-		}
-		return sb;
+	public static String deleteFirstEqualString(CharSequence str, CharSequence prefix) {
+		return removePrefix(str, prefix);
 	}
     
 	/**
 	 * 删除尾部相等的字符串
-	 * @param sb 		需要处理的字符串
-	 * @param condition 条件
-	 * @return 删除后的StringBuffer
+	 * 
+	 * @param str 需要处理的字符串
+	 * @param suffix 条件
+	 * @return 删除后的字符串
 	 */
-	public static StringBuffer deleteLastEqualString(StringBuffer sb, String condition) {
+	public static String deleteLastEqualString(CharSequence str, CharSequence suffix) {
+		StringBuffer sb = new StringBuffer(str);
 		int end = sb.length();
-		int start = end - condition.length();
-		String str = sb.substring(start, end);
-		if (condition.equals(str)) {
-			return sb.delete(start, end);
+		int start = end - suffix.length();
+		String condition = sb.substring(start, end);
+		if (suffix.equals(condition)) {
+			return sb.delete(start, end).toString();
 		}
-		return sb;
+		
+		return sb.toString();
 	}
 	
     /**
@@ -82,10 +82,9 @@ public class StringUtils extends StrUtil {
      * @return 删除后的字符串
      */
     public static String deleteFirstLastEqualString(String str, String firstStr, String lastStr) {
-    	StringBuffer sb = new StringBuffer(str);
-    	sb = deleteFirstEqualString(sb, firstStr);
-    	sb = deleteLastEqualString(sb, lastStr);
-    	return sb.toString();
+    	str = deleteFirstEqualString(str, firstStr);
+    	str = deleteLastEqualString(str, lastStr);
+    	return str;
     }
     
     /**
