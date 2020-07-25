@@ -12,6 +12,7 @@
 	<description>yue library 测试示例</description>
 	
 	<dependencies>
+		<!-- yue-library -->
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-base-crypto</artifactId>
@@ -37,9 +38,10 @@
 			<artifactId>yue-library-pay</artifactId>
 		</dependency>
 		
+		<!-- SpringBoot -->
 		<dependency>
-			<groupId>com.egzosn</groupId>
-			<artifactId>pay-java-wx</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -56,6 +58,11 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-extra</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.egzosn</groupId>
+			<artifactId>pay-java-wx</artifactId>
 		</dependency>
 	</dependencies>
 </project>

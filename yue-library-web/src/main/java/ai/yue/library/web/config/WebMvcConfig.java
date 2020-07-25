@@ -13,6 +13,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
+import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
 import ai.yue.library.web.config.properties.WebProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 		resolvers.add(new JavaBeanArgumentResolver());
+		resolvers.add(new CustomRequestParamMethodArgumentResolver(true));
 	}
 	
 }

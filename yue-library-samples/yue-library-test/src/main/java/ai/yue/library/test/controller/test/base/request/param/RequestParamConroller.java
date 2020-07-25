@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.test.constant.test.TestEnum;
 import ai.yue.library.test.ipo.ValidationIPO;
 
 /**
@@ -66,6 +67,37 @@ public class RequestParamConroller {
 	
 	@DeleteMapping("/2")
 	public Result<?> del2(ValidationIPO validationIPO) {
+		return ResultInfo.success(validationIPO);
+	}
+	
+	
+	@GetMapping("/get3")
+	public Result<?> get3(Long id, boolean flag, String str, TestEnum testEnum) {
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+		paramJson.put("flag", flag);
+		paramJson.put("str", str);
+		paramJson.put("testEnum", testEnum);
+		return ResultInfo.success(paramJson);
+	}
+	
+	@PostMapping("/post3")
+	public Result<?> post3(Long id, boolean flag, String str, TestEnum testEnum) {
+		JSONObject paramJson = new JSONObject();
+		paramJson.put("id", id);
+		paramJson.put("flag", flag);
+		paramJson.put("str", str);
+		paramJson.put("testEnum", testEnum);
+		return ResultInfo.success(paramJson);
+	}
+	
+	@PutMapping("/3")
+	public Result<?> put3(ValidationIPO validationIPO) {
+		return ResultInfo.success(validationIPO);
+	}
+	
+	@DeleteMapping("/3")
+	public Result<?> del3(ValidationIPO validationIPO) {
 		return ResultInfo.success(validationIPO);
 	}
 	

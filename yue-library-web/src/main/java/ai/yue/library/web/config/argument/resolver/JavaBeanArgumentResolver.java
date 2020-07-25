@@ -1,13 +1,18 @@
 package ai.yue.library.web.config.argument.resolver;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import ai.yue.library.base.util.ParamUtils;
+import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.validation.Validator;
 import cn.hutool.core.bean.BeanUtil;
 
 /**
@@ -27,7 +32,12 @@ public class JavaBeanArgumentResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		return ParamUtils.getParam(parameter.getParameterType());
+		Object param = ParamUtils.getParam(parameter.getParameterType());
+		if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
+			SpringUtils.getBean(Validator.class).valid(param);
+		}
+		
+		return param;
 	}
 
 }

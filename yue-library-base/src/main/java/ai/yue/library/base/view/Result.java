@@ -72,6 +72,15 @@ public class Result<T> implements Serializable {
 		}
 	}
 	
+	/**
+	 * HTTP请求是否正确响应
+	 * 
+	 * @return 是否正确响应
+	 */
+	public boolean isSuccess() {
+		return flag;
+	}
+	
 	public <D> D getData(Class<D> clazz) {
 		return Convert.convert(data, clazz);
 	}
