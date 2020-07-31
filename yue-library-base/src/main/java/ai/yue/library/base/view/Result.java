@@ -52,7 +52,7 @@ public class Result<T> implements Serializable {
 	private String msg;
 	/** 状态 */
 	@JSONField(ordinal = 3)
-	private Boolean flag;
+	private boolean flag;
 	/** count */
 	@JSONField(ordinal = 4)
 	private Long count;
@@ -70,15 +70,6 @@ public class Result<T> implements Serializable {
 		if (!flag) {
 			throw new ResultException(this);
 		}
-	}
-	
-	/**
-	 * HTTP请求是否正确响应
-	 * 
-	 * @return 是否正确响应
-	 */
-	public boolean isSuccess() {
-		return flag;
 	}
 	
 	public <D> D getData(Class<D> clazz) {

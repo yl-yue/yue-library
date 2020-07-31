@@ -50,8 +50,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				SerializerFeature.WriteMapNullValue, 
 				SerializerFeature.WriteNullBooleanAsFalse,
 				SerializerFeature.WriteNullListAsEmpty, 
-				SerializerFeature.WriteNullNumberAsZero,
-				SerializerFeature.WriteNullStringAsEmpty
+				SerializerFeature.WriteNullNumberAsZero, 
+				SerializerFeature.WriteNullStringAsEmpty, 
+				SerializerFeature.WriteDateUseDateFormat, 
+				SerializerFeature.IgnoreErrorGetter
 		);
 		converter.setFastJsonConfig(config);
 		converters.add(0, converter);

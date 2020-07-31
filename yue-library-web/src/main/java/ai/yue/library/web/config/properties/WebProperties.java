@@ -12,6 +12,18 @@ import lombok.Data;
 @ConfigurationProperties("yue.web")
 public class WebProperties {
 	
+	/**
+	 * 启用FastJson优先于默认的Jackson做json解析
+	 * <p>HTTP序列化时对null值进行初始化处理：<br>
+	 * <code>
+	 * 	SerializerFeature.WriteMapNullValue, 
+	 * 	SerializerFeature.WriteNullBooleanAsFalse,
+	 * 	SerializerFeature.WriteNullListAsEmpty, 
+	 * 	SerializerFeature.WriteNullNumberAsZero,
+	 * 	SerializerFeature.WriteNullStringAsEmpty
+	 * </code>
+	 * <p>默认：false
+	 */
 	private boolean enabledFastJsonHttpMessageConverter = false;
 	
 }

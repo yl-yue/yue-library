@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    include:
+    - yue-library-base
+  datasource: 
+    druid: 
+      filter: 
+        slf4j:
+          enabled: true
+          statement-prepare-after-log-enabled: false
+          statement-execute-query-after-log-enabled: false
+          statement-executable-sql-log-enable: true
+logging:
+  level:
+    # 默认执行SQL打印
+    druid.sql.Statement: DEBUG
