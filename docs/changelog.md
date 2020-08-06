@@ -2,12 +2,13 @@
 ---
 ## TODO LIST
 ### base
-- 前后端统一表单验证
 
 ### jdbc
-- **内置全局拦截插件**：提供全表 delete 、 update 操作智能分析阻断，预防误操作
+- 【jdbc】多租户支持
+- 【jdbc】tidb特性支持
 - JDBC审计支持
 - JDBC框架遵循Java开发手册实现MySQL 数据库规约与框架层面的优化，如：SQL分页优化、表必备三字段、数据修订前先确认数据等规范
+
 ![数据修订前先确认数据](changelog_files/3.jpg)
 ![表必备三字段](changelog_files/1.jpg)
 ![SQL分页优化](changelog_files/2.jpg)
@@ -17,7 +18,6 @@
 - 增强第三方登录封装
 
 ### 其他
-- 基于spring-cloud-alibaba体系封装改造
 - 添加短信、OSS等封装
 - 加入996icu license 协议、木兰协议
 
@@ -29,17 +29,31 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 |JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
 |JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
 
-## 2.1.0【规划中】
+## 2.2.0【规划中】
+## 2.1.0【2020-08-08】
 ### 新特性
-- 独立的OAuth认证体系
-- 实用的参数解析器
-- 分离的web、webflux
-- 升级系列依赖版本
-- 删除失效方法
-- redis client 包名标准，规范登录？
+基于全新的spring-cloud-alibaba体系封装改造，拆分独立的OAuth认证体系，对webmvc、webflux分开支持。依赖定义如下：
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.1.10.RELEASE	|
+|spring-cloud-alibaba	|2.1.2.RELEASE	|
+|spring-cloud			|Greenwich.SR5	|
+
+[点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+
+- 【base】提供`yml`默认配置支持，一键解决常规坑点困扰，更适合国内标准
+- 【web】实用的参数解析器（解决参数获取困扰，不再区分Query传参与Body传参，Request请求参数智能解析）
+- 【web】HTTP消息转换器增强，fastjson与jackson一键切换
+- 【redis】规范redis包名标准，分离OAuth认证体系
+- 【jdbc】遵守Java开发手册命名规约，Service/DAO 层方法命名规约，优化如获取单个对象采用 get 做前缀
+- 【jdbc】提供友好的方言支持，为适配国产化数据库打下基础
+- 【jdbc】提供业务主键支持
+- 【jdbc】提供逻辑删除支持
+- 【jdbc】提供获得表元数据支持
 
 ### Bug修复
-- 批量插入优化，容易报错
+- 【jdbc】批量插入容易报错问题
 
 ## Finchley.SR4.1【2019-10-18】
 ### 新特性

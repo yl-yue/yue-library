@@ -45,6 +45,25 @@ public class ListUtils extends ListUtil {
 	}
 	
 	/**
+	 * 获得List数组中对应类型的第一个值
+	 * 
+	 * @param <T> 想要的类型
+	 * @param list List数组
+	 * @param clazz 想要的类型Class
+	 * @return 找到的第一个值或null
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T get(List<?> list, Class<T> clazz) {
+		for (Object value : list) {
+			if (value != null && value.getClass() == clazz) {
+				return (T) value;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * 数据分组
 	 * <p>将拥有相同的 key 值的JSON数据归为一组</p>
 	 * @param list	要处理的集合

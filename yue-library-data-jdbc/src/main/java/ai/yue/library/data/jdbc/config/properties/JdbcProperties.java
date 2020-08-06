@@ -2,7 +2,7 @@ package ai.yue.library.data.jdbc.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
+import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import lombok.Data;
 
 /**

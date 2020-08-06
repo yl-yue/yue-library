@@ -8,11 +8,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 
+import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbSortEnum;
-import ai.yue.library.data.jdbc.constant.FieldNamingStrategyEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;

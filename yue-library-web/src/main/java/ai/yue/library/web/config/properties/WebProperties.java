@@ -23,7 +23,9 @@ public class WebProperties {
 	 * 	SerializerFeature.WriteNullStringAsEmpty
 	 * </code>
 	 * <p>默认：false
+	 * @deprecated {@linkplain FastJsonHttpMessageConverterProperties#isEnabled()}
 	 */
+	@Deprecated
 	private boolean enabledFastJsonHttpMessageConverter = false;
 	
 }

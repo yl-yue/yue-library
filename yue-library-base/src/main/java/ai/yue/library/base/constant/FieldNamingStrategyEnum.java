@@ -1,4 +1,4 @@
-package ai.yue.library.data.jdbc.constant;
+package ai.yue.library.base.constant;
 
 import com.alibaba.fastjson.PropertyNamingStrategy;
 
@@ -6,15 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 数据库字段命名策略
+ * 字段命名策略
  * 
- * @deprecated {@linkplain ai.yue.library.base.constant.FieldNamingStrategyEnum}
  * @author	ylyue
  * @since	2020年2月20日
  */
 @Getter
 @AllArgsConstructor
-@Deprecated
 public enum FieldNamingStrategyEnum {
 	
 	/**

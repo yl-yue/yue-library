@@ -35,9 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MapUtils extends MapUtil {
 	
-	/**
-	 * 不可变的空JSON常量
-	 */
+	/** 不可变的空Json常量 */
 	public final static JSONObject FINAL_EMPTY_JSON = new JSONObject();
 	
 	/**
