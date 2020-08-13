@@ -10,8 +10,8 @@ import org.springframework.web.client.RestTemplate;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.handler.ExceptionHandlerProperties;
-import ai.yue.library.base.config.http.HttpsRequestFactory;
 import ai.yue.library.base.config.http.RestProperties;
+import ai.yue.library.base.config.http.SkipSslVerificationHttpRequestFactory;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.util.ApplicationContextUtils;
@@ -37,7 +37,7 @@ public class BaseAutoConfig {
 	@Bean
 	@ConditionalOnMissingBean
     public RestTemplate restTemplate(RestProperties restProperties){
-    	HttpsRequestFactory factory = new HttpsRequestFactory();
+		SkipSslVerificationHttpRequestFactory factory = new SkipSslVerificationHttpRequestFactory();
     	
     	// 设置链接超时时间
     	Integer connectTimeout = restProperties.getConnectTimeout();

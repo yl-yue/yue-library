@@ -18,13 +18,13 @@
 		<img src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central">
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html">
-		<img src="https://img.shields.io/badge/JDK-8+11+-green.svg" >
+		<img src="https://img.shields.io/badge/Java11+-green.svg" >
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-boot">
-		<img src="https://img.shields.io/badge/Spring%20Boot-2.0+2.1+-green.svg" alt="Spring%20Boot Version">
+		<img src="https://img.shields.io/badge/Spring%20Boot-2.1+2.2+-green.svg" alt="Spring%20Boot Version">
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-cloud">
-		<img src="https://img.shields.io/badge/Spring%20Cloud-Finchley+Greenwich+-green.svg" alt="Spring%20Cloud Version">
+		<img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich+Hoxton+-green.svg" alt="Spring%20Cloud Version">
 	</a>
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" >
@@ -54,6 +54,7 @@
 ├── yue-library  基础库
 │   ├── yue-library-dependencies  父pom
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
+│   ├── yue-library-base-crypto   基于Hutool实现的加解密模块，提供诸如数据脱敏此类的更多特性
 │   ├── yue-library-web           基础库WebMvc实现，用于servlet项目
 │   ├── yue-library-webflux       基础库WebFlux实现，用于响应式编程项目（如：SpringCloudGateway）
 │   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
@@ -93,13 +94,30 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 ```
 
 ### 版本说明
-　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分所依赖的`SpringCloud`版本。<br>
+　　yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
 　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不引入`yue-library-base`。
 
-|JDK版本|JDK说明												|SpringCloud版本|版本说明																			|
-|--		|--														|--				|--																					|
-|JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
-|JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
+**推荐版本依赖关系**
+
+|yue-library|Java		|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
+|--			|--			|--			|--			|--					|
+|2.1		|Java 11+	|2.1+		|Greenwich	|2.1+				|
+|2.2		|Java 11+	|2.2+		|Hoxton		|2.2+				|
+
+**依赖关系介绍**
+
+|依赖组件名				|依赖组件说明										|yue-library支持版本	|
+|--						|--												|--					|
+|Java 11				|LTS（Oracle长期支持版本）						|Greenwich、2.1、2.2	|
+|SpringBoot 2.1			|兼容Java 8、Java 11								|Greenwich、2.1		|
+|SpringBoot 2.2			|兼容Java 8、Java 11、Java 13					|2.2				|
+|SpringCloud Greenwich	|默认依赖SpringBoot 2.1							|Greenwich、2.1		|
+|SpringCloud Hoxton		|默认依赖SpringBoot 2.2							|2.2				|
+|SpringCloudAlibaba 2.1	|默认依赖SpringBoot 2.1、SpringCloud Greenwich	|2.1				|
+|SpringCloudAlibaba 2.2	|默认依赖SpringBoot 2.2、SpringCloud Hoxton		|2.2				|
+
+[SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
+[SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
 更多细节，请查看[中文文档](https://ylyue.cn)
 

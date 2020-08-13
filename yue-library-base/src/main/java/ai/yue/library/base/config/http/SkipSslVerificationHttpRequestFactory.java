@@ -16,10 +16,14 @@ import javax.net.ssl.X509TrustManager;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 /**
+ * 跳过SSL证书校验，{@linkplain org.springframework.boot.actuate.autoconfigure.cloudfoundry.servlet.SkipSslVerificationHttpRequestFactory}
+ * <p>{@link SimpleClientHttpRequestFactory} that skips SSL certificate verification.
+ * <p>信任自签证书，跳过Hostname检查
+ * 
  * @author	ylyue
  * @since	2018年11月10日
  */
-public class HttpsRequestFactory extends SimpleClientHttpRequestFactory {
+public class SkipSslVerificationHttpRequestFactory extends SimpleClientHttpRequestFactory {
 
 	@Override
 	protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException {

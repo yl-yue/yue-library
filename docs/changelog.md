@@ -6,6 +6,7 @@
 ### jdbc
 - 【jdbc】多租户支持
 - 【jdbc】tidb特性支持
+- 分表分库数据脱敏
 - JDBC审计支持
 - JDBC框架遵循Java开发手册实现MySQL 数据库规约与框架层面的优化，如：SQL分页优化、表必备三字段、数据修订前先确认数据等规范
 
@@ -22,12 +23,29 @@
 - 加入996icu license 协议、木兰协议
 
 ## 版本
-yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分基础依赖版本。<br>
+yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
 
-|JDK版本|JDK说明												|SpringCloud版本|版本说明																			|
-|--		|--														|--				|--																					|
-|JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
-|JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
+**推荐版本依赖关系**
+
+|yue-library|Java		|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
+|--			|--			|--			|--			|--					|
+|2.1		|Java 11+	|2.1+		|Greenwich	|2.1+				|
+|2.2		|Java 11+	|2.2+		|Hoxton		|2.2+				|
+
+**依赖关系介绍**
+
+|依赖组件名				|依赖组件说明										|yue-library支持版本	|
+|--						|--												|--					|
+|Java 11				|LTS（Oracle长期支持版本）						|Greenwich、2.1、2.2	|
+|SpringBoot 2.1			|兼容Java 8、Java 11								|Greenwich、2.1		|
+|SpringBoot 2.2			|兼容Java 8、Java 11、Java 13					|2.2				|
+|SpringCloud Greenwich	|默认依赖SpringBoot 2.1							|Greenwich、2.1		|
+|SpringCloud Hoxton		|默认依赖SpringBoot 2.2							|2.2				|
+|SpringCloudAlibaba 2.1	|默认依赖SpringBoot 2.1、SpringCloud Greenwich	|2.1				|
+|SpringCloudAlibaba 2.2	|默认依赖SpringBoot 2.2、SpringCloud Hoxton		|2.2				|
+
+[SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
+[SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
 ## 2.2.0【规划中】
 ## 2.1.0【2020-08-08】
@@ -42,13 +60,16 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 
 [点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-- 【base】提供`yml`默认配置支持，一键解决常规坑点困扰，更适合国内标准
-- 【web】实用的参数解析器（解决参数获取困扰，不再区分Query传参与Body传参，Request请求参数智能解析）
+- 【base】提供`yml`默认配置支持，一键解决常规坑点困扰（如：时间格式化、可执行SQL打印、接口定义打印等），更适合国内标准
+- 【base】`@ApiVersion` 注解可优雅的实现接口版本控制，只为更好的Restful
+- 【web】实用的参数解析器（解决参数获取困扰，不再区分Query传参与Body传参，Request请求参数智能解析），并提供`RequestParamUtils`工具类适用于各种环境下获取请求参数
 - 【web】HTTP消息转换器增强，fastjson与jackson一键切换
 - 【redis】规范redis包名标准，分离OAuth认证体系
+- 【redis】提供可配置的Redis存储对象序列/反序列化器
 - 【jdbc】遵守Java开发手册命名规约，Service/DAO 层方法命名规约，优化如获取单个对象采用 get 做前缀
 - 【jdbc】提供友好的方言支持，为适配国产化数据库打下基础
 - 【jdbc】提供业务主键支持
+- 【jdbc】提供字段命名策略支持
 - 【jdbc】提供逻辑删除支持
 - 【jdbc】提供获得表元数据支持
 
@@ -56,6 +77,14 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 - 【jdbc】批量插入容易报错问题
 
 ## Finchley.SR4.1【2019-10-18】
+### 历史版本命名说明
+yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分基础依赖版本。<br>
+
+|JDK版本|JDK说明												|SpringCloud版本|版本说明																			|
+|--		|--														|--				|--																					|
+|JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
+|JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
+
 ### 新特性
 - JDK8版本，基于 `Greenwich.SR2.1` 做兼容适配。<font color=red>继此版本之后将采用双版本同时发布模式</font>
 - 版本更新日志同 [Greenwich.SR2.1](#GreenwichSR21【2019-10-15】)
