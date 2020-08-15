@@ -29,9 +29,9 @@ public class JacksonHttpMessageConverterProperties {
 	
 	/**
 	 * 输出Null值为空字符串
-	 * <p>默认：true
+	 * <p>默认：false
 	 */
-	private boolean writeNullAsStringEmpty = true;
+	private boolean writeNullAsStringEmpty = false;
 	
 	/**
 	 * Null String 输出为空字符串
