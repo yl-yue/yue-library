@@ -82,14 +82,12 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 	<version>${version}</version>
 </parent>
 ```
-随后引入所需要的模块，如WebMvc项目引入：`yue-library-web`
-
-依赖说明：`yue-library-base`为基础模块，一般情况下不需要单独引入，如：web、data-jdbc、data-redis等模块皆已默认依赖。
+随后引入所需要的模块，如基础库：`yue-library-base`
 ```xml
 <dependencies>
 	<dependency>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library-web</artifactId>
+		<artifactId>yue-library-base</artifactId>
 	</dependency>
 	...
 </dependencies>
@@ -97,7 +95,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 
 ### 版本说明
 　　yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
-　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、data-jdbc、data-redis），可以不引入`yue-library-base`。
+　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不引入`yue-library-base`。
 
 **推荐版本依赖关系**
 

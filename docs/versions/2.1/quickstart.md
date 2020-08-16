@@ -4,7 +4,6 @@
 ├── yue-library  基础库
 │   ├── yue-library-dependencies  父pom
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
-│   ├── yue-library-base-crypto   基于Hutool实现的加解密模块，提供诸如数据脱敏此类的更多特性
 │   ├── yue-library-web           基础库WebMvc实现，用于servlet项目
 │   ├── yue-library-webflux       基础库WebFlux实现，用于响应式编程项目（如：SpringCloudGateway）
 │   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
@@ -32,84 +31,25 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 	<version>${version}</version>
 </parent>
 ```
-随后引入所需要的模块，如WebMvc项目引入：`yue-library-web`
-
-依赖说明：`yue-library-base`为基础模块，一般情况下不需要单独引入，如：web、data-jdbc、data-redis等模块皆已默认依赖。
+随后引入所需要的模块，如基础库：`yue-library-base`
 ```xml
 <dependencies>
 	<dependency>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library-web</artifactId>
+		<artifactId>yue-library-base</artifactId>
 	</dependency>
 	...
 </dependencies>
 ```
 
-### 启动项目
-新建一个SpringBoot `main`方法启动类：
-```java
-@SpringBootApplication
-public class TestApplication {
-
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(TestApplication.class, args);
-	}
-
-}
-```
-
-写一个测试接口：
-```java
-@RestController
-@RequestMapping("/quickstart")
-public class QuickstartController {
-
-	@GetMapping("/get")
-	public Result<?> get(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
-	}
-	
-}
-```
-
-访问接口测试，如：http://localhost:8080/quickstart/get
-```json
-{
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-    "count": null,
-    "data": {}
-}
-```
-
-上面的代码完全保持了SpringBoot的风格，但又提供了更多特性增强，如：HTTP消息转换器对 **Alibaba Fastjson** 的支持，同时不再区分 **query from-data json** 等传参方式，默认也对 **跨域、时间格式、异常、参数校验** 等常见坑点进行了本土化处理与特性增强。
-
 ### 版本说明
-　　yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
-　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、data-jdbc、data-redis），可以不引入`yue-library-base`。
+　　yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然后以.1、.2、.3...这种形式，目的是为了方便区分所依赖的`SpringCloud`版本。<br>
+　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：data-jdbc、data-redis），可以不引入`yue-library-base`。
 
-**推荐版本依赖关系**
-
-|yue-library|Java		|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
-|--			|--			|--			|--			|--					|
-|2.1		|Java 11+	|2.1+		|Greenwich	|2.1+				|
-|2.2		|Java 11+	|2.2+		|Hoxton		|2.2+				|
-
-**依赖关系介绍**
-
-|依赖组件名				|依赖组件说明										|yue-library支持版本	|
-|--						|--												|--					|
-|Java 11				|LTS（Oracle长期支持版本）						|Greenwich、2.1、2.2	|
-|SpringBoot 2.1			|兼容Java 8、Java 11								|Greenwich、2.1		|
-|SpringBoot 2.2			|兼容Java 8、Java 11、Java 13					|2.2				|
-|SpringCloud Greenwich	|默认依赖SpringBoot 2.1							|Greenwich、2.1		|
-|SpringCloud Hoxton		|默认依赖SpringBoot 2.2							|2.2				|
-|SpringCloudAlibaba 2.1	|默认依赖SpringBoot 2.1、SpringCloud Greenwich	|2.1				|
-|SpringCloudAlibaba 2.2	|默认依赖SpringBoot 2.2、SpringCloud Hoxton		|2.2				|
-
-[SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
-[SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+|JDK版本|JDK说明												|SpringCloud版本|版本说明																			|
+|--		|--														|--				|--																					|
+|JDK8	|LTS（Oracle长期支持版本），目前大部分互联网公司采用版本|Finchley		|JDK8兼容版本，每次新特性发布都会进行一次全面的兼容适配与测试，以供JDK8用户稳定使用	|
+|JDK11	|LTS（Oracle长期支持版本），作者采用版本				|Greenwich		|JDK11推荐版本，提供更快速的迭代与反馈												|
 
 ## 配置与文档说明
 　　`yue-library`自动装配了一系列的基础Bean与环境配置项，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域，更多配置项与细节介绍，可查看 [官方文档](https://ylyue.cn) 中各模块的详细说明。<br>
