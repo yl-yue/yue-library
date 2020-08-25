@@ -32,10 +32,31 @@ import lombok.extern.slf4j.Slf4j;
  * @since 0.0.1
  */
 @Slf4j
-class DbQuery extends DbBase {
+class DbQuery extends DbJdbcTemplate {
 	
+	// query
+	
+    /**
+     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}
+     * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
+     * 
+     * @param <T> 普通类型泛型
+     * @param sql 要执行的SQL查询
+     * @param paramJson 要绑定到查询的参数映射
+     * @param mappedClass 结果对象期望匹配的普通类型
+     * @return 所需普通类型的结果对象（如：Long, String, Boolean）或null
+     */
+	public <T> T queryObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
+		try {
+			return namedParameterJdbcTemplate.queryForObject(sql, paramJson, mappedClass);
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			return null;
+		}
+	}
+    
     // queryFor
-
+    
 	/**
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
@@ -49,21 +70,21 @@ class DbQuery extends DbBase {
 	}
     
     /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}
+     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, ai.yue.library.data.jdbc.support.BeanPropertyRowMapper<T>)}
      * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * 
-     * @param <T> 泛型
+     * @param <T> JavaBean的泛型
      * @param sql 要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
-     * @param mappedClass 映射类
+     * @param mappedClass POJO映射类
      * @return POJO对象
      */
     public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
     	try {
     		return namedParameterJdbcTemplate.queryForObject(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
-    	}catch (Exception e) {
-    		log.warn(e.getMessage());
-    		return null;
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			return null;
 		}
 	}
     

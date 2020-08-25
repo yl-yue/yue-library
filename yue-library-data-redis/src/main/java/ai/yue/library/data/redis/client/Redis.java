@@ -9,7 +9,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.data.redis.constant.RedisConstant;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since	2018年3月27日
  */
 @Slf4j
+@Data
 @AllArgsConstructor
 public class Redis {
 
@@ -297,6 +300,29 @@ public class Redis {
 	 */
 	public String lpop(String key) {
 		return stringRedisTemplate.opsForList().leftPop(key);
+	}
+	
+	// static
+	
+    /**
+     * Redis分割Key拼接，参考 {@linkplain String#join(CharSequence, CharSequence...)}
+     * 
+     * <blockquote>示例：
+     * <pre>
+     * {@code
+     *     String message = Redis.join("Java", "is", "cool");
+     *     // message returned is: "Java:is:cool"
+     * }
+     * </pre>
+     * </blockquote>
+     * 
+     * 注意，如果元素为null，则添加 {@code "null"}。
+     * 
+     * @param  elements 要连接在一起的元素。
+     * @return 由Redis Key分隔符分隔的元素组成的新字符串
+     */
+	public static String separatorJoin(String... elements) {
+		return String.join(RedisConstant.KEY_SEPARATOR, elements);
 	}
 	
 }
