@@ -10,8 +10,9 @@ import org.springframework.web.client.RestTemplate;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.handler.ExceptionHandlerProperties;
-import ai.yue.library.base.config.http.RestProperties;
-import ai.yue.library.base.config.http.SkipSslVerificationHttpRequestFactory;
+import ai.yue.library.base.config.net.http.RestProperties;
+import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory;
+import ai.yue.library.base.config.net.proxy.NetProxy;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.util.ApplicationContextUtils;
@@ -27,7 +28,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ AsyncConfig.class, ApplicationContextUtils.class, SpringUtils.class, DateTimeFormatConfig.class })
+@Import({ ApplicationContextUtils.class, SpringUtils.class, NetProxy.class, AsyncConfig.class,
+		DateTimeFormatConfig.class })
 @EnableConfigurationProperties({ ApiVersionProperties.class, ExceptionHandlerProperties.class, RestProperties.class,
 		CorsProperties.class, })
 public class BaseAutoConfig {

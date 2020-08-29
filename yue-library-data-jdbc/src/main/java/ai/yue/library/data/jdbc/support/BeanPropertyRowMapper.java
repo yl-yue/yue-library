@@ -1,6 +1,7 @@
 package ai.yue.library.data.jdbc.support;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -12,7 +13,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -28,6 +28,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.util.BeanUtils;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -187,7 +189,12 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 		this.mappedProperties = new HashSet<>();
 		PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
 		for (PropertyDescriptor pd : pds) {
-			if (pd.getWriteMethod() != null) {
+			Method writeMethod = pd.getWriteMethod();
+			if (writeMethod == null) {
+				writeMethod = ReflectUtil.getMethodByName(mappedClass, BeanUtils.getSetMethodName(pd.getName()));
+			}
+			
+			if (writeMethod != null) {
 				String databaseFieldName = AnnotationUtil.getAnnotationValue(ReflectUtil.getField(mappedClass, pd.getName()), FieldName.class);
 				if (StrUtil.isNotEmpty(databaseFieldName)) {
 					this.mappedFields.put(databaseFieldName, pd);
@@ -251,10 +258,11 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	@Override
 	public T mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		Assert.state(this.mappedClass != null, "Mapped class was not specified");
-		T mappedObject = BeanUtils.instantiateClass(this.mappedClass);
+		T mappedObject = org.springframework.beans.BeanUtils.instantiateClass(this.mappedClass);
 		BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(mappedObject);
 		initBeanWrapper(bw);
-
+		Object wrappedInstance = bw.getWrappedInstance();
+		
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnCount = rsmd.getColumnCount();
 		Set<String> populatedProperties = (isCheckFullyPopulated() ? new HashSet<>() : null);
@@ -271,9 +279,35 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 								"' of type '" + ClassUtils.getQualifiedName(pd.getPropertyType()) + "'");
 					}
 					try {
-						bw.setPropertyValue(pd.getName(), value);
-					}
-					catch (TypeMismatchException ex) {
+						/*
+						 * 支持JavaBean中存在多个setMethod方法；
+						 * 在JavaBean中调用setMethod方法设置JSONObject类型value时进行额外解析处理
+						 */
+						Method writeMethod = pd.getWriteMethod();
+						if (writeMethod != null
+								&& ((value != null && value.getClass() == pd.getPropertyType()) || value == null)) {
+							bw.setPropertyValue(pd.getName(), value);
+						} else {
+							String setMethodName = BeanUtils.getSetMethodName(pd.getName());
+							if (value != null) {
+								writeMethod = ReflectUtil.getPublicMethod(this.mappedClass, setMethodName, value.getClass());
+							}
+							if (writeMethod == null) {
+								writeMethod = ReflectUtil.getPublicMethod(this.mappedClass, setMethodName, Object.class);
+							}
+							if (writeMethod == null) {
+								writeMethod = ReflectUtil.getPublicMethod(this.mappedClass, setMethodName, pd.getPropertyType());
+								if (writeMethod != null) {
+									if (Map.class.isAssignableFrom(pd.getPropertyType())) {
+										value = Convert.toJSONObject(value);
+									}
+								}
+							}
+							if (writeMethod != null) {
+								ReflectUtil.invokeWithCheck(wrappedInstance, writeMethod, value);
+							}
+						}
+					} catch (TypeMismatchException ex) {
 						if (value == null && this.primitivesDefaultedForNullValue) {
 							if (logger.isDebugEnabled()) {
 								logger.debug("Intercepted TypeMismatchException for row " + rowNumber +
@@ -282,21 +316,18 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 										ClassUtils.getQualifiedName(pd.getPropertyType()) +
 										"' on object: " + mappedObject, ex);
 							}
-						}
-						else {
+						} else {
 							throw ex;
 						}
 					}
 					if (populatedProperties != null) {
 						populatedProperties.add(pd.getName());
 					}
-				}
-				catch (NotWritablePropertyException ex) {
+				} catch (NotWritablePropertyException ex) {
 					throw new DataRetrievalFailureException(
 							"Unable to map column '" + column + "' to property '" + pd.getName() + "'", ex);
 				}
-			}
-			else {
+			} else {
 				// No PropertyDescriptor found
 				if (rowNumber == 0 && logger.isDebugEnabled()) {
 					logger.debug("No property found for column '" + column + "' mapped to field '" + field + "'");

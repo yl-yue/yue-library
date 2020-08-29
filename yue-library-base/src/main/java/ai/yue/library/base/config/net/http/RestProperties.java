@@ -1,4 +1,4 @@
-package ai.yue.library.base.config.http;
+package ai.yue.library.base.config.net.http;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @since	2018年11月6日
  */
 @Data
-@ConfigurationProperties("yue.rest")
+@ConfigurationProperties("yue.net.rest")
 public class RestProperties {
 	
 	/**
