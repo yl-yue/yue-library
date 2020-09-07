@@ -10,7 +10,9 @@ import javax.validation.ConstraintViolation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
@@ -347,15 +349,20 @@ public class Validator {
 		if (violations.size() > 0) {
 			log.warn("{} violations.", violations.size());
 			Console.log("校验对象：{}", param);
-			JSONObject paramHint = new JSONObject();
+			JSONArray errorHints = new JSONArray();
 			violations.forEach(violation -> {
-				String key = violation.getPropertyPath().toString();
-				String msg = violation.getMessage();
-				paramHint.put(key, msg);
-				System.out.println(key + " " + msg);
+				String errorkey = violation.getPropertyPath().toString();
+				Object errorValue = violation.getInvalidValue();
+				String errorHintMsg = violation.getMessage();
+				JSONObject errorHint = new JSONObject(true);
+				errorHint.put("errorkey", errorkey);
+				errorHint.put("errorValue", errorValue);
+				errorHint.put("errorHintMsg", errorHintMsg);
+				errorHints.add(errorHint);
+				System.out.println(errorHint.toString(SerializerFeature.WriteMapNullValue));
 			});
 			
-			throw new ValidateException(paramHint.toJSONString());
+			throw new ValidateException(errorHints.toString(SerializerFeature.WriteMapNullValue));
 		}
     	
     	return this;

@@ -1,5 +1,9 @@
 package ai.yue.library.test.controller.base.request.param;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +26,8 @@ import ai.yue.library.test.ipo.ValidationIPO;
 @RestController
 @RequestMapping("/requestParam")
 public class RequestParamConroller {
+	
+	// Json
 	
 	@GetMapping
 	public Result<?> get(JSONObject paramJson) {
@@ -48,7 +54,7 @@ public class RequestParamConroller {
 		return ResultInfo.success(paramJson);
 	}
 	
-	
+	// JavaBean
 	
 	@GetMapping("/2")
 	public Result<?> get2(ValidationIPO validationIPO) {
@@ -70,6 +76,7 @@ public class RequestParamConroller {
 		return ResultInfo.success(validationIPO);
 	}
 	
+	// 普通类型
 	
 	@GetMapping("/get3")
 	public Result<?> get3(Long id, boolean flag, String str, TestEnum testEnum) {
@@ -91,14 +98,35 @@ public class RequestParamConroller {
 		return ResultInfo.success(paramJson);
 	}
 	
-	@PutMapping("/3")
-	public Result<?> put3(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+	// List AND Array
+	
+	@PostMapping("/list1")
+	public Result<?> list1(String str, boolean bool, List<Long> ids) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("str", str);
+		jsonObject.put("bool", bool);
+		jsonObject.put("ids", ids);
+		return ResultInfo.success(jsonObject);
 	}
 	
-	@DeleteMapping("/3")
-	public Result<?> del3(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+	@PostMapping("/list2")
+	public Result<?> list2(List<JSONObject> ids) {
+		return ResultInfo.success(ids);
+	}
+	
+	@PostMapping("/list3")
+	public Result<?> list3(JSONObject[] ids) {
+		return ResultInfo.success(ids);
+	}
+	
+	@PostMapping("/list4")
+	public Result<?> list4(String[] ids) {
+		return ResultInfo.success(ids);
+	}
+	
+	@PostMapping("/list5")
+	public Result<?> list5(@Valid List<ValidationIPO> validationIPOs) {
+		return ResultInfo.success(validationIPOs);
 	}
 	
 }

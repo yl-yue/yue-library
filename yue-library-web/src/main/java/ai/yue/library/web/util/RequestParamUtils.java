@@ -1,15 +1,18 @@
 package ai.yue.library.web.util;
 
-import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.util.StringUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
+import com.alibaba.fastjson.JSONObject;
+
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.web.util.servlet.ServletUtils;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 请求参数工具栏
@@ -23,8 +26,8 @@ public class RequestParamUtils {
     /**
      * 工具栏，不允许实例
      */
-    private RequestParamUtils() {
-    }
+	private RequestParamUtils() {
+	}
 
     /**
      * 获取请求参数
@@ -38,10 +41,10 @@ public class RequestParamUtils {
         //判断请求内容类型
         if (StringUtils.isNotEmpty(contentType) && MediaType.MULTIPART_FORM_DATA_VALUE.equals(contentType.split(";")[0])) {
             return getRequestUrlParamJson(request);
-        } else {
-            //TODO html、xml、JavaScript暂时当做json处理，后序有业务需求时再迭代
-            return getRawJson(request);
-        }
+		} else {
+			// TODO html、xml、JavaScript暂时当做json处理，后序有业务需求时再迭代
+			return getRawJson(request);
+		}
     }
 
     /**
@@ -78,23 +81,22 @@ public class RequestParamUtils {
      * @Author: liuyang
      * @return json对象
      */
-    private static JSONObject getRawJson(HttpServletRequest request) {
-        //获取url中的参数
-        JSONObject json = getRequestUrlParamJson(request);
-        String body = null;
-        try {
-            body = ServletUtils.getBody(request);
-        }catch (IllegalStateException e){
-            log.warn("获取body读取流异常: {}",e.getMessage());
-        }
-        //将字符串转为json
-        if (StringUtils.isNotEmpty(body)) {
-            JSONObject tempJson = Convert.toJSONObject(body);
-            for (String key : tempJson.keySet()) {
-                json.put(key, tempJson.get(key));
-            }
-        }
-        return json;
-    }
-
+	private static JSONObject getRawJson(HttpServletRequest request) {
+		// 获取url中的参数
+		JSONObject json = getRequestUrlParamJson(request);
+		String body = null;
+		try {
+			body = ServletUtils.getBody(request);
+		} catch (IllegalStateException e) {
+			log.warn("获取body读取流异常: {}", e.getMessage());
+		}
+		// 将字符串转为json
+		if (StringUtils.isNotEmpty(body)) {
+			JSONObject tempJson = Convert.toJSONObject(body);
+			json.putAll(tempJson);
+		}
+		
+		return json;
+	}
+    
 }

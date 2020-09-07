@@ -2,14 +2,13 @@ package ai.yue.library.base.config.net.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -36,25 +35,25 @@ public class SkipSslVerificationHttpRequestFactory extends SimpleClientHttpReque
 	private void prepareHttpsConnection(HttpsURLConnection connection) {
 		connection.setHostnameVerifier(new SkipHostnameVerifier());
 		try {
-			connection.setSSLSocketFactory(createSslSocketFactory());
+			connection.setSSLSocketFactory(SkipSslVerificationHttpRequestFactory.getSSLContext().getSocketFactory());
 		} catch (Exception ex) {
 			// Ignore
 		}
 	}
 	
-	private SSLSocketFactory createSslSocketFactory() throws Exception {
-		SSLContext context = SSLContext.getInstance("TLS");
-		context.init(null, new TrustManager[] { new SkipX509TrustManager() }, new SecureRandom());
-		return context.getSocketFactory();
-	}
-	
-	private class SkipHostnameVerifier implements HostnameVerifier {
-
-		@Override
-		public boolean verify(String s, SSLSession sslSession) {
-			return true;
+	/**
+	 * 信任自签证书
+	 */
+	public static SSLContext getSSLContext() {
+		SSLContext sslContext = null;
+		try {
+			sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, new TrustManager[] { new SkipX509TrustManager() }, new SecureRandom());
+		} catch (NoSuchAlgorithmException | KeyManagementException e) {
+			e.printStackTrace();
 		}
-
+		
+		return sslContext;
 	}
 	
 	private static class SkipX509TrustManager implements X509TrustManager {

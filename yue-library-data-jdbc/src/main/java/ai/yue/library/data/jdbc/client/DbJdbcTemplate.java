@@ -87,6 +87,20 @@ class DbJdbcTemplate extends DbBase {
 	}
 	
     /**
+     * {@link JdbcTemplate#queryForMap(String, Object...)} 的安全查询方式
+     * <p>执行以 '?' 作为参数占位符的SQL语句进行单行查询
+	 * <p>查询预期应该是一个单行查询否则结果为null。
+	 * 
+     * @param sql SQL语句中可以包含一个或多个 '?' 参数占位符
+     * @param args 查询参数，有序的对应SQL语句中的 '?' 参数占位符
+     * @return Json对象
+     */
+	public JSONObject jdbcQueryForJson(String sql, @Nullable Object... args) {
+		var list = jdbcQueryForList(sql, args);
+		return resultToJson(list);
+	}
+	
+    /**
      * 同 {@link JdbcTemplate#queryForList(String, Object...)}
      * <p>执行以 '?' 作为参数占位符的SQL语句进行列表查询
 	 * <p>查询预期为一个多行查询

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
@@ -187,6 +188,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 		resolvers.add(new JavaBeanArgumentResolver());
+		resolvers.add(new ArrayArgumentResolver(true));
 		resolvers.add(new CustomRequestParamMethodArgumentResolver(true));
 	}
 	

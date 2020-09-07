@@ -10,7 +10,11 @@ public interface Constant {
 
 	/** yue-library前缀 */
 	String PREFIX = "yue-library-";
-	/** body参数传递 */
+	/**
+	 * body参数传递
+	 * @deprecated ai.yue.library.web.config.argument.resolver.RepeatedlyReadRequestFilter 自动传递可反复读取的HttpServletRequest
+	 */
+	@Deprecated
 	String BODY_PARAM_TRANSMIT = PREFIX + "Body-Param-Transmit";
 	
 }
