@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library</artifactId>
+		<version>${revision}${sha1}${changelist}</version>
+	</parent>
+	<artifactId>yue-library-data-es</artifactId>
+	<name>yue-library-data-es</name>
+	<description>yue-library-data-es</description>
+	
+	<properties>
+		<!-- 升级es定义版本 -->
+		<elasticsearch.version>7.3.0</elasticsearch.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-jdbc</artifactId>
+		</dependency>
+		
+		<!-- es init - start -->
+		<dependency>
+		    <groupId>com.amazon.opendistroforelasticsearch.client</groupId>
+		    <artifactId>opendistro-sql-jdbc</artifactId>
+		    <version>1.9.0.0</version>
+		</dependency>
+		
+		<!-- 升级es定义版本 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        </dependency>
+        <!-- es init - end -->
+	</dependencies>
+</project>

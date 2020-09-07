@@ -30,6 +30,8 @@
 		<module>yue-library-data-jdbc</module>
 		<!-- 基础库-redis模块 -->
 		<module>yue-library-data-redis</module>
+		<!-- 基础库-es模块 -->
+		<module>yue-library-data-es</module>
 		<!-- 基础库-认证客户端模块 -->
 		<module>yue-library-auth-client</module>
 		<!-- 基础库-认证服务模块 -->
@@ -96,6 +98,11 @@
 			<dependency>
 				<groupId>ai.ylyue</groupId>
 				<artifactId>yue-library-data-redis</artifactId>
+				<version>${revision}${sha1}${changelist}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.ylyue</groupId>
+				<artifactId>yue-library-data-es</artifactId>
 				<version>${revision}${sha1}${changelist}</version>
 			</dependency>
 			<dependency>
