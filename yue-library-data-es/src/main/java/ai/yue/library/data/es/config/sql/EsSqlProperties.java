@@ -1,4 +1,4 @@
-package ai.yue.library.data.es.config.properties;
+package ai.yue.library.data.es.config.sql;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -11,9 +11,14 @@ import lombok.Data;
  * @since	2020年8月28日
  */
 @Data
-@ConfigurationProperties("yue.es.sql")
+@ConfigurationProperties(EsSqlProperties.PREFIX)
 public class EsSqlProperties {
 
+	/**
+	 * Prefix of {@link EsSqlProperties}.
+	 */
+	public static final String PREFIX = "yue.es.sql";
+	
 	/**
 	 * 是否启用 <code style="color:red">Elasticsearch Db</code> 自动配置
 	 * <p>提供Bean esDb

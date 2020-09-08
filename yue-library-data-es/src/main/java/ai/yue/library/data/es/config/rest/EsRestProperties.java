@@ -1,4 +1,4 @@
-package ai.yue.library.data.es.config.properties;
+package ai.yue.library.data.es.config.rest;
 
 import java.util.List;
 
@@ -13,9 +13,14 @@ import lombok.Data;
  * @since	2020年8月28日
  */
 @Data
-@ConfigurationProperties("yue.es.rest")
+@ConfigurationProperties(EsRestProperties.PREFIX)
 public class EsRestProperties {
 
+	/**
+	 * Prefix of {@link EsRestProperties}.
+	 */
+	public static final String PREFIX = "yue.es.rest";
+	
 	/**
 	 * 是否启用 <code style="color:red">Elasticsearch RestHighLevelClient</code> 自动配置
 	 * <p>默认：false
