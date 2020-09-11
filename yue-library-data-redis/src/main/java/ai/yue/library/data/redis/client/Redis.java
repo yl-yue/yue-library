@@ -217,7 +217,7 @@ public class Redis {
 	 * @param value 设置的值
 	 */
 	public void hset(String key, String hashKey, Object value) {
-		stringRedisTemplate.opsForHash().put(key, hashKey, value);
+		redisTemplate.opsForHash().put(key, hashKey, value);
 	}
 	
 	/**
@@ -229,7 +229,7 @@ public class Redis {
 	 * @return hashKey的值
 	 */
 	public Object hget(String key, String hashKey) {
-		return stringRedisTemplate.opsForHash().get(key, hashKey);
+		return redisTemplate.opsForHash().get(key, hashKey);
 	}
 	
 	/**
@@ -243,7 +243,7 @@ public class Redis {
 	 * @return hashKey的反序列化对象
 	 */
 	public <T> T hget(String key, String hashKey, Class<T> clazz) {
-		return Convert.convert(stringRedisTemplate.opsForHash().get(key, hashKey), clazz);
+		return Convert.convert(redisTemplate.opsForHash().get(key, hashKey), clazz);
 	}
 	
 	/**
@@ -254,7 +254,7 @@ public class Redis {
 	 * @param hashKeys 不能为空
 	 */
 	public void hdel(String key, Object... hashKeys) {
-		stringRedisTemplate.opsForHash().delete(key, hashKeys);
+		redisTemplate.opsForHash().delete(key, hashKeys);
 	}
 	
 	/**
@@ -265,7 +265,7 @@ public class Redis {
 	 * @return map
 	 */
 	public Map<Object, Object> hgetall(String key) {
-		return stringRedisTemplate.opsForHash().entries(key);
+		return redisTemplate.opsForHash().entries(key);
 	}
 	
 	// List（列表）
