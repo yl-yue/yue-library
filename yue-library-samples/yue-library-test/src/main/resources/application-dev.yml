@@ -1,5 +1,4 @@
 spring:
-  mvc:    hiddenmethod:      filter:        enabled: true
   datasource: 
     druid: 
       url: jdbc:mysql://77.0.3.21:30200/ssc_demo?characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true
@@ -25,6 +24,8 @@ spring:
       password: pEzcu2c0hG84LkAyNgjg
 yue:  api-version:    minimum-version: 1
   web:
-#    http-message-converter:#      jackson:#        enabled: true
-#        write-null-number-as-zero: true    http-message-converter:      fastjson:
-        enabled: true
+#    enabled-repeatedly-read-servlet-request: true
+#    enabled-repeatedly-read-servlet-request: false
+    http-message-converter:      jackson:        enabled: true
+#        write-null-number-as-zero: true#    http-message-converter:#      fastjson:
+#        enabled: true

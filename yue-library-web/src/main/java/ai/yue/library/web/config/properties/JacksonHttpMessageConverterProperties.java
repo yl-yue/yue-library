@@ -12,8 +12,13 @@ import lombok.Data;
  * @since	2020年4月6日
  */
 @Data
-@ConfigurationProperties("yue.web.http-message-converter.jackson")
+@ConfigurationProperties(JacksonHttpMessageConverterProperties.PREFIX)
 public class JacksonHttpMessageConverterProperties {
+	
+	/**
+	 * Prefix of {@link JacksonHttpMessageConverterProperties}.
+	 */
+	public static final String PREFIX = WebProperties.PREFIX + ".http-message-converter.jackson";
 	
 	/**
 	 * 启用yue-library对Jackson进行增强配置

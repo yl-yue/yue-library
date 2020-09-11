@@ -13,19 +13,19 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import ai.yue.library.web.util.servlet.ServletUtils;
 
 /**
- * ServletInputStream可反复读取的HttpServletRequestWrapper
+ * 包装HttpServletRequest实现输入流可重复读取
  * 
  * @author	ylyue
  * @since	2020年9月3日
  */
-public class RepeatedlyReadRequestWrapper extends HttpServletRequestWrapper {
+public class RepeatedlyReadServletRequestWrapper extends HttpServletRequestWrapper {
 	
 	/**
 	 * 流中的数据
 	 */
 	private final byte[] body;
 
-	public RepeatedlyReadRequestWrapper(HttpServletRequest request) {
+	public RepeatedlyReadServletRequestWrapper(HttpServletRequest request) {
 		super(request);
 		// 获取流中的数据放到字节数组中
 		body = ServletUtils.getBodyBytes(request);

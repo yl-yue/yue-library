@@ -14,8 +14,13 @@ import lombok.Data;
  * @since	2020年4月6日
  */
 @Data
-@ConfigurationProperties("yue.web.http-message-converter.fastjson")
+@ConfigurationProperties(FastJsonHttpMessageConverterProperties.PREFIX)
 public class FastJsonHttpMessageConverterProperties {
+	
+	/**
+	 * Prefix of {@link FastJsonHttpMessageConverterProperties}.
+	 */
+	public static final String PREFIX = WebProperties.PREFIX + ".http-message-converter.fastjson";
 	
 	/**
 	 * 启用FastJson优先于默认的Jackson做json解析
