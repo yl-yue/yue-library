@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.web.util.servlet.ServletUtils;
 
 /**
@@ -39,7 +39,7 @@ public class RepeatedlyReadServletRequestController {
 		jsonArray.add(param);
 		jsonArray.add(param2);
 		jsonArray.add(inputStream);
-		return ResultInfo.success(jsonArray);
+		return R.success(jsonArray);
 	}
 	
 }

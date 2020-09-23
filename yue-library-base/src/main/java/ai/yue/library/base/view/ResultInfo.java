@@ -3,9 +3,11 @@ package ai.yue.library.base.view;
 /**
  * 便捷返回 - {@code Restful} 风格API结果
  * 
+ * @deprecated 请使用 {@linkplain R}
  * @author	ylyue
  * @since	2017年7月31日
  */
+@Deprecated
 public class ResultInfo {
 	
 	// ------ Result error builder ------
@@ -38,6 +40,7 @@ public class ResultInfo {
 	
 	/**
 	 * 成功后调用，返回的data为null
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
     private static Result<?> success(Integer code, String msg) {
@@ -49,6 +52,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 成功后调用，返回的data为null
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> success() {
@@ -56,6 +60,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 成功后调用，返回的data为一个对象
+	 * 
 	 * @param <T> 泛型
 	 * @param data 数据
 	 * @return HTTP请求，最外层响应对象
@@ -70,6 +75,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 成功后调用，分页查询
+	 * 
 	 * @param <T> 泛型
 	 * @param count 总数
 	 * @param data 数据
@@ -81,6 +87,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 成功后调用，分页查询
+	 * 
 	 * @param <T>		泛型
 	 * @param code		自定义code（默认200）
 	 * @param count		总数
@@ -93,6 +100,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 会话未注销，无需登录-210
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> loggedIn() {
@@ -103,6 +111,7 @@ public class ResultInfo {
 	
 	/**
 	 * 资源已失效-300
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> resourceAlreadyInvalid() {
@@ -110,6 +119,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 文件上传请求错误，获得文件信息为空，同时文件必须有明确的匹配类型（如文本类型：.txt）-301
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?>  fileEmpty() {
@@ -120,6 +130,7 @@ public class ResultInfo {
 	
 	/**
 	 * 未登录或登录已失效-401
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> unauthorized() {
@@ -127,6 +138,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 非法访问-402
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> attack() {
@@ -134,6 +146,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 非法访问-402
+	 * 
 	 * @param <T> 泛型
 	 * @param data 异常数据
 	 * @return HTTP请求，最外层响应对象
@@ -183,6 +196,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数校验未通过，请参照API核对后重试-433
+	 * 
 	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
@@ -191,6 +205,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数校验未通过，无效的value-434
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> paramValueInvalid() {
@@ -198,6 +213,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数校验未通过，无效的value-434
+	 * 
 	 * @param data {@link Result#setData(Object)} 提示信息
 	 * @return HTTP请求，最外层响应对象
 	 */
@@ -206,6 +222,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 参数解密错误-435
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> paramDecryptError() {
@@ -216,6 +233,7 @@ public class ResultInfo {
 	
 	/**
 	 * 服务器内部错误-500
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> internalServerError() {
@@ -223,6 +241,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 服务器内部错误-500
+	 * 
 	 * @param <T> 泛型
 	 * @param data	异常数据
 	 * @return HTTP请求，最外层响应对象
@@ -232,6 +251,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 请求错误-501
+	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> error() {
@@ -239,6 +259,7 @@ public class ResultInfo {
 	}
 	/**
 	 * 请求错误-501
+	 * 
 	 * @param <T> 泛型
 	 * @param data	异常数据
 	 * @return HTTP请求，最外层响应对象
@@ -308,13 +329,29 @@ public class ResultInfo {
 	// 600 - 自定义错误提示
 	
 	/**
-	 * 开发者自定义类型提示，请覆盖： {@linkplain Result#setMsg(String)}
+	 * 开发者自定义类型提示-600
+	 * <p>请覆盖：{@linkplain Result#setMsg(String)}
+	 * <p>用于业务消息提示，如：{@value ResultPrompt#USERNAME_OR_PASSWORD_ERROR}、{@value ResultPrompt#CAPTCHA_ERROR}
 	 * 
 	 * @param msg 提示消息
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> devCustomTypePrompt(String msg) {
 		return error(ResultEnum.DEV_CUSTOM_TYPE_PROMPT.getCode(), msg);
+	}
+	
+	/**
+	 * 开发者自定义类型提示-600
+	 * <p>请覆盖：{@linkplain Result#setMsg(String)}
+	 * <p>用于业务消息提示，如：{@value ResultPrompt#USERNAME_OR_PASSWORD_ERROR}、{@value ResultPrompt#CAPTCHA_ERROR}
+	 * 
+	 * @param <T> 泛型
+	 * @param msg 提示消息
+	 * @param data 业务处理数据
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<?> devCustomTypePrompt(String msg, T data) {
+		return error(ResultEnum.DEV_CUSTOM_TYPE_PROMPT.getCode(), msg, data);
 	}
 	
 }

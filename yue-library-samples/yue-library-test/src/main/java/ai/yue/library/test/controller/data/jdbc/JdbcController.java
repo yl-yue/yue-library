@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.test.constant.RoleEnum;
 import ai.yue.library.test.constant.UserStatusEnum;
+import ai.yue.library.test.dao.data.jdbc.JdbcDAO;
 import ai.yue.library.test.dataobject.UserDO;
-import ai.yue.library.test.doc.example.data.jdbc.JdbcDAO;
 
 /**
  * @author	ylyue
@@ -56,7 +56,7 @@ public class JdbcController {
 			System.out.println(fieldMap);
 		}
 		
-		return ResultInfo.success();
+		return R.success();
 	}
 	
 	/**
@@ -66,14 +66,14 @@ public class JdbcController {
 	 */
 	@PostMapping("/insert")
 	public Result<?> insert(UserDO userDO) {
-		return ResultInfo.success(jdbcDAO.insert(userDO));
+		return R.success(jdbcDAO.insert(userDO));
 	}
 	
 //	@PostMapping("/insertSql")
 //	public Result<?> insertSql(UserDO userDO) {
 //		String sql = "insert into user (cellphone, role, user_status) values (:cellphone, :role, :user_status)";
 //		JSONObject paramJson = MapUtils.toSnakeCase(userDO);
-//		return ResultInfo.success(db.insertSql(sql, paramJson));
+//		return R.success(db.insertSql(sql, paramJson));
 //	}
 	
 	@PostMapping("/insertBatch")
@@ -94,7 +94,7 @@ public class JdbcController {
 		paramJsons[2].put("role", RoleEnum.b2b_买家.name());
 		paramJsons[2].put("user_status", UserStatusEnum.正常.name());
 		jdbcDAO.insertBatch(paramJsons);
-		return ResultInfo.success();
+		return R.success();
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class JdbcController {
 	@DeleteMapping("/delete")
 	public Result<?> delete(@RequestParam("id") Long id) {
 		jdbcDAO.delete(id);
-		return ResultInfo.success();
+		return R.success();
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class JdbcController {
 	 */
 	@DeleteMapping("/deleteParamJson")
 	public Result<?> delete(JSONObject paramJson) {
-		return ResultInfo.success(db.delete(tableName, paramJson));
+		return R.success(db.delete(tableName, paramJson));
 	}
 	
 }

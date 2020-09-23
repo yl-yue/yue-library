@@ -18,7 +18,6 @@ import org.springframework.web.filter.CorsFilter;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.web.config.argument.resolver.CustomArgumentResolversConfig;
 import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
-import ai.yue.library.web.config.handler.ExceptionHandlerConfig;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.WebProperties;
@@ -34,8 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ WebMvcConfig.class, WebMvcRegistrationsConfig.class, ExceptionHandlerConfig.class,
-		CustomArgumentResolversConfig.class, WebMvcEnv.class })
+@Import({ WebMvcConfig.class, WebMvcRegistrationsConfig.class, CustomArgumentResolversConfig.class, WebMvcEnv.class })
 @EnableConfigurationProperties({ WebProperties.class, JacksonHttpMessageConverterProperties.class,
 		FastJsonHttpMessageConverterProperties.class, UploadProperties.class })
 public class WebAutoConfig {

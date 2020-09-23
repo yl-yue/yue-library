@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ai.yue.library.base.view.Result;
+import ai.yue.library.base.view.R;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,6 +39,16 @@ public class WebFluxController {
 	    String result = createStr();
 	    log.info("webMvc end.");
 	    return result;
+	}
+	
+	// 普通的SpringMVC方法
+	@GetMapping("/webMvc2")
+	private Result<?> webMvc2() {
+	    log.info("webMvc start");
+//	    String result = createStr();
+	    log.info("webMvc end.");
+//	    return result;
+	    return R.clientFallback();
 	}
 	
 	// WebFlux(返回的是Mono)

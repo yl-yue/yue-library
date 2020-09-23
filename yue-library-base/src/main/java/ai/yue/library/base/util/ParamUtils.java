@@ -11,7 +11,7 @@ import ai.yue.library.base.exception.ParamVoidException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.ipo.ParamFormatIPO;
 import ai.yue.library.base.validation.Validator;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.base.webenv.WebEnv;
 
 /**
@@ -162,7 +162,7 @@ public class ParamUtils {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
 			if (ObjectUtils.isNull(object)) {
-				throw new ResultException(ResultInfo.paramCheckNotPass());
+				throw new ResultException(R.paramCheckNotPass());
 			}
 		}
 	}

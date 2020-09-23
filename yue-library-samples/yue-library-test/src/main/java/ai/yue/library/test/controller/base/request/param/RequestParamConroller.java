@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.test.constant.TestEnum;
 import ai.yue.library.test.ipo.ValidationIPO;
 
@@ -31,49 +31,49 @@ public class RequestParamConroller {
 	
 	@GetMapping
 	public Result<?> get(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	@PostMapping
 	public Result<?> post(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	@PostMapping("/requestParam")
 	public Result<?> requestParam(@RequestParam JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	@PutMapping
 	public Result<?> put(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 
 	@DeleteMapping
 	public Result<?> del(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	// JavaBean
 	
 	@GetMapping("/2")
 	public Result<?> get2(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	@PostMapping("/2")
 	public Result<?> post2(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	@PutMapping("/2")
 	public Result<?> put2(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	@DeleteMapping("/2")
 	public Result<?> del2(ValidationIPO validationIPO) {
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	// 普通类型
@@ -85,7 +85,7 @@ public class RequestParamConroller {
 		paramJson.put("flag", flag);
 		paramJson.put("str", str);
 		paramJson.put("testEnum", testEnum);
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	@PostMapping("/post3")
@@ -95,7 +95,7 @@ public class RequestParamConroller {
 		paramJson.put("flag", flag);
 		paramJson.put("str", str);
 		paramJson.put("testEnum", testEnum);
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 	// List AND Array
@@ -106,27 +106,27 @@ public class RequestParamConroller {
 		jsonObject.put("str", str);
 		jsonObject.put("bool", bool);
 		jsonObject.put("ids", ids);
-		return ResultInfo.success(jsonObject);
+		return R.success(jsonObject);
 	}
 	
 	@PostMapping("/list2")
 	public Result<?> list2(List<JSONObject> ids) {
-		return ResultInfo.success(ids);
+		return R.success(ids);
 	}
 	
 	@PostMapping("/list3")
 	public Result<?> list3(JSONObject[] ids) {
-		return ResultInfo.success(ids);
+		return R.success(ids);
 	}
 	
 	@PostMapping("/list4")
 	public Result<?> list4(String[] ids) {
-		return ResultInfo.success(ids);
+		return R.success(ids);
 	}
 	
 	@PostMapping("/list5")
 	public Result<?> list5(@Valid List<ValidationIPO> validationIPOs) {
-		return ResultInfo.success(validationIPOs);
+		return R.success(validationIPOs);
 	}
 	
 }

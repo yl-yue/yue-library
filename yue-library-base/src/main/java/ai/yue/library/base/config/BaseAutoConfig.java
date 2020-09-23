@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
-import ai.yue.library.base.config.handler.ExceptionHandlerProperties;
+import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
 import ai.yue.library.base.config.net.http.RestProperties;
 import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory;
 import ai.yue.library.base.config.net.proxy.NetProxy;

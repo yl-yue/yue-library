@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.symmetric.AES;
@@ -30,7 +30,7 @@ public class CryptoExample {
 		RSA rsa = SecureSingleton.getRSA();
 		rsa.encryptBcd("", KeyType.PublicKey);
 		rsa.decryptStrFromBcd("", KeyType.PrivateKey);
-		return ResultInfo.success();
+		return R.success();
 	}
 	
 }

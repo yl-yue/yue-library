@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.test.ipo.ValidationIPO;
 
 /**
@@ -33,7 +33,7 @@ public class ValidationController {
 	@PostMapping("/valid")
 	public Result<?> valid(@Valid ValidationIPO validationIPO) {
 		System.out.println(validationIPO);
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class ValidationController {
 	public Result<?> validatorValid(ValidationIPO validationIPO) {
 		validator.valid(validationIPO);
 		System.out.println(validationIPO);
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class ValidationController {
 		validator.valid(validationIPO).param(birthday).birthday("birthday");
 		
 		// 返回结果
-		return ResultInfo.success(validationIPO);
+		return R.success(validationIPO);
 	}
 	
 }

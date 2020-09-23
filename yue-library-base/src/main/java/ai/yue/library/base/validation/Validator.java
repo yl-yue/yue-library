@@ -16,7 +16,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
@@ -220,7 +220,7 @@ public class Validator {
 		} else if (param instanceof LocalDate || param instanceof LocalDateTime) {
 			date = DateUtils.DATE_FORMATTER.format((LocalDate) param);
 		} else {
-			throw new ResultException(ResultInfo.error(StrUtil.format("参数 {} 未知类型，不支持生日校验", paramName)));
+			throw new ResultException(R.paramValueInvalid(StrUtil.format("参数 {} 未知类型，不支持生日校验", paramName)));
 		}
 		
     	cn.hutool.core.lang.Validator.validateBirthday(date, StrUtil.format(BIRTHDAY_HINT_MSG, paramName));

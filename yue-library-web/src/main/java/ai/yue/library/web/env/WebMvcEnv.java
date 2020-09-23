@@ -24,6 +24,7 @@ public class WebMvcEnv implements WebEnv {
 	@Override
 	public void resultResponse(Result<?> result) {
 		HttpServletResponse response = ServletUtils.getResponse();
+		response.setStatus(result.getCode());
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter writer;
 		try {

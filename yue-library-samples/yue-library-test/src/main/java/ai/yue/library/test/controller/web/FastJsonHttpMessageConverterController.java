@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
 
 /**
@@ -53,14 +53,14 @@ public class FastJsonHttpMessageConverterController {
 //		fastJsonHttpMessageConverterDTO.setJsonObject2(jsonObject2);
 		fastJsonHttpMessageConverterDTO.setList2(list2);
 		
-		return ResultInfo.success(fastJsonHttpMessageConverterDTO);
+		return R.success(fastJsonHttpMessageConverterDTO);
 		
 //		HashMap<Object, Object> map3 = new HashMap<>();
 //		map3.put("aaa", null);
 //		map3.put(1, null);
 //		map3.put(true, a);
-//		return ResultInfo.success(map3);
-//		return ResultInfo.success(null);
+//		return R.success(map3);
+//		return R.success(null);
 	}
 	
 }

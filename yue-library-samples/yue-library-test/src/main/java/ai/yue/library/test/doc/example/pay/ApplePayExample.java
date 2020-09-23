@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.pay.dto.ApplePayVerifyResult;
 import ai.yue.library.pay.util.ApplePayUtils;
 import cn.hutool.core.lang.Console;
@@ -35,7 +35,7 @@ public class ApplePayExample {
 		Console.log(applePayVerifyResult);
 		
 		// 返回结果信息
-		return ResultInfo.success();
+		return R.success();
 	}
 	
 }

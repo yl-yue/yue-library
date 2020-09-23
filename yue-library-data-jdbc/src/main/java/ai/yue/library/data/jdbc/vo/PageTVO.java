@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class PageTVO<T> {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public Result<List<T>> toResult() {
-		return ResultInfo.success(count, data);
+		return R.success(count, data);
 	}
 	
 }

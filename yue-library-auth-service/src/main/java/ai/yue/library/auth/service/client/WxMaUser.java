@@ -17,7 +17,7 @@ import ai.yue.library.auth.service.config.properties.WxMaProperties;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -82,7 +82,7 @@ public class WxMaUser {
 			wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
 		} catch (WxErrorException e) {
 			String msg = e.getMessage();
-			throw new ResultException(ResultInfo.devCustomTypePrompt(msg));
+			throw new ResultException(R.errorPrompt(msg));
 		}
 		
 		return wxMaJscode2SessionResult;

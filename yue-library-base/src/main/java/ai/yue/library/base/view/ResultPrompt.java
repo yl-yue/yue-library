@@ -1,14 +1,14 @@
 package ai.yue.library.base.view;
 
 /**
- * String类型异常处理提示信息-常量类
+ * Result String 类型异常提示信息预定义
  * 
  * @author	ylyue
  * @since	2018年7月19日
  */
 public class ResultPrompt {
 	
-	//---------------------预定义结果提示---------------------
+	//---------------------错误提示预定义---------------------
 	
 	public static final String USER_EXIST = "用户已存在";
 	public static final String USER_NO_EXIST = "用户不存在";
@@ -24,7 +24,7 @@ public class ResultPrompt {
 	public static final String ACCOUNT_EXIST_BUSINESS_NOT_ALLOW_CHANGE = "帐户存在业务，暂时不允许改变状态";
 	public static final String ACCOUNT_BALANCE_NOT_ENOUGH = "帐户余额不足";
     
-	//---------------------直接定义异常---------------------
+	//---------------------异常提示预定义---------------------
 	
 	/** 超出最大limit限制 */
 	public static final String MAX_LIMIT = "超出最大limit限制";
@@ -44,10 +44,11 @@ public class ResultPrompt {
 	/** 批次更新错误 */
 	public static final String UPDATE_BATCH_ERROR = "执行批次更新命令失败，可能原因是：数据结构异常或无ID主键。请立即检查数据的一致性、唯一性。";
 	
-	//---------------------引用定义异常---------------------
+	//---------------------枚举提示引用预定义---------------------
 	
 	/**
 	 * 数据结构异常-不正确的结果
+	 * 
 	 * @param expected	预期内容
 	 * @param actual	实际内容
 	 * @return 提示信息

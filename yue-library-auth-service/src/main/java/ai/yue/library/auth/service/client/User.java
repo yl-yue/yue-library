@@ -22,8 +22,8 @@ import ai.yue.library.auth.service.dto.WxUserDTO;
 import ai.yue.library.auth.service.vo.wx.open.AccessTokenVO;
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.util.CaptchaUtils;
@@ -92,7 +92,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		String result = restTemplate.getForObject(WX_URI_USER_INFO, String.class, paramJson);
 		WxUserDTO wxUserDTO = JSONObject.parseObject(result, WxUserDTO.class);
 		if (null == wxUserDTO.getOpenid()) {
-			throw new ResultException(ResultInfo.error(result));
+			throw new ResultException(R.requestError(result));
 		}
 
 		return wxUserDTO;
@@ -112,7 +112,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		String result = restTemplate.getForObject(QQ_URI_USER_INFO, String.class, paramJson);
 		QqUserDTO qqUserDTO = JSONObject.parseObject(result, QqUserDTO.class);
 		if (null == qqUserDTO.getGender()) {
-			throw new ResultException(ResultInfo.error(result));
+			throw new ResultException(R.requestError(result));
 		}
 
 		return qqUserDTO;
@@ -157,7 +157,7 @@ public class User extends ai.yue.library.auth.client.client.User {
     	String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
 		String randCaptcha = redis.get(captcha_redis_key);
 		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
-			throw new ResultException(ResultInfo.devCustomTypePrompt(ResultPrompt.CAPTCHA_ERROR));
+			throw new ResultException(R.errorPrompt(ResultPrompt.CAPTCHA_ERROR));
 		}
 		
 		redis.del(captcha_redis_key);
@@ -220,7 +220,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		
 		// 2. 确认token
 		if (StringUtils.isEmpty(token)) {
-			return ResultInfo.unauthorized();
+			return R.unauthorized();
 		}
 		
 		// 3. 清除Redis-token
@@ -230,7 +230,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		ServletUtils.addCookie(authProperties.getCookieTokenKey(), null, 0);
 		
 		// 5. 返回结果
-		return ResultInfo.success();
+		return R.success();
     }
     
 }

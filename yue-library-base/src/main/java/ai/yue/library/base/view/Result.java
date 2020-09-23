@@ -16,6 +16,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -71,6 +73,8 @@ public class Result<T> implements Serializable {
 			throw new ResultException(this);
 		}
 	}
+	
+	// -------- getData --------
 	
 	public <D> D getData(Class<D> clazz) {
 		return Convert.convert(data, clazz);
@@ -174,6 +178,12 @@ public class Result<T> implements Serializable {
 	public java.sql.Timestamp dataToTimestamp() {
 
 		return castToTimestamp(data);
+	}
+	
+	// -------- result convert --------
+	
+	public ResponseEntity<Result<?>> castToResponseEntity() {
+		return ResponseEntity.status(getCode()).body(this);
 	}
 	
 	/**

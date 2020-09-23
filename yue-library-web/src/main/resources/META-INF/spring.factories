@@ -1,2 +1,4 @@
+# Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.web.config.WebAutoConfig
+ai.yue.library.web.config.WebAutoConfig,\
+ai.yue.library.web.config.exception.ResultErrorAutoConfig

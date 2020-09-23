@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.test.ipo.UserIPO;
 
 /**
@@ -30,7 +30,7 @@ public class DateTimeFormatController {
 	public Result<?> insert(@Valid UserIPO userIPO) {
 		System.out.println(userIPO);
 		System.out.println(JSONObject.toJSONString(userIPO));
-		return ResultInfo.success(userIPO);
+		return R.success(userIPO);
 	}
 	
 }

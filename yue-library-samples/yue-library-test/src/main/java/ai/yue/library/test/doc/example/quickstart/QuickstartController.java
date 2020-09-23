@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue
@@ -19,7 +19,7 @@ public class QuickstartController {
 
 	@GetMapping("/get")
 	public Result<?> get(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 }

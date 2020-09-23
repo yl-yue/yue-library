@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.egzosn.pay.wx.bean.WxTransactionType;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.pay.client.Pay;
 import ai.yue.library.pay.ipo.PayOrderIPO;
 
@@ -48,7 +48,7 @@ public class PayExample {
 		payOrderIPO.setOpenid(openid);
 		
 		Map<String, Object> orderInfo = pay.getOrderInfo(payOrderIPO);
-		return ResultInfo.success(orderInfo);
+		return R.success(orderInfo);
 	}
 	
 }

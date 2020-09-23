@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.test.dataobject.UserDO;
 
@@ -42,7 +42,7 @@ public class RedisController {
 		redis.set(cellphone, userDO);
 		UserDO resultUserDO = redis.get(cellphone, UserDO.class);
 		System.out.println(resultUserDO);
-		return ResultInfo.success(resultUserDO);
+		return R.success(resultUserDO);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class RedisController {
 		redisTemplate.opsForValue().set(cellphone, userDO);
 		UserDO resultUserDO = (UserDO) redisTemplate.opsForValue().get(cellphone);
 		System.out.println(resultUserDO);
-		return ResultInfo.success(resultUserDO);
+		return R.success(resultUserDO);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class RedisController {
 		stringRedisTemplate.opsForValue().set(cellphone, JSONObject.toJSONString(userDO));
 		UserDO resultUserDO = JSONObject.parseObject(stringRedisTemplate.opsForValue().get(cellphone), UserDO.class);
 		System.out.println(resultUserDO);
-		return ResultInfo.success(resultUserDO);
+		return R.success(resultUserDO);
 	}
 	
 }

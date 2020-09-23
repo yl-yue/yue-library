@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import ai.yue.library.base.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,10 +24,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RepeatedlyReadServletRequestFilter extends OncePerRequestFilter {
 	
+	private static final String PARAM_TRANSMIT = Constant.PREFIX + "Param-Transmit";
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		log.debug("传递输入流可反复读取的HttpServletRequest ...");
+		
+		/*
+		 * 在request被包装之前，先进行一次参数解析处理，避免后续出现使用未包装的request导致：FileUploadException: Stream closed.
+		 * 如：调用 request#getParts() 将使用已解析过的结果（parse multipart content and store the parts）.
+		 */
+		request.getParameter(PARAM_TRANSMIT);
+		
 		ServletRequest requestWrapper = new RepeatedlyReadServletRequestWrapper(request);
 		filterChain.doFilter(requestWrapper, response);
 	}

@@ -39,7 +39,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
 //	        }
 //	        if (StringUtils.isEmpty(token)) {
 //	            log.warn("【登录校验】Cookie中查不到token");
-//	            ResultInfo.unauthorized().response(response);
+//	            R.unauthorized().response(response);
 //	            return false;
 //	        }
 	        
@@ -47,7 +47,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
 //	        String tokenValue = redis.get(String.format(TokenConstant.REDIS_TOKEN_PREFIX, token));
 //	        if (StringUtils.isEmpty(tokenValue)) {
 //	            log.warn("【登录校验】Redis中查不到token");
-//	            ResultInfo.unauthorized().response(response);
+//	            R.unauthorized().response(response);
 //	            return false;
 //	        }
 		}

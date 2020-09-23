@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ApplicationContextUtils;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.pay.dto.ApplePayVerifyResult;
 
 /**
@@ -59,7 +59,7 @@ public class ApplePayUtils {
 			return verify(URI_SANDBOX, receiptData);
 		}
 		if (status != 0) {
-			throw new ResultException(ResultInfo.error(response));
+			throw new ResultException(R.requestError(response));
 		}
 		
 		// 3. 获得结果

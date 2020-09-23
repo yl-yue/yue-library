@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue
@@ -28,7 +28,7 @@ public class ApiVersionConroller {
 	@ApiVersion(deprecated = true)
 	@GetMapping("/get")
 	public Result<?> get(@PathVariable String version) {
-		return ResultInfo.success("get：" + version);
+		return R.success("get：" + version);
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class ApiVersionConroller {
 	@ApiVersion(value = 2, deprecated = true)
 	@GetMapping("/get")
 	public Result<?> get2(@PathVariable String version) {
-		return ResultInfo.success("get2：" + version);
+		return R.success("get2：" + version);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class ApiVersionConroller {
 	@ApiVersion(3.1)
 	@GetMapping("/get")
 	public Result<?> get3(@PathVariable String version) {
-		return ResultInfo.success("get3：" + version);
+		return R.success("get3：" + version);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class ApiVersionConroller {
 	@ApiVersion(4)
 	@GetMapping("/get")
 	public Result<?> get4(@PathVariable String version) {
-		return ResultInfo.success("get4：" + version);
+		return R.success("get4：" + version);
 	}
 	
 }

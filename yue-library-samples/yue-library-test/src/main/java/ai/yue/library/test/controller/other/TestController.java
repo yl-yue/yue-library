@@ -10,7 +10,7 @@ import com.alibaba.fastjson.PropertyNamingStrategy;
 
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue
@@ -29,7 +29,7 @@ public class TestController {
 	public Result<?> get(@RequestParam JSONObject paramJson) {
 		JSONObject a = MapUtils.toPropertyNamingStrategy(paramJson, PropertyNamingStrategy.SnakeCase);
 		System.out.println(a);
-		return ResultInfo.success(a);
+		return R.success(a);
 	}
 	
 }
