@@ -208,6 +208,16 @@ public class R {
 		return error(ResultEnum.NOT_FOUND.getCode(), ResultEnum.NOT_FOUND.getMsg());
 	}
 	/**
+	 * 方法不允许（Method Not Allowed）-405
+	 * <p>客户端使用服务端不支持的 Http Request Method 进行接口调用
+	 * 
+	 * @param data {@link Result#setData(Object)} 更详细的异常提示信息
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<T> methodNotAllowed(T data) {
+		return error(ResultEnum.METHOD_NOT_ALLOWED.getCode(), ResultEnum.METHOD_NOT_ALLOWED.getMsg(), data);
+	}
+	/**
 	 * API接口版本弃用-410
 	 * 
 	 * @return HTTP请求，最外层响应对象
@@ -394,7 +404,7 @@ public class R {
 	 * @param data 业务处理数据
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public static <T> Result<?> errorPrompt(String msg, T data) {
+	public static <T> Result<T> errorPrompt(String msg, T data) {
 		return error(ResultEnum.ERROR_PROMPT.getCode(), msg, data);
 	}
 	
@@ -477,6 +487,7 @@ public class R {
 			ExceptionUtils.printException(e);
 			return typeConvertError(e.getMessage());
 		} else if (e instanceof ResponseStatusException) {
+			ExceptionUtils.printException(e);
 			HttpStatus httpStatus = ((ResponseStatusException) e).getStatus();
 			int code = httpStatus.value();
 			ResultEnum resultEnum = ResultEnum.valueOf(code);

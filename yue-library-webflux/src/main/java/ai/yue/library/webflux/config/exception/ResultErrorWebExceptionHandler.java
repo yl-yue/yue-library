@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import lombok.extern.slf4j.Slf4j;
+import cn.hutool.core.lang.Console;
 import reactor.core.publisher.Mono;
 
 /**
@@ -25,7 +25,6 @@ import reactor.core.publisher.Mono;
  * @author	ylyue
  * @since	2020年9月16日
  */
-@Slf4j
 public class ResultErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
 
 	public ResultErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
@@ -40,8 +39,8 @@ public class ResultErrorWebExceptionHandler extends DefaultErrorWebExceptionHand
 	
 	@Override
 	protected Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+		Console.error("path={}", request.path());
 		Throwable e = getError(request);
-		log.debug("全局异常拦截：{}", e.getMessage());
 		Result<?> result = R.getResult(e);
 		return ServerResponse.status(result.getCode()).contentType(MediaType.APPLICATION_JSON).bodyValue(result);
 	}

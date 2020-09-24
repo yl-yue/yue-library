@@ -58,7 +58,13 @@ public enum ResultEnum {
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
 	 */
 	NOT_FOUND(404, "Not Found"),
-	METHOD_NOT_ALLOWED(405, "方法不允许（Method Not Allowed）"),
+	
+	/**
+	 * {@link HttpStatus#METHOD_NOT_ALLOWED}
+	 * <p>{@code 405 Method Not Allowed}.
+	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
+	 */
+	METHOD_NOT_ALLOWED(405, "方法不允许（Method Not Allowed），客户端使用服务端不支持的 Http Request Method 进行接口调用。"),
 	
 	/**
 	 * {@link HttpStatus#GONE}

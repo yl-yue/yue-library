@@ -6,11 +6,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -58,7 +61,24 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 		ExceptionUtils.printException(e);
 		return result;
 	}
-	
+    
+    /**
+	 * 方法不允许（Method Not Allowed）-405
+	 * <p>客户端使用服务端不支持的 Http Request Method 进行接口调用
+	 * 
+     * @param e 方法不允许异常
+     * @return 结果
+	 */
+	@ResponseBody
+	@ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public Result<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
+    	String uri = ServletUtils.getRequest().getRequestURI();
+    	Console.error("uri={}", uri);
+		ExceptionUtils.printException(e);
+		return R.methodNotAllowed(e.getMessage());
+	}
+    
     /**
 	 * 参数效验为空统一处理-432
 	 * @return 结果
