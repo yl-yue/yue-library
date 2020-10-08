@@ -352,10 +352,10 @@ public class ListUtils extends ListUtil {
 	/**
 	 * {@linkplain JSONArray} 转 {@linkplain List}-{@linkplain Class}
 	 * 
-	 * @param <T> 		泛型
-	 * @param list 		需要转换的JSONArray
-	 * @param clazz		json转换的POJO类型
-	 * @return			转换后的List
+	 * @param <T>       泛型
+	 * @param jsonArray 需要转换的JSONArray
+	 * @param clazz     json转换的POJO类型
+	 * @return 转换后的List
 	 */
 	public static <T> List<T> toList(JSONArray jsonArray, Class<T> clazz) {
 		return jsonArray.toJavaList(clazz);

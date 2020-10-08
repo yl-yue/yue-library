@@ -87,26 +87,22 @@ public class QuickstartController {
 
 ### 版本说明
 　　yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
-　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、data-jdbc、data-redis），可以不引入`yue-library-base`。
+　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、webflux、data-jdbc、data-redis），可以不引入`yue-library-base`。
 
-**推荐版本依赖关系**
+**版本区别说明**
 
-|yue-library|Java		|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
-|--			|--			|--			|--			|--					|
-|2.1		|Java 11+	|2.1+		|Greenwich	|2.1+				|
-|2.2		|Java 11+	|2.2+		|Hoxton		|2.2+				|
+|示例版本								|区别说明								|
+|--										|--										|
+|`j8.2.x`								|基于Java 8的2.x.x版本					|
+|`j11.2.x`								|基于Java 11的2.x.x版本					|
+|`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
 
-**依赖关系介绍**
+**默认版本依赖关系**
 
-|依赖组件名				|依赖组件说明										|yue-library支持版本	|
-|--						|--												|--					|
-|Java 11				|LTS（Oracle长期支持版本）						|Greenwich、2.1、2.2	|
-|SpringBoot 2.1			|兼容Java 8、Java 11								|Greenwich、2.1		|
-|SpringBoot 2.2			|兼容Java 8、Java 11、Java 13					|2.2				|
-|SpringCloud Greenwich	|默认依赖SpringBoot 2.1							|Greenwich、2.1		|
-|SpringCloud Hoxton		|默认依赖SpringBoot 2.2							|2.2				|
-|SpringCloudAlibaba 2.1	|默认依赖SpringBoot 2.1、SpringCloud Greenwich	|2.1				|
-|SpringCloudAlibaba 2.2	|默认依赖SpringBoot 2.2、SpringCloud Hoxton		|2.2				|
+|yue-library|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
+|--			|--			|--			|--					|
+|2.1		|2.1+		|Greenwich	|2.1+				|
+|2.2		|2.2+		|Hoxton		|2.2+				|
 
 [SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
 [SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)

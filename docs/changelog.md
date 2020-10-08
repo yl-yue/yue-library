@@ -25,29 +25,60 @@
 ## 版本
 yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
 
-**推荐版本依赖关系**
+**版本区别说明**
 
-|yue-library|Java		|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
-|--			|--			|--			|--			|--					|
-|2.1		|Java 11+	|2.1+		|Greenwich	|2.1+				|
-|2.2		|Java 11+	|2.2+		|Hoxton		|2.2+				|
+|示例版本								|区别说明								|
+|--										|--										|
+|`j8.2.x`								|基于Java 8的2.x.x版本					|
+|`j11.2.x`								|基于Java 11的2.x.x版本					|
+|`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
 
-**依赖关系介绍**
+**默认版本依赖关系**
 
-|依赖组件名				|依赖组件说明										|yue-library支持版本	|
-|--						|--												|--					|
-|Java 11				|LTS（Oracle长期支持版本）						|Greenwich、2.1、2.2	|
-|SpringBoot 2.1			|兼容Java 8、Java 11								|Greenwich、2.1		|
-|SpringBoot 2.2			|兼容Java 8、Java 11、Java 13					|2.2				|
-|SpringCloud Greenwich	|默认依赖SpringBoot 2.1							|Greenwich、2.1		|
-|SpringCloud Hoxton		|默认依赖SpringBoot 2.2							|2.2				|
-|SpringCloudAlibaba 2.1	|默认依赖SpringBoot 2.1、SpringCloud Greenwich	|2.1				|
-|SpringCloudAlibaba 2.2	|默认依赖SpringBoot 2.2、SpringCloud Hoxton		|2.2				|
+|yue-library|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
+|--			|--			|--			|--					|
+|2.1		|2.1+		|Greenwich	|2.1+				|
+|2.2		|2.2+		|Hoxton		|2.2+				|
 
 [SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
 [SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
-## 2.2.0【规划中】
+## 2.3.0【规划中】
+## 2.2.0【2020-10-09】
+### Maven仓库实际发布版本号
+`j8.2.2.0`、`j11.2.2.0`
+
+解释：j8对应Java 8，详情查看版本区别说明
+
+### 新特性
+此版本主要实现`HttpServletRequest`输入流可反复读取，重点解决全局异常捕获（包括过滤器中的异常）问题，规范Restful处理让body中的code值与http状态码保持一致。此版本关键依赖定义如下：
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.2.5.RELEASE	|
+|spring-cloud			|Hoxton.SR3		|
+|spring-cloud-alibaba	|2.2.1.RELEASE	|
+|hutool					|5.3.10			|
+|fastjson				|1.2.73			|
+
+[点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+
+- 【base】标准了`Result`构建与使用（废弃~~ResultInfo~~类，添加**R**类进行`Result`构建），错误提示使用：`R.errorPrompt("用户名或密码错误")`、`R.errorPrompt("验证码错误")` 等
+- 【base】Java全局网络代理封装，简化配置与操作（开启全局代理、获取代理配置、临时设置全局代理、取消全局代理等）
+- 【web】提供`RepeatedlyReadServletRequestWrapper`过滤器，传递输入流可反复读取的`HttpServletRequest`
+- 【web】解决全局异常捕获与HTTP状态码同步，并捕获404、405等异常
+- 【web】提供Array数据结构参数解析器`ArrayArgumentResolver`
+- 【webflux】解决全局异常捕获与HTTP状态码同步，并捕获404、405等异常
+- 【jdbc】提供jdbc逻辑删除数据剔除查询
+- 【jdbc】支持JavaBean中存在多个setMethod方法
+- 【jdbc】在JavaBean中调用setMethod方法设置JSONObject类型value时进行额外解析处理
+- 【jdbc】克隆Db支持
+- 【jdbc】JdbcTemplate支持，提供`queryXX`单参数类型方法
+- 【es】新增es模块，提供es rest便捷配置与es sql配置
+
+### Bug修复
+- 【redis】hashMap 序列化采用Object
+
 ## 2.1.0【2020-08-08】
 ### 新特性
 基于全新的spring-cloud-alibaba体系封装改造，拆分独立的OAuth认证体系，对webmvc、webflux分开支持。依赖定义如下：

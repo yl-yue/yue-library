@@ -47,8 +47,9 @@ public class StringUtils extends StrUtil {
 	
 	/**
 	 * 删除开始相等的字符串
-	 * @param sb 		需要处理的字符串
-	 * @param condition 条件
+	 * 
+	 * @param str    需要处理的字符串
+	 * @param prefix 条件
 	 * @return 删除后的StringBuffer
 	 */
 	public static String deleteFirstEqualString(CharSequence str, CharSequence prefix) {
