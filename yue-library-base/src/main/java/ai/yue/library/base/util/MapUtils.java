@@ -570,7 +570,7 @@ public class MapUtils extends MapUtil {
 	 * @param objectList list数据
 	 * @param key        需要提取的key
 	 * @param <T>        泛型对象
-	 * @return Map<String, T>
+	 * @return Map&lt;String, T&gt;
 	 */
 	public static <T> Map<String, T> listPOJOExtractKeyToPOJO(List<T> objectList, String key) {
 		// 声明一个返回的map集合
