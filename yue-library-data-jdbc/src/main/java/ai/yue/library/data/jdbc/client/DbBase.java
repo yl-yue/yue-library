@@ -17,6 +17,7 @@ import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
+import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**

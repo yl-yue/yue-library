@@ -47,7 +47,7 @@
 		<spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<hutool.version>5.3.10</hutool.version>
@@ -271,7 +271,7 @@
 						<configuration>
 							<additionalOptions>
 								<additionalOption>-Xdoclint:none</additionalOption>
-								<additionalOption>-html5</additionalOption>
+<!-- 								<additionalOption>-html5</additionalOption> -->
 							</additionalOptions>
 						</configuration>
 						<executions>

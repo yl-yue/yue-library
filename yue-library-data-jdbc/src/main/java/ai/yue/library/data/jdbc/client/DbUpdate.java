@@ -22,6 +22,7 @@ import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbExpectedValueModeEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import cn.hutool.core.util.ArrayUtil;
+import lombok.var;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
