@@ -2,29 +2,29 @@
 	<a href="https://ylyue.cn/"><img src="https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png" width="400"></a>
 </p>
 <p align="center">
-	<strong>一个基于SpringBoot封装的基础库</strong>
+	<strong>一个基于SpringBoot封装的增强库</strong>
 </p>
 <p align="center">
-	<a href="https://ylyue.cn/">
+	<a target="_blank" href="https://ylyue.cn/">
 		<img src="https://img.shields.io/badge/文档-yue-blue.svg?style=flat-square" alt="yue-library官网">
 	</a>
-	<a href="https://apidoc.gitee.com/yl-yue/yue-library/">
+	<a target="_blank" href="https://apidoc.gitee.com/yl-yue/yue-library/">
 		<img src="https://img.shields.io/badge/文档-javadoc-blue.svg?style=flat-square" alt="yue-library JavaDoc">
 	</a>
-	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.html">
-		<img src="https://img.shields.io/:license-apache-blue.svg" >
-	</a>
 	<a target="_blank" href="https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies">
-		<img src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central">
+		<img alt="Maven Central with version prefix filter" src="https://img.shields.io/maven-central/v/ai.ylyue/yue-library/j?style=flat-square">
+	</a>
+	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.html">
+		<img alt="GitHub" src="https://img.shields.io/github/license/yl-yue/yue-library?style=flat-square">
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html">
-		<img src="https://img.shields.io/badge/Java11+-green.svg" >
+		<img src="https://img.shields.io/badge/Java-8+11+-green?style=flat-square" >
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-boot">
-		<img src="https://img.shields.io/badge/Spring%20Boot-2.1+2.2+-green.svg" alt="Spring%20Boot Version">
+		<img src="https://img.shields.io/badge/Spring%20Boot-2.1+2.2+-green?style=flat-square" alt="Spring%20Boot Version">
 	</a>
 	<a target="_blank" href="https://spring.io/projects/spring-cloud">
-		<img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich+Hoxton+-green.svg" alt="Spring%20Cloud Version">
+		<img src="https://img.shields.io/badge/Spring%20Cloud-Greenwich+Hoxton+-green?style=flat-square" alt="Spring%20Cloud Version">
 	</a>
 	<a target="_blank" href="https://gitter.im/yl-yue/yue-library?utm_source=share-link&utm_medium=link&utm_campaign=share-link">
 		<img src="https://badges.gitter.im/yl-yue/yue-library.svg" >
@@ -33,7 +33,10 @@
 		<img src='https://gitee.com/yl-yue/yue-library/badge/star.svg?theme=dark' alt='gitee star'>
 	</a>
 	<a target="_blank" href='https://github.com/yl-yue/yue-library'>
-		<img src="https://img.shields.io/github/stars/yl-yue/yue-library.svg?style=social" alt="github star">
+		<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/yl-yue/yue-library?style=social">
+	</a>
+	<a target="_blank" href="https://github.com/yl-yue/yue-library/issues">
+		<img alt="GitHub issues" src="https://img.shields.io/github/issues/yl-yue/yue-library?style=flat-square">
 	</a>
 </p>
 <p align="center">
@@ -46,7 +49,7 @@
 -------------------------------------------------------------------------------
 
 ## 介绍
-　　yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。
+　　yue-library是一个基于SpringBoot封装的增强库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。
 
 ## 工程结构
 ```

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Hoxton.SR3</version>
+		<version>Hoxton.SR8</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
@@ -41,21 +41,21 @@
 	</modules>
 	
 	<properties>
-		<revision>j${java.version}.2.2.0</revision>
+		<revision>j${java.version}.2.3.0</revision>
 		<sha1 />
 		<changelist>-SNAPSHOT</changelist>
-		<spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
+		<spring-cloud-alibaba.version>2.2.3.RELEASE</spring-cloud-alibaba.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.3.10</hutool.version>
-		<fastjson.version>1.2.73</fastjson.version>
+		<hutool.version>5.4.4</hutool.version>
+		<fastjson.version>1.2.74</fastjson.version>
 		<pay.version>2.12.8</pay.version>
-		<easypoi.version>4.1.3</easypoi.version>
-		<easyexcel.version>2.1.6</easyexcel.version>
-		<jpush.version>3.4.4</jpush.version>
+		<easypoi.version>4.2.0</easypoi.version>
+		<easyexcel.version>2.2.6</easyexcel.version>
+		<jpush.version>3.4.7</jpush.version>
 	</properties>
 	
 	<dependencyManagement>
