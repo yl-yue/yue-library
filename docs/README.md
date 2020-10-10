@@ -77,7 +77,7 @@
 
 ## 快速开始
 ### 引入项目依赖
-maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/ai.ylyue/yue-library-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
+maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/ai.ylyue/yue-library/j?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
 ```xml
 <parent>
 	<groupId>ai.ylyue</groupId>
