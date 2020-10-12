@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ApiVersionDeprecatedException;
 import ai.yue.library.base.exception.AttackException;
 import ai.yue.library.base.exception.AuthorizeException;
@@ -24,6 +25,8 @@ import ai.yue.library.base.util.ExceptionUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -365,11 +368,29 @@ public class R {
 		return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg());
 	}
 	/**
+	 * 哎哟喂！网络开小差了，请稍后重试...-507
+	 * 
+	 * @param data {@link Result#setData(Object)} 更详细的异常提示信息
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<?>  clientFallback(T data) {
+		return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg(), data);
+	}
+	/**
 	 * 哎哟喂！服务都被您挤爆了...-508
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?>  clientFallbackError() {
 		return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg());
+	}
+	/**
+	 * 哎哟喂！服务都被您挤爆了...-508
+	 * 
+	 * @param data {@link Result#setData(Object)} 更详细的异常提示信息
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<?>  clientFallbackError(T data) {
+		return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg(), data);
 	}
 	/**
 	 * 类型转换错误-509
@@ -493,6 +514,14 @@ public class R {
 			ResultEnum resultEnum = ResultEnum.valueOf(code);
 			if (resultEnum != null) {
 				return error(resultEnum.getCode(), resultEnum.getMsg(), e.toString());
+			}
+		} else if (ClassLoaderUtil.isPresent("feign.FeignException")
+				&& ClassLoaderUtil.loadClass("feign.FeignException").isAssignableFrom(e.getClass())) {
+			String contentUTF8 = ReflectUtil.invoke(e, "contentUTF8");
+			try {
+				return Convert.toJavaBean(contentUTF8, Result.class);
+			} catch (Exception ex) {
+				return clientFallback(contentUTF8);
 			}
 		}
 		

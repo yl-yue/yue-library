@@ -159,11 +159,9 @@ public abstract class AbstractExceptionHandler {
 	 * @return 结果
 	 */
 	@ResponseBody
-	@ResponseStatus
 	@ExceptionHandler(Exception.class)
 	public Result<?> exceptionHandler(Exception e) {
-    	e.printStackTrace();
-    	return R.internalServerError(e.toString());
+		return R.getResult(e);
 	}
     
     /**
