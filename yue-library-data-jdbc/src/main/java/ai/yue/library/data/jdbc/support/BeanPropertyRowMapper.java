@@ -37,9 +37,11 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 增强 {@linkplain org.springframework.jdbc.core.BeanPropertyRowMapper}，支持 {@linkplain FieldName} 注解
  * 
+ * @deprecated 由于性能相对较差，已切换为 {@link Convert#toJavaBean(Object, Class)} 代替
  * @author	ylyue
  * @since	2020年2月24日
  */
+@Deprecated
 public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 
 	/** Logger available to subclasses. */

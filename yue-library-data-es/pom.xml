@@ -12,8 +12,7 @@
 	<description>yue-library-data-es</description>
 	
 	<properties>
-		<!-- 升级es定义版本 -->
-		<elasticsearch.version>7.3.0</elasticsearch.version>
+		<elasticsearch.sql.version>1.9.0.0</elasticsearch.sql.version>
 	</properties>
 	
 	<dependencies>
@@ -26,26 +25,12 @@
 		<dependency>
 		    <groupId>com.amazon.opendistroforelasticsearch.client</groupId>
 		    <artifactId>opendistro-sql-jdbc</artifactId>
-		    <version>1.9.0.0</version>
+		    <version>${elasticsearch.sql.version}</version>
 		</dependency>
-		
-		<!-- 升级es定义版本 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-        </dependency>
         <!-- es init - end -->
 	</dependencies>
 </project>

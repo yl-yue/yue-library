@@ -1,4 +1,4 @@
-package ai.yue.library.test.dataobject;
+package ai.yue.library.test.dataobject.jdbc;
 
 import java.time.LocalDate;
 

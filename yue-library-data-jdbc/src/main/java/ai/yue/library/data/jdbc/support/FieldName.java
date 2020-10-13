@@ -6,12 +6,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 数据库字段名
  * 
+ * @deprecated 请使用 {@link JSONField} 注解
  * @author	ylyue
  * @since	2020年2月24日
  */
+@Deprecated
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD })

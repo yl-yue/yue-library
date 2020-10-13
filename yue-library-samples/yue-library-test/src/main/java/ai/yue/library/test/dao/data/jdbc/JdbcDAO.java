@@ -3,7 +3,7 @@ package ai.yue.library.test.dao.data.jdbc;
 import org.springframework.stereotype.Repository;
 
 import ai.yue.library.data.jdbc.dao.AbstractRepository;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.jdbc.UserDO;
 
 /**
  * @author	ylyue

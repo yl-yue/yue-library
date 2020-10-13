@@ -14,15 +14,18 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.parser.ParserConfig;
 
 import ai.yue.library.base.convert.converter.JSONArrayConverter;
 import ai.yue.library.base.convert.converter.JSONObjectConverter;
-import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.MapUtils;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -208,16 +211,26 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		try {
 			return cast(value, clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
-			ExceptionUtils.printException(e);
-			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
+			if (log.isDebugEnabled()) {
+				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
+				e.printStackTrace();
+			}
 		}
 		
-		// 采用 hutool 转换
+		// 采用 hutool 默认转换能力 + yue-library 扩展能力进行转换
 		return cn.hutool.core.convert.Convert.convert(clazz, value);
 	}
 	
 	/**
-	 * 转换值为指定 POJO 类型
+	 * <h2 style="color:red">转换值为指定 POJO 类型</h2>
+	 * <p>
+	 * 	<b><i>性能测试对比如下：</i></b><br>
+	 * 	<i>1、Spring BeanUtils：</i>性能伯仲，兼容性远超<br>
+	 * 	<i>2、Cglib BeanCopier：</i>性能伯仲，兼容性远超<br>
+	 *  <i>3、Apache BeanUtils：</i>秒杀<br>
+	 *  <i>4、Apache PropertyUtils：</i>秒杀<br>
+	 *  <i>5、Dozer：</i>秒杀<br>
+	 * </p>
 	 * 
 	 * @param <T> 泛型
 	 * @param value 被转换的值
@@ -233,26 +246,20 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		
 		// 采用 fastjson 转换
 		try {
-			if (value instanceof JSONObject) {
-				return castToJavaBean((JSONObject) value, clazz, ParserConfig.getGlobalInstance());
-			}
-			
 			if (value instanceof String) {
 				return JSONObject.parseObject((String) value, clazz);
 			}
 			
 			return castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
-			ExceptionUtils.printException(e);
-			log.warn("【Convert】采用 fastjson 类型转换器转换失败，正尝试 yue-library 类型转换器转换。");
+			if (log.isDebugEnabled()) {
+				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
+				e.printStackTrace();
+			}
 		}
 		
-		// 采用 yue-library 转换
-		if (value instanceof String) {
-			return convert(JSONObject.parseObject((String) value), clazz);
-		}
-		
-		return convert(value, clazz);
+		// 采用 hutool 默认转换能力 + yue-library 扩展能力进行转换
+		return BeanUtil.toBean(value, clazz);
 	}
 	
 	/**
@@ -275,7 +282,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 			return JSONObject.parseObject((String) value);
         }
         
-        return (JSONObject) toJSON(value);
+        return JSONObject.parseObject(JSONObject.toJSONString(value));
 	}
 	
 	/**
@@ -300,7 +307,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
         
         return (JSONArray) toJSON(value);
     }
-	
+    
 	// ----------------------------------------------------------------------- List转换方法
     
 	/**
@@ -323,6 +330,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @param jsonArray 需要转换的JSONArray
 	 * @param clazz     json转换的POJO类型
 	 * @return 转换后的List
+	 * @see ListUtils#toList(JSONArray, Class)
 	 */
 	public static <T> List<T> toList(JSONArray jsonArray, Class<T> clazz) {
 		return ListUtils.toList(jsonArray, clazz);
@@ -530,6 +538,97 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 */
 	public static JSONObject[] toJsons(String text, String regex, String key) {
 		return ListUtils.toJsons(text, regex, key);
+	}
+	
+	// ---------- 命名策略转换 - 字符串转换 ----------
+	
+	/**
+	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+	 * 例如：
+	 *
+	 * <pre>
+	 * HelloWorld=》hello_world
+	 * Hello_World=》hello_world
+	 * HelloWorld_test=》hello_world_test
+	 * </pre>
+	 *
+	 * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
+	 * @return 转换后下划线方式命名的字符串
+	 * @see StrUtil#toUnderlineCase(CharSequence)
+	 */
+	public static String toUnderlineCase(CharSequence str) {
+		return StrUtil.toUnderlineCase(str);
+	}
+
+	/**
+	 * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+	 *
+	 * @param str    转换前的驼峰式命名的字符串，也可以为符号连接形式
+	 * @param symbol 连接符
+	 * @return 转换后符号连接方式命名的字符串
+	 * @see StrUtil#toSymbolCase(CharSequence, char)
+	 */
+	public static String toSymbolCase(CharSequence str, char symbol) {
+		return StrUtil.toSymbolCase(str, symbol);
+	}
+	
+	/**
+	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
+	 * 例如：hello_world=》helloWorld
+	 *
+	 * @param name 转换前的下划线大写方式命名的字符串
+	 * @return 转换后的驼峰式命名的字符串
+	 * @see StrUtil#toCamelCase(CharSequence)
+	 */
+	public static String toCamelCase(CharSequence name) {
+		return StrUtil.toCamelCase(name);
+	}
+	
+	// ---------- 命名策略转换 - Json转换 ----------
+    
+	/**
+	 * 属性命名策略转换-驼峰命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 * @see MapUtils#toCamelCase(Object)
+	 */
+	public static JSONObject toCamelCase(Object param) {
+		return MapUtils.toCamelCase(param);
+	}
+	
+	/**
+	 * 属性命名策略转换-下划线命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 * @see MapUtils#toUnderlineCase(Object)
+	 */
+	public static JSONObject toUnderlineCase(Object param) {
+		return MapUtils.toUnderlineCase(param);
+	}
+	
+	/**
+	 * 属性命名策略转换-下划线命名法
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 * @see MapUtils#toSnakeCase(Object)
+	 */
+	public static JSONObject toSnakeCase(Object param) {
+		return MapUtils.toSnakeCase(param);
+	}
+	
+	/**
+	 * 属性命名策略转换
+	 * 
+	 * @param param Json参数 或 POJO对象
+	 * @param propertyNamingStrategy 属性命名策略
+	 * @return 经过属性命名策略转换后的 JSONObject
+	 * @see MapUtils#toPropertyNamingStrategy(Object, PropertyNamingStrategy)
+	 */
+	public static JSONObject toPropertyNamingStrategy(Object param, PropertyNamingStrategy propertyNamingStrategy) {
+		return MapUtils.toPropertyNamingStrategy(param, propertyNamingStrategy);
 	}
 	
 }

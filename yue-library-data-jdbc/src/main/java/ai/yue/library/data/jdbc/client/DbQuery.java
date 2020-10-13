@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
@@ -20,7 +21,6 @@ import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
@@ -79,13 +79,8 @@ class DbQuery extends DbJdbcTemplate {
      * @param mappedClass POJO映射类
      * @return POJO对象
      */
-    public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
-    	try {
-    		return namedParameterJdbcTemplate.queryForObject(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-			return null;
-		}
+	public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
+		return Convert.toJavaBean(queryForJson(sql, paramJson), mappedClass);
 	}
     
     /**
@@ -121,7 +116,13 @@ class DbQuery extends DbJdbcTemplate {
      * @return 列表数据
      */
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
-    	return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+		List<Map<String, Object>> queryForList = namedParameterJdbcTemplate.queryForList(sql, paramJson);
+		List<T> list = new ArrayList<>();
+		for (Map<String, Object> map : queryForList) {
+			list.add(Convert.toJavaBean(map, mappedClass));
+		}
+    	
+    	return list;
 	}
 	
     // is
@@ -302,7 +303,7 @@ class DbQuery extends DbJdbcTemplate {
 	 */
 	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass) {
 		String sql = listSqlBuild(tableName, paramJson, null);
-		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+		return queryForList(sql, paramJson, mappedClass);
 	}
 	
 	/**
@@ -314,7 +315,7 @@ class DbQuery extends DbJdbcTemplate {
 	 */
 	public List<JSONObject> list(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
 		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
-		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
+		return queryForList(sql, paramJson);
 	}
 	
 	/**
@@ -328,7 +329,7 @@ class DbQuery extends DbJdbcTemplate {
 	 */
 	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, DbSortEnum dBSortEnum) {
 		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
-		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+		return queryForList(sql, paramJson, mappedClass);
 	}
     
     private String listAllSqlBuild(String tableName) {
@@ -358,7 +359,7 @@ class DbQuery extends DbJdbcTemplate {
 	 */
     public <T> List<T> listAll(String tableName, Class<T> mappedClass) {
     	String sql = listAllSqlBuild(tableName);
-		return namedParameterJdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(mappedClass));
+    	return queryForList(sql, MapUtils.FINAL_EMPTY_JSON, mappedClass);
 	}
     
 	// Page
@@ -372,7 +373,7 @@ class DbQuery extends DbJdbcTemplate {
 		// 2. 查询数据
 		List<JSONObject> data = new ArrayList<>();
 		if (count == null || count != 0) {
-			data = ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(querySql, paramJson));
+			data = queryForList(querySql, paramJson);
 		}
 		
 		// 3. 分页
@@ -388,7 +389,7 @@ class DbQuery extends DbJdbcTemplate {
 		// 2. 查询数据
 		List<T> data = new ArrayList<>();
 		if (count != 0) {
-			data = namedParameterJdbcTemplate.query(querySql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
+			data = queryForList(querySql, paramJson, mappedClass);
 		}
 		
 		// 3. 分页
@@ -501,7 +502,7 @@ class DbQuery extends DbJdbcTemplate {
 		// 3. 统计
 		Long count = null;
 		if (!StringUtils.isEmpty(countSql)) {
-			count = (Long) namedParameterJdbcTemplate.queryForMap(countSql, conditions).get("count");
+			count = queryForJson(countSql, conditions).getLong("count");
 		}
 		
 		// 4. 返回结果

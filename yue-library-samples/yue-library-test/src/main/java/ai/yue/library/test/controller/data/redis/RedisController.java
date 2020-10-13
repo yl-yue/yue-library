@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.R;
 import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.jdbc.UserDO;
 
 /**
  * @author	ylyue

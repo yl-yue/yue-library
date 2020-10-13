@@ -1,9 +1,11 @@
 package ai.yue.library.test.controller.data.jdbc;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.test.constant.RoleEnum;
 import ai.yue.library.test.constant.UserStatusEnum;
 import ai.yue.library.test.dao.data.jdbc.JdbcDAO;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.jdbc.BasePersonDO;
+import ai.yue.library.test.dataobject.jdbc.UserDO;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 
 /**
  * @author	ylyue
@@ -34,6 +39,8 @@ public class JdbcController {
 	JdbcDAO jdbcDAO;
 	@Autowired
 	Db db;
+	@Autowired
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	String tableName = "user";
 	
 	@GetMapping("/getMetaData")
@@ -118,6 +125,40 @@ public class JdbcController {
 	@DeleteMapping("/deleteParamJson")
 	public Result<?> delete(JSONObject paramJson) {
 		return R.success(db.delete(tableName, paramJson));
+	}
+	
+	// 查询性能测试
+	
+	@GetMapping("/performance")
+	public Result<?> performance(JSONObject paramJson) {
+		String sql =
+				"SELECT\n" +
+				"	* \n" +
+				"FROM\n" +
+				"	base_person \n" +
+				"WHERE\n" +
+				"	id > 223150 \n" +
+				"	LIMIT 10000";
+		
+		TimeInterval timer = DateUtil.timer();
+		List<BasePersonDO> queryForList = db.queryForList(sql, paramJson, BasePersonDO.class);
+		System.out.println("10000条Json数据耗时：" + timer.intervalRestart());
+		
+//		List<JSONObject> queryForList = db.queryForList(sql, paramJson);
+//		System.out.println("10000条Json数据耗时：" + timer.intervalRestart());
+//		
+//		List<BasePersonDO> javaBeanList = Convert.toList(queryForList, BasePersonDO.class);
+//		System.out.println("10000条Json数据转换JavaBean耗时：" + timer.intervalRestart());
+//		
+//		List<BasePersonDO> queryForList2 = namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(BasePersonDO.class));
+//		System.out.println("10000条JavaBean数据，原生转换耗时：" + timer.intervalRestart());
+//		
+//		List<BasePersonDO> queryForList3 = namedParameterJdbcTemplate.query(sql, paramJson, ai.yue.library.data.jdbc.support.BeanPropertyRowMapper.newInstance(BasePersonDO.class));
+//		System.out.println("10000条JavaBean数据，增强转换耗时：" + timer.intervalRestart());
+		
+		return R.success(queryForList.size());
+//		return R.success(basePersonDOs);
+//		return R.success(basePersonDOs2.size());
 	}
 	
 }

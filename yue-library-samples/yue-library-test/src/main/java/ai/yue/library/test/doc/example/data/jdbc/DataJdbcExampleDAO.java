@@ -13,7 +13,7 @@ import ai.yue.library.data.jdbc.dao.AbstractDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.jdbc.UserDO;
 import cn.hutool.core.lang.Console;
 
 /**

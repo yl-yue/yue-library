@@ -1,0 +1,21 @@
+spring:
+  datasource: 
+    druid: 
+      url: jdbc:mysql://localhost:3306/yue_library_test?characterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123456
+  redis:
+    host: localhost
+    port: 6379
+  elasticsearch:
+    rest:
+      uris:      - https://localhost:30292
+      username: admin
+      password: 123456
+yue:  api-version:    minimum-version: 1
+  web:
+#    enabled-repeatedly-read-servlet-request: true
+#    enabled-repeatedly-read-servlet-request: false
+    http-message-converter:      jackson:        enabled: true
+#        write-null-number-as-zero: true#    http-message-converter:#      fastjson:
+#        enabled: true

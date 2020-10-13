@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.data.jdbc.dao.AbstractRepository;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
-import ai.yue.library.test.dataobject.UserDO;
+import ai.yue.library.test.dataobject.jdbc.UserDO;
 
 /**
  * @author  ylyue
