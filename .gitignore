@@ -1,3 +1,6 @@
+# yue-library ignore
+application-test-confidential.yml
+
 # IDE ignore
 rebel.xml
 

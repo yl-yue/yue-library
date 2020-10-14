@@ -30,7 +30,7 @@ public class UserDAO extends AbstractRepository<UserDO> {
 	public boolean isUser(String cellphone) {
 		JSONObject paramJson = new JSONObject();
 		paramJson.put("cellphone", cellphone);
-		long dataSize = db.query(tableName(), paramJson, mappedClass).size();
+		long dataSize = db.queryForList(tableName(), paramJson, mappedClass).size();
 		return db.isDataSize(dataSize);
 	}
 	
@@ -45,7 +45,7 @@ public class UserDAO extends AbstractRepository<UserDO> {
 		JSONObject paramJson = new JSONObject();
 		paramJson.put("cellphone", cellphone);
 		paramJson.put("password", password);
-		return db.resultToObject(db.query(tableName(), paramJson, mappedClass));
+		return db.resultToObject(db.queryForList(tableName(), paramJson, mappedClass));
 	}
 	
 }

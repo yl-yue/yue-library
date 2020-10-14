@@ -7,6 +7,6 @@ spring:
     include:    - yue-library-data-jdbc
     - yue-library-data-redis
     active:
-    - dev
+    - test-confidential
 #yue:#  api-version:#    enabled: false
 #  exception-handler:#    enabled: false
