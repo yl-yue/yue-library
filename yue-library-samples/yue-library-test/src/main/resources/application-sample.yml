@@ -19,3 +19,17 @@ yue:  api-version:    minimum-version: 1
     http-message-converter:      jackson:        enabled: true
 #        write-null-number-as-zero: true#    http-message-converter:#      fastjson:
 #        enabled: true
+  net:
+    proxy:
+      enabled: true
+      http-server-enabled: true
+      http-server-host: 127.0.0.1
+      http-server-port: 80
+      socks-server-enabled: true
+      socks-server-host: 127.0.0.1
+      socks-server-port: 1080
+      socks-proxy-version: 5
+      non-proxy-hosts: localhost|127.*|[::1]|0.0.0.0|[::0]
+      non-proxy-hosts-additional: ai.ylyue.cn|*.ylyue.cn
+      basic-authenticator-username: ylyue
+      basic-authenticator-password: ylyue

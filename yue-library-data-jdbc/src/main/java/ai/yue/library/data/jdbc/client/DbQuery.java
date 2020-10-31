@@ -80,7 +80,8 @@ class DbQuery extends DbJdbcTemplate {
      * @return POJO对象
      */
 	public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
-		return Convert.toJavaBean(queryForJson(sql, paramJson), mappedClass);
+		JSONObject resultJson = queryForJson(sql, paramJson);
+		return MapUtils.isEmpty(resultJson) ? null : Convert.toJavaBean(resultJson, mappedClass);
 	}
     
     /**

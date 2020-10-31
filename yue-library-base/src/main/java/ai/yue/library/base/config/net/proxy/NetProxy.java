@@ -44,7 +44,6 @@ public class NetProxy {
 	public static final String SOCKS_PROXY_VERSION = "socksProxyVersion";
 	
 	// 忽略代理
-	
 	public static final String FTP_NON_PROXY_HOSTS = "ftp.nonProxyHosts";
 	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 	public static final String SOCKET_NON_PROXY_HOSTS = "socksNonProxyHosts";

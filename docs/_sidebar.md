@@ -10,6 +10,7 @@
   * [校验](base/校验.md "校验框架")
   * [参数解析器](base/参数解析器.md)
   * [统一异常处理](base/统一异常处理.md)
+  * [网络代理](base/网络代理.md)
   * [工具类](base/工具类.md)
 
 * yue-library-base-crypto
@@ -41,6 +42,12 @@
 * yue-library-samples
 
   * [template-simple](samples/template-simple.md)
+
+* 开源共建
+
+  * [开源共建](开源共建/开源共建.md)
+  * [开源共建-任务清单](开源共建/开源共建-任务清单.md)
+  * [开源共建-迭代思路](开源共建/开源共建-迭代思路.md)
 
 * [更多](更多.md)
 * [Changelog<sup style="color:red">(new)<sup>](changelog.md)

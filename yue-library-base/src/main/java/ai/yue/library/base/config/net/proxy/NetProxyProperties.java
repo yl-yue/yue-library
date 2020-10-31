@@ -29,9 +29,16 @@ public class NetProxyProperties {
 	 */
 	private boolean httpServerEnabled = false;
 	
-	private String httpServerHost;
+	/**
+	 * HTTP代理服务器Host
+	 * <p>示例：localhost、127.0.0.1
+	 */
+	private String httpServerHost = "localhost";
 	
-	/** default: 80 */
+	/**
+	 * HTTP代理服务器Port
+	 * <p>默认：80
+	 */
 	private int httpServerPort = 80;
 	
 	// HTTPS代理
@@ -42,9 +49,16 @@ public class NetProxyProperties {
 	 */
 	private boolean httpsServerEnabled = false;
 	
-	private String httpsServerHost;
+	/**
+	 * HTTPS代理服务器Host
+	 * <p>示例：localhost、127.0.0.1
+	 */
+	private String httpsServerHost = "localhost";
 	
-	/** default: 443 */
+	/**
+	 * HTTPS代理服务器Port
+	 * <p>默认：443
+	 */
 	private int httpsServerPort = 443;
 	
 	// FTP代理
@@ -55,12 +69,19 @@ public class NetProxyProperties {
 	 */
 	private boolean ftpServerEnabled = false;
 	
-	private String ftpServerHost;
+	/**
+	 * FTP代理服务器Host
+	 * <p>示例：localhost、127.0.0.1
+	 */
+	private String ftpServerHost = "localhost";
 	
-	/** default: 80 */
+	/**
+	 * FTP代理服务器Port
+	 * <p>默认：80
+	 */
 	private int ftpServerPort = 80;
 	
-	// SOCKS5代理
+	// SOCKS代理
 	
 	/**
 	 * 启用socks代理服务器进行http、https、ftp、socket请求代理访问
@@ -68,12 +89,22 @@ public class NetProxyProperties {
 	 */
 	private boolean socksServerEnabled = false;
 	
-	private String socksServerHost;
+	/**
+	 * SOCKS代理服务器Host
+	 * <p>示例：localhost、127.0.0.1
+	 */
+	private String socksServerHost = "localhost";
 	
-	/** default: 1080 */
+	/**
+	 * SOCKS代理服务器Port
+	 * <p>默认：1080
+	 */
 	private int socksServerPort = 1080;
 	
-	/** default: 5 */
+	/**
+	 * SOCKS代理协议版本
+	 * <p>默认：5
+	 */
 	private int socksProxyVersion = 5;
 	
 	// 忽略代理
@@ -81,13 +112,13 @@ public class NetProxyProperties {
 	/**
 	 * 忽略代理地址，适用于发起HTTP、HTTPS、FTP、SOCKET请求时不进行代理访问（优先级高于其它配置）
 	 * <p>使用 {@code |} 对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*|*.ylyue.cn}
-	 * <p>default: {@value NetProxy#DEF_NON_PROXY_VAL}
+	 * <p>默认：{@value NetProxy#DEF_NON_PROXY_VAL}
 	 */
 	private String nonProxyHosts = NetProxy.DEF_NON_PROXY_VAL;
 	
 	/**
-	 * 额外忽略地址
-	 * <p>适用于不想覆盖默认值进行配置
+	 * 额外忽略地址（适用于不想覆盖默认值进行配置）
+	 * <p>使用 {@code |} 对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*|*.ylyue.cn}
 	 */
 	private String nonProxyHostsAdditional;
 	
