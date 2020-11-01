@@ -22,11 +22,22 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class PageIPO {
 	
+	/**
+	 * 当前页
+	 */
 	@NonNull
-	Integer page;// 当前页
+	Integer page;
+	
+	/**
+	 * 每页显示的条数
+	 */
 	@NonNull
-	Integer limit;// 每页显示的条数
-	JSONObject conditions;// 查询条件（null表示无条件）
+	Integer limit;
+	
+	/**
+	 * 查询条件（null表示无条件）
+	 */
+	JSONObject conditions;
 	
 	/**
 	 * 将分页参数转换为分页对象
