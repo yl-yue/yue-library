@@ -11,7 +11,7 @@ import org.springframework.lang.Nullable;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -109,8 +109,8 @@ class DbJdbcTemplate extends DbBase {
      * @param args 查询参数，有序的对应SQL语句中的 '?' 参数占位符
      * @return 列表数据
      */
-    public List<JSONObject> jdbcQueryForList(String sql, @Nullable Object... args) {
-    	return ListUtils.toJsonList(jdbcTemplate.queryForList(sql, args));
+	public List<JSONObject> jdbcQueryForList(String sql, @Nullable Object... args) {
+		return jdbcTemplate.query(sql, args, new ColumnMapRowMapper());
 	}
     
 }

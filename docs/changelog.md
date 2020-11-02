@@ -1,27 +1,5 @@
 # Changelog
 ---
-## TODO LIST
-### base
-
-### jdbc
-- 【jdbc】多租户支持
-- 【jdbc】tidb特性支持
-- 分表分库数据脱敏
-- JDBC审计支持
-- JDBC框架遵循Java开发手册实现MySQL 数据库规约与框架层面的优化，如：SQL分页优化、表必备三字段、数据修订前先确认数据等规范
-
-![数据修订前先确认数据](changelog_files/3.jpg)
-![表必备三字段](changelog_files/1.jpg)
-![SQL分页优化](changelog_files/2.jpg)
-
-### redis
-- 权限拦截框架集成
-- 增强第三方登录封装
-
-### 其他
-- 添加短信、OSS等封装
-- 加入996icu license 协议、木兰协议
-
 ## 版本
 yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
 
@@ -44,6 +22,28 @@ yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringClo
 [SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
 ## 2.3.0【规划中】
+### Maven仓库实际发布版本号
+`j8.2.3.0`、`j11.2.3.0`
+
+解释：j8对应Java 8，详情查看版本区别说明
+
+### 新特性
+1. 替换Db JavaBean转换方案，性能提升约300%+
+2. 优化Convert JavaBean转换性能
+3. 优化Convert异常提示，划分日志等级
+4. 重载驼峰转换方法到Convert类
+
+JDBC实体类映射方案已重构，废弃了Spring的转换器方案，这是一次底层改动。我已测试了如下场景成功支持：
+
+1. 驼峰转换（自动映射、自动识别boolean is命名）
+2. JSONObject、JSONArray解析支持
+3. 支持实体类多set方法存在
+
+- ColumnMapRowMapper，SpringJdbc深度解析，全局性能优化规范
+- BeanPropertyRowMapper
+
+### Bug修复
+
 ## 2.2.0【2020-10-09】
 ### Maven仓库实际发布版本号
 `j8.2.2.0`、`j11.2.2.0`

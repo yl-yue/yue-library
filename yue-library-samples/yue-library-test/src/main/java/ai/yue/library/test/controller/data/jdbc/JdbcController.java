@@ -135,15 +135,15 @@ public class JdbcController {
 				"SELECT\n" +
 				"	* \n" +
 				"FROM\n" +
-				"	base_person \n" +
+				"	base_person_performance \n" +
 				"WHERE\n" +
 				"	id > 223150 \n" +
 				"	LIMIT 10000";
 		
 		TimeInterval timer = DateUtil.timer();
 		List<BasePersonDO> queryForList = db.queryForList(sql, paramJson, BasePersonDO.class);
-		System.out.println("10000条Json数据耗时：" + timer.intervalRestart());
-		
+    	System.out.println("10000条Json数据耗时：" + timer.intervalRestart());
+    	
 //		List<JSONObject> queryForList = db.queryForList(sql, paramJson);
 //		System.out.println("10000条Json数据耗时：" + timer.intervalRestart());
 //		

@@ -1,31 +1,29 @@
-## DBRepository
+## AbstractDAO
 ### 简单使用
-`data-jdbc`所有的CRUD方法都在`DB`类里面，所以使用时只需要直接注入即可，推荐采用继承`DBDAO 或 DBRepository`方式。<br>
+`data-jdbc`所有的CRUD方法都在`Db`类里面，所以使用时只需要直接注入即可，推荐采用继承`AbstractDAO 或 DBRepository`方式。<br>
 <font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
 ```ddl
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '表自增ID'
 ```
 主键ID：bigint类型、无符号、自动递增、不能为NULL
-> 其实这样做也符合了“阿里巴巴Java开发手册”MySQL 数据库-建表规约第九条：<br>
-> 9. 【强制】表必备三字段：id, create_time, update_time。
-说明：其中 id 必为主键，类型为 bigint unsigned、单表时自增、步长为 1。create_time, update_time
-的类型均为 datetime 类型。
+> 其实这样做也符合了《Java开发手册》MySQL数据库-建表规约第九条：<br>
+> ![建表规约第九条](介绍_files/建表规约第九条.png)
 
-**DBRepository：**
+**AbstractDAO：**
 ```java
 @Repository
-public class DataJdbcExampleTDAO extends DBRepository<UserDO> {
+public class DataJdbcExampleDAO extends AbstractDAO {
 
 	@Override
 	protected String tableName() {
-		return "user";
+		return "tableName";
 	}
 	
 }
 ```
 
-### <font color=red>DBRepository类速览</font>
-`DBRepository`为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
+### <font color=red>AbstractDAO类速览</font>
+`AbstractDAO`为 JSON 对象提供服务
 
 实际中可能会遇到类型转换问题，可使用 `Convert` 类进行转换，支持DO、Json、List等相互转换
 
@@ -38,26 +36,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.client.DB;
-import ai.yue.library.data.jdbc.constant.DBSortEnum;
+import ai.yue.library.data.jdbc.client.Db;
+import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.data.jdbc.vo.PageTVO;
-import cn.hutool.core.util.ClassUtil;
+import ai.yue.library.data.jdbc.vo.PageVO;
 
 /**
- * DBRepository 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
+ * AbstractDAO 为 JSON 对象提供服务
  * 
  * @author	ylyue
  * @since	2019年4月30日
- * @param <T> 映射类
  */
-public abstract class DBRepository<T> {
+public abstract class AbstractDAO {
 
 	@Autowired
-	protected DB db;
-	@SuppressWarnings("unchecked")
-	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
-    protected abstract String tableName();
+	protected Db db;
+	protected String tableName = tableName();
+	protected abstract String tableName();
     
 	/**
 	 * 插入数据
@@ -104,19 +99,19 @@ public abstract class DBRepository<T> {
 	
 	/**
 	 * 单个
-	 * @param id 主键ID
-	 * @return POJO对象
+	 * @param id 主键id
+	 * @return JSON数据
 	 */
-	public T get(Long id) {
-		return db.queryById(tableName(), id, mappedClass);
+	public JSONObject get(Long id) {
+		return db.getById(tableName(), id);
 	}
 	
 	/**
 	 * 列表-全部
 	 * @return 列表数据
 	 */
-	public List<T> listAll() {
-		return db.queryAll(tableName(), mappedClass);
+	public List<JSONObject> listAll() {
+		return db.listAll(tableName());
 	}
 	
 	/**
@@ -124,8 +119,8 @@ public abstract class DBRepository<T> {
 	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
 	 * @return count（总数），data（分页列表数据）
 	 */
-	public PageTVO<T> page(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, mappedClass);
+	public PageVO page(PageIPO pageIPO) {
+		return db.page(tableName(), pageIPO);
 	}
 	
 	/**
@@ -133,9 +128,11 @@ public abstract class DBRepository<T> {
 	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
 	 * @return count（总数），data（分页列表数据）
 	 */
-	public PageTVO<T> pageDESC(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, mappedClass, DBSortEnum.降序);
+	public PageVO pageDESC(PageIPO pageIPO) {
+		return db.page(tableName(), pageIPO, DbSortEnum.DESC);
 	}
 	
 }
 ```
+
+[👉点击前往源码仓库查看](https://gitee.com/yl-yue/yue-library/blob/master/yue-library-data-jdbc/src/main/java/ai/yue/library/data/jdbc/dao/AbstractDAO.java)

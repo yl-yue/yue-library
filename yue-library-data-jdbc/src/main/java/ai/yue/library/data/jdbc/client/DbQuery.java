@@ -11,7 +11,6 @@ import org.springframework.lang.Nullable;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
@@ -21,6 +20,8 @@ import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
+import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
+import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
@@ -60,6 +61,7 @@ class DbQuery extends DbJdbcTemplate {
 	/**
      * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
+     * 
      * @param sql 要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
      * @return JSON对象
@@ -70,7 +72,7 @@ class DbQuery extends DbJdbcTemplate {
 	}
     
     /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, ai.yue.library.data.jdbc.support.BeanPropertyRowMapper<T>)}
+     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, BeanPropertyRowMapper<T>)}
      * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * 
      * @param <T> JavaBean的泛型
@@ -80,8 +82,8 @@ class DbQuery extends DbJdbcTemplate {
      * @return POJO对象
      */
 	public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
-		JSONObject resultJson = queryForJson(sql, paramJson);
-		return MapUtils.isEmpty(resultJson) ? null : Convert.toJavaBean(resultJson, mappedClass);
+		List<T> list = queryForList(sql, paramJson, mappedClass);
+		return resultToObject(list);
 	}
     
     /**
@@ -99,31 +101,27 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 同 {@link NamedParameterJdbcTemplate#queryForList(String, Map)}<br><br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
+     * 
      * @param sql 要执行的查询SQL
      * @param paramJson 要绑定到查询的参数映射
      * @return 列表数据
      */
     public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
-    	return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
+		return namedParameterJdbcTemplate.query(sql, paramJson, new ColumnMapRowMapper());
 	}
     
     /**
      * 同 {@linkplain NamedParameterJdbcTemplate#queryForList(String, Map, Class)}<br>
      * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
+     * 
      * @param <T> 泛型
      * @param sql 要执行的查询SQL
      * @param paramJson 要绑定到查询的参数映射
      * @param mappedClass 映射类
      * @return 列表数据
      */
-    public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
-		List<Map<String, Object>> queryForList = namedParameterJdbcTemplate.queryForList(sql, paramJson);
-		List<T> list = new ArrayList<>();
-		for (Map<String, Object> map : queryForList) {
-			list.add(Convert.toJavaBean(map, mappedClass));
-		}
-    	
-    	return list;
+	public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
+		return namedParameterJdbcTemplate.query(sql, paramJson, BeanPropertyRowMapper.newInstance(mappedClass));
 	}
 	
     // is

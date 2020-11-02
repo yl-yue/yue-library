@@ -21,8 +21,8 @@
 
   * [介绍](data/jdbc/介绍.md "yue-library-data-jdbc介绍")
   * [增删改查](data/jdbc/增删改查.md)
-  * [DbDAO](data/jdbc/DbDAO.md)
-  * [DbRepository](data/jdbc/DbRepository.md)
+  * [AbstractDAO](data/jdbc/AbstractDAO.md)
+  * [AbstractRepository](data/jdbc/AbstractRepository.md)
 
 * yue-library-data-redis
 
