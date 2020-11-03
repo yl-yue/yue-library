@@ -39,8 +39,9 @@ JDBC实体类映射方案已重构，废弃了Spring的转换器方案，这是�
 2. JSONObject、JSONArray解析支持
 3. 支持实体类多set方法存在
 
-- ColumnMapRowMapper，SpringJdbc深度解析，全局性能优化规范
-- BeanPropertyRowMapper
+
+1. BeanPropertyRowMapper，JavaBean映射两倍有余Spring原生的性能，支持更多类型映射，支持 JSONField 注解
+2. ColumnMapRowMapper，转换 Map 为 fastjson 的 JSONObject
 
 ### Bug修复
 

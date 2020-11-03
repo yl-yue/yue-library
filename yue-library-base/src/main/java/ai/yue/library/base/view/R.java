@@ -527,7 +527,7 @@ public class R {
 		
 		// 处理所有未处理异常-500
 		e.printStackTrace();
-		return internalServerError(e);
+		return internalServerError(ExceptionUtils.getPrintExceptionToJson(e));
 	}
 	
 }
