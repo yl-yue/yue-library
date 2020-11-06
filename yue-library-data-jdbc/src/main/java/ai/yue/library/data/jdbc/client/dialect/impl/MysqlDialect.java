@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
@@ -16,7 +17,6 @@ import ai.yue.library.data.jdbc.client.dialect.AnsiSqlDialect;
 import ai.yue.library.data.jdbc.client.dialect.DialectName;
 import ai.yue.library.data.jdbc.client.dialect.Wrapper;
 import ai.yue.library.data.jdbc.constant.DbConstant;
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
@@ -111,7 +111,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 	// Page
 
 	@Override
-	public PageDTO pageDTOBuild(String tableName, PageIPO pageIPO, DbSortEnum dBSortEnum) {
+	public PageDTO pageDTOBuild(String tableName, PageIPO pageIPO, SortEnum sortEnum) {
 		// 1. 参数验证
 		paramValidate(tableName);
 		
@@ -132,10 +132,10 @@ public class MysqlDialect extends AnsiSqlDialect {
 		}
 		querySql.append(whereSql);
 		// 排序
-		if (dBSortEnum == null) {// 默认（不排序）
+		if (sortEnum == null) {// 默认（不排序）
 			querySql.append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 		} else {
-			if (DbSortEnum.ASC == dBSortEnum) {// 升序
+			if (SortEnum.ASC == sortEnum) {// 升序
 				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			} else {// 降序
 				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
@@ -87,7 +87,7 @@ public interface Dialect extends Serializable {
 	 */
 	JSONObject toParamJson(PageIPO pageIPO);
 	
-    PageDTO pageDTOBuild(String tableName, PageIPO pageIPO, DbSortEnum dBSortEnum);
+    PageDTO pageDTOBuild(String tableName, PageIPO pageIPO, SortEnum sortEnum);
     
     PageDTO pageDTOBuild(String tableName, String whereSql, PageIPO pageIPO);
     

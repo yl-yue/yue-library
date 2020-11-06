@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dao.AbstractDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
@@ -133,7 +133,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> list(JSONObject paramJson) {
-		return db.list(tableName(), paramJson, DbSortEnum.DESC);
+		return db.list(tableName(), paramJson, SortEnum.DESC);
 	}
 	
 	public void query(JSONObject paramJson) {

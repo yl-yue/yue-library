@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.data.jdbc.constant.DbConstant;
+import ai.yue.library.data.jdbc.constant.DbExpectedEnum;
 import ai.yue.library.data.jdbc.constant.DbExpectedValueModeEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import cn.hutool.core.util.ArrayUtil;
@@ -28,6 +29,7 @@ import cn.hutool.core.util.ArrayUtil;
  * Created by sunJinChuan on 2016/6/6
  * @since 0.0.1
  */
+@SuppressWarnings("deprecation")
 class DbUpdate extends DbQuery {
 	
 	// Spring Update
@@ -83,11 +85,26 @@ class DbUpdate extends DbQuery {
      * 		将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DbException}
      * 	</p>
      * </blockquote>
+     * 
      * @param sql						要执行的更新SQL
      * @param paramJson					更新所用到的参数
      * @param expectedValue				更新所影响的行数预期值
-     * @param dBExpectedValueModeEnum	预期值确认方式
+     * @param dBExpectedEnum			预期值确认方式
      */
+	@Transactional
+	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedEnum dBExpectedEnum) {
+		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
+		if (DbExpectedEnum.EQ == dBExpectedEnum) {
+			updateAndExpectedEqual(updateRowsNumber, expectedValue);
+		} else if (DbExpectedEnum.GE == dBExpectedEnum) {
+			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
+		}
+	}
+	
+	/**
+	 * @deprecated 请使用：{@linkplain DbExpectedEnum}
+	 */
+	@Deprecated
 	@Transactional
 	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedValueModeEnum dBExpectedValueModeEnum) {
 		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
@@ -157,9 +174,26 @@ class DbUpdate extends DbQuery {
      * @param paramJson      	更新所用到的参数
      * @param conditions		作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum		更新类型 {@linkplain DbUpdateEnum}
-     * @param expectedValue				更新所影响的行数预期值
-     * @param dBExpectedValueModeEnum	预期值确认方式
+     * @param expectedValue		更新所影响的行数预期值
+     * @param dBExpectedEnum	预期值确认方式
      */
+	@Transactional
+    public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
+    		, int expectedValue, DbExpectedEnum dBExpectedEnum) {
+		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
+		
+		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
+		if (DbExpectedEnum.EQ == dBExpectedEnum) {
+			updateAndExpectedEqual(updateRowsNumber, expectedValue);
+		} else if (DbExpectedEnum.GE == dBExpectedEnum) {
+			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
+		}
+	}
+	
+	/**
+	 * @deprecated 请使用：{@linkplain DbExpectedEnum}
+	 */
+	@Deprecated
 	@Transactional
     public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
     		, int expectedValue, DbExpectedValueModeEnum dBExpectedValueModeEnum) {
@@ -172,7 +206,7 @@ class DbUpdate extends DbQuery {
 			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
 		}
 	}
-
+	
 	/**
 	 * 更新-ById
 	 * <p>根据表中主键ID进行更新

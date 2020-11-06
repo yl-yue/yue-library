@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by sunJinChuan on 2016/6/6
  * @since 0.0.1
  */
+@SuppressWarnings("deprecation")
 @Slf4j
 class DbQuery extends DbJdbcTemplate {
 	
@@ -265,16 +267,16 @@ class DbQuery extends DbJdbcTemplate {
 	
     // list
     
-	private String listSqlBuild(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
+	private String listSqlBuild(String tableName, JSONObject paramJson, SortEnum sortEnum) {
 		paramValidate(tableName, paramJson);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append(dialect.getWrapper().wrap(tableName));
 		String whereSql = paramToWhereSql(paramJson);
 		sql.append(whereSql);
-		if (dBSortEnum == DbSortEnum.ASC) {// 升序
+		if (sortEnum == SortEnum.ASC) {// 升序
 			sql.append(" ORDER BY id");
-		} else if (dBSortEnum == DbSortEnum.DESC) {// 降序
+		} else if (sortEnum == SortEnum.DESC) {// 降序
 			sql.append(" ORDER BY id DESC");
 		}
 		
@@ -307,30 +309,58 @@ class DbQuery extends DbJdbcTemplate {
 	
 	/**
 	 * 绝对条件查询
+	 * 
 	 * @param tableName 表名
 	 * @param paramJson 查询参数
-	 * @param dBSortEnum 排序方式
+	 * @param sortEnum  排序方式
 	 * @return 列表数据
 	 */
-	public List<JSONObject> list(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
-		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
+	public List<JSONObject> list(String tableName, JSONObject paramJson, SortEnum sortEnum) {
+		String sql = listSqlBuild(tableName, paramJson, sortEnum);
 		return queryForList(sql, paramJson);
 	}
 	
 	/**
+	 * @deprecated 请使用：{@linkplain SortEnum}
+	 */
+	@Deprecated
+	public List<JSONObject> list(String tableName, JSONObject paramJson, DbSortEnum dBSortEnum) {
+		SortEnum sortEnum = null;
+		if (dBSortEnum != null) {
+			sortEnum = SortEnum.valueOf(dBSortEnum.name());
+		}
+		
+		return list(tableName, paramJson, sortEnum);
+	}
+	
+	/**
 	 * 绝对条件查询
-	 * @param <T> 泛型
-	 * @param tableName 表名
-	 * @param paramJson 查询参数
+	 * 
+	 * @param <T>         泛型
+	 * @param tableName   表名
+	 * @param paramJson   查询参数
 	 * @param mappedClass 映射类
-	 * @param dBSortEnum 排序方式
+	 * @param sortEnum    排序方式
 	 * @return 列表数据
 	 */
-	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, DbSortEnum dBSortEnum) {
-		String sql = listSqlBuild(tableName, paramJson, dBSortEnum);
+	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, SortEnum sortEnum) {
+		String sql = listSqlBuild(tableName, paramJson, sortEnum);
 		return queryForList(sql, paramJson, mappedClass);
 	}
     
+	/**
+	 * @deprecated 请使用：{@linkplain SortEnum}
+	 */
+	@Deprecated
+	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, DbSortEnum dBSortEnum) {
+		SortEnum sortEnum = null;
+		if (dBSortEnum != null) {
+			sortEnum = SortEnum.valueOf(dBSortEnum.name());
+		}
+		
+		return list(tableName, paramJson, mappedClass, sortEnum);
+	}
+	
     private String listAllSqlBuild(String tableName) {
 		paramValidate(tableName);
 		StringBuffer sql = new StringBuffer();
@@ -429,14 +459,27 @@ class DbQuery extends DbJdbcTemplate {
      * <b>单表分页查询</b><br><br>
      * <p>阿里最优SQL示例：</p>
      * <code>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 ORDER BY id LIMIT 100000,20 ) b where a.id=b.id</code><br><br>
+     * 
      * @param tableName 	表名
      * @param pageIPO 		分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
-     * @param dBSortEnum 	排序方式 {@linkplain DbSortEnum}
+     * @param sortEnum		排序方式 {@linkplain SortEnum}
      * @return count（总数），data（分页列表数据）
      */
-	public PageVO page(String tableName, PageIPO pageIPO, DbSortEnum dBSortEnum) {
-		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, dBSortEnum);
+	public PageVO page(String tableName, PageIPO pageIPO, SortEnum sortEnum) {
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, sortEnum);
 		return toPageVO(pageDTO);
+	}
+	
+	/**
+	 * @deprecated 请使用：{@linkplain SortEnum}
+	 */
+	public PageVO page(String tableName, PageIPO pageIPO, DbSortEnum dBSortEnum) {
+		SortEnum sortEnum = null;
+		if (dBSortEnum != null) {
+			sortEnum = SortEnum.valueOf(dBSortEnum.name());
+		}
+		
+		return page(tableName, pageIPO, sortEnum);
 	}
 	
     /**
@@ -447,13 +490,25 @@ class DbQuery extends DbJdbcTemplate {
      * @param tableName 	表名
      * @param pageIPO 		分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
      * @param mappedClass 	映射类
-     * @param dBSortEnum 	排序方式 {@linkplain DbSortEnum}
+     * @param sortEnum		排序方式 {@linkplain SortEnum}
      * @return count（总数），data（分页列表数据）
      */
-	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, DbSortEnum dBSortEnum) {
+	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, SortEnum sortEnum) {
 		// 1. 获得PageDTO
-		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, dBSortEnum);
+		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, sortEnum);
 		return toPageTVO(pageDTO, mappedClass);
+	}
+	
+	/**
+	 * @deprecated 请使用：{@linkplain SortEnum}
+	 */
+	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, DbSortEnum dBSortEnum) {
+		SortEnum sortEnum = null;
+		if (dBSortEnum != null) {
+			sortEnum = SortEnum.valueOf(dBSortEnum.name());
+		}
+		
+		return page(tableName, pageIPO, mappedClass, sortEnum);
 	}
 	
 	/**

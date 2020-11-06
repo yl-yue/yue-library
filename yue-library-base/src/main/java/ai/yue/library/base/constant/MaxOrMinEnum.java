@@ -8,7 +8,9 @@ package ai.yue.library.base.constant;
  */
 public enum MaxOrMinEnum {
 
-	最大值, 
-	最小值;
+	/** 最大值 */
+	MAX, 
+	/** 最小值 */
+	MIN;
 
 }
