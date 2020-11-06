@@ -8,7 +8,9 @@ package ai.yue.library.base.constant;
  */
 public enum SortEnum {
 
-	降序, 
-	升序;
+	/** 升序 */
+	ASC, 
+	/** 降序 */
+	DESC;
 
 }

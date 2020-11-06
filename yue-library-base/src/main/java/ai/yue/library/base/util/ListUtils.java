@@ -183,7 +183,7 @@ public class ListUtils extends ListUtil {
 			public int compare(JSONObject json1, JSONObject json2) {
 				var json1value = json1.get(sortKey);
 				var json2value = json2.get(sortKey);
-				if (sortEnum == SortEnum.升序) {
+				if (sortEnum == SortEnum.ASC) {
 					return CompareUtil.compare(json1value, json2value, false);
 				} else {
 					return CompareUtil.compare(json2value, json1value, false);
@@ -210,7 +210,7 @@ public class ListUtils extends ListUtil {
 				JSONObject json2 = Convert.toJSONObject(o2);
 				var json1value = json1.get(sortField);
 				var json2value = json2.get(sortField);
-				if (sortEnum == SortEnum.升序) {
+				if (sortEnum == SortEnum.ASC) {
 					return CompareUtil.compare(json1value, json2value, false);
 				} else {
 					return CompareUtil.compare(json2value, json1value, false);
@@ -316,13 +316,13 @@ public class ListUtils extends ListUtil {
 				if (jsoni.get(distinctKey).equals(jsonj.get(distinctKey))) {
 					// i > j
 					if (CompareUtil.compare(jsoni.get(keepKey), jsonj.get(keepKey), false) > 0) {
-						if (maxOrMinEnum == MaxOrMinEnum.最小值) {
+						if (maxOrMinEnum == MaxOrMinEnum.MIN) {
 							jsoni.replace(keepKey, jsonj.get(keepKey));
 						}
 						list.remove(j);
 						frequency++;
 					} else {
-						if (maxOrMinEnum == MaxOrMinEnum.最大值) {
+						if (maxOrMinEnum == MaxOrMinEnum.MAX) {
 							jsoni.replace(keepKey, jsonj.get(keepKey));
 						}
 						list.remove(j);

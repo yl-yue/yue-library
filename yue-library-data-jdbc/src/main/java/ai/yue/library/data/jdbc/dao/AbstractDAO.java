@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.data.jdbc.client.Db;
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 
@@ -99,7 +99,7 @@ public abstract class AbstractDAO {
 	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageVO pageDESC(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, DbSortEnum.DESC);
+		return db.page(tableName(), pageIPO, SortEnum.DESC);
 	}
 	
 }

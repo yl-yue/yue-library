@@ -42,7 +42,7 @@ import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.data.jdbc.constant.SortEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
@@ -171,7 +171,7 @@ public abstract class AbstractRepository<T> {
 	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageTVO<T> pageDESC(PageIPO pageIPO) {
-		return db.page(tableName(), pageIPO, mappedClass, DbSortEnum.DESC);
+		return db.page(tableName(), pageIPO, mappedClass, SortEnum.DESC);
 	}
 	
 }
