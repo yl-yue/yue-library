@@ -405,7 +405,7 @@ public class R {
 	// 600 - 自定义错误提示
 	
 	/**
-	 * 错误提示-600
+	 * <b>错误提示-600</b>
 	 * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
 	 * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
 	 * 
@@ -417,7 +417,7 @@ public class R {
 	}
 	
 	/**
-	 * 错误提示-600
+	 * <b>错误提示-600</b>
 	 * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
 	 * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
 	 * 

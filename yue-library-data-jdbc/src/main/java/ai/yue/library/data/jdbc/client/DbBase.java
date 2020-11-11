@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.exception.DbException;
+import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
@@ -202,10 +203,13 @@ public class DbBase {
 		if (null == value) {
 			whereSql.append(" IS :");
 			whereSql.append(condition);
-		} else if (value instanceof Collection) {
+		} else if (value instanceof Collection || ArrayUtil.isArray(value)) {
 			whereSql.append(" IN (:");
 			whereSql.append(condition);
 			whereSql.append(") ");
+			if (ArrayUtil.isArray(value)) {
+				paramJson.replace(condition, ListUtils.toList((Object[]) value));
+			}
 		} else {
 			whereSql.append(" = :");
 			whereSql.append(condition);

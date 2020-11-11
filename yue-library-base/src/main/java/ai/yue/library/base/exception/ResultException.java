@@ -18,14 +18,20 @@ public class ResultException extends RuntimeException {
 	
 	private Result<?> result;
 	
+	/**
+	 * <h2>异常消息构造</h2>
+	 * {@linkplain R#errorPrompt(String)} 的便捷方式
+	 */
 	public <T> ResultException(String msg) {
 		super(msg);
 		this.result = R.errorPrompt(msg);
 	}
 	
 	/**
-	 * 异常消息格式化构造<br>
-	 * 当传入msg无"{}"时，被认为非模板，直接打印多个参数以空格分隔
+	 * <h2>异常消息格式化构造</h2>
+	 * <p>{@linkplain R#errorPrompt(String)} 的便捷方式
+	 * <p>msg支持文本模板格式化，{} 表示占位符
+	 * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
 	 * 
 	 * @param msg    文本模板，被替换的部分用 {} 表示
 	 * @param values 文本模板中占位符被替换的值
