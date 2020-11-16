@@ -1,4 +1,4 @@
-${AnsiColor.BRIGHT_BLUE}:: yue-library 🤓 :: Running Spring Boot  ${spring-boot.version} ::
+${AnsiColor.BRIGHT_BLUE}:: yue-library 🤓 :: Running Spring Boot ${spring-boot.version} ::
   ${AnsiColor.GREEN}                  ${AnsiColor.GREEN}     _ _ _
   ${AnsiColor.GREEN}                  ${AnsiColor.GREEN}    | (_) |
   ${AnsiColor.GREEN} _   _ _   _  ___ ${AnsiColor.GREEN}    | |_| |__  _ __ __ _ _ __ _   _
@@ -8,4 +8,5 @@ ${AnsiColor.BRIGHT_BLUE}:: yue-library 🤓 :: Running Spring Boot  ${spring-boo
   ${AnsiColor.GREEN}  __/ |           ${AnsiColor.GREEN}                               __/ |
   ${AnsiColor.GREEN} |___/            ${AnsiColor.GREEN}                              |___/
 
-  ${AnsiColor.RED}项目地址: https://gitee.com/yl-yue/yue-library${AnsiColor.BLACK}
+  ${AnsiColor.RED}项目地址: https://gitee.com/yl-yue/yue-library
+  ${AnsiColor.BLACK}

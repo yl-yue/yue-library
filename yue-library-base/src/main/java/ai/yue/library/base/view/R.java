@@ -517,6 +517,7 @@ public class R {
 			}
 		} else if (ClassLoaderUtil.isPresent("feign.FeignException")
 				&& ClassLoaderUtil.loadClass("feign.FeignException").isAssignableFrom(e.getClass())) {
+			log.error("【服务降级】接口调用失败，FeignException 错误内容如下：", e);
 			String contentUTF8 = ReflectUtil.invoke(e, "contentUTF8");
 			try {
 				return Convert.toJavaBean(contentUTF8, Result.class);

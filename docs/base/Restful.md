@@ -1,13 +1,13 @@
 # Restful
 ## Restful Result
-　　`ai.yue.library.base.view.Result<T>` 定义为最外层响应对象，`ai.yue.library.base.view.ResultInfo` 定义为工具类可便捷返回 Restful 风格API结果。
+　　`ai.yue.library.base.view.Result<T>` 定义为最外层响应对象，`ai.yue.library.base.view.R` 定义为工具类可便捷返回 Restful 风格API结果。
 
 ### 示例
 **代码如下：**
 ```java
 @PostMapping("/valid")
 public Result<?> valid(@Valid ValidationIPO validationIPO) {
-	return ResultInfo.success(validationIPO);
+	return R.success(validationIPO);
 }
 ```
 
@@ -60,7 +60,7 @@ public class ApiVersionConroller {
 	@ApiVersion(deprecated = true)
 	@GetMapping("/get")
 	public Result<?> get(@PathVariable String version) {
-		return ResultInfo.success("get：" + version);
+		return R.success("get：" + version);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class ApiVersionConroller {
 	@ApiVersion(value = 2, deprecated = true)
 	@GetMapping("/get")
 	public Result<?> get2(@PathVariable String version) {
-		return ResultInfo.success("get2：" + version);
+		return R.success("get2：" + version);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class ApiVersionConroller {
 	@ApiVersion(3.1)
 	@GetMapping("/get")
 	public Result<?> get3(@PathVariable String version) {
-		return ResultInfo.success("get3：" + version);
+		return R.success("get3：" + version);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class ApiVersionConroller {
 	@ApiVersion(4)
 	@GetMapping("/get")
 	public Result<?> get4(@PathVariable String version) {
-		return ResultInfo.success("get4：" + version);
+		return R.success("get4：" + version);
 	}
 	
 }
