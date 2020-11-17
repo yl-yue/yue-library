@@ -1,7 +1,6 @@
 package ai.yue.library.base.config.net.proxy;
 
 import cn.hutool.core.util.StrUtil;
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -88,13 +87,13 @@ public class NetProxy {
 
         String nonProxyHosts = netProxyProperties.getNonProxyHosts();
         String nonProxyHostsAdditional = netProxyProperties.getNonProxyHostsAdditional();
-        if (StringUtils.isNotEmpty(nonProxyHostsAdditional)) {
-            // 适配`,`分割
+        // 适配`,`分割
+        if (StrUtil.isNotEmpty(nonProxyHosts) && nonProxyHosts.contains(",")) {
+            nonProxyHosts = nonProxyHosts.replace(",", "|");
+        }
+        if (StrUtil.isNotEmpty(nonProxyHostsAdditional)) {
             if (nonProxyHostsAdditional.contains(",")) {
                 nonProxyHostsAdditional = nonProxyHostsAdditional.replace(",", "|");
-            }
-            if (nonProxyHosts.contains(",")) {
-                nonProxyHosts = nonProxyHosts.replace(",", "|");
             }
             nonProxyHosts = String.join("|", nonProxyHosts, nonProxyHostsAdditional);
         }
