@@ -25,6 +25,12 @@ yue:  api-version:    minimum-version: 1
       http-server-enabled: true
       http-server-host: 127.0.0.1
       http-server-port: 80
+      https-server-enabled: true
+      https-server-host: 127.0.0.1
+      https-server-port: 443
+      ftp-server-enabled: true
+      ftp-server-host: 127.0.0.1
+      ftp-server-port: 80
       socks-server-enabled: true
       socks-server-host: 127.0.0.1
       socks-server-port: 1080

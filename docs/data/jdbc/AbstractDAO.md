@@ -1,5 +1,5 @@
-## AbstractDAO
-### 简单使用
+# AbstractDAO
+## 简单使用
 `data-jdbc`所有的CRUD方法都在`Db`类里面，所以使用时只需要直接注入即可，推荐采用继承`AbstractDAO 或 DBRepository`方式。<br>
 <font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
 ```ddl
@@ -22,7 +22,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 }
 ```
 
-### <font color=red>AbstractDAO类速览</font>
+## <font color=red>AbstractDAO类速览</font>
 `AbstractDAO`为 JSON 对象提供服务
 
 实际中可能会遇到类型转换问题，可使用 `Convert` 类进行转换，支持DO、Json、List等相互转换

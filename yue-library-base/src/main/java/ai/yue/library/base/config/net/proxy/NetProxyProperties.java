@@ -24,7 +24,7 @@ public class NetProxyProperties {
 	// HTTP代理
 	
 	/**
-	 * 启用http代理服务器进行http请求代理访问
+	 * 启用HTTP代理服务器进行HTTP请求代理访问
 	 * <p>默认：false
 	 */
 	private boolean httpServerEnabled = false;
@@ -44,7 +44,7 @@ public class NetProxyProperties {
 	// HTTPS代理
 	
 	/**
-	 * 启用https代理服务器进行https请求代理访问
+	 * 启用HTTPS代理服务器进行HTTPS请求代理访问
 	 * <p>默认：false
 	 */
 	private boolean httpsServerEnabled = false;
@@ -64,7 +64,7 @@ public class NetProxyProperties {
 	// FTP代理
 	
 	/**
-	 * 启用ftp代理服务器进行ftp请求代理访问
+	 * 启用FTP代理服务器进行FTP请求代理访问
 	 * <p>默认：false
 	 */
 	private boolean ftpServerEnabled = false;
@@ -84,7 +84,7 @@ public class NetProxyProperties {
 	// SOCKS代理
 	
 	/**
-	 * 启用socks代理服务器进行http、https、ftp、socket请求代理访问
+	 * 启用SOCKS代理服务器进行HTTP、HTTPS、FTP、SOCKET请求代理访问
 	 * <p>默认：false
 	 */
 	private boolean socksServerEnabled = false;
