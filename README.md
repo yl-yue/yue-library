@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://ylyue.cn/"><img src="https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png" width="400"></a>
+	<a target="_blank" href="https://ylyue.cn/"><img src="https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png" width="400"></a>
 </p>
 <p align="center">
 	<strong>一个基于SpringBoot封装的增强库</strong>
@@ -185,5 +185,9 @@ yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源�
 - 关于三方库：新加的方法不要使用第三方库的方法，yue-library遵循无依赖原则
 
 ## 特别鸣谢
-[![logo-spring-tools-4](https://ylyue.cn/_images/logo-spring-tools-4.png)](https://spring.io/tools/?from=yue-library)&emsp;&emsp;&emsp;&emsp;&emsp;
-[![logo-jetbrains](https://ylyue.cn/_images/jetbrains.svg)](https://www.jetbrains.com/?from=yue-library)
+<a target="_blank" href="https://spring.io/tools/?from=yue-library">
+	<img src="https://ylyue.cn/_images/logo-spring-tools-4.png" alt="logo-spring-tools-4">
+</a>&emsp;&emsp;&emsp;&emsp;&emsp;
+<a target="_blank" href="https://www.jetbrains.com/?from=yue-library">
+	<img src="https://ylyue.cn/_images/jetbrains.svg" alt="logo-jetbrains">
+</a>
