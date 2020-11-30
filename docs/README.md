@@ -179,15 +179,12 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 - 维护文档：文档地址 [yue-library-doc](https://gitee.com/yl-yue/yue-library/tree/master/docs) ，欢迎参与翻译和修订
 
 ### PR遵照原则
-yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源共建/开源共建)，不过yue-library的维护者同`Hutool的维护者`一样，是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合如下规范：
+yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源共建/开源共建)，不过yue-library的维护者（同Hutool的维护者）是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合如下规范：
 - 关于注释：提供完备的注释，尤其对每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，必要时请添加单元测试，如果愿意，也可以加上你的大名。
-- 关于缩进：按照Eclipse默认（tab）缩进
+- 关于缩进：采用IDEA中默认的 <font color=red>**`空格`**</font> 作为标准，可设置一个 `tab` 四个空格
 - 关于三方库：新加的方法不要使用第三方库的方法，yue-library遵循无依赖原则
 
 ## 特别鸣谢
-<a target="_blank" href="https://spring.io/tools/?from=yue-library">
-	<img src="https://ylyue.cn/_images/logo-spring-tools-4.png" alt="logo-spring-tools-4">
-</a>&emsp;&emsp;&emsp;&emsp;&emsp;
 <a target="_blank" href="https://www.jetbrains.com/?from=yue-library">
 	<img src="https://ylyue.cn/_images/jetbrains.svg" alt="logo-jetbrains">
 </a>
