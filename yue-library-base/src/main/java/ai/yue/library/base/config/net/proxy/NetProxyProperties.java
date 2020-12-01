@@ -110,14 +110,14 @@ public class NetProxyProperties {
 
     /**
      * 忽略代理地址，适用于发起HTTP、HTTPS、FTP、SOCKET请求时不进行代理访问（优先级高于其它配置）
-     * <p>使用 {@code |}或者{@code ,} 对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*|*.ylyue.cn}
+     * <p>使用（{@code | 或 ,}）对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*|*.ylyue.cn}
      * <p>默认：{@value NetProxy#DEF_NON_PROXY_VAL}
      */
     private String nonProxyHosts = NetProxy.DEF_NON_PROXY_VAL;
 
     /**
      * 额外忽略地址（适用于不想覆盖默认值进行配置）
-     * <p>使用 {@code |}或者{@code ,} 对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*,*.ylyue.cn}
+     * <p>使用（{@code | 或 ,}）对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*,*.ylyue.cn}
      */
     private String nonProxyHostsAdditional;
 
