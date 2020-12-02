@@ -1,26 +1,7 @@
 package ai.yue.library.base.view;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.exception.ApiVersionDeprecatedException;
-import ai.yue.library.base.exception.AttackException;
-import ai.yue.library.base.exception.AuthorizeException;
-import ai.yue.library.base.exception.ClientFallbackException;
-import ai.yue.library.base.exception.DbException;
-import ai.yue.library.base.exception.ForbiddenException;
-import ai.yue.library.base.exception.LoginException;
-import ai.yue.library.base.exception.ParamDecryptException;
-import ai.yue.library.base.exception.ParamException;
-import ai.yue.library.base.exception.ParamVoidException;
-import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
@@ -28,7 +9,14 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 /**
  * 便捷返回 {@linkplain Result}，构建 {@code Restful} 风格API结果
@@ -415,7 +403,22 @@ public class R {
 	public static Result<?> errorPrompt(String msg) {
 		return error(ResultEnum.ERROR_PROMPT.getCode(), msg);
 	}
-	
+
+	/**
+	 * <b>错误提示-600</b>
+	 * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
+	 * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
+	 * <p>msg支持文本模板格式化，{} 表示占位符
+	 * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
+	 *
+	 * @param msg    文本模板，被替换的部分用 {} 表示
+	 * @param values 文本模板中占位符被替换的值
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> errorPromptFormat(String msg, Object... values) {
+		return errorPrompt(StrUtil.format(msg, values));
+	}
+
 	/**
 	 * <b>错误提示-600</b>
 	 * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。

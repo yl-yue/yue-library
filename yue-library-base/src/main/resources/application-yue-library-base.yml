@@ -1,13 +1,16 @@
 server:
   tomcat:
-    port-header: GET, POST, PUT, DELETE
+    remote:
+      port-header: GET, POST, PUT, DELETE
 spring:
   servlet:
     multipart:
       max-file-size: 512MB
       max-request-size: 1024MB
   mvc:
-    # 解决传日期参数报400转换错误问题    date-format: yyyy-MM-dd HH:mm:ss
+    # 解决传日期参数报400转换错误问题
+    format:
+      date: yyyy-MM-dd HH:mm:ss
     hiddenmethod:
       filter:
         enabled: true

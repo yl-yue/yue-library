@@ -29,25 +29,25 @@ public class ResultException extends RuntimeException {
 	 * <h2>异常消息构造</h2>
 	 * {@linkplain R#errorPrompt(String)} 的便捷方式
 	 */
-	public <T> ResultException(String msg) {
+	public ResultException(String msg) {
 		super(msg);
 		this.result = R.errorPrompt(msg);
 	}
 	
 	/**
 	 * <h2>异常消息格式化构造</h2>
-	 * <p>{@linkplain R#errorPrompt(String)} 的便捷方式
+	 * <p>{@linkplain R#errorPromptFormat(String, Object...)} 的便捷方式
 	 * <p>msg支持文本模板格式化，{} 表示占位符
 	 * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
 	 * 
 	 * @param msg    文本模板，被替换的部分用 {} 表示
 	 * @param values 文本模板中占位符被替换的值
 	 */
-	public <T> ResultException(String msg, Object... values) {
+	public ResultException(String msg, Object... values) {
 		this(StrUtil.format(msg, values));
 	}
 	
-	public <T> ResultException(Result<T> result) {
+	public ResultException(Result<?> result) {
 		super(result.getMsg());
 		this.result = result;
 	}
@@ -56,13 +56,13 @@ public class ResultException extends RuntimeException {
 	 * <h2>异常消息构造</h2>
 	 * {@linkplain R#errorPrompt(String)} 的便捷方式
 	 */
-	public <T> ResultException(int businessId, String msg) {
+	public ResultException(int businessId, String msg) {
 		super(msg);
 		this.businessId = businessId;
 		this.result = R.errorPrompt(msg);
 	}
 	
-	public <T> ResultException(int businessId, Result<T> result) {
+	public ResultException(int businessId, Result<?> result) {
 		super(result.getMsg());
 		this.businessId = businessId;
 		this.result = result;
