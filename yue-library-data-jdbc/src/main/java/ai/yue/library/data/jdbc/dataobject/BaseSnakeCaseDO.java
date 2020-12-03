@@ -1,11 +1,11 @@
 package ai.yue.library.data.jdbc.dataobject;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 下划线命名法DO基类
@@ -25,16 +25,20 @@ import lombok.experimental.SuperBuilder;
 public abstract class BaseSnakeCaseDO implements Serializable {
 	
 	private static final long serialVersionUID = 3601450189220851200L;
-	
-	protected Long id;// 表自增ID
-	protected Integer sort_idx;// 排序索引
+
+	/** 表自增ID */
+	protected Long id;
+	/** 排序索引 */
+	protected Integer sort_idx;
 	/**
 	 * 删除时间戳
 	 * <p>默认值为0 == 未删除
 	 * <p>一般不作查询展示
 	 */
 	protected Long delete_time;
-	protected LocalDateTime create_time;// 数据插入时间
-	protected LocalDateTime update_time;// 数据更新时间
-	
+	/** 数据插入时间 */
+	protected LocalDateTime create_time;
+	/** 数据更新时间 */
+	protected LocalDateTime update_time;
+
 }

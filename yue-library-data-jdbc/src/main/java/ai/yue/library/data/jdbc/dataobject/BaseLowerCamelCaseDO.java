@@ -1,11 +1,11 @@
 package ai.yue.library.data.jdbc.dataobject;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 小驼峰命名法DO基类
@@ -15,10 +15,12 @@ import lombok.experimental.SuperBuilder;
  * 	<p>&#064;ToString(callSuper = true)
  * 	<p>&#064;EqualsAndHashCode(callSuper = true)
  * </blockquote>
- * 
+ *
+ * @deprecated 请使用：{@link BaseCamelCaseDO}
  * @author	ylyue
  * @since	2018年7月26日
  */
+@Deprecated
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
