@@ -9,15 +9,22 @@ spring:
     port: 6379
   elasticsearch:
     rest:
-      uris:      - https://localhost:30292
+      uris:
+      - https://localhost:30292
       username: admin
       password: 123456
-yue:  api-version:    minimum-version: 1
+yue:
+  api-version:
+    minimum-version: 1
   web:
 #    enabled-repeatedly-read-servlet-request: true
 #    enabled-repeatedly-read-servlet-request: false
-    http-message-converter:      jackson:        enabled: true
-#        write-null-number-as-zero: true#    http-message-converter:#      fastjson:
+    http-message-converter:
+      jackson:
+        enabled: true
+#        write-null-number-as-zero: true
+#    http-message-converter:
+#      fastjson:
 #        enabled: true
   net:
     proxy:
@@ -39,3 +46,17 @@ yue:  api-version:    minimum-version: 1
       non-proxy-hosts-additional: ai.ylyue.cn|*.ylyue.cn
       basic-authenticator-username: ylyue
       basic-authenticator-password: ylyue
+  thread-pool:
+    async:
+      enabled: true
+      thread-name-prefix: async-exec-
+      core-pool-size: 10
+      max-pool-size: 20
+      queue-capacity: 200
+      allow-core-thread-time-out: false
+      keep-alive-seconds: 60
+      wait-for-tasks-to-complete-on-shutdown: true
+      await-termination-seconds: 5
+      rejected-execution-handler-policy: caller_runs_policy
+      enable-servlet-async-context: true
+      servlet-async-context-timeout-millis: 600

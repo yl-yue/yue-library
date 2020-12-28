@@ -1,17 +1,15 @@
 package ai.yue.library.test.controller.data.jdbc;
 
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.view.R;
-import ai.yue.library.base.view.Result;
 
 /**
  * @author	ylyue

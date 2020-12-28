@@ -1,18 +1,13 @@
 package ai.yue.library.test.controller.data.jdbc;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.data.jdbc.dataobject.BaseLowerCamelCaseDO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 人员DO
@@ -26,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class PersonDO extends BaseLowerCamelCaseDO {
+public class PersonDO extends BaseCamelCaseDO {
 
     private static final long serialVersionUID = -5880107144355168990L;
 

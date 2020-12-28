@@ -61,7 +61,7 @@ public class FastJsonHttpMessageConverterProperties {
 	/**
 	 * 输出Null值为空字符串
 	 * <p>排除 {@link #getSerializerFeatures()} 中可配置的Null处理（基本数据类型、List、Boolean）
-	 * <p>排除 {@link #isWriteMapAsEmpty()} (Map)
+	 * <p>排除 {@link #isWriteNullMapAsEmpty()} (Map)
 	 * <p>默认：false
 	 */
 	private boolean writeNullAsStringEmpty = false;

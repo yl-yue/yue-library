@@ -12,7 +12,7 @@
 	<description>yue-library-data-es</description>
 	
 	<properties>
-		<elasticsearch.sql.version>1.9.0.0</elasticsearch.sql.version>
+		<elasticsearch.sql.version>1.11.0.0</elasticsearch.sql.version>
 	</properties>
 	
 	<dependencies>

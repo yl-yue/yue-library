@@ -1,8 +1,15 @@
 package ai.yue.library.web.config;
 
-import java.util.Arrays;
-import java.util.List;
-
+import ai.yue.library.base.config.properties.CorsProperties;
+import ai.yue.library.web.config.argument.resolver.CustomArgumentResolversConfig;
+import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
+import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
+import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
+import ai.yue.library.web.config.properties.WebProperties;
+import ai.yue.library.web.config.thread.pool.ContextDecorator;
+import ai.yue.library.web.env.WebMvcEnv;
+import ai.yue.library.web.util.servlet.multipart.UploadProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,15 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import ai.yue.library.base.config.properties.CorsProperties;
-import ai.yue.library.web.config.argument.resolver.CustomArgumentResolversConfig;
-import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
-import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
-import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
-import ai.yue.library.web.config.properties.WebProperties;
-import ai.yue.library.web.env.WebMvcEnv;
-import ai.yue.library.web.util.servlet.multipart.UploadProperties;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * web bean 自动配置
@@ -85,5 +85,16 @@ public class WebAutoConfig {
 		log.info("【初始化配置-HttpServletRequest】默认配置为true，当前环境为true：默认启用输入流可反复读取的HttpServletRequest ... 已初始化完毕。");
 		return filterRegistrationBean;
 	}
-	
+
+	// 线程装饰器
+
+	/**
+	 * Servlet子线程上下文装饰器
+	 */
+	@Bean
+	@ConditionalOnMissingBean
+	public ContextDecorator contextDecorator() {
+		return new ContextDecorator();
+	}
+
 }

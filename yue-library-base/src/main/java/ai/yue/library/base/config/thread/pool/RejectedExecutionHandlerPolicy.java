@@ -1,13 +1,15 @@
 package ai.yue.library.base.config.thread.pool;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
+ * 任务丢弃策略
+ *
  * @author	ylyue
  * @since	2019年7月9日
  */
