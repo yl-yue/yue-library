@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Hoxton.SR8</version>
+		<version>Hoxton.SR9</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
