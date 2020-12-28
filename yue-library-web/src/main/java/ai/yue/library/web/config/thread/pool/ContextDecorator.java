@@ -2,7 +2,7 @@ package ai.yue.library.web.config.thread.pool;
 
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
 import cn.hutool.core.convert.Convert;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletRequest;
  * @author ylyue
  * @since  2020/12/26
  */
+@AllArgsConstructor
 public class ContextDecorator implements TaskDecorator {
 
-    @Autowired
-    AsyncProperties asyncProperties;
+    protected AsyncProperties asyncProperties;
 
     @Override
     public Runnable decorate(Runnable runnable) {

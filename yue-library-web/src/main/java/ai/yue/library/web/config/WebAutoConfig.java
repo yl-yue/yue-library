@@ -1,6 +1,7 @@
 package ai.yue.library.web.config;
 
 import ai.yue.library.base.config.properties.CorsProperties;
+import ai.yue.library.base.config.thread.pool.AsyncProperties;
 import ai.yue.library.web.config.argument.resolver.CustomArgumentResolversConfig;
 import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
@@ -11,6 +12,7 @@ import ai.yue.library.web.env.WebMvcEnv;
 import ai.yue.library.web.util.servlet.multipart.UploadProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -93,8 +95,9 @@ public class WebAutoConfig {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
-	public ContextDecorator contextDecorator() {
-		return new ContextDecorator();
+	@ConditionalOnBean(AsyncProperties.class)
+	public ContextDecorator contextDecorator(AsyncProperties asyncProperties) {
+		return new ContextDecorator(asyncProperties);
 	}
 
 }
