@@ -1,5 +1,9 @@
 package ai.yue.library.base.view;
 
+import ai.yue.library.base.util.DateUtils;
+
+import java.time.LocalDateTime;
+
 /**
  * Result String 类型异常提示信息预定义
  * 
@@ -56,5 +60,35 @@ public class ResultPrompt {
 	public static String dataStructure(Object expected, Object actual) {
 		return ResultEnum.DATA_STRUCTURE.getMsg() + " Incorrect result size: expected " + expected + ", actual " + actual;
 	}
-	
+
+	/**
+	 * 服务不可用-停机维护
+	 *
+	 * @param restoreTime 预计恢复时间（如：2020-12-31 08:00:00）
+	 * @return 提示信息
+	 */
+	public static String serviceUnavailable(LocalDateTime restoreTime) {
+		StringBuffer msg = new StringBuffer();
+		msg.append(ResultEnum.SERVICE_UNAVAILABLE.getMsg());
+		msg.append("，我们正对服务进行停机维护，预计将在 ");
+		msg.append(DateUtils.toDateTimeFormatter(restoreTime));
+		msg.append(" 后恢复，给你带来的不便，敬请谅解！");
+		return msg.toString();
+	}
+
+	/**
+	 * 服务不可用-停机维护
+	 *
+	 * @param restoreMinutes 预计恢复时间（单位：分钟）
+	 * @return 提示信息
+	 */
+	public static String serviceUnavailable(int restoreMinutes) {
+		StringBuffer msg = new StringBuffer();
+		msg.append(ResultEnum.SERVICE_UNAVAILABLE.getMsg());
+		msg.append("，我们正对服务进行停机维护，预计将在 ");
+		msg.append(restoreMinutes);
+		msg.append(" 分钟后恢复，给你带来的不便，敬请谅解！");
+		return msg.toString();
+	}
+
 }

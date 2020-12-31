@@ -3,14 +3,18 @@ package ai.yue.library.web.config.thread.pool;
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
 import cn.hutool.core.convert.Convert;
 import lombok.AllArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
- * 子线程上下文装饰器
+ * <h2>子线程上下文装饰器</h2>
+ * <p>https://stackoverflow.com/questions/23732089/how-to-enable-request-scope-in-async-task-executor</p>
+ * <p>传递：RequestAttributes and MDC and SecurityContext</p>
  *
  * @author ylyue
  * @since  2020/12/26
@@ -22,15 +26,17 @@ public class ContextDecorator implements TaskDecorator {
 
     @Override
     public Runnable decorate(Runnable runnable) {
-        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());    // 1
+        Map<String,String> previous = MDC.getCopyOfContextMap(); 					                                    // 2
         enableServletAsyncContext(context, asyncProperties);
-
         return () -> {
             try {
-                RequestContextHolder.setRequestAttributes(context);
+                RequestContextHolder.setRequestAttributes(context); // 1
+                MDC.setContextMap(previous);					    // 2
                 runnable.run();
             } finally {
-                RequestContextHolder.resetRequestAttributes();
+                RequestContextHolder.resetRequestAttributes();      // 1
+                MDC.clear(); 								        // 2
             }
         };
     }

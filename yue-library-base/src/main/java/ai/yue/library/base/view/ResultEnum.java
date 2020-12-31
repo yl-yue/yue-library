@@ -110,7 +110,7 @@ public enum ResultEnum {
 	 * <p>{@code 503 Service Unavailable}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
 	 */
-	SERVICE_UNAVAILABLE(503, "Service Unavailable"),
+	SERVICE_UNAVAILABLE(503, "服务不可用（Service Unavailable）"),
 	
 	/**
 	 * {@link HttpStatus#GATEWAY_TIMEOUT}

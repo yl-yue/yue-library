@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 
 /**
@@ -46,15 +45,12 @@ public class AsyncConfig implements AsyncConfigurer {
 	 */
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-		return new AsyncUncaughtExceptionHandler() {
-			@Override
-			public void handleUncaughtException(Throwable arg0, Method arg1, Object... arg2) {
-				log.error("=========================={}=======================", arg0.getMessage(), arg0);
-				log.error("exception method: {}", arg1.getName());
-				for (Object param : arg2) {
-		        	log.error("Parameter value - {}", param);
-		        }
+		return (ex, method, params) -> {
+			log.error("Async Exception Method: {}", method);
+			for (int i = 0; i < params.length; i++) {
+				log.error("Method Parameter Value {} - {}", i, params[i]);
 			}
+			log.error("==========================printStackTrace=======================", ex);
 		};
 	}
 	

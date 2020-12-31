@@ -16,6 +16,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -313,6 +314,37 @@ public class R {
 	public static <T> Result<T> requestError(T data) {
 		return error(ResultEnum.REQUEST_ERROR.getCode(), ResultEnum.REQUEST_ERROR.getMsg(), data);
 	}
+
+	/**
+	 * 服务不可用-503
+	 * <p>服务目前无法使用（由于超载或停机维护）</p>
+	 *
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> serviceUnavailable() {
+		return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg());
+	}
+	/**
+	 * 服务不可用（停机维护）-503
+	 *
+	 * @param restoreTime 预计恢复时间（如：2020-12-31 08:00:00）
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static Result<?> serviceUnavailable(LocalDateTime restoreTime) {
+		return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg(), ResultPrompt.serviceUnavailable(restoreTime));
+	}
+	/**
+	 * 服务不可用-503
+	 * <p>服务目前无法使用（由于超载或停机维护）</p>
+	 *
+	 * @param <T>  泛型
+	 * @param data 服务不可用的具体原因，参考：{@link ResultPrompt#serviceUnavailable(int)}
+	 * @return HTTP请求，最外层响应对象
+	 */
+	public static <T> Result<T> serviceUnavailable(T data) {
+		return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg(), data);
+	}
+
 	/**
 	 * 数据结构异常-505
 	 * @return HTTP请求，最外层响应对象
@@ -329,8 +361,7 @@ public class R {
 	 * @return HTTP请求，最外层响应对象
 	 */
 	public static Result<?> dataStructure(int expected, int actual) {
-		String data = "Incorrect result size: expected " + expected + ", actual " + actual;
-		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), data);
+		return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), ResultPrompt.dataStructure(expected, actual));
 	}
 	/**
 	 * 数据结构异常，请检查相应数据结构一致性-506

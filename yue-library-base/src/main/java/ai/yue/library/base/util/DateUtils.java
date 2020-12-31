@@ -1,5 +1,7 @@
 package ai.yue.library.base.util;
 
+import cn.hutool.core.date.DateUtil;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,8 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
-
-import cn.hutool.core.date.DateUtil;
 
 /**
  * 时间工具类（JDK1.8）
@@ -297,13 +297,25 @@ public class DateUtils extends DateUtil {
 	public static String toDateTimeFormatter(Date date) {
 		return DATE_TIME_FORMATTER.format(toLocalDateTime(date));
 	}
+
+	/**
+	 * 将 {@link TemporalAccessor} 类型进行标准日期时间字符串格式化
+	 *
+	 * @param date 日期
+	 * @return 年-月-日 时:分:秒
+	 */
+	public static String toDateTimeFormatter(TemporalAccessor date) {
+		return DATE_TIME_FORMATTER.format(date);
+	}
 	
 	/**
 	 * 将 {@link TemporalAccessor} 类型进行标准日期时间字符串格式化
 	 * 
+	 * @deprecated 请使用：{@link #toDateTimeFormatter(TemporalAccessor)}
 	 * @param date 日期
 	 * @return 年-月-日 时:分:秒
 	 */
+	@Deprecated
 	public static String to_y_M_d_H_m_s(TemporalAccessor date) {
 		return DATE_TIME_FORMATTER.format(date);
 	}
