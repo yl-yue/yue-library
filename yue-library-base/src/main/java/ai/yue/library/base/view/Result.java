@@ -31,7 +31,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.var;
 
 /**
  * HTTP请求最外层响应对象，更适应Restful风格API
