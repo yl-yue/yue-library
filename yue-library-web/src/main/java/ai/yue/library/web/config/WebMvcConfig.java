@@ -1,20 +1,17 @@
 package ai.yue.library.web.config;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.MediaType;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+import ai.yue.library.base.constant.FieldNamingStrategyEnum;
+import ai.yue.library.base.util.ClassUtils;
+import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
+import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
+import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
+import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
+import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.BeanContext;
 import com.alibaba.fastjson.serializer.ContextValueFilter;
@@ -25,20 +22,21 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-
-import ai.yue.library.base.constant.FieldNamingStrategyEnum;
-import ai.yue.library.base.util.ClassUtils;
-import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
-import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
-import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
-import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
-import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author	ylyue
@@ -72,9 +70,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private void fastJsonHttpMessageConverterConfig(List<HttpMessageConverter<?>> converters) {
 		// 1. 创建FastJsonHttpMessageConverter
 		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-        converter.setSupportedMediaTypes(CollUtil.newArrayList(MediaType.APPLICATION_JSON, new MediaType("application", "*+json")));
+		converter.setSupportedMediaTypes(CollUtil.newArrayList(MediaType.APPLICATION_JSON, new MediaType("application", "*+json")));
 		FastJsonConfig config = new FastJsonConfig();
-
 		config.setDateFormat(JSON.DEFFAULT_DATE_FORMAT);
 		config.setSerializerFeatures(fastJsonProperties.getSerializerFeatures());
 		

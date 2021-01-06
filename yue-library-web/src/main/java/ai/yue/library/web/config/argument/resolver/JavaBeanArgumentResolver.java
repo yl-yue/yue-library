@@ -1,7 +1,9 @@
 package ai.yue.library.web.config.argument.resolver;
 
-import javax.validation.Valid;
-
+import ai.yue.library.base.util.ParamUtils;
+import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.validation.Validator;
+import cn.hutool.core.bean.BeanUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.annotation.Validated;
@@ -10,10 +12,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import ai.yue.library.base.util.ParamUtils;
-import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.base.validation.Validator;
-import cn.hutool.core.bean.BeanUtil;
+import javax.validation.Valid;
 
 /**
  * POJO、IPO、JavaBean对象方法参数解析器
@@ -32,11 +31,27 @@ public class JavaBeanArgumentResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+		// 1. 获得参数
 		Object param = ParamUtils.getParam(parameter.getParameterType());
+
+		// 2. 确认校验
+		boolean verify = false;
 		if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
+			verify = true;
+		}
+		if (verify == false && param != null) {
+			Class<?> paramClass = param.getClass();
+			if (paramClass.isAnnotationPresent(Valid.class) || paramClass.isAnnotationPresent(Validated.class)) {
+				verify = true;
+			}
+		}
+
+		// 3. 执行校验
+		if (verify) {
 			SpringUtils.getBean(Validator.class).valid(param);
 		}
-		
+
+		// 4. 返回结果
 		return param;
 	}
 

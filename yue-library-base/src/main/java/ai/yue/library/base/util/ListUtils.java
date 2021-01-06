@@ -1,22 +1,15 @@
 package ai.yue.library.base.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.MaxOrMinEnum;
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.ArrayUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.*;
 
 /**
  * List工具类
@@ -179,15 +172,13 @@ public class ListUtils extends ListUtil {
 	 * @return 处理后的List集合
 	 */
 	public static List<JSONObject> sort(List<JSONObject> list, String sortKey, SortEnum sortEnum) {
-		Collections.sort(list, new Comparator<JSONObject>() {
-			public int compare(JSONObject json1, JSONObject json2) {
-				var json1value = json1.get(sortKey);
-				var json2value = json2.get(sortKey);
-				if (sortEnum == SortEnum.ASC) {
-					return CompareUtil.compare(json1value, json2value, false);
-				} else {
-					return CompareUtil.compare(json2value, json1value, false);
-				}
+		Collections.sort(list, (json1, json2) -> {
+			var json1value = json1.get(sortKey);
+			var json2value = json2.get(sortKey);
+			if (sortEnum == SortEnum.ASC) {
+				return CompareUtil.compare(json1value, json2value, false);
+			} else {
+				return CompareUtil.compare(json2value, json1value, false);
 			}
 		});
 		
@@ -204,17 +195,15 @@ public class ListUtils extends ListUtil {
 	 * @return 处理后的List集合
 	 */
 	public static <T> List<T> sortT(List<T> list, String sortField, SortEnum sortEnum) {
-		Collections.sort(list, new Comparator<T>() {
-			public int compare(T o1, T o2) {
-				JSONObject json1 = Convert.toJSONObject(o1);
-				JSONObject json2 = Convert.toJSONObject(o2);
-				var json1value = json1.get(sortField);
-				var json2value = json2.get(sortField);
-				if (sortEnum == SortEnum.ASC) {
-					return CompareUtil.compare(json1value, json2value, false);
-				} else {
-					return CompareUtil.compare(json2value, json1value, false);
-				}
+		Collections.sort(list, (o1, o2) -> {
+			JSONObject json1 = Convert.toJSONObject(o1);
+			JSONObject json2 = Convert.toJSONObject(o2);
+			var json1value = json1.get(sortField);
+			var json2value = json2.get(sortField);
+			if (sortEnum == SortEnum.ASC) {
+				return CompareUtil.compare(json1value, json2value, false);
+			} else {
+				return CompareUtil.compare(json2value, json1value, false);
 			}
 		});
 		
@@ -623,5 +612,98 @@ public class ListUtils extends ListUtil {
 		
 		return jsons;
 	}
-	
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toSnakeCaseJsonList(List<JSONObject> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (JSONObject json : list) {
+			jsonList.add(Convert.toSnakeCase(json));
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toSnakeCaseJsonListT(List<T> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (T obj : list) {
+			jsonList.add(Convert.toSnakeCase(obj));
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toUnderlineCaseJsonList(List<JSONObject> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (JSONObject json : list) {
+			jsonList.add(Convert.toUnderlineCase(json));
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toUnderlineCaseJsonListT(List<T> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (T obj : list) {
+			jsonList.add(Convert.toUnderlineCase(obj));
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-驼峰命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toCamelCaseJsonList(List<JSONObject> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (JSONObject json : list) {
+			jsonList.add(Convert.toCamelCase(json));
+		}
+
+		return jsonList;
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-驼峰命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toCamelCaseJsonListT(List<T> list) {
+		List<JSONObject> jsonList = new ArrayList<>(list.size());
+		for (T obj : list) {
+			jsonList.add(Convert.toCamelCase(obj));
+		}
+
+		return jsonList;
+	}
+
 }

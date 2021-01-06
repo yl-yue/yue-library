@@ -1,14 +1,14 @@
 package ai.yue.library.web.config.argument.resolver;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import javax.validation.Valid;
-
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.validation.Validator;
+import ai.yue.library.web.util.RequestParamUtils;
+import ai.yue.library.web.util.servlet.ServletUtils;
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
@@ -33,16 +33,13 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.base.validation.Validator;
-import ai.yue.library.web.util.RequestParamUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
-import cn.hutool.core.bean.BeanUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import javax.validation.Valid;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Array、List对象方法参数解析器
@@ -185,8 +182,22 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 				} else if (!BeanUtils.isSimpleProperty(actualTypeArgument) && BeanUtil.isBean(actualTypeArgument)) {
 					List<?> value = Convert.toJSONArray(body).toJavaList(actualTypeArgument);
 					arg = value;
-					if (parameter.hasParameterAnnotation(Valid.class)
-							|| parameter.hasParameterAnnotation(Validated.class)) {
+
+					// 确认校验
+					boolean verify = false;
+					if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
+						verify = true;
+					}
+					if (verify == false && value != null && value.size() > 0) {
+						Object verifyObject = value.get(0);
+						Class<?> paramClass = verifyObject.getClass();
+						if (paramClass.isAnnotationPresent(Valid.class) || paramClass.isAnnotationPresent(Validated.class)) {
+							verify = true;
+						}
+					}
+
+					// 执行校验
+					if (verify) {
 						Validator validator = SpringUtils.getBean(Validator.class);
 						value.forEach(javaBean -> {
 							validator.valid(javaBean);

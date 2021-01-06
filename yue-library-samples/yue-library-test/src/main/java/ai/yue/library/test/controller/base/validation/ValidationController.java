@@ -1,18 +1,17 @@
 package ai.yue.library.test.controller.base.validation;
 
-import java.time.LocalDate;
-
-import javax.validation.Valid;
-
+import ai.yue.library.base.validation.Validator;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import ai.yue.library.test.ipo.ValidationIPO;
+import ai.yue.library.test.ipo.ValidationIPO2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.yue.library.base.validation.Validator;
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
-import ai.yue.library.test.ipo.ValidationIPO;
+import javax.validation.Valid;
+import java.time.LocalDate;
 
 /**
  * @author  ylyue
@@ -78,5 +77,16 @@ public class ValidationController {
 		// 返回结果
 		return R.success(validationIPO);
 	}
-	
+
+	/**
+	 * valid2
+	 * @param validationIPO2
+	 * @return
+	 */
+	@PostMapping("/valid2")
+	public Result<?> valid2(ValidationIPO2 validationIPO2) {
+		System.out.println(validationIPO2);
+		return R.success(validationIPO2);
+	}
+
 }

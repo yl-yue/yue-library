@@ -1,10 +1,17 @@
 package ai.yue.library.web.config.exception;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import ai.yue.library.base.config.exception.AbstractExceptionHandler;
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.exception.*;
+import ai.yue.library.base.util.ExceptionUtils;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import ai.yue.library.web.util.servlet.ServletUtils;
+import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -15,22 +22,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.config.exception.AbstractExceptionHandler;
-import ai.yue.library.base.exception.AuthorizeException;
-import ai.yue.library.base.exception.ParamDecryptException;
-import ai.yue.library.base.exception.ParamException;
-import ai.yue.library.base.exception.ParamVoidException;
-import ai.yue.library.base.exception.ResultException;
-import ai.yue.library.base.util.ExceptionUtils;
-import ai.yue.library.base.view.R;
-import ai.yue.library.base.view.Result;
-import ai.yue.library.web.util.servlet.ServletUtils;
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 全局统一异常处理
@@ -127,7 +121,7 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 			Console.error(key + " " + msg);
 		});
 		
-		return R.paramCheckNotPass(paramHint.toString());
+		return R.paramCheckNotPass(paramHint);
 	}
     
     /**
@@ -141,7 +135,11 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	public Result<?> validateExceptionHandler(ValidateException e) {
     	ServletUtils.getResponse().setStatus(433);
     	ExceptionUtils.printException(e);
-		return R.paramCheckNotPass(e.getMessage());
+		try {
+			return R.paramCheckNotPass(Convert.toJSONArray(e.getMessage()));
+		} catch (Exception exception) {
+			return R.paramCheckNotPass(e.getMessage());
+		}
 	}
     
 	/**

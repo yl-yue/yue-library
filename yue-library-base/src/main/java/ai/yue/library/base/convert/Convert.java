@@ -1,22 +1,5 @@
 package ai.yue.library.base.convert;
 
-import static com.alibaba.fastjson.JSON.toJSON;
-import static com.alibaba.fastjson.util.TypeUtils.cast;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
-
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.parser.ParserConfig;
-
 import ai.yue.library.base.convert.converter.JSONArrayConverter;
 import ai.yue.library.base.convert.converter.JSONObjectConverter;
 import ai.yue.library.base.util.ListUtils;
@@ -26,7 +9,23 @@ import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.parser.ParserConfig;
 import lombok.extern.slf4j.Slf4j;
+
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static com.alibaba.fastjson.JSON.toJSON;
+import static com.alibaba.fastjson.util.TypeUtils.cast;
+import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
 
 /**
  * <b>类型转换器</b>
@@ -630,5 +629,70 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	public static JSONObject toPropertyNamingStrategy(Object param, PropertyNamingStrategy propertyNamingStrategy) {
 		return MapUtils.toPropertyNamingStrategy(param, propertyNamingStrategy);
 	}
-	
+
+	// ---------- 命名策略转换 - List转换 ----------
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toSnakeCaseJsonList(List<JSONObject> list) {
+		return ListUtils.toSnakeCaseJsonList(list);
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toSnakeCaseJsonListT(List<T> list) {
+		return ListUtils.toSnakeCaseJsonListT(list);
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toUnderlineCaseJsonList(List<JSONObject> list) {
+		return ListUtils.toUnderlineCaseJsonList(list);
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-下划线命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toUnderlineCaseJsonListT(List<T> list) {
+		return ListUtils.toUnderlineCaseJsonListT(list);
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-驼峰命名法</h2>
+	 *
+	 * @param list 需要转换的jsonList
+	 * @return 转换后的jsonList
+	 */
+	public static List<JSONObject> toCamelCaseJsonList(List<JSONObject> list) {
+		return ListUtils.toCamelCaseJsonList(list);
+	}
+
+	/**
+	 * <h2>JsonList属性命名策略转换-驼峰命名法</h2>
+	 *
+	 * @param <T> 泛型
+	 * @param list 需要转换的List
+	 * @return 转换后的jsonList
+	 */
+	public static <T> List<JSONObject> toCamelCaseJsonListT(List<T> list) {
+		return ListUtils.toCamelCaseJsonListT(list);
+	}
+
 }
