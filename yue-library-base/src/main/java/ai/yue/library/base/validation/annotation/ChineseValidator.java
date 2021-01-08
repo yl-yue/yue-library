@@ -1,12 +1,12 @@
 package ai.yue.library.base.validation.annotation;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author	ylyue
@@ -24,7 +24,7 @@ public class ChineseValidator implements ConstraintValidator<Chinese, Object> {
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		String validValue = null;
-		if ((CharUtil.isChar(value) && !CharUtil.isBlankChar((char) value))
+		if ((value != null && CharUtil.isChar(value) && !CharUtil.isBlankChar((char) value))
 				|| (value instanceof String && StrUtil.isNotBlank((String) value))) {
 			validValue = StrUtil.toString(value);
 		}

@@ -1,6 +1,6 @@
 # AbstractDAO
 ## 简单使用
-`data-jdbc`所有的CRUD方法都在`Db`类里面，所以使用时只需要直接注入即可，推荐采用继承`AbstractDAO 或 DBRepository`方式。<br>
+`data-jdbc`所有的CRUD方法都在`Db`类里面，所以使用时只需要直接注入即可，推荐采用继承`AbstractDAO 或 AbstractRepository`方式。<br>
 <font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
 ```ddl
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '表自增ID'

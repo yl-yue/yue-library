@@ -10,6 +10,7 @@
   * [校验](base/校验.md "校验框架")
   * [参数解析器](base/参数解析器.md)
   * [统一异常处理](base/统一异常处理.md)
+  * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)
   * [工具类](base/工具类.md)
 
@@ -23,6 +24,7 @@
   * [增删改查](data/jdbc/增删改查.md)
   * [AbstractDAO](data/jdbc/AbstractDAO.md)
   * [AbstractRepository](data/jdbc/AbstractRepository.md)
+  * [动态数据源](data/jdbc/动态数据源.md)
 
 * yue-library-data-redis
 
