@@ -24,6 +24,7 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**
