@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -74,7 +75,8 @@ class DbQuery extends DbJdbcTemplate {
 	}
     
     /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, BeanPropertyRowMapper<T>)}
+     * <h3>同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, org.springframework.jdbc.core.RowMapper)}</h3>
+     * <b>注：{@linkplain RowMapper} 的实现为 {@linkplain BeanPropertyRowMapper}</b>
      * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      * 
      * @param <T> JavaBean的泛型

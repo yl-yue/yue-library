@@ -21,29 +21,65 @@ yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringClo
 [SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
 [SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
 
-## 2.3.0【规划中】
+## 2.4.0【规划中】
+### Maven仓库实际发布版本号
+`j8.2.4.0`、`j11.2.4.0`
+
+解释：j8对应Java 8，详情查看版本区别说明
+
+### 新特性
+
+### Bug修复
+
+## 2.3.0【2021-01-10】
 ### Maven仓库实际发布版本号
 `j8.2.3.0`、`j11.2.3.0`
 
 解释：j8对应Java 8，详情查看版本区别说明
 
+**关键依赖版本定义：**
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.3.5.RELEASE	|
+|spring-cloud			|Hoxton.SR9		|
+|spring-cloud-alibaba	|2.2.3.RELEASE	|
+|hutool					|5.4.4			|
+|fastjson				|1.2.74			|
+
+[点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+
 ### 新特性
+**data-jdbc进行了重大优化，如下：**
 1. 替换Db JavaBean转换方案，性能提升约300%+
 2. 优化Convert JavaBean转换性能
 3. 优化Convert异常提示，划分日志等级
 4. 重载驼峰转换方法到Convert类
 
-JDBC实体类映射方案已重构，废弃了Spring的转换器方案，这是一次底层改动。我已测试了如下场景成功支持：
-
+**JDBC实体类映射方案已重构，废弃了Spring的转换器方案，这是一次底层改动。我已测试了如下场景成功支持：**
 1. 驼峰转换（自动映射、自动识别boolean is命名）
 2. JSONObject、JSONArray解析支持
 3. 支持实体类多set方法存在
 
-
+**新增如下RowMapper：**
 1. BeanPropertyRowMapper，JavaBean映射两倍有余Spring原生的性能，支持更多类型映射，支持 JSONField 注解
 2. ColumnMapRowMapper，转换 Map 为 fastjson 的 JSONObject
 
+- 【base】优化异步线程池默认配置，完美解决异步上下文遇到的所有问题（包括并发模式与Servlet提前关闭导致的子线程获取不到参数异常）
+- 【base】全局统一异常处理新增FeignException处理，提供异常消息格式化构造
+- 【base】增强ExceptionUtils，提供多种堆栈打印方式与获取方式，并优化异常拦截返回错误内容
+- 【base】Java全局网络代理配置，允许使用`,`分割（如：`localhost|127.*` `localhost,127.*`）
+- 【base】新增R.errorPromptFormat()方法
+- 【base】提供最外层HTTP状态码503（停机维护）约定
+- 【base】新增JsonList驼峰等属性命名策略多个重载工具方法
+- 【base】增强validator校验框架，支持将`@Valid`注解添加到POJO类上
+- 【jdbc】规范排序、比较、预期、枚举，创建比较code定义命名规范类
+- 【jdbc】对BaseDO进行驼峰命名规范
+- 【jdbc】增强Db WHERE SQL对数组类型的处理
+
 ### Bug修复
+- 【base】解决@Chinese注解中文汉字校验，value为空时的NullPointerException
+- 【web】HttpMessageConverter选用fastjson时，解析非json格式响应体错误 [#I2ALJW](https://gitee.com/yl-yue/yue-library/issues/I2ALJW)
 
 ## 2.2.0【2020-10-09】
 ### Maven仓库实际发布版本号

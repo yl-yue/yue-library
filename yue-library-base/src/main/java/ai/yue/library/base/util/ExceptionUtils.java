@@ -99,7 +99,6 @@ public class ExceptionUtils {
 	 * <p>默认只打印关键的5行内容
 	 * 
 	 * @param e    异常
-	 * @return 异常内容
 	 */
 	public synchronized static void printException(Throwable e) {
 		printException(e, 4);
@@ -110,7 +109,6 @@ public class ExceptionUtils {
 	 * 
 	 * @param e    异常
 	 * @param line 打印行数
-	 * @return 异常内容
 	 */
 	public synchronized static void printException(Throwable e, @Nullable Integer line) {
 		System.err.print(getPrintExceptionToStr(e, line));
