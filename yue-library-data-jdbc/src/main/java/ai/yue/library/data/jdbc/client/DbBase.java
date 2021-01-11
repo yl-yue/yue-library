@@ -20,6 +20,8 @@ import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sql.DataSource;
+
 /**
  * <h2>SQL优化型数据库操作</h2>
  * Created by sunJinChuan on 2016/6/6
@@ -53,7 +55,26 @@ public class DbBase {
 	boolean enableDeleteQueryFilter = false;
 	
     // 方法
-	
+
+	/**
+	 * 获得数据源
+	 *
+	 * @return 数据源
+	 */
+	public DataSource getDataSource() {
+		return this.jdbcTemplate.getDataSource();
+	}
+
+	/**
+	 * 设置数据源
+	 *
+	 * @param dataSource 数据源
+	 */
+	public void setDataSource(DataSource dataSource) {
+		jdbcTemplate.setDataSource(dataSource);
+		namedParameterJdbcTemplate.getJdbcTemplate().setDataSource(dataSource);
+	}
+
     /**
      * 是否有数据
      * 

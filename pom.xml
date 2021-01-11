@@ -41,7 +41,7 @@
 	</modules>
 	
 	<properties>
-		<revision>j${java.version}.2.3.0</revision>
+		<revision>j${java.version}.2.3.1</revision>
 		<sha1 />
 		<changelist>-SNAPSHOT</changelist>
 		<spring-cloud-alibaba.version>2.2.3.RELEASE</spring-cloud-alibaba.version>

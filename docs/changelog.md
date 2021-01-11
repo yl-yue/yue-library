@@ -1,43 +1,25 @@
 # Changelog
 ---
 ## 版本
-yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
+yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发行](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions) 对应的命名方式。
 
-**版本区别说明**
-
-|示例版本								|区别说明								|
+|示例版本号								|版本号区别								|
 |--										|--										|
 |`j8.2.x`								|基于Java 8的2.x.x版本					|
 |`j11.2.x`								|基于Java 11的2.x.x版本					|
 |`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
 
-**默认版本依赖关系**
-
-|yue-library|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
-|--			|--			|--			|--					|
-|2.1		|2.1+		|Greenwich	|2.1+				|
-|2.2		|2.2+		|Hoxton		|2.2+				|
-
-[SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
-[SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+[👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
 ## 2.4.0【规划中】
-### Maven仓库实际发布版本号
-`j8.2.4.0`、`j11.2.4.0`
-
-解释：j8对应Java 8，详情查看版本区别说明
-
 ### 新特性
 
 ### Bug修复
 
-## 2.3.0【2021-01-10】
 ### Maven仓库实际发布版本号
 `j8.2.3.0`、`j11.2.3.0`
 
-解释：j8对应Java 8，详情查看版本区别说明
-
-**关键依赖版本定义：**
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.0/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
@@ -47,8 +29,7 @@ yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringClo
 |hutool					|5.4.4			|
 |fastjson				|1.2.74			|
 
-[点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
-
+## 2.3.0【2021-01-10】
 ### 新特性
 **data-jdbc进行了重大优化，如下：**
 1. 替换Db JavaBean转换方案，性能提升约300%+
@@ -80,6 +61,19 @@ yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringClo
 ### Bug修复
 - 【base】解决@Chinese注解中文汉字校验，value为空时的NullPointerException
 - 【web】HttpMessageConverter选用fastjson时，解析非json格式响应体错误 [#I2ALJW](https://gitee.com/yl-yue/yue-library/issues/I2ALJW)
+
+### Maven仓库实际发布版本号
+`j8.2.3.0`、`j11.2.3.0`
+
+[**关键依赖版本定义：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.3.5.RELEASE	|
+|spring-cloud			|Hoxton.SR9		|
+|spring-cloud-alibaba	|2.2.3.RELEASE	|
+|hutool					|5.4.4			|
+|fastjson				|1.2.74			|
 
 ## 2.2.0【2020-10-09】
 ### Maven仓库实际发布版本号
