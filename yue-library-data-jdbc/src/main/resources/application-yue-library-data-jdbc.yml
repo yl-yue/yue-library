@@ -10,6 +10,12 @@ spring:
           statement-prepare-after-log-enabled: false
           statement-execute-query-after-log-enabled: false
           statement-executable-sql-log-enable: true
+    dynamic:
+      druid:
+        slf4j:
+          enable: true
+          statement-executable-sql-log-enable: true
+        filters: slf4j
 logging:
   level:
     # 默认执行SQL打印

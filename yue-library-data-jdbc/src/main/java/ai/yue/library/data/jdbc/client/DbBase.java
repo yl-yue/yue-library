@@ -1,13 +1,5 @@
 package ai.yue.library.data.jdbc.client;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
@@ -17,10 +9,17 @@ import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import cn.hutool.core.util.ArrayUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -431,5 +430,34 @@ public class DbBase {
         	throw new DbException("更新条件不能为空");
         }
 	}
-	
+
+	// paramFormat
+
+	/**
+	 * 参数美化（对SpringJDBC不支持的类型进行转换）
+	 * <p>Character 转 String</p>
+	 * <p>JSONObject 转 JsonString</p>
+	 * <p>LocalDataTime 转 Date</p>
+	 *
+	 * @param paramJson 需要进行类型处理的paramJson
+	 */
+	public void paramFormat(JSONObject paramJson) {
+		for (Map.Entry<String, Object> entry : paramJson.entrySet()) {
+			Object value = entry.getValue();
+			if (value == null) {
+				return;
+			}
+
+			String key = entry.getKey();
+			Class<?> valueClass = value.getClass();
+			if (valueClass == Character.class) {
+				paramJson.replace(key, value.toString());
+			} else if (valueClass == JSONObject.class) {
+				paramJson.replace(key, ((JSONObject) value).toJSONString());
+			} else if (valueClass == LocalDateTime.class) {
+				paramJson.replace(key, value.toString());
+			}
+		}
+	}
+
 }

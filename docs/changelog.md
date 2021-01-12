@@ -11,15 +11,15 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.4.0【规划中】
+## 2.3.1【规划中】
 ### 新特性
 
 ### Bug修复
 
 ### Maven仓库实际发布版本号
-`j8.2.3.0`、`j11.2.3.0`
+`j8.2.3.1`、`j11.2.3.1`
 
-[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.0/pom.xml)
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
@@ -65,7 +65,7 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 ### Maven仓库实际发布版本号
 `j8.2.3.0`、`j11.2.3.0`
 
-[**关键依赖版本定义：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.0/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
