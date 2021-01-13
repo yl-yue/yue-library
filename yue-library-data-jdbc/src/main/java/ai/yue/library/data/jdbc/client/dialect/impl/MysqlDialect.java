@@ -1,14 +1,5 @@
 package ai.yue.library.data.jdbc.client.dialect.impl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
@@ -23,6 +14,13 @@ import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import cn.hutool.core.util.ArrayUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * MySQL方言
@@ -104,7 +102,8 @@ public class MysqlDialect extends AnsiSqlDialect {
 			sql.append(", ");
 		}
 		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
-    	
+
+		paramFormat(paramJson);
     	return (long) namedParameterJdbcTemplate.update(sql.toString(), paramJson);
 	}
 	

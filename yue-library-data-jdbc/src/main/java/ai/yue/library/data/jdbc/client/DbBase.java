@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -435,9 +434,7 @@ public class DbBase {
 
 	/**
 	 * 参数美化（对SpringJDBC不支持的类型进行转换）
-	 * <p>Character 转 String</p>
 	 * <p>JSONObject 转 JsonString</p>
-	 * <p>LocalDataTime 转 Date</p>
 	 *
 	 * @param paramJson 需要进行类型处理的paramJson
 	 */
@@ -450,12 +447,8 @@ public class DbBase {
 
 			String key = entry.getKey();
 			Class<?> valueClass = value.getClass();
-			if (valueClass == Character.class) {
-				paramJson.replace(key, value.toString());
-			} else if (valueClass == JSONObject.class) {
+			if (valueClass == JSONObject.class) {
 				paramJson.replace(key, ((JSONObject) value).toJSONString());
-			} else if (valueClass == LocalDateTime.class) {
-				paramJson.replace(key, value.toString());
 			}
 		}
 	}

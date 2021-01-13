@@ -1,17 +1,15 @@
 package ai.yue.library.data.jdbc.client;
 
-import java.util.Map;
-
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -89,6 +87,7 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public long delete(String tableName, JSONObject paramJson) {
 		String sql = deleteSqlBuild(tableName, paramJson);
+		paramFormat(paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -101,20 +100,36 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional
     public void deleteBatch(String tableName, JSONObject[] paramJsons) {
+		for (JSONObject paramJson : paramJsons) {
+			paramFormat(paramJson);
+		}
+
+		deleteBatchNotParamFormat(tableName, paramJsons);
+    }
+
+	/**
+	 * 删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 *
+	 * @param tableName		表名
+	 * @param paramJsons	条件数组
+	 */
+	@Transactional
+	public void deleteBatchNotParamFormat(String tableName, JSONObject[] paramJsons) {
 		// 1. 获得SQL
 		String sql = deleteSqlBuild(tableName, paramJsons[0]);
-		
+
 		// 2. 执行
-        int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
-        
-        // 3. 确认影响行数
-        for (int updateRowsNumber : updateRowsNumberArray) {
+		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+
+		// 3. 确认影响行数
+		for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber > 1) {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);
 			}
 		}
-    }
-	
+	}
+
 	/**
      * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
      * <p>指定SQL语句以创建预编译执行SQL和绑定删除参数
@@ -125,9 +140,26 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional
 	public int[] deleteBatch2(String sql, JSONObject[] paramJsons) {
+		for (JSONObject paramJson : paramJsons) {
+			paramFormat(paramJson);
+		}
+
+		return deleteBatchNotParamFormat2(sql, paramJsons);
+	}
+
+	/**
+	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 * <p>指定SQL语句以创建预编译执行SQL和绑定删除参数
+	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code><br>
+	 * @param sql			要执行的删除SQL
+	 * @param paramJsons	删除所用到的条件数组（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
+	 */
+	@Transactional
+	public int[] deleteBatchNotParamFormat2(String sql, JSONObject[] paramJsons) {
 		return namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
 	}
-	
+
 	// Delete Logic
 	
 	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson) {
@@ -180,6 +212,7 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
+		paramFormat(paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -193,18 +226,35 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional
     public void deleteBatchLogic(String tableName, JSONObject[] paramJsons) {
+		for (JSONObject paramJson : paramJsons) {
+			paramFormat(paramJson);
+		}
+
+		deleteBatchLogicNotParamFormat(tableName, paramJsons);
+    }
+
+	/**
+	 * 删除-批量-逻辑的（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为 true，代表数据已删除
+	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 *
+	 * @param tableName		表名
+	 * @param paramJsons	条件数组
+	 */
+	@Transactional
+	public void deleteBatchLogicNotParamFormat(String tableName, JSONObject[] paramJsons) {
 		// 1. 获得SQL
 		String sql = deleteLogicSqlBuild(tableName, paramJsons[0]);
-		
+
 		// 2. 执行
-        int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
-        
-        // 3. 确认影响行数
-        for (int updateRowsNumber : updateRowsNumberArray) {
+		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+
+		// 3. 确认影响行数
+		for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber > 1) {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);
 			}
 		}
-    }
-	
+	}
+
 }
