@@ -166,8 +166,8 @@ class DbUpdate extends DbQuery {
      */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions) {
-		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
 		paramFormat(paramJson);
+		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         return (long) namedParameterJdbcTemplate.update(sql, paramJson);
     }
 	
@@ -181,8 +181,8 @@ class DbUpdate extends DbQuery {
      */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
-		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		paramFormat(paramJson);
+		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
         return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -198,8 +198,8 @@ class DbUpdate extends DbQuery {
 	@Transactional
     public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
     		, int expectedValue, DbExpectedEnum dBExpectedEnum) {
-		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		paramFormat(paramJson);
+		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
 		if (DbExpectedEnum.EQ == dBExpectedEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
@@ -246,8 +246,8 @@ class DbUpdate extends DbQuery {
 	@Transactional
     public void updateById(String tableName, JSONObject paramJson, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { DbConstant.PRIMARY_KEY };
-		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		paramFormat(paramJson);
+		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
         int expectedValue = 1;
 		updateAndExpectedEqual(updateRowsNumber, expectedValue);
@@ -311,9 +311,9 @@ class DbUpdate extends DbQuery {
      */
 	@Transactional
     public void updateByBusinessUk(String tableName, JSONObject paramJson, DbUpdateEnum dBUpdateEnum) {
-		String[] conditions = { businessUk };
-		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
+		String[] conditions = { jdbcProperties.getBusinessUk() };
 		paramFormat(paramJson);
+		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
         int expectedValue = 1;
 		updateAndExpectedEqual(updateRowsNumber, expectedValue);
@@ -350,7 +350,7 @@ class DbUpdate extends DbQuery {
 	 */
 	@Transactional
 	public void updateByBusinessUkNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dBUpdateEnum) {
-		String[] conditions = { businessUk };
+		String[] conditions = { jdbcProperties.getBusinessUk() };
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
 		int expectedValue = 1;

@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.data.jdbc;
+package ai.yue.library.test.controller.data.jdbc.param.format;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.ListUtils;

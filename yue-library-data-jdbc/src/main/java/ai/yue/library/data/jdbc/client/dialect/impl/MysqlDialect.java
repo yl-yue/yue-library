@@ -55,6 +55,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 	@Override
 	public Long insertOrUpdate(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
         paramValidate(tableName, paramJson, conditions);
+		paramFormat(paramJson);
         tableName = wrapper.wrap(tableName);
         paramJson = wrapper.wrap(paramJson);
         conditions = wrapper.wrap(conditions);
@@ -103,7 +104,6 @@ public class MysqlDialect extends AnsiSqlDialect {
 		}
 		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
 
-		paramFormat(paramJson);
     	return (long) namedParameterJdbcTemplate.update(sql.toString(), paramJson);
 	}
 	

@@ -1,17 +1,5 @@
 package ai.yue.library.data.jdbc.client;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
-import org.springframework.lang.Nullable;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
@@ -27,7 +15,17 @@ import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
+import org.springframework.lang.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -167,7 +165,7 @@ class DbQuery extends DbJdbcTemplate {
 		StringBuffer sql = new StringBuffer("SELECT * FROM ");
 		sql.append(tableName);
 		sql.append(" WHERE ").append(columnName).append(" = :").append(columnName);
-		if (enableDeleteQueryFilter) {
+		if (jdbcProperties.isEnableDeleteQueryFilter()) {
 			sql.append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
 			.append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
 		}
@@ -217,9 +215,9 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return JSON数据
 	 */
     public JSONObject getByBusinessUk(String tableName, Object businessUkValue) {
-    	String sql = getByColumnNameSqlBuild(tableName, businessUk);
+    	String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(dialect.getWrapper().wrap(businessUk), businessUkValue);
+		paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);
 		return queryForJson(sql, paramJson);
 	}
     
@@ -235,9 +233,9 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return POJO对象
 	 */
     public <T> T getByBusinessUk(String tableName, Object businessUkValue, Class<T> mappedClass) {
-    	String sql = getByColumnNameSqlBuild(tableName, businessUk);
+    	String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(dialect.getWrapper().wrap(businessUk), businessUkValue);
+		paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);
 		return queryForObject(sql, paramJson, mappedClass);
 	}
     
@@ -249,6 +247,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return JSON数据
 	 */
 	public JSONObject get(String tableName, JSONObject paramJson) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, null);
 		return queryForJson(sql, paramJson);
 	}
@@ -263,6 +262,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return POJO对象
 	 */
 	public <T> T get(String tableName, JSONObject paramJson, Class<T> mappedClass) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, null);
 		return queryForObject(sql, paramJson, mappedClass);
 	}
@@ -292,6 +292,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> list(String tableName, JSONObject paramJson) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, null);
 		return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
 	}
@@ -305,6 +306,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return 列表数据
 	 */
 	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, null);
 		return queryForList(sql, paramJson, mappedClass);
 	}
@@ -318,6 +320,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> list(String tableName, JSONObject paramJson, SortEnum sortEnum) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, sortEnum);
 		return queryForList(sql, paramJson);
 	}
@@ -346,6 +349,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @return 列表数据
 	 */
 	public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass, SortEnum sortEnum) {
+		paramFormat(paramJson);
 		String sql = listSqlBuild(tableName, paramJson, sortEnum);
 		return queryForList(sql, paramJson, mappedClass);
 	}
@@ -437,6 +441,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO page(String tableName, PageIPO pageIPO) {
+		paramFormat(pageIPO.getConditions());
 		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, null);
 		return toPageVO(pageDTO);
 	}
@@ -452,7 +457,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
 	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass) {
-		// 1. 获得PageDTO
+		paramFormat(pageIPO.getConditions());
 		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, null);
 		return toPageTVO(pageDTO, mappedClass);
 	}
@@ -468,6 +473,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
 	public PageVO page(String tableName, PageIPO pageIPO, SortEnum sortEnum) {
+		paramFormat(pageIPO.getConditions());
 		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, sortEnum);
 		return toPageVO(pageDTO);
 	}
@@ -496,7 +502,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
 	public <T> PageTVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass, SortEnum sortEnum) {
-		// 1. 获得PageDTO
+		paramFormat(pageIPO.getConditions());
 		PageDTO pageDTO = dialect.pageDTOBuild(tableName, pageIPO, sortEnum);
 		return toPageTVO(pageDTO, mappedClass);
 	}

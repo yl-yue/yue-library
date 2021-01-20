@@ -1,15 +1,18 @@
 package ai.yue.library.data.jdbc.client;
 
-import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +26,7 @@ import java.util.Map;
 /**
  * <h2>SQL优化型数据库操作</h2>
  * Created by sunJinChuan on 2016/6/6
+ * @author ylyue
  * @since 0.0.1
  */
 @Slf4j
@@ -34,24 +38,13 @@ public class DbBase {
 	protected JdbcTemplate jdbcTemplate;
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	protected Dialect dialect;
-	
-	// 默认变量
-	
-	/** 业务唯一键 */
-	String businessUk = "key";
-	/**
-	 * 数据库字段命名策略
-	 * <p>默认：SNAKE_CASE
-	 */
-	FieldNamingStrategyEnum databaseFieldNamingStrategy = FieldNamingStrategyEnum.SNAKE_CASE;
-	/**
-	 * 数据库字段命名策略识别-是否开启
-	 * <p>默认：true
-	 */
-	boolean databaseFieldNamingStrategyRecognitionEnabled = true;
-	/** 启用删除查询过滤 */
-	boolean enableDeleteQueryFilter = false;
-	
+	protected JdbcProperties jdbcProperties;
+
+	// 私有常量
+
+	private static final String IS_PREFIX = "is";
+	private static final String IS_PREFIX_FORMAT = "is_%s";
+
     // 方法
 
 	/**
@@ -296,7 +289,7 @@ public class DbBase {
      */
     public String paramToWhereSql(JSONObject paramJson) {
     	StringBuffer whereSql = new StringBuffer();
-    	if (enableDeleteQueryFilter) {
+    	if (jdbcProperties.isEnableDeleteQueryFilter()) {
     		whereSql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
 			.append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
     	} else {
@@ -439,18 +432,49 @@ public class DbBase {
 	 * @param paramJson 需要进行类型处理的paramJson
 	 */
 	public void paramFormat(JSONObject paramJson) {
+		if (MapUtils.isEmpty(paramJson)) {
+			return;
+		}
+
+		JSONObject paramFormatJson = new JSONObject();
 		for (Map.Entry<String, Object> entry : paramJson.entrySet()) {
+			// 1. 参数确认
 			Object value = entry.getValue();
 			if (value == null) {
 				return;
 			}
 
+			// 2. 参数美化
 			String key = entry.getKey();
 			Class<?> valueClass = value.getClass();
+			String formatKey = key;
+			Object formatValue = value;
 			if (valueClass == JSONObject.class) {
-				paramJson.replace(key, ((JSONObject) value).toJSONString());
+				formatValue = ((JSONObject) value).toJSONString();
 			}
+
+			// 3. 布尔值映射识别
+			boolean enableBooleanMapRecognition = jdbcProperties.isEnableBooleanMapRecognition();
+			boolean isBoolean = BooleanUtil.isBoolean(valueClass);
+			boolean isStrBoolean = false;
+			if (!isBoolean && valueClass == String.class) {
+				isStrBoolean = StrUtil.equalsAnyIgnoreCase((String) value, "true", "false");
+			}
+			if (enableBooleanMapRecognition && isBoolean || isStrBoolean) {
+				if (!StrUtil.startWith(key, IS_PREFIX, true, true)) {
+					String aliasFormat = String.format(IS_PREFIX_FORMAT, PropertyNamingStrategy.SnakeCase.translate(key));
+					formatKey = jdbcProperties.getDatabaseFieldNamingStrategy().getPropertyNamingStrategy().translate(aliasFormat);
+					if (!BooleanUtil.isBoolean(valueClass)) {
+						formatValue = Boolean.parseBoolean((String) value);
+					}
+				}
+			}
+
+			// 4. 设置处理后的值
+			paramFormatJson.put(formatKey, formatValue);
 		}
+
+		paramJson.fluentClear().putAll(paramFormatJson);
 	}
 
 }

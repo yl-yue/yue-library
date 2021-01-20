@@ -1,21 +1,18 @@
 package ai.yue.library.data.jdbc.dao;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.data.jdbc.client.Db;
-import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import cn.hutool.core.util.ClassUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * AbstractRepository 为 DO 对象提供服务，字段映射支持下划线与驼峰自动识别转换
@@ -28,8 +25,6 @@ public abstract class AbstractRepository<T> {
 
 	@Autowired
 	protected Db db;
-	@Autowired
-	private JdbcProperties jdbcProperties;
 	@SuppressWarnings("unchecked")
 	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
 	protected String tableName = tableName();
@@ -53,8 +48,8 @@ public abstract class AbstractRepository<T> {
 	 * @return 返回主键值
 	 */
 	public Long insert(Object paramIPO) {
-		if (jdbcProperties.isEnableFieldNamingStrategyRecognition()) {
-			return insert(paramIPO, jdbcProperties.getDatabaseFieldNamingStrategy());
+		if (db.getJdbcProperties().isEnableFieldNamingStrategyRecognition()) {
+			return insert(paramIPO, db.getJdbcProperties().getDatabaseFieldNamingStrategy());
 		}
 		
 		return insert(Convert.toJSONObject(paramIPO));

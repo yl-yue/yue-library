@@ -86,8 +86,8 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional
 	public long delete(String tableName, JSONObject paramJson) {
-		String sql = deleteSqlBuild(tableName, paramJson);
 		paramFormat(paramJson);
+		String sql = deleteSqlBuild(tableName, paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	
@@ -211,8 +211,8 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional
 	public long deleteLogic(String tableName, JSONObject paramJson) {
-		String sql = deleteLogicSqlBuild(tableName, paramJson);
 		paramFormat(paramJson);
+		String sql = deleteLogicSqlBuild(tableName, paramJson);
 		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
 	}
 	

@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.data.jdbc;
+package ai.yue.library.test.controller.data.jdbc.query.map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
