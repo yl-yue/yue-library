@@ -1,5 +1,6 @@
 package ai.yue.library.data.jdbc.client;
 
+import ai.yue.library.base.util.ObjectUtils;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.client.dialect.impl.MysqlDialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
@@ -45,7 +46,7 @@ public class Db extends DbInsert implements Cloneable {
 	 */
 	@Override
 	public Db clone() {
-		return new Db(jdbcTemplate, namedParameterJdbcTemplate, dialect, jdbcProperties);
+		return new Db(jdbcTemplate, namedParameterJdbcTemplate, dialect, ObjectUtils.cloneByStream(jdbcProperties));
 	}
 	
 }

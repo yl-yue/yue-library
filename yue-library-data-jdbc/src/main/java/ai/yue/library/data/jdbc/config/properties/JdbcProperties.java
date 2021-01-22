@@ -4,6 +4,8 @@ import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.io.Serializable;
+
 /**
  * jdbc可配置属性
  * 
@@ -12,7 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties("yue.jdbc")
-public class JdbcProperties {
+public class JdbcProperties implements Serializable {
 
 	/**
 	 * 业务唯一键
