@@ -20,14 +20,14 @@ public class Db extends DbInsert implements Cloneable {
 		this(new NamedParameterJdbcTemplate(dataSource));
 	}
 
+	public Db(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this(namedParameterJdbcTemplate.getJdbcTemplate(), namedParameterJdbcTemplate, new MysqlDialect(namedParameterJdbcTemplate), new JdbcProperties());
+	}
+
 	public Db(DataSource dataSource, Dialect dialect, JdbcProperties jdbcProperties) {
 		this(new JdbcTemplate(dataSource), new NamedParameterJdbcTemplate(dataSource), dialect, jdbcProperties);
 	}
 
-	public Db(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-		this(namedParameterJdbcTemplate.getJdbcTemplate(), namedParameterJdbcTemplate, new MysqlDialect(namedParameterJdbcTemplate), new JdbcProperties());
-	}
-	
 	public Db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, Dialect dialect) {
 		this(jdbcTemplate, namedParameterJdbcTemplate, dialect, new JdbcProperties());
 	}

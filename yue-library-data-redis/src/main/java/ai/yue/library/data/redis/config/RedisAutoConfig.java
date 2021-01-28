@@ -45,8 +45,8 @@ public class RedisAutoConfig {
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 		
 		// 支持FastJson进行Redis存储对象序列/反序列化
-		if (redisProperties.getRedisSerializerEnum() != RedisSerializerEnum.JDK) {
-			redisTemplate.setDefaultSerializer(redisProperties.getRedisSerializerEnum().getRedisSerializer());
+		if (redisProperties.getRedisSerializer() != RedisSerializerEnum.JDK) {
+			redisTemplate.setDefaultSerializer(redisProperties.getRedisSerializer().getRedisSerializer());
 		}
 		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 		redisTemplate.setKeySerializer(stringRedisSerializer);

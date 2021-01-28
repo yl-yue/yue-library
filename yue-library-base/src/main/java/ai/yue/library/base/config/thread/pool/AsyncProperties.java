@@ -109,9 +109,9 @@ public class AsyncProperties {
 	/**
 	 * 线程池拒绝策略
 	 * <p>
-	 * 默认：{@linkplain RejectedExecutionHandlerPolicy#CALLER_RUNS_POLICY}
+	 * 默认：{@linkplain RejectedExecutionHandlerPolicyEnum#CALLER_RUNS_POLICY}
 	 */
-	private RejectedExecutionHandlerPolicy rejectedExecutionHandlerPolicy = RejectedExecutionHandlerPolicy.CALLER_RUNS_POLICY;
+	private RejectedExecutionHandlerPolicyEnum rejectedExecutionHandlerPolicy = RejectedExecutionHandlerPolicyEnum.CALLER_RUNS_POLICY;
 
 	/**
 	 * 是否开启 ServletAsyncContext

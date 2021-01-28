@@ -44,6 +44,7 @@ public class FastJsonHttpMessageConverterProperties {
 	 * SerializerFeature.WriteMapNullValue, // 对Null值进行输出
 	 * SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
 	 * SerializerFeature.WriteNullStringAsEmpty // Null String 输出为空字符串
+	 * SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
 	 * </pre>
 	 */
 	private SerializerFeature[] serializerFeatures = {
@@ -53,8 +54,8 @@ public class FastJsonHttpMessageConverterProperties {
 			SerializerFeature.WriteDateUseDateFormat, // 对时间类型进行格式化（默认：yyyy-MM-dd HH:mm:ss）
 			SerializerFeature.WriteMapNullValue, // 对Null值进行输出
 			SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
-			SerializerFeature.WriteNullStringAsEmpty // Null String 输出为空字符串
-//			SerializerFeature.WriteNullBooleanAsFalse, // Null Boolean 输出为 false
+			SerializerFeature.WriteNullStringAsEmpty, // Null String 输出为空字符串
+			SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
 //			SerializerFeature.WriteNullNumberAsZero // Null Number 输出为 0
 	};
 	
