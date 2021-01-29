@@ -1,11 +1,9 @@
 package ai.yue.library.web.config.properties;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * FastJson HTTP消息转换器配置
@@ -27,7 +25,13 @@ public class FastJsonHttpMessageConverterProperties {
 	 * <p>默认：false
 	 */
 	private boolean enabled = false;
-	
+
+	/**
+	 * 启用属性声明顺序进行序列化排序
+	 * <p>FastJson序列化时默认根据字母（ASCII）排序而非成员变量声明顺序。</p>
+	 */
+	private boolean enablePropertyDefineOrderSerializer = true;
+
 	/**
 	 * 字段命名策略
 	 */

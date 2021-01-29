@@ -1,19 +1,17 @@
 package ai.yue.library.test.controller.web;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
-import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author	ylyue
@@ -23,11 +21,6 @@ import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
 @RequestMapping("/fastJsonHttpMessageConverter")
 public class FastJsonHttpMessageConverterController {
 
-	/**
-	 * 
-	 * @param paramJson
-	 * @return
-	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping("/get")
 	public Result<?> get() {

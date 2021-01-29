@@ -42,7 +42,7 @@ public class JacksonHttpMessageConverterProperties {
 	 * Null String 输出为空字符串
 	 * <p>默认：true
 	 */
-	private boolean WriteNullStringAsEmpty = true;
+	private boolean writeNullStringAsEmpty = true;
 	
 	/**
 	 * 输出 Null Map 为 {}
@@ -54,7 +54,7 @@ public class JacksonHttpMessageConverterProperties {
 	 * Null List 输出为 []
 	 * <p>默认：true
 	 */
-	private boolean WriteNullListAsEmpty = true;
+	private boolean writeNullListAsEmpty = true;
 	
 	/**
 	 * 输出 Null Array 为 []
@@ -64,14 +64,14 @@ public class JacksonHttpMessageConverterProperties {
 	
 	/**
 	 * Null Boolean 输出为 false
-	 * <p>默认：false
+	 * <p>默认：true
 	 */
-	private boolean WriteNullBooleanAsFalse = false;
+	private boolean writeNullBooleanAsFalse = true;
 	
 	/**
 	 * Null Number 输出为 0
 	 * <p>默认：false
 	 */
-	private boolean WriteNullNumberAsZero = false;
+	private boolean writeNullNumberAsZero = false;
 	
 }

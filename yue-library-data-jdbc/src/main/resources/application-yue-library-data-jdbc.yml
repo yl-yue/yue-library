@@ -1,10 +1,10 @@
 spring:
   profiles:
     include:
-    - yue-library-base
-  datasource: 
-    druid: 
-      filter: 
+      - yue-library-base
+  datasource:
+    druid:
+      filter:
         slf4j:
           enabled: true
           statement-prepare-after-log-enabled: false
