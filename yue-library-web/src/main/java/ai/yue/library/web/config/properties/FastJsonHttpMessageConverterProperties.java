@@ -28,7 +28,7 @@ public class FastJsonHttpMessageConverterProperties {
 
 	/**
 	 * 启用属性声明顺序进行序列化排序
-	 * <p>FastJson序列化时默认根据字母（ASCII）排序而非成员变量声明顺序。</p>
+	 * <p>FastJson序列化时默认根据字母（ASCII）排序而非成员变量声明顺序，详情见：<a href="https://github.com/alibaba/fastjson/issues/3115">#3115</a></p>
 	 */
 	private boolean enablePropertyDefineOrderSerializer = true;
 

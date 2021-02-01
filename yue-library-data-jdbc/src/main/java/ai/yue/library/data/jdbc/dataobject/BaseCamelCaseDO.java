@@ -38,6 +38,6 @@ public abstract class BaseCamelCaseDO implements Serializable {
 	/** 数据插入时间 */
 	protected LocalDateTime createTime;
 	/** 数据更新时间 */
-	protected LocalDateTime updateTime;//
+	protected LocalDateTime updateTime;
 	
 }
