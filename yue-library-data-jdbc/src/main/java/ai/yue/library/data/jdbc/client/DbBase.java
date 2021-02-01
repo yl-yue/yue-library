@@ -333,7 +333,7 @@ public class DbBase {
         if (StringUtils.isEmpty(tableName)) {
             throw new DbException("表名不能为空");
         }
-        if (StringUtils.isEmpty(tableName)) {
+        if (StringUtils.isEmpty(whereSql)) {
             throw new DbException("whereSql不能为空");
         }
     }

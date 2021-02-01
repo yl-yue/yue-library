@@ -175,6 +175,7 @@ class DbQuery extends DbJdbcTemplate {
 	
 	/**
 	 * 通过表主键ID查询
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String)}</p>
 	 * 
 	 * @param tableName	表名
 	 * @param id		表自增ID
@@ -190,6 +191,7 @@ class DbQuery extends DbJdbcTemplate {
     
 	/**
 	 * 通过表ID查询（字段名=id，一般为表自增ID-主键）
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String, Class)}</p>
 	 * 
 	 * @param <T> 泛型
 	 * @param tableName 表名
@@ -214,7 +216,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @param businessUkValue 业务键的唯一值
 	 * @return JSON数据
 	 */
-    public JSONObject getByBusinessUk(String tableName, Object businessUkValue) {
+    public JSONObject getByBusinessUk(String tableName, String businessUkValue) {
     	String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
 		JSONObject paramJson = new JSONObject();
 		paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);
@@ -232,7 +234,7 @@ class DbQuery extends DbJdbcTemplate {
 	 * @param mappedClass 映射类
 	 * @return POJO对象
 	 */
-    public <T> T getByBusinessUk(String tableName, Object businessUkValue, Class<T> mappedClass) {
+    public <T> T getByBusinessUk(String tableName, String businessUkValue, Class<T> mappedClass) {
     	String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
 		JSONObject paramJson = new JSONObject();
 		paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);

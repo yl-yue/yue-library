@@ -228,6 +228,8 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 更新-ById
 	 * <p>根据表中主键ID进行更新
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByBusinessUk(String, JSONObject)}</p>
+	 * 
      * @param tableName		表名
      * @param paramJson		更新所用到的参数（包含主键ID字段）
      */
@@ -239,6 +241,8 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 更新-ById
 	 * <p>根据表中主键ID进行更新
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByBusinessUk(String, JSONObject, DbUpdateEnum)}</p>
+	 * 
      * @param tableName		表名
      * @param paramJson		更新所用到的参数（包含主键ID字段）
      * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
@@ -256,6 +260,8 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 批量更新-ById
 	 * <p>根据表中主键ID进行批量更新
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByBusinessUk(String, JSONObject[], DbUpdateEnum)}</p>
+	 * 
      * @param tableName    	表名
      * @param paramJsons	更新所用到的参数数组（包含主键ID字段）
      * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
@@ -272,6 +278,8 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 批量更新-ById（不调用 {@link #paramFormat(JSONObject)} 方法）
 	 * <p>根据表中主键ID进行批量更新
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByBusinessUkNotParamFormat(String, JSONObject[], DbUpdateEnum)}</p>
+	 * 
 	 * @param tableName    	表名
 	 * @param paramJsons	更新所用到的参数数组（包含主键ID字段）
 	 * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
