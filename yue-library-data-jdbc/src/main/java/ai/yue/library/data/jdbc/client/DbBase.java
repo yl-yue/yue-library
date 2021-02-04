@@ -13,7 +13,9 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -31,7 +33,9 @@ import java.util.Map;
  * @since 0.0.1
  */
 @Slf4j
-@Data
+@Getter
+@Setter
+@ToString
 public class DbBase {
 
     // 必须初始化变量
