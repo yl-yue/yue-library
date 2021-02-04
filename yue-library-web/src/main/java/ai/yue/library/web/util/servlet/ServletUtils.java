@@ -95,7 +95,8 @@ public class ServletUtils {
 	 * @return HttpServletResponse
 	 */
 	public static HttpServletResponse getResponse() {
-		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		return requestAttributes == null ? null : ((ServletRequestAttributes) requestAttributes).getResponse();
 	}
 
 	/**
