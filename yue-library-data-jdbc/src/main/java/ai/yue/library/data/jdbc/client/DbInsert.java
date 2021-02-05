@@ -34,7 +34,7 @@ class DbInsert extends DbDelete {
 		paramValidate(tableName, paramJson);
 		
 		// 2. 创建JdbcInsert实例
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(getJdbcTemplate());
 		// 设置表名
 		simpleJdbcInsert.setTableName(tableName);
 		// 设置主键名，添加成功后返回主键的值

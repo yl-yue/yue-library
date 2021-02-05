@@ -5,6 +5,8 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.test.constant.RoleEnum;
 import ai.yue.library.test.constant.UserStatusEnum;
+import ai.yue.library.test.dao.data.jdbc.CloneOneDAO;
+import ai.yue.library.test.dao.data.jdbc.CloneTwoDAO;
 import ai.yue.library.test.dao.data.jdbc.JdbcDAO;
 import ai.yue.library.test.dataobject.jdbc.UserDO;
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +28,10 @@ public class JdbcController {
 
 	@Autowired
 	JdbcDAO jdbcDAO;
+	@Autowired
+	CloneOneDAO cloneOneDAO;
+	@Autowired
+	CloneTwoDAO cloneTwoDAO;
 	@Autowired
 	Db db;
 	@Autowired
@@ -114,6 +120,18 @@ public class JdbcController {
 	@DeleteMapping("/deleteParamJson")
 	public Result<?> delete(JSONObject paramJson) {
 		return R.success(db.delete(tableName, paramJson));
+	}
+
+	/**
+	 * Db深度克隆测试
+	 */
+	@GetMapping("/dbCloneTest")
+	public Result<?> dbCloneTest() {
+		int sizeOne = cloneOneDAO.listAll().size();
+		int sizeTow = cloneTwoDAO.listAll().size();
+		System.out.println(sizeOne);
+		System.out.println(sizeTow);
+		return R.success();
 	}
 	
 }

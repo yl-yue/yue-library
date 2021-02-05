@@ -53,7 +53,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> T queryObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
         try {
-            return namedParameterJdbcTemplate.queryForObject(sql, paramJson, mappedClass);
+            return getNamedParameterJdbcTemplate().queryForObject(sql, paramJson, mappedClass);
         } catch (Exception e) {
             log.warn(e.getMessage());
             return null;
@@ -100,7 +100,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return 结果集可用于方便的获取各种类型的数据
      */
     public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
-        return namedParameterJdbcTemplate.queryForRowSet(sql, paramJson);
+        return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
     }
 
     /**
@@ -112,7 +112,7 @@ class DbQuery extends DbJdbcTemplate {
      * @return 列表数据
      */
     public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
-        return namedParameterJdbcTemplate.query(sql, paramJson, new ColumnMapRowMapper());
+        return getNamedParameterJdbcTemplate().query(sql, paramJson, new ColumnMapRowMapper());
     }
 
     /**
@@ -128,7 +128,7 @@ class DbQuery extends DbJdbcTemplate {
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
         RowMapper<T> rowMapper = ClassUtils.isSimpleValueType(mappedClass) ?
                 SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
-        return namedParameterJdbcTemplate.query(sql, paramJson, rowMapper);
+        return getNamedParameterJdbcTemplate().query(sql, paramJson, rowMapper);
     }
 
     // is
@@ -170,7 +170,7 @@ class DbQuery extends DbJdbcTemplate {
         StringBuffer sql = new StringBuffer("SELECT * FROM ");
         sql.append(tableName);
         sql.append(" WHERE ").append(columnName).append(" = :").append(columnName);
-        if (jdbcProperties.isEnableDeleteQueryFilter()) {
+        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
             sql.append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
                     .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
         }
@@ -222,9 +222,9 @@ class DbQuery extends DbJdbcTemplate {
      * @return JSON数据
      */
     public JSONObject getByBusinessUk(String tableName, String businessUkValue) {
-        String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
+        String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getBusinessUk());
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);
+        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getBusinessUk()), businessUkValue);
         return queryForJson(sql, paramJson);
     }
 
@@ -240,9 +240,9 @@ class DbQuery extends DbJdbcTemplate {
      * @return POJO对象
      */
     public <T> T getByBusinessUk(String tableName, String businessUkValue, Class<T> mappedClass) {
-        String sql = getByColumnNameSqlBuild(tableName, jdbcProperties.getBusinessUk());
+        String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getBusinessUk());
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(jdbcProperties.getBusinessUk()), businessUkValue);
+        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getBusinessUk()), businessUkValue);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
@@ -302,7 +302,7 @@ class DbQuery extends DbJdbcTemplate {
     public List<JSONObject> list(String tableName, JSONObject paramJson) {
         paramFormat(paramJson);
         String sql = listSqlBuild(tableName, paramJson, null);
-        return ListUtils.toJsonList(namedParameterJdbcTemplate.queryForList(sql, paramJson));
+        return ListUtils.toJsonList(getNamedParameterJdbcTemplate().queryForList(sql, paramJson));
     }
 
     /**
@@ -381,6 +381,11 @@ class DbQuery extends DbJdbcTemplate {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * FROM ");
         sql.append(dialect.getWrapper().wrap(tableName));
+        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
+            sql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+        }
+
         return sql.toString();
     }
 

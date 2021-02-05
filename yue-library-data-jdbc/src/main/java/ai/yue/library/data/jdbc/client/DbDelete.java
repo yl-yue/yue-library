@@ -50,7 +50,7 @@ class DbDelete extends DbUpdate {
 			key = DbConstant.PRIMARY_KEY;
 		} else if (uk instanceof String) {
 			data = getByBusinessUk(tableName, (String) uk);
-			key = jdbcProperties.getBusinessUk();
+			key = getJdbcProperties().getBusinessUk();
 		}
 		if (data == null || data.isEmpty()) {
 			throw new DbException("执行单行删除命令失败，数据结构异常，可能原因是：数据不存在或存在多条数据", true);
@@ -62,7 +62,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteSqlBuild(tableName, paramJson);
 
 		// 4. 执行删除
-		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
+		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 
 		// 5. 确认影响的数据条数
 		if (updateRowsNumber != 1) {
@@ -128,7 +128,7 @@ class DbDelete extends DbUpdate {
 	public long delete(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		String sql = deleteSqlBuild(tableName, paramJson);
-		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
+		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
 	/**
@@ -160,7 +160,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteSqlBuild(tableName, paramJsons[0]);
 
 		// 2. 执行
-		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
 		// 3. 确认影响行数
 		for (int updateRowsNumber : updateRowsNumberArray) {
@@ -197,7 +197,7 @@ class DbDelete extends DbUpdate {
 	 */
 	@Transactional
 	public int[] deleteBatchNotParamFormat2(String sql, JSONObject[] paramJsons) {
-		return namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
 	// Delete Logic
@@ -227,7 +227,7 @@ class DbDelete extends DbUpdate {
 		if (uk instanceof Long) {
 			key = DbConstant.PRIMARY_KEY;
 		} else if (uk instanceof String) {
-			key = jdbcProperties.getBusinessUk();
+			key = getJdbcProperties().getBusinessUk();
 		}
 
 		// 3. 获得SQL
@@ -236,7 +236,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
 
 		// 4. 执行删除
-		int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
+		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 
 		// 5. 确认影响的数据条数
 		if (updateRowsNumber != 1) {
@@ -281,7 +281,7 @@ class DbDelete extends DbUpdate {
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
-		return (long) namedParameterJdbcTemplate.update(sql, paramJson);
+		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
 	/**
@@ -315,7 +315,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteLogicSqlBuild(tableName, paramJsons[0]);
 
 		// 2. 执行
-		int[] updateRowsNumberArray = namedParameterJdbcTemplate.batchUpdate(sql, paramJsons);
+		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
 		// 3. 确认影响行数
 		for (int updateRowsNumber : updateRowsNumberArray) {

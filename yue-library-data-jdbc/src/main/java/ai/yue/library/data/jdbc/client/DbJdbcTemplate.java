@@ -2,6 +2,7 @@ package ai.yue.library.data.jdbc.client;
 
 import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import com.alibaba.fastjson.JSONObject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.Nullable;
@@ -20,6 +21,7 @@ import java.util.List;
  * @since	2020年8月19日
  */
 @Slf4j
+@Getter
 class DbJdbcTemplate extends DbBase {
 	
 	// Jdbc Query
@@ -37,7 +39,7 @@ class DbJdbcTemplate extends DbBase {
 	 */
 	public <T> T jdbcQueryObj(String sql, Class<T> requiredType, @Nullable Object... args) {
     	try {
-    		return jdbcTemplate.queryForObject(sql, requiredType, args);
+    		return getJdbcTemplate().queryForObject(sql, requiredType, args);
 		} catch (Exception e) {
 			log.warn(e.getMessage());
 			return null;
@@ -108,7 +110,7 @@ class DbJdbcTemplate extends DbBase {
      * @return 列表数据
      */
 	public List<JSONObject> jdbcQueryForList(String sql, @Nullable Object... args) {
-		return jdbcTemplate.query(sql, args, new ColumnMapRowMapper());
+		return getJdbcTemplate().query(sql, args, new ColumnMapRowMapper());
 	}
     
 }

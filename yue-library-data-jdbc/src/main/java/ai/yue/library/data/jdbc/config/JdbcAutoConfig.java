@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
@@ -26,9 +25,9 @@ public class JdbcAutoConfig {
 
 	@Bean
 	@Primary
-	@ConditionalOnBean({JdbcTemplate.class, NamedParameterJdbcTemplate.class})
-	public Db db(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
-		return new Db(jdbcTemplate, namedParameterJdbcTemplate, new MysqlDialect(namedParameterJdbcTemplate), jdbcProperties);
+	@ConditionalOnBean({NamedParameterJdbcTemplate.class})
+	public Db db(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
+		return new Db(new MysqlDialect(namedParameterJdbcTemplate, jdbcProperties));
 	}
 	
 }

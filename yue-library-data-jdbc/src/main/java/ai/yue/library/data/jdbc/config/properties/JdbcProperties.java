@@ -1,6 +1,7 @@
 package ai.yue.library.data.jdbc.config.properties;
 
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
+import ai.yue.library.base.convert.Convert;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -14,7 +15,9 @@ import java.io.Serializable;
  */
 @Data
 @ConfigurationProperties("yue.jdbc")
-public class JdbcProperties implements Serializable {
+public class JdbcProperties implements Serializable, Cloneable {
+
+	private static final long serialVersionUID = -2792479012600072153L;
 
 	/**
 	 * 业务唯一键
@@ -51,5 +54,17 @@ public class JdbcProperties implements Serializable {
 	 * <p>默认：true
 	 */
 	private boolean enableBooleanMapRecognition = true;
+
+	@Override
+	public JdbcProperties clone() {
+		JdbcProperties jdbcProperties = null;
+		try {
+			jdbcProperties = (JdbcProperties) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return Convert.toJavaBean(Convert.toJSONObject(jdbcProperties), getClass());
+	}
 
 }

@@ -40,10 +40,7 @@ public class DbBase {
 
     // 必须初始化变量
 
-    protected JdbcTemplate jdbcTemplate;
-    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     protected Dialect dialect;
-    protected JdbcProperties jdbcProperties;
 
     // 私有常量
 
@@ -58,7 +55,7 @@ public class DbBase {
      * @return 数据源
      */
     public DataSource getDataSource() {
-        return this.jdbcTemplate.getDataSource();
+        return getJdbcTemplate().getDataSource();
     }
 
     /**
@@ -67,8 +64,19 @@ public class DbBase {
      * @param dataSource 数据源
      */
     public void setDataSource(DataSource dataSource) {
-        jdbcTemplate.setDataSource(dataSource);
-        namedParameterJdbcTemplate.getJdbcTemplate().setDataSource(dataSource);
+        getJdbcTemplate().setDataSource(dataSource);
+    }
+
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return dialect.getNamedParameterJdbcTemplate();
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        return getNamedParameterJdbcTemplate().getJdbcTemplate();
+    }
+
+    public JdbcProperties getJdbcProperties() {
+        return dialect.getJdbcProperties();
     }
 
     /**
@@ -300,7 +308,7 @@ public class DbBase {
      */
     public String paramToWhereSql(JSONObject paramJson) {
         StringBuffer whereSql = new StringBuffer();
-        if (jdbcProperties.isEnableDeleteQueryFilter()) {
+        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
             whereSql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
                     .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
         } else {
@@ -472,7 +480,7 @@ public class DbBase {
             }
 
             // 3. 布尔值映射识别
-            boolean enableBooleanMapRecognition = jdbcProperties.isEnableBooleanMapRecognition();
+            boolean enableBooleanMapRecognition = getJdbcProperties().isEnableBooleanMapRecognition();
             boolean isBoolean = BooleanUtil.isBoolean(valueClass);
             boolean isStrBoolean = false;
             if (!isBoolean && valueClass == String.class) {
@@ -481,7 +489,7 @@ public class DbBase {
             if (enableBooleanMapRecognition && isBoolean || isStrBoolean) {
                 if (!StrUtil.startWith(key, IS_PREFIX, true, true)) {
                     String aliasFormat = String.format(IS_PREFIX_FORMAT, PropertyNamingStrategy.SnakeCase.translate(key));
-                    formatKey = jdbcProperties.getDatabaseFieldNamingStrategy().getPropertyNamingStrategy().translate(aliasFormat);
+                    formatKey = getJdbcProperties().getDatabaseFieldNamingStrategy().getPropertyNamingStrategy().translate(aliasFormat);
                     if (!BooleanUtil.isBoolean(valueClass)) {
                         formatValue = Boolean.parseBoolean((String) value);
                     }
