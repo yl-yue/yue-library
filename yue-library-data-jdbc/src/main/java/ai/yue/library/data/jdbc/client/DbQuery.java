@@ -179,11 +179,12 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 通过表主键ID查询
+     * 单个-ById
+     * <p>字段名=id，一般为表自增ID-主键</p>
      * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String)}</p>
      *
      * @param tableName 表名
-     * @param id        表自增ID
+     * @param id        主键ID
      * @return JSON数据
      */
     public JSONObject getById(String tableName, long id) {
@@ -195,7 +196,8 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 通过表ID查询（字段名=id，一般为表自增ID-主键）
+     * 单个-ById
+     * <p>字段名=id，一般为表自增ID-主键</p>
      * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String, Class)}</p>
      *
      * @param <T>         泛型
@@ -213,7 +215,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 通过表业务键查询
+     * 单个-By业务键
      * <p>默认业务键为key
      * <p>业务键值推荐使用UUID5
      *
@@ -229,7 +231,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 通过表业务键查询
+     * 单个-By业务键
      * <p>默认业务键为key
      * <p>业务键值推荐使用UUID5
      *
@@ -247,7 +249,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 单个-绝对条件查询
      *
      * @param tableName 表名
      * @param paramJson 查询参数
@@ -260,7 +262,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 单个-绝对条件查询
      *
      * @param <T>         泛型
      * @param tableName   表名
@@ -293,7 +295,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 列表-绝对条件查询
      *
      * @param tableName 表名
      * @param paramJson 查询参数
@@ -306,7 +308,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 列表-绝对条件查询
      *
      * @param <T>         泛型
      * @param tableName   表名
@@ -321,7 +323,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 列表-绝对条件查询
      *
      * @param tableName 表名
      * @param paramJson 查询参数
@@ -348,7 +350,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 绝对条件查询
+     * 列表-绝对条件查询
      *
      * @param <T>         泛型
      * @param tableName   表名
@@ -390,7 +392,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 查询表中所有数据
+     * 列表-查询表中所有数据
      *
      * @param tableName 表名
      * @return 列表数据
@@ -401,7 +403,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 查询表中所有数据
+     * 列表-查询表中所有数据
      *
      * @param <T>         泛型
      * @param tableName   表名
