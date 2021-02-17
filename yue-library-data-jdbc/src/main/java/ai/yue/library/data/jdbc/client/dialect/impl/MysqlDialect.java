@@ -1,21 +1,15 @@
 package ai.yue.library.data.jdbc.client.dialect.impl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
+import ai.yue.library.base.util.ObjectUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.jdbc.client.dialect.AnsiSqlDialect;
-import ai.yue.library.data.jdbc.client.dialect.DialectName;
+import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.client.dialect.DialectNameEnum;
 import ai.yue.library.data.jdbc.client.dialect.Wrapper;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
@@ -23,6 +17,15 @@ import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import cn.hutool.core.util.ArrayUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import javax.sql.DataSource;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * MySQL方言
@@ -30,26 +33,40 @@ import cn.hutool.core.util.ArrayUtil;
  * @author	ylyue
  * @since	2020年6月13日
  */
+@Slf4j
 public class MysqlDialect extends AnsiSqlDialect {
 	
 	private static final long serialVersionUID = -3734718212043823636L;
 	
-	public MysqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public MysqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
 		super.wrapper = new Wrapper('`');
 		super.dialect = this;
 		super.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		super.jdbcProperties = jdbcProperties;
 	}
-	
+
+	@Override
+	public Dialect cloneDialect() {
+		return clone();
+	}
+
+	@Override
+	public MysqlDialect clone() {
+		log.info("执行{}，深度克隆。", getClass());
+		DataSource dataSource = ObjectUtils.cloneIfPossible(getNamedParameterJdbcTemplate().getJdbcTemplate().getDataSource());
+		return new MysqlDialect(new NamedParameterJdbcTemplate(dataSource), jdbcProperties.clone());
+	}
+
+	@Override
+	public DialectNameEnum dialectName() {
+		return DialectNameEnum.MYSQL;
+	}
+
 	@Override
 	public String getPageJoinSql() {
 		StringBuffer pageJoinSql = new StringBuffer(" ");
 		return pageJoinSql.append(Page.LIMIT_KEYWORD).append(" ").append(Page.PAGE_NAMED_PARAMETER).append(" , ")
 				.append(Page.LIMIT_NAMED_PARAMETER).append(" ").toString();
-	}
-	
-	@Override
-	public DialectName dialectName() {
-		return DialectName.MYSQL;
 	}
 
 	// insert
@@ -57,6 +74,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 	@Override
 	public Long insertOrUpdate(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
         paramValidate(tableName, paramJson, conditions);
+		paramFormat(paramJson);
         tableName = wrapper.wrap(tableName);
         paramJson = wrapper.wrap(paramJson);
         conditions = wrapper.wrap(conditions);
@@ -104,7 +122,7 @@ public class MysqlDialect extends AnsiSqlDialect {
 			sql.append(", ");
 		}
 		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
-    	
+
     	return (long) namedParameterJdbcTemplate.update(sql.toString(), paramJson);
 	}
 	

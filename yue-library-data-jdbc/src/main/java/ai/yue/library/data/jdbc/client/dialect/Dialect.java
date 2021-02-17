@@ -1,15 +1,16 @@
 package ai.yue.library.data.jdbc.client.dialect;
 
-import java.io.Serializable;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.constant.SortEnum;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.io.Serializable;
 
 /**
  * SQL方言
@@ -19,11 +20,27 @@ import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
  * @author	ylyue
  * @since	2020年6月13日
  */
-public interface Dialect extends Serializable {
+public interface Dialect extends Serializable, Cloneable {
 
 	// Dialect
-	
+
 	/**
+	 * 方言名
+	 *
+	 * @return 方言名
+	 */
+	DialectNameEnum dialectName();
+
+	/**
+	 * 克隆方言
+	 *
+	 * @return 克隆方言
+	 */
+	Dialect cloneDialect();
+
+	/**
+	 * 包装器
+	 *
 	 * @return 包装器
 	 */
 	Wrapper getWrapper();
@@ -36,12 +53,33 @@ public interface Dialect extends Serializable {
 	void setWrapper(Wrapper wrapper);
 
 	/**
-	 * 方言名
-	 * 
-	 * @return 方言名
+	 * 命名参数JdbcTemplate
+	 *
+	 * @return 命名参数JdbcTemplate
 	 */
-	DialectName dialectName();
-	
+	NamedParameterJdbcTemplate getNamedParameterJdbcTemplate();
+
+	/**
+	 * 设置命名参数JdbcTemplate
+	 *
+	 * @param namedParameterJdbcTemplate 命名参数JdbcTemplate
+	 */
+	void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate);
+
+	/**
+	 * Db可配置属性
+	 *
+	 * @return Db可配置属性
+	 */
+	JdbcProperties getJdbcProperties();
+
+	/**
+	 * 设置Db可配置属性
+	 *
+	 * @param jdbcProperties Db可配置属性
+	 */
+	void setJdbcProperties(JdbcProperties jdbcProperties);
+
 	// insert
 	
     /**

@@ -1,17 +1,14 @@
 package ai.yue.library.web.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
-import javax.servlet.http.HttpSession;
-
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.util.servlet.ServletUtils;
 import ai.yue.library.web.vo.CaptchaVO;
+
+import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  * 验证码工具类，用于创建验证码图片与验证验证码
@@ -80,8 +77,7 @@ public class CaptchaUtils {
             // 设置随机颜色
             graphic.setColor(getRandomColor());
             // 设置字体大小
-            graphic.setFont(new Font(
-                    null, Font.BOLD + Font.ITALIC, fontSize));
+            graphic.setFont(new Font(null, Font.BOLD + Font.ITALIC, fontSize));
             // 画字符
             graphic.drawString(CHARS[n] + "", i * width / charQuantity, height * 2 / 3);
             // 记录字符

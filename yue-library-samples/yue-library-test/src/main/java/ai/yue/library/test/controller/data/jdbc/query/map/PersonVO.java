@@ -1,13 +1,12 @@
-package ai.yue.library.test.controller.data.jdbc;
+package ai.yue.library.test.controller.data.jdbc.query.map;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import lombok.Data;
 
 /**
  * 人员dto

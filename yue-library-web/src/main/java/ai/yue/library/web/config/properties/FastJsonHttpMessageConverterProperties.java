@@ -1,11 +1,9 @@
 package ai.yue.library.web.config.properties;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * FastJson HTTP消息转换器配置
@@ -27,7 +25,13 @@ public class FastJsonHttpMessageConverterProperties {
 	 * <p>默认：false
 	 */
 	private boolean enabled = false;
-	
+
+	/**
+	 * 启用属性声明顺序进行序列化排序
+	 * <p>FastJson序列化时默认根据字母（ASCII）排序而非成员变量声明顺序，详情见：<a href="https://github.com/alibaba/fastjson/issues/3115">#3115</a></p>
+	 */
+	private boolean enablePropertyDefineOrderSerializer = true;
+
 	/**
 	 * 字段命名策略
 	 */
@@ -44,6 +48,7 @@ public class FastJsonHttpMessageConverterProperties {
 	 * SerializerFeature.WriteMapNullValue, // 对Null值进行输出
 	 * SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
 	 * SerializerFeature.WriteNullStringAsEmpty // Null String 输出为空字符串
+	 * SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
 	 * </pre>
 	 */
 	private SerializerFeature[] serializerFeatures = {
@@ -53,8 +58,8 @@ public class FastJsonHttpMessageConverterProperties {
 			SerializerFeature.WriteDateUseDateFormat, // 对时间类型进行格式化（默认：yyyy-MM-dd HH:mm:ss）
 			SerializerFeature.WriteMapNullValue, // 对Null值进行输出
 			SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
-			SerializerFeature.WriteNullStringAsEmpty // Null String 输出为空字符串
-//			SerializerFeature.WriteNullBooleanAsFalse, // Null Boolean 输出为 false
+			SerializerFeature.WriteNullStringAsEmpty, // Null String 输出为空字符串
+			SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
 //			SerializerFeature.WriteNullNumberAsZero // Null Number 输出为 0
 	};
 	

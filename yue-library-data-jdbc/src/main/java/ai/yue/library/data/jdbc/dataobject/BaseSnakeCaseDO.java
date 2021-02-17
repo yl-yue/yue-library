@@ -8,13 +8,21 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 下划线命名法DO基类
- * 
- * <p><b><code style="color:red">注意：继承 {@link BaseSnakeCaseDO} get set ... 采用 &#064;{@link Data} 注解生成时，需加上：</code></b>
+ * <h2>下划线命名法DO基类</h2><br>
+ *
+ * <b><code style="color:red">注意子类使用Lombok重写toString()与equals()和hashCode()方法时，callSuper属性需为true，如下：</code></b>
  * <blockquote>
  * 	<p>&#064;ToString(callSuper = true)
  * 	<p>&#064;EqualsAndHashCode(callSuper = true)
- * </blockquote>
+ * </blockquote><br>
+ *
+ * <b><code style="color:red">注意子类使用Lombok生成builder()方法时，需使用@SuperBuilder注解，而非@Builder注解，如下：</code></b>
+ * <blockquote>
+ * 	<p>&#064;AllArgsConstructor
+ * 	<p>&#064;SuperBuilder(toBuilder = true)
+ * </blockquote><br>
+ *
+ * <a href="https://ylyue.cn/#/data/jdbc/介绍?id=do%e5%9f%ba%e7%b1%bb">👉点击查看关于DO基类的详细使用介绍</a>
  * 
  * @author	ylyue
  * @since	2018年7月26日

@@ -1,19 +1,17 @@
 package ai.yue.library.data.jdbc.client;
 
-import java.util.List;
-
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -36,9 +34,11 @@ class DbInsert extends DbDelete {
 		paramValidate(tableName, paramJson);
 		
 		// 2. 创建JdbcInsert实例
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-		simpleJdbcInsert.setTableName(tableName); // 设置表名
-		simpleJdbcInsert.setGeneratedKeyName(DbConstant.PRIMARY_KEY);	// 设置主键名，添加成功后返回主键的值
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(getJdbcTemplate());
+		// 设置表名
+		simpleJdbcInsert.setTableName(tableName);
+		// 设置主键名，添加成功后返回主键的值
+		simpleJdbcInsert.setGeneratedKeyName(DbConstant.PRIMARY_KEY);
 		
 		// 3. 设置ColumnNames
 		List<String> keys = MapUtils.keyList(paramJson);
@@ -49,7 +49,7 @@ class DbInsert extends DbDelete {
 		// 4. 返回结果
 		return simpleJdbcInsert;
 	}
-	
+
 	/**
 	 * 向表中插入一条数据，主键默认为id时使用。
 	 * 
@@ -63,14 +63,15 @@ class DbInsert extends DbDelete {
 		MapUtils.removeEmpty(paramJson);
 		
 		// 2. 插入源初始化
+		paramFormat(paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
-		
+
 		// 3. 执行
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
-	
+
 	/**
 	 * 向表中插入一条数据
 	 * 
@@ -83,10 +84,11 @@ class DbInsert extends DbDelete {
 		MapUtils.removeEmpty(paramJson);
 		
 		// 2. 插入源初始化
+		paramFormat(paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
-		
+
 		// 3. 执行
 		simpleJdbcInsert.execute(paramJson);
 	}
@@ -112,7 +114,8 @@ class DbInsert extends DbDelete {
 		tableName = dialect.getWrapper().wrap(tableName);
 		String sortFieldName = "sort_idx";
 		String sortFieldNameWrapped = dialect.getWrapper().wrap(sortFieldName);
-		
+		paramFormat(paramJson);
+
 		// 2. 组装最大sort_idx值查询SQL
 		int sort_idx = 1;
 		StringBuffer sql = new StringBuffer();
@@ -142,25 +145,44 @@ class DbInsert extends DbDelete {
 	 * @param tableName 表名
 	 * @param paramJsons 参数
 	 */
-	@Transactional
 	public void insertBatch(String tableName, JSONObject[] paramJsons) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJsons);
-		
+
+		// 2. 参数美化
+		for (JSONObject paramJson : paramJsons) {
+			paramFormat(paramJson);
+		}
+
+		// 3. 执行
+		insertBatchNotParamFormat(tableName, paramJsons);
+	}
+
+	/**
+	 * 向表中批量插入数据，主键默认为id时使用（不调用 {@link #paramFormat(JSONObject)} 方法）。
+	 *
+	 * @param tableName 表名
+	 * @param paramJsons 参数
+	 */
+	@Transactional
+	public void insertBatchNotParamFormat(String tableName, JSONObject[] paramJsons) {
+		// 1. 参数验证
+		paramValidate(tableName, paramJsons);
+
 		// 2. 插入源初始化
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJsons = dialect.getWrapper().wrap(paramJsons);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);
-		
+
 		// 3. 执行
-        int updateRowsNumber = simpleJdbcInsert.executeBatch(paramJsons).length;
-        
-        // 4. 确认插入条数
-        if (updateRowsNumber != paramJsons.length) {
-        	throw new DbException(ResultPrompt.INSERT_BATCH_ERROR);
-        }
+		int updateRowsNumber = simpleJdbcInsert.executeBatch(paramJsons).length;
+
+		// 4. 确认插入条数
+		if (updateRowsNumber != paramJsons.length) {
+			throw new DbException(ResultPrompt.INSERT_BATCH_ERROR);
+		}
 	}
-	
+
 	// InsertOrUpdate
 	
     /**

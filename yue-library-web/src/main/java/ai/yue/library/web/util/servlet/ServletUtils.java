@@ -1,31 +1,5 @@
 package ai.yue.library.web.util.servlet;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.web.util.servlet.multipart.MultipartFormData;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -36,17 +10,27 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.CaseInsensitiveMap;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Servlet相关工具类封装<br>
  * 源自 hutool-extra 增强
- * 
+ *
  * @author	ylyue
  * @since	2019年8月14日
  */
@@ -61,7 +45,7 @@ public class ServletUtils {
 	public static final String METHOD_TRACE = "TRACE";
 	public static final String HTTP_TCP_NAME = "http://";
 	public static final String HTTPS_TCP_NAME = "https://";
-	
+
 	/**
 	 * HttpAspect请求切入点
 	 */
@@ -71,7 +55,7 @@ public class ServletUtils {
 			+ " || @annotation(org.springframework.web.bind.annotation.PutMapping)"
 			+ " || @annotation(org.springframework.web.bind.annotation.PatchMapping)"
 			+ " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)";
-	
+
 	/**
 	 * 获得当前请求上下文中的{@linkplain ServletRequestAttributes}
 	 * @return ServletRequestAttributes
@@ -79,23 +63,25 @@ public class ServletUtils {
 	public static ServletRequestAttributes getRequestAttributes() {
 		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
 	}
-	
+
 	/**
 	 * 获得当前请求上下文中的{@linkplain HttpServletRequest}
 	 * @return HttpServletRequest
 	 */
 	public static HttpServletRequest getRequest() {
-		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		return requestAttributes == null ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
 	}
-	
+
 	/**
 	 * 获得当前请求上下文中的{@linkplain HttpServletResponse}
 	 * @return HttpServletResponse
 	 */
 	public static HttpServletResponse getResponse() {
-		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		return requestAttributes == null ? null : ((ServletRequestAttributes) requestAttributes).getResponse();
 	}
-	
+
 	/**
 	 * 获得当前请求{@linkplain HttpSession}
 	 * @return HttpSession
@@ -103,7 +89,7 @@ public class ServletUtils {
 	public static HttpSession getSession() {
 		return getRequest().getSession();
 	}
-	
+
 	/**
 	 * 获得当前请求的服务器的URL地址
 	 * <p>
@@ -118,7 +104,7 @@ public class ServletUtils {
 		String contextPath = request.getContextPath();// 项目名称
 		return HTTP_TCP_NAME + serverName + ":" + serverPort + contextPath;
 	}
-	
+
 	/**
 	 * 打印请求报文
 	 * <p>
@@ -133,20 +119,20 @@ public class ServletUtils {
 		Console.log("RemoteAddr：{}", request.getRemoteAddr());
 		Console.log("Method：{}", request.getMethod());
 		Console.log("AuthType：{}", request.getAuthType());
-		
+
 		// 2. 打印服务器信息
 		Console.log();
 		Console.log("打印服务器信息：");
 		Console.log("ServerURL：{}", getServerURL());
 		Console.log("RequestURL：{}", request.getRequestURL());
 		Console.log("RequestedSessionId：{}", request.getRequestedSessionId());
-		
+
 		// 3. 打印请求参数
 		Console.log();
 		Console.log("打印请求参数：");
 		Console.log("QueryString：{}", request.getQueryString());
 		Console.log("ParameterMap：{}", JSONObject.toJSONString(request.getParameterMap()));
-		
+
 		// 4. 打印请求头
 		Console.log();
 		Console.log("打印请求头：");
@@ -174,11 +160,11 @@ public class ServletUtils {
 		}
 		Console.error("========结束-打印请求报文========");
 	}
-	
+
 	// --------------------------------------------------------- getParam start
 	/**
 	 * 获得所有请求参数
-	 * 
+	 *
 	 * @param request 请求对象{@link ServletRequest}
 	 * @return Map
 	 */
@@ -189,7 +175,7 @@ public class ServletUtils {
 
 	/**
 	 * 获得所有请求参数
-	 * 
+	 *
 	 * @param request 请求对象{@link ServletRequest}
 	 * @return Map
 	 */
@@ -204,7 +190,7 @@ public class ServletUtils {
 	/**
 	 * 获取请求体<br>
 	 * 调用该方法后，getParam方法将失效
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体
 	 * @since 4.0.2
@@ -220,7 +206,7 @@ public class ServletUtils {
 	/**
 	 * 获取请求体byte[]<br>
 	 * 调用该方法后，getParam方法将失效
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体byte[]
 	 * @since 4.0.2
@@ -237,7 +223,7 @@ public class ServletUtils {
 	// --------------------------------------------------------- fillBean start
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param bean Bean
@@ -277,7 +263,7 @@ public class ServletUtils {
 
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request {@link ServletRequest}
 	 * @param bean Bean
@@ -290,7 +276,7 @@ public class ServletUtils {
 
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param beanClass Bean Class
@@ -304,10 +290,10 @@ public class ServletUtils {
 
 	/**
 	 * 获取客户端IP
-	 * 
+	 *
 	 * <p>
 	 * 默认检测的Header:
-	 * 
+	 *
 	 * <pre>
 	 * 1、X-Forwarded-For
 	 * 2、X-Real-IP
@@ -319,7 +305,7 @@ public class ServletUtils {
 	 * otherHeaderNames参数用于自定义检测的Header<br>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
-	 * 
+	 *
 	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
 	 */
@@ -328,18 +314,18 @@ public class ServletUtils {
 		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
 			headers = ArrayUtil.addAll(headers, otherHeaderNames);
 		}
-		
+
 		return getClientIPByHeader(headers);
 	}
-	
+
 	/**
 	 * 获取客户端IP
-	 * 
+	 *
 	 * <p>
 	 * headerNames参数用于自定义检测的Header<br>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
-	 * 
+	 *
 	 * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
 	 * @since 4.4.1
@@ -357,12 +343,12 @@ public class ServletUtils {
 		ip = request.getRemoteAddr();
 		return getMultistageReverseProxyIp(ip);
 	}
-	
+
 	/**
 	 * 获得multipart/form-data 表单内容<br>
 	 * 包括文件和普通表单数据<br>
 	 * 在同一次请求中，此方法只能被执行一次！
-	 * 
+	 *
 	 * @return MultiPart表单
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.2
@@ -377,11 +363,11 @@ public class ServletUtils {
 
 		return formData;
 	}
-	
+
 	// --------------------------------------------------------- Header start
 	/**
 	 * 获取请求所有的头（header）信息
-	 * 
+	 *
 	 * @return header值
 	 * @since 4.6.2
 	 */
@@ -394,14 +380,14 @@ public class ServletUtils {
 			name = names.nextElement();
 			headerMap.put(name, request.getHeader(name));
 		}
-		
+
 		return headerMap;
 	}
-	
-	
+
+
 	/**
 	 * 忽略大小写获得请求header中的信息
-	 * 
+	 *
 	 * @param nameIgnoreCase 忽略大小写头信息的KEY
 	 * @return header值
 	 */
@@ -418,10 +404,10 @@ public class ServletUtils {
 
 		return null;
 	}
-	
+
 	/**
 	 * 获得请求header中的信息
-	 * 
+	 *
 	 * @param name 头信息的KEY
 	 * @param charsetName 字符集
 	 * @return header值
@@ -429,10 +415,10 @@ public class ServletUtils {
 	public static String getHeader(String name, String charsetName) {
 		return getHeader(name, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 获得请求header中的信息
-	 * 
+	 *
 	 * @param name 头信息的KEY
 	 * @param charset 字符集
 	 * @return header值
@@ -448,7 +434,7 @@ public class ServletUtils {
 
 	/**
 	 * 客户浏览器是否为IE
-	 * 
+	 *
 	 * @return 客户浏览器是否为IE
 	 */
 	public static boolean isIE() {
@@ -463,7 +449,7 @@ public class ServletUtils {
 
 	/**
 	 * 是否为GET请求
-	 * 
+	 *
 	 * @return 是否为GET请求
 	 */
 	public static boolean isGetMethod() {
@@ -472,7 +458,7 @@ public class ServletUtils {
 
 	/**
 	 * 是否为POST请求
-	 * 
+	 *
 	 * @return 是否为POST请求
 	 */
 	public static boolean isPostMethod() {
@@ -481,7 +467,7 @@ public class ServletUtils {
 
 	/**
 	 * 是否为Multipart类型表单，此类型表单用于文件上传
-	 * 
+	 *
 	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
 	public static boolean isMultipart() {
@@ -500,7 +486,7 @@ public class ServletUtils {
 	// --------------------------------------------------------- Cookie start
 	/**
 	 * 获得指定的Cookie
-	 * 
+	 *
 	 * @param name cookie名
 	 * @return Cookie对象
 	 */
@@ -510,7 +496,7 @@ public class ServletUtils {
 
 	/**
 	 * 将cookie封装到Map里面
-	 * 
+	 *
 	 * @return Cookie map
 	 */
 	public static Map<String, Cookie> readCookieMap() {
@@ -523,10 +509,10 @@ public class ServletUtils {
 		}
 		return cookieMap;
 	}
-	
+
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param cookie Servlet Cookie对象
 	 */
 	public static void addCookie(Cookie cookie) {
@@ -535,7 +521,7 @@ public class ServletUtils {
 
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param name Cookie名
 	 * @param value Cookie值
 	 */
@@ -545,7 +531,7 @@ public class ServletUtils {
 
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param name cookie名
 	 * @param value cookie值
 	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
@@ -566,7 +552,7 @@ public class ServletUtils {
 	 * 设定返回给客户端的Cookie<br>
 	 * Path: "/"<br>
 	 * No Domain
-	 * 
+	 *
 	 * @param name cookie名
 	 * @param value cookie值
 	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
@@ -579,7 +565,7 @@ public class ServletUtils {
 	// --------------------------------------------------------- Response start
 	/**
 	 * 获得PrintWriter
-	 * 
+	 *
 	 * @return 获得PrintWriter
 	 * @throws IORuntimeException IO异常
 	 */
@@ -593,7 +579,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param text 返回的内容
 	 * @param contentType 返回的类型
 	 */
@@ -614,7 +600,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回文件给客户端
-	 * 
+	 *
 	 * @param file 写出的文件对象
 	 * @since 4.1.15
 	 */
@@ -632,7 +618,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param in 需要返回客户端的内容
 	 * @param contentType 返回的类型
 	 * @param fileName 文件名
@@ -648,7 +634,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param in 需要返回客户端的内容
 	 * @param contentType 返回的类型
 	 */
@@ -659,7 +645,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param in 需要返回客户端的内容
 	 */
 	public static void write(InputStream in) {
@@ -668,7 +654,7 @@ public class ServletUtils {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param in 需要返回客户端的内容
 	 * @param bufferSize 缓存大小
 	 */
@@ -687,7 +673,7 @@ public class ServletUtils {
 
 	/**
 	 * 设置响应的Header
-	 * 
+	 *
 	 * @param name 名
 	 * @param value 值，可以是String，Date， int
 	 */
@@ -708,7 +694,7 @@ public class ServletUtils {
 	// --------------------------------------------------------- Private methd start
 	/**
 	 * 从多级反向代理中获得第一个非unknown IP地址
-	 * 
+	 *
 	 * @param ip 获得的IP地址
 	 * @return 第一个非unknown IP地址
 	 */
@@ -728,7 +714,7 @@ public class ServletUtils {
 
 	/**
 	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 * 
+	 *
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
 	 */

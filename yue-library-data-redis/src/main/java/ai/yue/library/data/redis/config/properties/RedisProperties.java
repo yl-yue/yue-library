@@ -24,7 +24,7 @@ public class RedisProperties {
 	 * <p>Redis存储对象序列/反序列化器
 	 * <p>默认：{@linkplain RedisSerializerEnum#JDK}
 	 */
-	private RedisSerializerEnum redisSerializerEnum = RedisSerializerEnum.JDK;
+	private RedisSerializerEnum redisSerializer = RedisSerializerEnum.JDK;
 	
 	/**
 	 * IP前缀（自定义值，请保留“<code style="color:red">_%s</code>”部分）

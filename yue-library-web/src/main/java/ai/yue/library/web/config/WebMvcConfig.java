@@ -13,8 +13,11 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.BeanContext;
 import com.alibaba.fastjson.serializer.ContextValueFilter;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -24,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -74,8 +76,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		FastJsonConfig config = new FastJsonConfig();
 		config.setDateFormat(JSON.DEFFAULT_DATE_FORMAT);
 		config.setSerializerFeatures(fastJsonProperties.getSerializerFeatures());
-		
-		// 2. 配置FastJsonHttpMessageConverter规则
+
+		// 2. 配置属性声明顺序进行序列化排序
+		if (fastJsonProperties.isEnablePropertyDefineOrderSerializer()) {
+			JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();
+			SerializeConfig serializeConfig = new SerializeConfig(true);
+			config.setSerializeConfig(serializeConfig);
+		}
+
+		// 3. 配置FastJsonHttpMessageConverter规则
 		ContextValueFilter contextValueFilter = (BeanContext context, Object object, String name, Object value) -> {
 			if (context == null) {
 				if (fastJsonProperties.isWriteNullAsStringEmpty()) {
@@ -103,7 +112,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			return value;
 		};
 		
-		// 3. 配置FastJsonHttpMessageConverter
+		// 4. 配置FastJsonHttpMessageConverter
 		if (fastJsonProperties.isWriteNullAsStringEmpty() || fastJsonProperties.isWriteNullMapAsEmpty()) {
 			config.setSerializeFilters(contextValueFilter);
 		}

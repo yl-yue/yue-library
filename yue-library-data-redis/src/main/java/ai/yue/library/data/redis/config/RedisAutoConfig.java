@@ -1,5 +1,10 @@
 package ai.yue.library.data.redis.config;
 
+import ai.yue.library.base.util.ClassUtils;
+import ai.yue.library.data.redis.client.Redis;
+import ai.yue.library.data.redis.config.properties.RedisProperties;
+import ai.yue.library.data.redis.constant.RedisSerializerEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -13,12 +18,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import ai.yue.library.base.util.ClassUtils;
-import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.data.redis.config.properties.RedisProperties;
-import ai.yue.library.data.redis.constant.RedisSerializerEnum;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * redis自动配置
@@ -45,8 +44,8 @@ public class RedisAutoConfig {
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 		
 		// 支持FastJson进行Redis存储对象序列/反序列化
-		if (redisProperties.getRedisSerializerEnum() != RedisSerializerEnum.JDK) {
-			redisTemplate.setDefaultSerializer(redisProperties.getRedisSerializerEnum().getRedisSerializer());
+		if (redisProperties.getRedisSerializer() != RedisSerializerEnum.JDK) {
+			redisTemplate.setDefaultSerializer(redisProperties.getRedisSerializer().getRedisSerializer());
 		}
 		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 		redisTemplate.setKeySerializer(stringRedisSerializer);

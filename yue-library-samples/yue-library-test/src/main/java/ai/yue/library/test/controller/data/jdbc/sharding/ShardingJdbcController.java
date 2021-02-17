@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.data.jdbc;
+package ai.yue.library.test.controller.data.jdbc.sharding;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;

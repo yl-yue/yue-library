@@ -97,26 +97,16 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 ```
 
 ### 版本说明
-　　yue-library的版本命名方式，继2.1.0开始采用与SpringBoot和SpringCloudAlibaba相同的命名方式。<br>
+　　yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发行](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions) 对应的命名方式。<br>
 　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、webflux、data-jdbc、data-redis），可以不引入`yue-library-base`。
 
-**版本区别说明**
-
-|示例版本								|区别说明								|
+|示例版本号								|版本号区别								|
 |--										|--										|
 |`j8.2.x`								|基于Java 8的2.x.x版本					|
 |`j11.2.x`								|基于Java 11的2.x.x版本					|
 |`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
 
-**默认版本依赖关系**
-
-|yue-library|SpringBoot	|SpringCloud|SpringCloudAlibaba	|
-|--			|--			|--			|--					|
-|2.1		|2.1+		|Greenwich	|2.1+				|
-|2.2		|2.2+		|Hoxton		|2.2+				|
-
-[SpringBoot版本发行说明](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions)<br>
-[SpringCloudAlibaba版本发行说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+[👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
 更多细节，请查看[中文文档](https://ylyue.cn)
 

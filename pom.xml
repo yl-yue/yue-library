@@ -41,7 +41,7 @@
 	</modules>
 	
 	<properties>
-		<revision>j${java.version}.2.3.0</revision>
+		<revision>j${java.version}.2.3.1</revision>
 		<sha1 />
 		<changelist>-SNAPSHOT</changelist>
 		<spring-cloud-alibaba.version>2.2.3.RELEASE</spring-cloud-alibaba.version>
@@ -52,6 +52,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<hutool.version>5.4.4</hutool.version>
 		<fastjson.version>1.2.74</fastjson.version>
+		<dynamic-datasource.version>3.3.1</dynamic-datasource.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.2.0</easypoi.version>
 		<easyexcel.version>2.2.6</easyexcel.version>
@@ -188,6 +189,12 @@
 			</dependency>
 			
 			<!-- 其他 -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+				<version>${dynamic-datasource.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>cn.afterturn</groupId>
 				<artifactId>easypoi-spring-boot-starter</artifactId>
