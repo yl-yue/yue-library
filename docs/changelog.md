@@ -11,10 +11,42 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.3.1【规划中】
+## 2.4.0【规划中】
 ### 新特性
+### Bug修复
+### Maven仓库实际发布版本号
+`j8.2.4.0`、`j11.2.4.0`
+
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.3.5.RELEASE	|
+|spring-cloud			|Hoxton.SR9		|
+|spring-cloud-alibaba	|2.2.3.RELEASE	|
+|hutool					|5.4.4			|
+|fastjson				|1.2.74			|
+
+## 2.3.1【2021-02-18】
+### 新特性
+-【all】规范Redis、异步线程池枚举命名
+-【jdbc】DAO中新增基于业务键的删、改、查方法，并建议使用：可避免主键ID被遍历风险
+-【jdbc】优化delete方法为行数确认安全删除机制
+-【jdbc】对依赖于主键ID作为唯一键进行删、改、查的方法添加有序主键可遍历安全风险提示（可能存在数据越权行为），并推荐使用业务唯一键
+-【jdbc】默认开启动态数据源的sql打印
+-【jdbc】全面接入参数类型美化（现已支持：Character、JSONObject、LocalDateTime进行特殊转换处理）
+-【jdbc】实现布尔类型识别与is命名规约识别
+-【jdbc】新增支持识别单行数据进行简单数据类型映射（如：String）
+-【web】新增支持使用FastJson做HTTP消息转换器时按照属性声明顺序进行序列化排序
+-【web】更改HTTP消息转换器默认配置将 Null Boolean 输出为 false
 
 ### Bug修复
+-【web】解决@RequestMapping中指定produces为xml类型时，JavaBean转换会去解析xml内容BUG [#I2ALJW](https://gitee.com/yl-yue/yue-library/issues/I2ALJW)
+-【web】解决获取request、response空指针，改为返回null
+-【jdbc】优化DbBase与Dialect相互依赖设计，实现Db.clone()深度克隆并解决DbBase与Dialect相互依赖造成的成员变量（JdbcProperties）初始化null异常
+-【jdbc】解决spring-cloud-stream启动时循环调用DbBase的equals()方法错误
+-【jdbc】修改jdbcQueryBoolean返回类型错误
+-【jdbc】修复JdbcProperties默认未注入问题
 
 ### Maven仓库实际发布版本号
 `j8.2.3.1`、`j11.2.3.1`
