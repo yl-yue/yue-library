@@ -2,7 +2,6 @@ package ai.yue.library.data.jdbc.client;
 
 import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
-import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
@@ -11,15 +10,12 @@ import ai.yue.library.data.jdbc.constant.DbSortEnum;
 import ai.yue.library.data.jdbc.dto.PageDTO;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageTVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -45,12 +41,13 @@ class DbQuery extends DbJdbcTemplate {
      * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}
      * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
      *
-     * @param <T>         普通类型泛型
+     * @deprecated 请使用：{@linkplain #queryForObject(String, JSONObject, Class)}
      * @param sql         要执行的SQL查询
      * @param paramJson   要绑定到查询的参数映射
      * @param mappedClass 结果对象期望匹配的普通类型
      * @return 所需普通类型的结果对象（如：Long, String, Boolean）或null
      */
+    @Deprecated
     public <T> T queryObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
         try {
             return getNamedParameterJdbcTemplate().queryForObject(sql, paramJson, mappedClass);
@@ -63,76 +60,94 @@ class DbQuery extends DbJdbcTemplate {
     // queryFor
 
     /**
-     * {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 的安全查询方式<br><br>
-     * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
+     * <b>查询一行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 方法的优化实现</p>
      *
      * @param sql       要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
-     * @return JSON对象
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public JSONObject queryForJson(String sql, JSONObject paramJson) {
         var list = queryForList(sql, paramJson);
-        return resultToJson(list);
+        return listResultToGetResult(list);
     }
 
     /**
-     * <h3>同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, org.springframework.jdbc.core.RowMapper)}</h3>
-     * <b>注：{@linkplain RowMapper} 的实现为 {@linkplain BeanPropertyRowMapper}</b>
-     * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
+     * <b>查询一行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, org.springframework.jdbc.core.RowMapper)} 方法的优化实现</p>
      *
-     * @param <T>         JavaBean的泛型
      * @param sql         要执行的SQL查询
      * @param paramJson   要绑定到查询的参数映射
-     * @param mappedClass POJO映射类
-     * @return POJO对象
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
         List<T> list = queryForList(sql, paramJson, mappedClass);
-        return resultToObject(list);
+        return listResultToGetResult(list);
     }
 
     /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForRowSet(String, Map)}
-     * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果集可用于方便的获取各种类型的数据。
+     * <b>查询多行数据</b>
+     * <p>同 {@linkplain NamedParameterJdbcTemplate#queryForRowSet(String, Map)}</p>
      *
      * @param sql       要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
-     * @return 结果集可用于方便的获取各种类型的数据
+     * @return 可用于方便的获取各种数据类型的结果集
      */
     public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
         return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
     }
 
     /**
-     * 同 {@link NamedParameterJdbcTemplate#queryForList(String, Map)}<br><br>
-     * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
+     * <b>查询多行数据</b>
+     * <p>对 {@link NamedParameterJdbcTemplate#queryForList(String, Map)} 方法的优化实现</p>
      *
      * @param sql       要执行的查询SQL
      * @param paramJson 要绑定到查询的参数映射
-     * @return 列表数据
+     * @return 多行查询结果
      */
     public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
         return getNamedParameterJdbcTemplate().query(sql, paramJson, new ColumnMapRowMapper());
     }
 
     /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForList(String, Map, Class)}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个多行查询。
+     * <b>查询多行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForList(String, Map, Class)} 方法的优化实现</p>
      *
-     * @param <T>         泛型
      * @param sql         要执行的查询SQL
      * @param paramJson   要绑定到查询的参数映射
-     * @param mappedClass 映射类
-     * @return 列表数据
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 多行查询结果
      */
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
-        RowMapper<T> rowMapper = ClassUtils.isSimpleValueType(mappedClass) ?
-                SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
-        return getNamedParameterJdbcTemplate().query(sql, paramJson, rowMapper);
+        return getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass));
     }
 
     // is
 
+    private String isExistDataSqlBuild(String tableName, JSONObject paramJson) {
+        paramValidate(tableName, paramJson);
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT count(*) FROM ");
+        sql.append(dialect.getWrapper().wrap(tableName));
+        String whereSql = paramToWhereSql(paramJson);
+        sql.append(whereSql);
+        return sql.toString();
+    }
+
+    /**
+     * 是否有数据
+     *
+     * @deprecated 请使用：{@linkplain #isExistData(String, JSONObject)}
+     * @param tableName 表名
+     * @param paramJson 查询参数
+     * @return 是否有数据
+     */
+    @Deprecated
+    public boolean isDataSize(String tableName, JSONObject paramJson) {
+        return isExistData(tableName, paramJson);
+    }
+    
     /**
      * 是否有数据
      *
@@ -140,8 +155,10 @@ class DbQuery extends DbJdbcTemplate {
      * @param paramJson 查询参数
      * @return 是否有数据
      */
-    public boolean isDataSize(String tableName, JSONObject paramJson) {
-        return MapUtils.isNotEmpty(get(tableName, paramJson));
+    public boolean isExistData(String tableName, JSONObject paramJson) {
+        String sql = isExistDataSqlBuild(tableName, paramJson);
+        Long count = queryForObject(sql, paramJson, Long.class);
+        return count > 0;
     }
 
     // get
@@ -185,7 +202,7 @@ class DbQuery extends DbJdbcTemplate {
      *
      * @param tableName 表名
      * @param id        主键ID
-     * @return JSON数据
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public JSONObject getById(String tableName, long id) {
         paramValidate(tableName, id);
@@ -200,11 +217,10 @@ class DbQuery extends DbJdbcTemplate {
      * <p>字段名=id，一般为表自增ID-主键</p>
      * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String, Class)}</p>
      *
-     * @param <T>         泛型
      * @param tableName   表名
      * @param id          主键ID
-     * @param mappedClass 映射类
-     * @return POJO对象
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public <T> T getById(String tableName, Long id, Class<T> mappedClass) {
         paramValidate(tableName, id);
@@ -221,7 +237,7 @@ class DbQuery extends DbJdbcTemplate {
      *
      * @param tableName       表名
      * @param businessUkValue 业务键的唯一值
-     * @return JSON数据
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public JSONObject getByBusinessUk(String tableName, String businessUkValue) {
         String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getBusinessUk());
@@ -235,11 +251,10 @@ class DbQuery extends DbJdbcTemplate {
      * <p>默认业务键为key
      * <p>业务键值推荐使用UUID5
      *
-     * @param <T>             泛型
      * @param tableName       表名
      * @param businessUkValue 业务键的唯一值
-     * @param mappedClass     映射类
-     * @return POJO对象
+     * @param mappedClass     查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public <T> T getByBusinessUk(String tableName, String businessUkValue, Class<T> mappedClass) {
         String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getBusinessUk());
@@ -253,7 +268,7 @@ class DbQuery extends DbJdbcTemplate {
      *
      * @param tableName 表名
      * @param paramJson 查询参数
-     * @return JSON数据
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public JSONObject get(String tableName, JSONObject paramJson) {
         paramFormat(paramJson);
@@ -264,11 +279,10 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 单个-绝对条件查询
      *
-     * @param <T>         泛型
      * @param tableName   表名
      * @param paramJson   查询参数
-     * @param mappedClass 映射类
-     * @return POJO对象
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public <T> T get(String tableName, JSONObject paramJson, Class<T> mappedClass) {
         paramFormat(paramJson);

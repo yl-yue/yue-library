@@ -70,7 +70,13 @@ public class JdbcController {
 	public Result<?> insert(UserDO userDO) {
 		return R.success(jdbcDAO.insert(userDO));
 	}
-	
+
+	@PostMapping("/get")
+	public Result<?> get(UserDO userDO) {
+		return R.success(jdbcDAO.get(userDO.getUserId()));
+//		return R.success(jdbcDAO.insert(userDO));
+	}
+
 //	@PostMapping("/insertSql")
 //	public Result<?> insertSql(UserDO userDO) {
 //		String sql = "insert into user (cellphone, role, user_status) values (:cellphone, :role, :user_status)";

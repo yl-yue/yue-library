@@ -70,9 +70,10 @@ public abstract class AbstractRepository<T> {
 		JSONObject paramJson = (JSONObject) JSONObject.toJSON(paramIPO, serializeConfig);
 		return insert(paramJson);
 	}
-	
+
 	/**
 	 * 插入数据-批量
+	 *
 	 * @param paramJsons 参数
 	 */
 	public void insertBatch(JSONObject[] paramJsons) {
@@ -149,7 +150,7 @@ public abstract class AbstractRepository<T> {
 	 * 单个
 	 *
 	 * @param id 主键ID
-	 * @return POJO对象
+	 * @return POJO对象（结果映射应该是一个单行查询否则结果为null）
 	 */
 	public T get(Long id) {
 		return db.getById(tableName(), id, mappedClass);
@@ -161,7 +162,7 @@ public abstract class AbstractRepository<T> {
 	 * <p>业务键值推荐使用UUID5
 	 *
 	 * @param businessUkValue 业务键的唯一值
-	 * @return POJO对象
+	 * @return POJO对象（结果映射应该是一个单行查询否则结果为null）
 	 */
 	public T getByBusinessUk(String businessUkValue) {
 		return db.getByBusinessUk(tableName(), businessUkValue, mappedClass);
@@ -169,23 +170,26 @@ public abstract class AbstractRepository<T> {
 
 	/**
 	 * 列表-全部
+	 *
 	 * @return 列表数据
 	 */
 	public List<T> listAll() {
 		return db.listAll(tableName(), mappedClass);
 	}
-	
+
 	/**
 	 * 分页
+	 *
 	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
 	 * @return count（总数），data（分页列表数据）
 	 */
 	public PageTVO<T> page(PageIPO pageIPO) {
 		return db.page(tableName(), pageIPO, mappedClass);
 	}
-	
+
 	/**
 	 * 分页-降序
+	 *
 	 * @param pageIPO 分页查询参数 {@linkplain PageIPO}，所有的条件参数，都将以等于的形式进行SQL拼接
 	 * @return count（总数），data（分页列表数据）
 	 */

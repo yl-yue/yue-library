@@ -24,8 +24,11 @@ public class Db extends DbInsert implements Cloneable {
 
 	/**
 	 * 克隆Db
-	 * <p>适用于需要复制原有Db配置，并创建新的Db对象以进行修改配置等场景。
-	 * <p>如：需要对操作的某个DAO单独配置 {@link #getJdbcProperties()} {@link JdbcProperties#setEnableDeleteQueryFilter(boolean)} 属性
+	 *
+	 * <ul>
+	 *     <li>适用于需要复制原有Db配置，并创建新的Db对象以进行修改配置等场景</li>
+	 *     <li>如：需要对操作的某个DAO单独配置 {@link #getJdbcProperties()} {@link JdbcProperties#setEnableDeleteQueryFilter(boolean)} 属性</li>
+	 * </ul>
 	 */
 	@Override
 	public Db clone() {

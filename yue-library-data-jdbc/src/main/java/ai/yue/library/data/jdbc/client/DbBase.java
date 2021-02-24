@@ -1,6 +1,7 @@
 package ai.yue.library.data.jdbc.client;
 
 import ai.yue.library.base.exception.DbException;
+import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
@@ -8,6 +9,7 @@ import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
+import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,9 +20,12 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -79,18 +84,23 @@ public class DbBase {
         return dialect.getJdbcProperties();
     }
 
+    @NotNull
+    public <T> RowMapper<T> getRowMapper(Class<T> mappedClass) {
+        RowMapper<T> rowMapper = ClassUtils.isSimpleValueType(mappedClass) ?
+                SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
+        return rowMapper;
+    }
+
     /**
      * 是否有数据
      *
+     * @deprecated 请自行条件判断
      * @param dataSize 数据大小
-     * @return 是否 <b>&lt;=</b> 0
+     * @return 是否 <b>&gt;</b> 0
      */
+    @Deprecated
     public boolean isDataSize(long dataSize) {
-        if (dataSize <= 0) {
-            return false;
-        }
-
-        return true;
+        return dataSize > 0;
     }
 
     /**
@@ -183,18 +193,24 @@ public class DbBase {
     }
 
     /**
-     * 同 {@linkplain DbQuery#queryForJson(String, JSONObject)} 的安全查询结果获取
+     * <b>多行查询结果转换为单行查询结果</b>
+     * <p>为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取</p>
+     * <p>为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取</p>
      *
-     * @param list {@linkplain DbQuery#queryForList(String, JSONObject)} 查询结果
-     * @return JSON数据
+     * @param list 多行查询结果
+     * @return 根据如下规则，返回正确的单行查询结果：
+     * <ol>
+     *     <li>size < 1 return null</li>
+     *     <li>size = 1 return list.get(0)</li>
+     *     <li>size > 1 throw Exception</li>
+     * </ol>
      */
-    public JSONObject resultToJson(List<JSONObject> list) {
+    public <T> T listResultToGetResult(List<T> list) {
         int size = list.size();
         int expectedValue = 1;
         if (size != expectedValue) {
             if (size > expectedValue) {
-                String msg = ResultPrompt.dataStructure(expectedValue, size);
-                log.warn(msg);
+                throw new DbException(ResultPrompt.dataStructure(expectedValue, size), true);
             }
 
             return null;
@@ -204,25 +220,28 @@ public class DbBase {
     }
 
     /**
-     * 同 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 的安全查询结果获取
+     * 为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取
      *
+     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
+     * @param list {@linkplain DbQuery#queryForList(String, JSONObject)} 查询结果
+     * @return JSON数据
+     */
+    @Deprecated
+    public JSONObject resultToJson(List<JSONObject> list) {
+        return listResultToGetResult(list);
+    }
+
+    /**
+     * 为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取
+     *
+     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
      * @param <T>  泛型
      * @param list {@linkplain DbQuery#queryForList(String, JSONObject, Class)} 查询结果
      * @return POJO对象
      */
+    @Deprecated
     public <T> T resultToObject(List<T> list) {
-        int size = list.size();
-        int expectedValue = 1;
-        if (size != expectedValue) {
-            if (size > expectedValue) {
-                String msg = ResultPrompt.dataStructure(expectedValue, size);
-                log.warn(msg);
-            }
-
-            return null;
-        }
-
-        return list.get(0);
+        return listResultToGetResult(list);
     }
 
     // WHERE SQL

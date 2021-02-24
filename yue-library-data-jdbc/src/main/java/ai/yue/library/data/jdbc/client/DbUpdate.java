@@ -4,7 +4,6 @@ import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbExpectedEnum;
-import ai.yue.library.data.jdbc.constant.DbExpectedValueModeEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -33,25 +32,25 @@ class DbUpdate extends DbQuery {
 	// Spring Update
 
 	/**
-     * 同 {@linkplain NamedParameterJdbcTemplate#update(String, SqlParameterSource, KeyHolder)}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-     * 
-     * @param sql			要执行的更新SQL
-     * @param paramSource	更新所用到的参数：{@linkplain MapSqlParameterSource}，{@linkplain BeanPropertySqlParameterSource}
-	 * @return 自动生成的键(可能由JDBC insert语句返回)。
-     */
+	 * 更新或插入数据<br>
+	 * 同 {@linkplain NamedParameterJdbcTemplate#update(String, SqlParameterSource, KeyHolder)}<br>
+	 *
+	 * @param sql         要执行的更新SQL
+	 * @param paramSource 更新所用到的参数：{@linkplain MapSqlParameterSource}，{@linkplain BeanPropertySqlParameterSource}
+	 * @return 自动生成的键(可能由JDBC insert语句返回)或更新的主键id值。
+	 */
 	@Transactional
 	public KeyHolder update(String sql, SqlParameterSource paramSource, KeyHolder generatedKeyHolder) {
 		getNamedParameterJdbcTemplate().update(sql, paramSource, generatedKeyHolder);
 		return generatedKeyHolder;
 	}
-	
+
 	/**
-	 * 更新或插入一条数据，主键默认为id时使用。
-	 * 
-	 * @param sql 更新或插入SQL
+	 * 更新或插入数据，主键默认为id时使用。
+	 *
+	 * @param sql         更新或插入SQL
 	 * @param paramSource 更新所用到的参数：{@linkplain MapSqlParameterSource}，{@linkplain BeanPropertySqlParameterSource}
-	 * @return 更新的主键id值
+	 * @return 自动生成的键(可能由JDBC insert语句返回)或更新的主键id值。
 	 */
 	@Transactional
 	public Long update(String sql, SqlParameterSource paramSource) {
@@ -63,9 +62,9 @@ class DbUpdate extends DbQuery {
 	}
 	
 	/**
+	 * 更新数据<br>
      * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-     * 
+     *
      * @param sql			要执行的更新SQL
      * @param paramJson		更新所用到的参数
 	 * @return 受影响的行数
@@ -75,21 +74,20 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
-	
+
 	/**
-     * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-     * <blockquote>
-     * 	<p>
-     * 		将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DbException}
-     * 	</p>
-     * </blockquote>
-     * 
-     * @param sql						要执行的更新SQL
-     * @param paramJson					更新所用到的参数
-     * @param expectedValue				更新所影响的行数预期值
-     * @param dBExpectedEnum			预期值确认方式
-     */
+	 * 更新数据<br>
+	 *
+	 * <ul>
+	 *     <li>对 {@linkplain NamedParameterJdbcTemplate#update(String, Map)} 方法的增强实现</li>
+	 *     <li>将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DbException}</li>
+	 * </ul>
+	 *
+	 * @param sql            要执行的更新SQL
+	 * @param paramJson      更新所用到的参数
+	 * @param expectedValue  更新所影响的行数预期值
+	 * @param dBExpectedEnum 预期值确认方式
+	 */
 	@Transactional
 	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedEnum dBExpectedEnum) {
 		paramFormat(paramJson);
@@ -100,28 +98,15 @@ class DbUpdate extends DbQuery {
 			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
 		}
 	}
-	
+
 	/**
-	 * @deprecated 请使用：{@linkplain DbExpectedEnum}
-	 */
-	@Deprecated
-	@Transactional
-	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedValueModeEnum dBExpectedValueModeEnum) {
-		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
-		if (DbExpectedValueModeEnum.EQUAL == dBExpectedValueModeEnum) {
-			updateAndExpectedEqual(updateRowsNumber, expectedValue);
-		} else if (DbExpectedValueModeEnum.GREATER_THAN_EQUAL == dBExpectedValueModeEnum) {
-			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
-		}
-	}
-	
-	/**
-     * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
-     * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-     * @param sql			要执行的更新SQL
-     * @param paramJsons	更新所用到的参数数组
+	 * 对多组参数进行批量更新处理<br>
+	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 *
+	 * @param sql        要执行的更新SQL
+	 * @param paramJsons 更新所用到的参数数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
-     */
+	 */
 	@Transactional
 	public int[] updateBatch(String sql, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
@@ -132,10 +117,11 @@ class DbUpdate extends DbQuery {
 	}
 
 	/**
+	 * 对多组参数进行批量更新处理<br>
 	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
-	 * 指定SQL语句以创建预编译执行SQL和绑定更新参数
-	 * @param sql			要执行的更新SQL
-	 * @param paramJsons	更新所用到的参数数组（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 *
+	 * @param sql        要执行的更新SQL
+	 * @param paramJsons 更新所用到的参数数组（不调用 {@link #paramFormat(JSONObject)} 方法）
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
 	@Transactional
@@ -148,53 +134,56 @@ class DbUpdate extends DbQuery {
     private String updateSqlBuild(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
     	return dialect.updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 	}
-	
+
 	/**
-     * <b>绝对</b>条件更新优化SQL<br><br>
-     * <b>相对</b>条件更新优化SQL可参照如下编写：<br>
-     * <code>UPDATE table</code><br>
-     * <code>SET paramNumber1 = paramNumber1 - 1, ...</code><br>
-     * <code>WHERE</code><br>
-     * <code>id = :id</code><br>
-     * <code>AND</code><br>
-     * <code>paramNumber1 &gt; 0</code><br>
-     * <code>AND ...</code>
-     * @param tableName    	表名
-     * @param paramJson		更新所用到的参数（where条件参数不会用于set值的更新）
-     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
-     * @return 受影响的行数
-     */
+	 * <b>绝对</b>条件更新优化SQL<br><br>
+	 * <b>相对</b>条件更新优化SQL可参照如下编写：<br>
+	 * <code>UPDATE table</code><br>
+	 * <code>SET paramNumber1 = paramNumber1 - 1, ...</code><br>
+	 * <code>WHERE</code><br>
+	 * <code>id = :id</code><br>
+	 * <code>AND</code><br>
+	 * <code>paramNumber1 &gt; 0</code><br>
+	 * <code>AND ...</code>
+	 *
+	 * @param tableName  表名
+	 * @param paramJson  更新所用到的参数（where条件参数不会用于set值的更新）
+	 * @param conditions 作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
+	 * @return 受影响的行数
+	 */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions) {
 		paramFormat(paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
     }
-	
+
 	/**
-     * <b>绝对</b>条件更新优化SQL<br><br>
-     * @param tableName    	表名
-     * @param paramJson		更新所用到的参数
-     * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
-     * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
-     * @return 受影响的行数
-     */
+	 * <b>绝对</b>条件更新优化SQL<br><br>
+	 *
+	 * @param tableName    表名
+	 * @param paramJson    更新所用到的参数
+	 * @param conditions   作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
+	 * @param dBUpdateEnum 更新类型 {@linkplain DbUpdateEnum}
+	 * @return 受影响的行数
+	 */
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		paramFormat(paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
-	
+
 	/**
-     * <b>绝对</b>条件更新优化SQL<br><br>
-     * @param tableName    		表名
-     * @param paramJson      	更新所用到的参数
-     * @param conditions		作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
-     * @param dBUpdateEnum		更新类型 {@linkplain DbUpdateEnum}
-     * @param expectedValue		更新所影响的行数预期值
-     * @param dBExpectedEnum	预期值确认方式
-     */
+	 * <b>绝对</b>条件更新优化SQL<br><br>
+	 *
+	 * @param tableName      表名
+	 * @param paramJson      更新所用到的参数
+	 * @param conditions     作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
+	 * @param dBUpdateEnum   更新类型 {@linkplain DbUpdateEnum}
+	 * @param expectedValue  更新所影响的行数预期值
+	 * @param dBExpectedEnum 预期值确认方式
+	 */
 	@Transactional
     public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
     		, int expectedValue, DbExpectedEnum dBExpectedEnum) {
@@ -204,23 +193,6 @@ class DbUpdate extends DbQuery {
 		if (DbExpectedEnum.EQ == dBExpectedEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
 		} else if (DbExpectedEnum.GE == dBExpectedEnum) {
-			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
-		}
-	}
-	
-	/**
-	 * @deprecated 请使用：{@linkplain DbExpectedEnum}
-	 */
-	@Deprecated
-	@Transactional
-    public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
-    		, int expectedValue, DbExpectedValueModeEnum dBExpectedValueModeEnum) {
-		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
-		
-		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
-		if (DbExpectedValueModeEnum.EQUAL == dBExpectedValueModeEnum) {
-			updateAndExpectedEqual(updateRowsNumber, expectedValue);
-		} else if (DbExpectedValueModeEnum.GREATER_THAN_EQUAL == dBExpectedValueModeEnum) {
 			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
 		}
 	}
@@ -366,7 +338,7 @@ class DbUpdate extends DbQuery {
 	}
 
 	/**
-	 * <h1>更新-排序</h1><br>
+	 * <b>更新-排序</b><br>
 	 * <i>使用限制：见</i> {@linkplain DbInsert#insertWithSortIdxAutoIncrement(String, JSONObject, String...)}
 	 * <p>
 	 * @param tableName 表名
