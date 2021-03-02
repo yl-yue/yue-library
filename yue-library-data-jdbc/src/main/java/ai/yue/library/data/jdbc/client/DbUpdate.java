@@ -2,6 +2,8 @@ package ai.yue.library.data.jdbc.client;
 
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.MapUtils;
+import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbExpectedEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
@@ -17,9 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -130,9 +130,63 @@ class DbUpdate extends DbQuery {
 	}
 
 	// Update
-	
-    private String updateSqlBuild(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
-    	return dialect.updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
+
+	/**
+	 * 构建绝对条件更新优化SQL
+	 *
+	 * @param tableName    表名
+	 * @param paramJson    更新所用到的参数
+	 * @param conditions   作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
+	 * @param dBUpdateEnum 更新类型 {@linkplain DbUpdateEnum}
+	 * @return 绝对条件更新优化SQL
+	 */
+    protected String updateSqlBuild(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
+		paramValidate(tableName, paramJson, conditions);
+		StringBuffer sql = new StringBuffer();
+		sql.append("UPDATE ");
+		sql.append(dialect.getWrapper().wrap(tableName));
+		sql.append(" SET ");
+
+		Set<String> keys = paramJson.keySet();
+		Iterator<String> it = keys.iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			// 排除更新条件
+			if (!ArrayUtil.contains(conditions, key)) {
+				sql.append(dialect.getWrapper().wrap(key));
+				sql.append(" = ");
+				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {// 递增更新
+					sql.append(dialect.getWrapper().wrap(key));
+					sql.append(" + :");
+				} else if (dBUpdateEnum == DbUpdateEnum.DECR // 递减更新
+						|| dBUpdateEnum == DbUpdateEnum.DECR_UNSIGNED) {// 递减-无符号更新
+					sql.append(dialect.getWrapper().wrap(key));
+					sql.append(" - :");
+				} else {// 正常更新
+					sql.append(":");
+				}
+				sql.append(key);
+				sql.append(", ");
+			}
+		}
+		sql = new StringBuffer(StringUtils.deleteLastEqualString(sql, ", "));
+		String whereSql = paramToWhereSql(paramJson, conditions);
+		sql.append(whereSql);
+
+		if (dBUpdateEnum == DbUpdateEnum.DECR_UNSIGNED) {// 递减-无符号更新
+			List<String> updateKeys = MapUtils.keyList(paramJson);
+			for (String key : updateKeys) {
+				// 排除更新条件
+				if (!ArrayUtil.contains(conditions, key)) {
+					sql.append(" AND ");
+					sql.append(dialect.getWrapper().wrap(key));
+					sql.append(" >= :");
+					sql.append(key);
+				}
+			}
+		}
+
+		return sql.toString();
 	}
 
 	/**
@@ -340,10 +394,10 @@ class DbUpdate extends DbQuery {
 	/**
 	 * <b>更新-排序</b><br>
 	 * <i>使用限制：见</i> {@linkplain DbInsert#insertWithSortIdxAutoIncrement(String, JSONObject, String...)}
-	 * <p>
-	 * @param tableName 表名
-	 * @param id 主键ID
-	 * @param move sort_idx移动位数（值不可等于零，正整数表示：向后移动几位，负整数表示：向前移动几位）
+	 *
+	 * @param tableName  表名
+	 * @param id         主键ID
+	 * @param move       sort_idx移动位数（值不可等于零，正整数表示：向后移动几位，负整数表示：向前移动几位）
 	 * @param uniqueKeys 同sort_idx字段组合的唯一约束keys（表中不建议建立sort_idx字段的唯一约束，但可以建立普通索引，以便于提高查询性能），<b>可选参数</b>
 	 */
 	@Transactional
@@ -355,25 +409,23 @@ class DbUpdate extends DbQuery {
 		}
 		
 		// 2. 获得当前排序索引
-		String id_key = "id";
-		String sort_idx_key = "sort_idx";
 		JSONObject sortJson = getById(tableName, id);
-		int sortIdx = sortJson.getInteger(sort_idx_key);
-		int updateSortIdx = sortIdx + move;
+		long sortIdx = sortJson.getLongValue(DbConstant.FIELD_DEFINITION_SORT_IDX);
+		long updateSortIdx = sortIdx + move;
 		if (updateSortIdx < 1) {
 			throw new DbException("排序后的索引值不能小于1");
 		}
 		
 		// 3. 确认排序方式
-		List<Integer> updateSortList = new ArrayList<>();
+		List<Long> updateSortList = new ArrayList<>();
 		boolean isASC = false;
 		if (updateSortIdx > sortIdx) {// 升序
 			isASC = true;
-			for (int i = updateSortIdx; i > sortIdx; i--) {
+			for (long i = updateSortIdx; i > sortIdx; i--) {
 				updateSortList.add(i);
 			}
 		} else {// 降序
-			for (int i = updateSortIdx; i < sortIdx; i++) {
+			for (long i = updateSortIdx; i < sortIdx; i++) {
 				updateSortList.add(i);
 			}
 		}
@@ -382,33 +434,33 @@ class DbUpdate extends DbQuery {
 		JSONObject paramJson = new JSONObject();
 		if (ArrayUtil.isNotEmpty(uniqueKeys)) {
 			for (String uniqueKey : uniqueKeys) {
-				var uniqueValue = sortJson.get(uniqueKey);
+				Object uniqueValue = sortJson.get(uniqueKey);
 				paramJson.put(uniqueKey, uniqueValue);
 			}
 		}
-		paramJson.put(sort_idx_key, updateSortList);
+		paramJson.put(DbConstant.FIELD_DEFINITION_SORT_IDX, updateSortList);
 		List<JSONObject> list = list(tableName, paramJson);
 		
 		// 5. 组装跟随移动参数到参数列表
 		JSONArray paramJsonArray = new JSONArray();
 		for (JSONObject actionJSON : list) {
-			Long actionId = actionJSON.getLong(id_key);
-			Integer actionSort = actionJSON.getInteger(sort_idx_key);
+			Long actionId = actionJSON.getLong(DbConstant.PRIMARY_KEY);
+			Long actionSort = actionJSON.getLong(DbConstant.FIELD_DEFINITION_SORT_IDX);
 			if (isASC) {
 				actionSort -= 1;
 			} else {
 				actionSort += 1;
 			}
 			JSONObject actionParamJSON = new JSONObject();
-			actionParamJSON.put(id_key, actionId);
-			actionParamJSON.put(sort_idx_key, actionSort);
+			actionParamJSON.put(DbConstant.PRIMARY_KEY, actionId);
+			actionParamJSON.put(DbConstant.FIELD_DEFINITION_SORT_IDX, actionSort);
 			paramJsonArray.add(actionParamJSON);
 		}
 		
 		// 6. 添加排序更新参数到参数列表
 		JSONObject updateSortParam = new JSONObject();
-		updateSortParam.put(id_key, id);
-		updateSortParam.put(sort_idx_key, updateSortIdx);
+		updateSortParam.put(DbConstant.PRIMARY_KEY, id);
+		updateSortParam.put(DbConstant.FIELD_DEFINITION_SORT_IDX, updateSortIdx);
 		paramJsonArray.add(updateSortParam);
 		
 		// 7. 排序更新

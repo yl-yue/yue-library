@@ -220,7 +220,7 @@ class DbDelete extends DbUpdate {
 		paramJson.put(DbConstant.FIELD_DEFINITION_DELETE_TIME, System.currentTimeMillis());
 		
 		// 3. 返回结果
-		return dialect.updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+		return updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
 	}
 
 	private void deleteLogicByUk(String tableName, Object uk) {
@@ -289,7 +289,7 @@ class DbDelete extends DbUpdate {
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
-		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
+		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
 	/**

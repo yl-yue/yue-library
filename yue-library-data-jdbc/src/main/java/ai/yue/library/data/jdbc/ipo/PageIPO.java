@@ -1,17 +1,12 @@
 package ai.yue.library.data.jdbc.ipo;
 
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.view.ResultPrompt;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import com.alibaba.fastjson.JSONObject;
+import lombok.*;
 
 /**
- * 分页请求对象，用于SQL分页查询请求
+ * 分页查询参数
  * 
  * @author	ylyue
  * @since	2018年4月13日

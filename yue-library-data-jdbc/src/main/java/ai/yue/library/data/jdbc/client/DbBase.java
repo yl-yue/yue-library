@@ -10,6 +10,7 @@ import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
+import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,9 +24,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -84,12 +85,135 @@ public class DbBase {
         return dialect.getJdbcProperties();
     }
 
-    @NotNull
     public <T> RowMapper<T> getRowMapper(Class<T> mappedClass) {
-        RowMapper<T> rowMapper = ClassUtils.isSimpleValueType(mappedClass) ?
-                SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
+        RowMapper<T> rowMapper;
+        if (mappedClass == null || Map.class.isAssignableFrom(mappedClass)) {
+            rowMapper = (RowMapper<T>) new ColumnMapRowMapper();
+        } else {
+            rowMapper = ClassUtils.isSimpleValueType(mappedClass) ? SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
+        }
+
         return rowMapper;
     }
+
+    /**
+     * <b>多行查询结果转换为单行查询结果</b>
+     * <p>为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取</p>
+     * <p>为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取</p>
+     *
+     * @param list 多行查询结果
+     * @return 根据如下规则，返回正确的单行查询结果：
+     * <ol>
+     *     <li>size < 1 return null</li>
+     *     <li>size = 1 return list.get(0)</li>
+     *     <li>size > 1 throw Exception</li>
+     * </ol>
+     */
+    public <T> T listResultToGetResult(List<T> list) {
+        int size = list.size();
+        int expectedValue = 1;
+        if (size != expectedValue) {
+            if (size > expectedValue) {
+                throw new DbException(ResultPrompt.dataStructure(expectedValue, size), true);
+            }
+
+            return null;
+        }
+
+        return list.get(0);
+    }
+
+    /**
+     * 为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取
+     *
+     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
+     * @param list {@linkplain DbQuery#queryForList(String, JSONObject)} 查询结果
+     * @return JSON数据
+     */
+    @Deprecated
+    public JSONObject resultToJson(List<JSONObject> list) {
+        return listResultToGetResult(list);
+    }
+
+    /**
+     * 为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取
+     *
+     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
+     * @param <T>  泛型
+     * @param list {@linkplain DbQuery#queryForList(String, JSONObject, Class)} 查询结果
+     * @return POJO对象
+     */
+    @Deprecated
+    public <T> T resultToObject(List<T> list) {
+        return listResultToGetResult(list);
+    }
+
+    // queryFor
+
+    /**
+     * <b>查询一行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForMap(String, Map)} 方法的优化实现</p>
+     *
+     * @param sql       要执行的SQL查询
+     * @param paramJson 要绑定到查询的参数映射
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
+     */
+    public JSONObject queryForJson(String sql, JSONObject paramJson) {
+        return queryForObject(sql, paramJson, null);
+    }
+
+    /**
+     * <b>查询一行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, org.springframework.jdbc.core.RowMapper)} 方法的优化实现</p>
+     *
+     * @param sql         要执行的SQL查询
+     * @param paramJson   要绑定到查询的参数映射
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
+     */
+    public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
+        List<T> list = queryForList(sql, paramJson, mappedClass);
+        return listResultToGetResult(list);
+    }
+
+    /**
+     * <b>查询多行数据</b>
+     * <p>同 {@linkplain NamedParameterJdbcTemplate#queryForRowSet(String, Map)}</p>
+     *
+     * @param sql       要执行的SQL查询
+     * @param paramJson 要绑定到查询的参数映射
+     * @return 可用于方便的获取各种数据类型的结果集
+     */
+    public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
+        return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
+    }
+
+    /**
+     * <b>查询多行数据</b>
+     * <p>对 {@link NamedParameterJdbcTemplate#queryForList(String, Map)} 方法的优化实现</p>
+     *
+     * @param sql       要执行的查询SQL
+     * @param paramJson 要绑定到查询的参数映射
+     * @return 多行查询结果
+     */
+    public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
+        return queryForList(sql, paramJson, null);
+    }
+
+    /**
+     * <b>查询多行数据</b>
+     * <p>对 {@linkplain NamedParameterJdbcTemplate#queryForList(String, Map, Class)} 方法的优化实现</p>
+     *
+     * @param sql         要执行的查询SQL
+     * @param paramJson   要绑定到查询的参数映射
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @return 多行查询结果
+     */
+    public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
+        return getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass));
+    }
+
+    // is
 
     /**
      * 是否有数据
@@ -168,7 +292,7 @@ public class DbBase {
      * @param expectedValue    预期值
      */
     public void updateAndExpectedGreaterThanEqual(long updateRowsNumber, int expectedValue) {
-        if (!(updateRowsNumber >= expectedValue)) {
+        if (updateRowsNumber < expectedValue) {
             String msg = ResultPrompt.dataStructure(">= " + expectedValue, updateRowsNumber);
             throw new DbException(msg);
         }
@@ -190,58 +314,6 @@ public class DbBase {
                 throw new DbException(msg);
             }
         }
-    }
-
-    /**
-     * <b>多行查询结果转换为单行查询结果</b>
-     * <p>为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取</p>
-     * <p>为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取</p>
-     *
-     * @param list 多行查询结果
-     * @return 根据如下规则，返回正确的单行查询结果：
-     * <ol>
-     *     <li>size < 1 return null</li>
-     *     <li>size = 1 return list.get(0)</li>
-     *     <li>size > 1 throw Exception</li>
-     * </ol>
-     */
-    public <T> T listResultToGetResult(List<T> list) {
-        int size = list.size();
-        int expectedValue = 1;
-        if (size != expectedValue) {
-            if (size > expectedValue) {
-                throw new DbException(ResultPrompt.dataStructure(expectedValue, size), true);
-            }
-
-            return null;
-        }
-
-        return list.get(0);
-    }
-
-    /**
-     * 为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取
-     *
-     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
-     * @param list {@linkplain DbQuery#queryForList(String, JSONObject)} 查询结果
-     * @return JSON数据
-     */
-    @Deprecated
-    public JSONObject resultToJson(List<JSONObject> list) {
-        return listResultToGetResult(list);
-    }
-
-    /**
-     * 为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取
-     *
-     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
-     * @param <T>  泛型
-     * @param list {@linkplain DbQuery#queryForList(String, JSONObject, Class)} 查询结果
-     * @return POJO对象
-     */
-    @Deprecated
-    public <T> T resultToObject(List<T> list) {
-        return listResultToGetResult(list);
     }
 
     // WHERE SQL
@@ -334,9 +406,7 @@ public class DbBase {
             whereSql.append(" WHERE 1 = 1 ");
         }
 
-        paramJson.keySet().forEach(condition -> {
-            paramToWhereSql(whereSql, paramJson, condition);
-        });
+        paramJson.keySet().forEach(condition -> paramToWhereSql(whereSql, paramJson, condition));
 
         return whereSql.toString();
     }

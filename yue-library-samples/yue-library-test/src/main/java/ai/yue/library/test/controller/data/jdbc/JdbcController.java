@@ -3,6 +3,7 @@ package ai.yue.library.test.controller.data.jdbc;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.client.Db;
+import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.test.constant.RoleEnum;
 import ai.yue.library.test.constant.UserStatusEnum;
 import ai.yue.library.test.dao.data.jdbc.CloneOneDAO;
@@ -37,44 +38,10 @@ public class JdbcController {
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	String tableName = "user";
-	
-	@GetMapping("/getMetaData")
-	public Result<?> getMetaData() {
-		SqlRowSetMetaData metaData = db.getMetaData("user");
-		int columnCount = metaData.getColumnCount();
-		for (int i = 1; i <= columnCount; i++) {  
-			Map<String,String> fieldMap = new HashMap<String,String>();
-			fieldMap.put("ColumnName", metaData.getColumnName(i));
-			fieldMap.put("ColumnType", String.valueOf(metaData.getColumnType(i)));
-			fieldMap.put("ColumnTypeName", metaData.getColumnTypeName(i));
-			fieldMap.put("CatalogName", metaData.getCatalogName(i));
-			fieldMap.put("ColumnClassName", metaData.getColumnClassName(i));
-			fieldMap.put("ColumnLabel", metaData.getColumnLabel(i));
-			fieldMap.put("Precision", String.valueOf(metaData.getPrecision(i)));
-			fieldMap.put("Scale", String.valueOf(metaData.getScale(i)));
-			fieldMap.put("SchemaName", metaData.getSchemaName(i));
-			fieldMap.put("TableName", metaData.getTableName(i));
-			fieldMap.put("SchemaName", metaData.getSchemaName(i));
-			System.out.println(fieldMap);
-		}
-		
-		return R.success();
-	}
-	
-	/**
-	 * 
-	 * @param userDO
-	 * @return
-	 */
+
 	@PostMapping("/insert")
 	public Result<?> insert(UserDO userDO) {
 		return R.success(jdbcDAO.insert(userDO));
-	}
-
-	@PostMapping("/get")
-	public Result<?> get(UserDO userDO) {
-		return R.success(jdbcDAO.get(userDO.getUserId()));
-//		return R.success(jdbcDAO.insert(userDO));
 	}
 
 //	@PostMapping("/insertSql")
@@ -126,6 +93,45 @@ public class JdbcController {
 	@DeleteMapping("/deleteParamJson")
 	public Result<?> delete(JSONObject paramJson) {
 		return R.success(db.delete(tableName, paramJson));
+	}
+
+	@GetMapping("/getMetaData")
+	public Result<?> getMetaData() {
+		SqlRowSetMetaData metaData = db.getMetaData("user");
+		int columnCount = metaData.getColumnCount();
+		for (int i = 1; i <= columnCount; i++) {
+			Map<String,String> fieldMap = new HashMap<String,String>();
+			fieldMap.put("ColumnName", metaData.getColumnName(i));
+			fieldMap.put("ColumnType", String.valueOf(metaData.getColumnType(i)));
+			fieldMap.put("ColumnTypeName", metaData.getColumnTypeName(i));
+			fieldMap.put("CatalogName", metaData.getCatalogName(i));
+			fieldMap.put("ColumnClassName", metaData.getColumnClassName(i));
+			fieldMap.put("ColumnLabel", metaData.getColumnLabel(i));
+			fieldMap.put("Precision", String.valueOf(metaData.getPrecision(i)));
+			fieldMap.put("Scale", String.valueOf(metaData.getScale(i)));
+			fieldMap.put("SchemaName", metaData.getSchemaName(i));
+			fieldMap.put("TableName", metaData.getTableName(i));
+			fieldMap.put("SchemaName", metaData.getSchemaName(i));
+			System.out.println(fieldMap);
+		}
+
+		return R.success(metaData);
+	}
+
+	@GetMapping("/query")
+	public Result<?> query(Long id) {
+		// 单个
+		System.out.println(db.getById(tableName, id));
+		System.out.println(db.getById(tableName, id, UserDO.class));
+		System.out.println(db.queryForObject("select id from user where id = 999", null, Long.class));
+
+		// 分页
+		PageIPO pageIPO = PageIPO.builder().page(1).limit(10).build();
+		System.out.println(db.page(tableName, pageIPO));
+		System.out.println(db.page(tableName, pageIPO, UserDO.class));
+
+		// 返回结果
+		return R.success(jdbcDAO.get(id));
 	}
 
 	/**

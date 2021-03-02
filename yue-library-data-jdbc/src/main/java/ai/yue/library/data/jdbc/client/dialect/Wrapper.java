@@ -1,10 +1,5 @@
 package ai.yue.library.data.jdbc.client.dialect;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.collection.CollectionUtil;
@@ -12,6 +7,10 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * <b>包装器</b>
@@ -185,26 +184,6 @@ public class Wrapper {
 		
 		return paramJsons;
 	}
-	
-//	/**
-//	 * 包装字段名<br>
-//	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
-//	 * @param conditions 被包装的实体
-//	 * @return 包装后的字段名
-//	 */
-//	public Condition[] wrap(Condition... conditions){
-//		final Condition[] clonedConditions = new Condition[conditions.length];
-//		if(ArrayUtil.isNotEmpty(conditions)) {
-//			Condition clonedCondition;
-//			for(int i = 0; i < conditions.length; i++) {
-//				clonedCondition = conditions[i].clone();
-//				clonedCondition.setField(wrap(clonedCondition.getField()));
-//				clonedConditions[i] = clonedCondition;
-//			}
-//		}
-//		
-//		return clonedConditions;
-//	}
 	
 	/**
 	 * 去除字段包装

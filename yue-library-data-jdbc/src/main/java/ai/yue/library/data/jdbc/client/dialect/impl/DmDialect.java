@@ -11,19 +11,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.sql.DataSource;
 
 /**
- * MySQL方言
+ * DM_SQL（达梦数据库）方言
  * 
  * @author	ylyue
  * @since	2020年6月13日
  */
 @Slf4j
-public class MysqlDialect extends AnsiDialect {
+public class DmDialect extends AnsiDialect {
 	
 	private static final long serialVersionUID = -3734718212043823636L;
-
-	public MysqlDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
+	
+	public DmDialect(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
 		super(namedParameterJdbcTemplate, jdbcProperties);
-		super.wrapper = new Wrapper('`');
+		super.wrapper = new Wrapper('"');
 		super.dialect = this;
 	}
 
@@ -33,15 +33,15 @@ public class MysqlDialect extends AnsiDialect {
 	}
 
 	@Override
-	public MysqlDialect clone() {
+	public DmDialect clone() {
 		log.info("执行{}，深度克隆。", getClass());
 		DataSource dataSource = ObjectUtils.cloneIfPossible(getNamedParameterJdbcTemplate().getJdbcTemplate().getDataSource());
-		return new MysqlDialect(new NamedParameterJdbcTemplate(dataSource), jdbcProperties.clone());
+		return new DmDialect(new NamedParameterJdbcTemplate(dataSource), jdbcProperties.clone());
 	}
 
 	@Override
 	public DialectNameEnum dialectName() {
-		return DialectNameEnum.MYSQL;
+		return DialectNameEnum.DM;
 	}
 
 }

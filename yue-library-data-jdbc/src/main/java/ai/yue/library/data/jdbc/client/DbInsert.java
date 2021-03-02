@@ -112,28 +112,23 @@ class DbInsert extends DbDelete {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
-		String sortFieldName = "sort_idx";
-		String sortFieldNameWrapped = dialect.getWrapper().wrap(sortFieldName);
+		String fieldDefinitionSortIdxWrapped = dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_SORT_IDX);
 		paramFormat(paramJson);
 
 		// 2. 组装最大sort_idx值查询SQL
-		int sort_idx = 1;
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT " + sortFieldNameWrapped + " FROM ");
+		sql.append("SELECT " + fieldDefinitionSortIdxWrapped + " FROM ");
 		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramJson, uniqueKeys);
-		sql.append(whereSql);
-		sql.append(" ORDER BY " + sortFieldNameWrapped + " DESC LIMIT 1");
-		
+		sql.append(paramToWhereSql(paramJson, uniqueKeys));
+		sql.append(" ORDER BY " + fieldDefinitionSortIdxWrapped + " DESC LIMIT 1");
+
 		// 3. 查询最大sort_idx值
 		paramJson = dialect.getWrapper().wrap(paramJson);
-		JSONObject result = queryForJson(sql.toString(), paramJson);
-		if (result != null) {
-			sort_idx = result.getInteger(sortFieldName) + 1;
-		}
-		
+		Long sort_idx = queryForObject(sql.toString(), paramJson, Long.class);
+		sort_idx = sort_idx == null ? 1L : sort_idx++;
+
 		// 4. put sort_idx值
-		paramJson.put(sortFieldNameWrapped, sort_idx);
+		paramJson.put(fieldDefinitionSortIdxWrapped, sort_idx);
 		
 		// 5. 执行
 		return insert(tableName, paramJson);

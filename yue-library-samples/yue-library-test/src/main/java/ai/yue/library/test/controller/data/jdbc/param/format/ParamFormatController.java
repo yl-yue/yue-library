@@ -76,8 +76,7 @@ public class ParamFormatController {
     public Result<?> updateByIdNotParamFormat(ParamFormatIPO paramFormatIPO) {
         String[] conditions = { DbConstant.PRIMARY_KEY };
         JSONObject paramJson = Convert.toJSONObject(paramFormatIPO);
-        String sql = db.getDialect().updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
-        int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
+        Long updateRowsNumber = db.update(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         int expectedValue = 1;
         db.updateAndExpectedEqual(updateRowsNumber, expectedValue);
         return R.success();
