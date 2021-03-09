@@ -606,6 +606,12 @@ public class MapUtils extends MapUtil {
 	 * @throws Exception
 	 */
 	private static Object getValue(Object obj, String name) {
+		//判断是否键值对
+		if(obj instanceof JSONObject){
+			return ((JSONObject)obj).get(name);
+		}else if(obj instanceof  Map){
+			return ((Map)obj).get(name);
+		}
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(obj.getClass());
