@@ -8,6 +8,7 @@ import ai.yue.library.data.jdbc.client.dialect.impl.MysqlDialect;
 import ai.yue.library.data.jdbc.client.dialect.impl.PostgresqlDialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidPooledConnection;
 import com.alibaba.druid.util.JdbcConstants;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -36,9 +37,19 @@ public class JdbcAutoConfig {
 	@ConditionalOnBean({NamedParameterJdbcTemplate.class})
 	public Db db(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcProperties jdbcProperties) {
 		DataSource dataSource = namedParameterJdbcTemplate.getJdbcTemplate().getDataSource();
+		DruidDataSource druidDataSource = null;
+		try {
+			if (dataSource instanceof DruidDataSource) {
+				druidDataSource = (DruidDataSource) dataSource;
+			} else {
+				druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
+			}
+		} catch (Exception e) {
+			// ignore
+		}
 		Dialect dialect;
-		if (dataSource instanceof DruidDataSource) {
-			String dbType = ((DruidDataSource) dataSource).getDbType();
+		if (druidDataSource != null) {
+			String dbType = druidDataSource.getDbType();
 			if (JdbcConstants.MYSQL.equalsIgnoreCase(dbType)) {
 				dialect = new MysqlDialect(namedParameterJdbcTemplate, jdbcProperties);
 			} else if (JdbcConstants.POSTGRESQL.equalsIgnoreCase(dbType)) {

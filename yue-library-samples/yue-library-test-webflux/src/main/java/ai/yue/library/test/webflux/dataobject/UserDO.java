@@ -1,13 +1,13 @@
 package ai.yue.library.test.webflux.dataobject;
 
-import java.time.LocalDate;
-
-import ai.yue.library.data.jdbc.dataobject.BaseLowerCamelCaseDO;
+import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
 import ai.yue.library.test.webflux.constant.RoleEnum;
 import ai.yue.library.test.webflux.constant.UserStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import java.time.LocalDate;
 
 /**
  * @author	ylyue
@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserDO extends BaseLowerCamelCaseDO {
+public class UserDO extends BaseCamelCaseDO {
 
 	private static final long serialVersionUID = 7476666037783878036L;
 	

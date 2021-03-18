@@ -2,7 +2,7 @@ package ai.yue.library.template.simple.dataobject.user;
 
 import java.time.LocalDate;
 
-import ai.yue.library.data.jdbc.dataobject.BaseLowerCamelCaseDO;
+import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
 import ai.yue.library.template.simple.constant.user.RoleEnum;
 import ai.yue.library.template.simple.constant.user.UserStatusEnum;
 import lombok.Data;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserDO extends BaseLowerCamelCaseDO {
+public class UserDO extends BaseCamelCaseDO {
 
 	private static final long serialVersionUID = 908912816212643805L;
 	

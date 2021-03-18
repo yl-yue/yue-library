@@ -1,5 +1,6 @@
 package ai.yue.library.data.jdbc.client;
 
+import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
@@ -7,6 +8,7 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.config.properties.DataEncrypt;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
@@ -27,6 +29,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -362,7 +365,7 @@ public class DbBase {
      * @param conditions where条件（对应paramJson key）
      * @return whereSql
      */
-    protected String paramToWhereSql(JSONObject paramJson, String... conditions) {
+    public String paramToWhereSql(JSONObject paramJson, String... conditions) {
         StringBuffer whereSql = new StringBuffer();
         whereSql.append(" WHERE 1 = 1 ");
         if (ArrayUtil.isNotEmpty(conditions)) {
@@ -409,6 +412,20 @@ public class DbBase {
         paramJson.keySet().forEach(condition -> paramToWhereSql(whereSql, paramJson, condition));
 
         return whereSql.toString();
+    }
+
+    /**
+     * @return 逻辑删除条件SQL
+     */
+    public String getDeleteWhereSql() {
+        StringBuffer sql = new StringBuffer();
+        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
+            sql.append(" WHERE ")
+                    .append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+        }
+
+        return sql.toString();
     }
 
     // ParamValidate
@@ -540,8 +557,10 @@ public class DbBase {
     // paramFormat
 
     /**
-     * 参数美化（对SpringJDBC不支持的类型进行转换）
+     * 参数美化（对SpringJDBC不支持的类型进行转换与布尔值映射识别）
+     * <p>Character 转 String</p>
      * <p>JSONObject 转 JsonString</p>
+     * <p>LocalDataTime 转 Date</p>
      *
      * @param paramJson 需要进行类型处理的paramJson
      */
@@ -566,6 +585,8 @@ public class DbBase {
             Class<?> valueClass = value.getClass();
             if (valueClass == JSONObject.class) {
                 formatValue = ((JSONObject) value).toJSONString();
+            } else if (valueClass == Character.class || valueClass == LocalDateTime.class) {
+                formatValue = value.toString();
             }
 
             // 3. 布尔值映射识别
@@ -590,6 +611,40 @@ public class DbBase {
         }
 
         paramJson.fluentClear().putAll(paramFormatJson);
+    }
+
+    // ========== 数据脱敏、JDBC审计 ==========
+
+    protected void aop(String tableName, JSONObject paramJson) {
+
+    }
+
+    protected void dataEncrypt(String tableName, JSONObject paramJson) {
+        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
+        if (ListUtils.isNotEmpty(dataEncryptConfigList)) {
+            for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
+                String dataEncryptTableName = dataEncryptConfig.getTableName();
+                if (tableName.equalsIgnoreCase(dataEncryptTableName)) {
+                    List<String> fieldNameList = dataEncryptConfig.getFieldNames();
+                    for (String fieldName : fieldNameList) {
+                        paramJson.replace(fieldName, SecureSingleton.getAES().encryptBase64(paramJson.getString(fieldName)));
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    protected void audit(String tableName, JSONObject paramJson) {
+        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
+        if (ListUtils.isNotEmpty(auditTableNames)) {
+            for (String auditTableName : auditTableNames) {
+                if (tableName.equalsIgnoreCase(auditTableName)) {
+                    paramJson.put("","");
+                }
+            }
+        }
     }
 
 }

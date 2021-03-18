@@ -104,9 +104,9 @@ public T getByBusinessUk(String businessUkValue) {
 // 列表-全部
 public List<T> listAll() {
 // 分页
-public PageTVO<T> page(PageIPO pageIPO) {
+public PageVO<T> page(PageIPO pageIPO) {
 // 分页-降序
-public PageTVO<T> pageDESC(PageIPO pageIPO) {
+public PageVO<T> pageDESC(PageIPO pageIPO) {
 ```
 
 ## 其他
