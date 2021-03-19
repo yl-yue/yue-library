@@ -134,6 +134,22 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
+     * 获得总数
+     *
+     * @param tableName 表名
+     * @return 总数
+     */
+    public long getCount(String tableName) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT count(*) count FROM ");
+        sql.append(tableName);
+        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
+            sql.append(getDeleteWhereSql());
+        }
+        return queryForObject(sql.toString(), null, Long.class);
+    }
+
+    /**
      * 单个-ById
      * <p>字段名=id，一般为表自增ID-主键</p>
      * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String)}</p>
