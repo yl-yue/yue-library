@@ -1,6 +1,7 @@
 package ai.yue.library.base.convert;
 
 import ai.yue.library.base.convert.converter.JSONArrayConverter;
+import ai.yue.library.base.convert.converter.JSONListConverter;
 import ai.yue.library.base.convert.converter.JSONObjectConverter;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
@@ -42,6 +43,8 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		ConverterRegistry converterRegistry = ConverterRegistry.getInstance();
 		converterRegistry.putCustom(JSONObject.class, JSONObjectConverter.class);
 		converterRegistry.putCustom(JSONArray.class, JSONArrayConverter.class);
+		JSONListConverter jsonListConverter = new JSONListConverter();
+		converterRegistry.putCustom(jsonListConverter.getRegistryType(), jsonListConverter);
 	}
 	
 	// --------------------------------------- 覆盖hutool转换方法，防止直接调用父类静态方法，导致因为本类未加载，从而自定义转换器未注册
@@ -248,7 +251,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 			if (value instanceof String) {
 				return JSONObject.parseObject((String) value, clazz);
 			}
-			
+
 			return castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
