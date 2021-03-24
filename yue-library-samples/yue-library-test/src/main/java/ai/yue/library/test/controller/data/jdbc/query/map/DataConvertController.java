@@ -1,5 +1,6 @@
 package ai.yue.library.test.controller.data.jdbc.query.map;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import com.alibaba.fastjson.JSONArray;
@@ -28,13 +29,13 @@ public class DataConvertController {
 	public Result<?> get(@PathVariable Long id) {
 		PersonDO personDO = personDAO.get(id);
 		System.out.println(personDO);
-//		PersonVO personVO = Convert.toJavaBean(personDO, PersonVO.class);
-//		System.out.println(personVO);
+		PersonVO personVO = Convert.toJavaBean(personDO, PersonVO.class);
+		System.out.println(personVO);
 		PersonVO personVO2 = personDAO.getPersonVO(id);
-//		System.out.println(personVO2);
-		return R.success(personDO);
+		System.out.println(personVO2);
+//		return R.success(personDO);
 //		return R.success(personVO);
-//		return R.success(personVO2);
+		return R.success(personVO2);
 	}
 
 	public static void main(String[] args) {

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import static com.alibaba.fastjson.JSON.toJSON;
 import static com.alibaba.fastjson.util.TypeUtils.cast;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
 
 /**
  * <b>类型转换器</b>
@@ -252,7 +251,8 @@ public class Convert extends cn.hutool.core.convert.Convert {
 				return JSONObject.parseObject((String) value, clazz);
 			}
 
-			return castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
+//			return TypeUtils.castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
+			return YueTypeUtils.castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
 				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");

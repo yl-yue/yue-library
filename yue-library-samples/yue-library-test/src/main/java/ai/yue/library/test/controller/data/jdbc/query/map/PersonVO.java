@@ -171,7 +171,7 @@ public class PersonVO implements Serializable {
     /**
      * 人员状态
      */
-    private String personStatus;
+    private PersonStatusEnum personStatus;
 
     /**
      * 扩展信息
