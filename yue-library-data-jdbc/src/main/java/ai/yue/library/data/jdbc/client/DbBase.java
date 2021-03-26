@@ -16,6 +16,7 @@ import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import lombok.Getter;
@@ -31,6 +32,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -421,8 +423,9 @@ public class DbBase {
         StringBuffer sql = new StringBuffer();
         if (getJdbcProperties().isEnableDeleteQueryFilter()) {
             sql.append(" WHERE ")
-                    .append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
-                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+            .append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+            .append(" = ")
+            .append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
         }
 
         return sql.toString();
@@ -585,8 +588,15 @@ public class DbBase {
             Class<?> valueClass = value.getClass();
             if (valueClass == JSONObject.class) {
                 formatValue = ((JSONObject) value).toJSONString();
+            } else if (valueClass == JSONArray.class) {
+                formatValue = ((JSONArray) value).toJSONString();
             } else if (valueClass == Character.class || valueClass == LocalDateTime.class) {
                 formatValue = value.toString();
+            } else if (value instanceof List && ListUtils.isNotEmpty(Collections.singletonList(value))) {
+                Object assertMap = ((List<?>) value).get(0);
+                if (assertMap instanceof Map) {
+                    formatValue = JSONObject.toJSONString(value);
+                }
             }
 
             // 3. 布尔值映射识别

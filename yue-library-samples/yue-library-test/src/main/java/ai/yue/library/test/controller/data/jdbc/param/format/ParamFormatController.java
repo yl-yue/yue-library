@@ -8,6 +8,7 @@ import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.test.ipo.ParamFormatIPO;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -94,6 +95,8 @@ public class ParamFormatController {
         Character character = paramFormatIPO.getCharacter();
         LocalDateTime localDateTime = paramFormatIPO.getLocalDateTime();
         JSONObject jsonObject = paramFormatIPO.getJsonObject();
+        List<JSONObject> jsonObjectList = paramFormatIPO.getJsonObjectList();
+        JSONArray jsonArray = paramFormatIPO.getJsonArray();
         JSONObject paramJson = new JSONObject();
         if (id != null) {
             paramJson.put("id", id);
@@ -101,6 +104,8 @@ public class ParamFormatController {
         paramJson.put("character", character);
         paramJson.put("localDateTime", localDateTime);
         paramJson.put("jsonObject", jsonObject);
+        paramJson.put("jsonObjectList", jsonObjectList);
+        paramJson.put("jsonArray", jsonArray);
         return paramJson;
     }
 

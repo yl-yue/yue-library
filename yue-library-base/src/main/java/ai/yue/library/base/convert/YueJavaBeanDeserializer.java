@@ -1400,7 +1400,7 @@ public class YueJavaBeanDeserializer implements ObjectDeserializer {
                             || (fieldAnnation != null && fieldAnnation.deserializeUsing() != Void.class))
                 ) {
 //                    DefaultJSONParser parser = new DefaultJSONParser(JSON.toJSONString(value));
-                    if (fieldInfo.isEnum) {
+                    if (fieldInfo.isEnum || fieldClass == Character.class) {
                         value = TypeUtils.cast(value, paramType, config);
                         fieldDeser.setValue(object, value);
                     } else {

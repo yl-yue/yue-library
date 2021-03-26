@@ -42,8 +42,10 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		ConverterRegistry converterRegistry = ConverterRegistry.getInstance();
 		converterRegistry.putCustom(JSONObject.class, JSONObjectConverter.class);
 		converterRegistry.putCustom(JSONArray.class, JSONArrayConverter.class);
-		JSONListConverter jsonListConverter = new JSONListConverter();
-		converterRegistry.putCustom(jsonListConverter.getRegistryType(), jsonListConverter);
+		List<Type> registryTypes = JSONListConverter.getRegistryTypes();
+		for (Type registryType : registryTypes) {
+			converterRegistry.putCustom(registryType, JSONListConverter.class);
+		}
 	}
 	
 	// --------------------------------------- 覆盖hutool转换方法，防止直接调用父类静态方法，导致因为本类未加载，从而自定义转换器未注册
