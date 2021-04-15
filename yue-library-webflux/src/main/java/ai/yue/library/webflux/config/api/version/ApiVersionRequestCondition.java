@@ -42,20 +42,24 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     	String requestURI = serverHttpRequest.getURI().getPath();
     	String[] versionPaths = StringUtils.split(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
-		
-		// 如果当前url中传递的版本信息高于(或等于)申明(或默认)版本，则用url的版本
+
+		// pathVersion的值大于等于apiVersionValue皆可匹配，除非ApiVersion的deprecated值已被标注为true
 		double apiVersionValue = this.getApiVersion().value();
 		if (pathVersion >= apiVersionValue) {
 			double minimumVersion = apiVersionProperties.getMinimumVersion();
-			if ((this.getApiVersion().deprecated() || minimumVersion >= pathVersion) && pathVersion == apiVersionValue) {
+			if ((this.getApiVersion().deprecated() || minimumVersion > pathVersion) && NumberUtil.equals(pathVersion, apiVersionValue)) {
+				// 匹配到弃用版本接口
 				throw new ApiVersionDeprecatedException(StrUtil.format("客户端调用弃用版本API接口，requestURI：{}", requestURI));
 			} else if (this.getApiVersion().deprecated()) {
+				// 继续匹配
 				return null;
 			}
-            
+
+			// 匹配成功
 			return this;
 		}
-		
+
+		// 继续匹配
 		return null;
 	}
     

@@ -1,18 +1,18 @@
 package ai.yue.library.data.redis.client;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-
 import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.redis.constant.RedisConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <h2>简单Redis</h2>
@@ -30,18 +30,19 @@ public class Redis {
 	StringRedisTemplate stringRedisTemplate;
 	
 	// Redis分布式锁
-	
+
 	/**
 	 * Redis分布式锁-加锁
-	 * <p>可用于实现接口幂等性、秒杀业务等场景需求
-	 * 
-	 * @param lockKey 分布式锁的key（唯一性）
-	 * @param lockTimeout 当前时间戳 + 超时毫秒
+	 * <p>可用于实现接口幂等性、秒杀、库存加锁等业务场景需求
+	 * <p>注意：服务器集群间需进行时间同步，保障分布式锁的时序性</p>
+	 *
+	 * @param lockKey          分布式锁的key（唯一性）
+	 * @param lockTimeoutStamp 分布式锁的超时时间戳（<code style="color:red">当前时间戳 + 超时毫秒</code>，推荐使用：{@link DateUtils#getTimestamp(int)} 生成此变量）
 	 * @return 是否成功拿到锁
 	 */
-	public boolean lock(String lockKey, Long lockTimeout) {
-		String value = lockTimeout.toString();
+	public boolean lock(String lockKey, Long lockTimeoutStamp) {
 		// 1. 设置锁
+		String value = lockTimeoutStamp.toString();
 		if (stringRedisTemplate.opsForValue().setIfAbsent(lockKey, value)) {
 			return true;
 		}
@@ -57,17 +58,18 @@ public class Redis {
 				return true;
 			}
 		}
+
 		return false;
 	}
-	
+
 	/**
 	 * Redis分布式锁-解锁
-	 * 
-	 * @param lockKey 分布式锁的key（唯一性）
-	 * @param lockTimeout 加锁时使用的超时时间戳
+	 *
+	 * @param lockKey          分布式锁的key（唯一性）
+	 * @param lockTimeoutStamp 加锁时使用的超时时间戳
 	 */
-	public void unlock(String lockKey, Long lockTimeout) {
-		String value = lockTimeout.toString();
+	public void unlock(String lockKey, Long lockTimeoutStamp) {
+		String value = lockTimeoutStamp.toString();
 		try {
 			String currentValue = stringRedisTemplate.opsForValue().get(lockKey);
 			if (StringUtils.isNotEmpty(currentValue) && currentValue.equals(value)) {

@@ -72,7 +72,7 @@ public class IdUtils extends IdUtil {
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < length; i++) {
             //循环随机获得当次字符
-            code.append(String.valueOf(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length()))));
+            code.append(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length())));
         }
 
         return code.toString();
@@ -90,7 +90,7 @@ public class IdUtils extends IdUtil {
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < length; i++) {
             //循环随机获得当次字符
-            code.append(String.valueOf(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length()))));
+            code.append(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length())));
         }
 
         return code.toString();
@@ -108,7 +108,7 @@ public class IdUtils extends IdUtil {
 		StringBuilder code = new StringBuilder();
 		for (int i = 0; i < length; i++) {
 			//循环随机获得当次字符
-			code.append(String.valueOf(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length()))));
+			code.append(randomCodeSource.charAt((int) Math.floor(Math.random() * randomCodeSource.length())));
 		}
 
 		return code.toString();

@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: yue-library-test
+  profiles:
+    include:    - yue-library-data-jdbc
+    - yue-library-data-redis
+    active:
+    - test-confidential

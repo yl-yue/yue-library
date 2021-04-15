@@ -11,9 +11,14 @@ import lombok.Data;
  * @since	2018年11月6日
  */
 @Data
-@ConfigurationProperties("yue.crypto")
+@ConfigurationProperties(CryptoProperties.PREFIX)
 public class CryptoProperties {
-	
+
+	/**
+	 * Prefix of {@link CryptoProperties}.
+	 */
+	public static final String PREFIX = "yue.crypto";
+
 	/**
 	 * AES密钥
 	 */
