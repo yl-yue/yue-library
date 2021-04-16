@@ -1,14 +1,18 @@
 package ai.yue.library.base.view;
 
-import static com.alibaba.fastjson.util.TypeUtils.castToBigDecimal;
-import static com.alibaba.fastjson.util.TypeUtils.castToBigInteger;
-import static com.alibaba.fastjson.util.TypeUtils.castToBoolean;
-import static com.alibaba.fastjson.util.TypeUtils.castToDate;
-import static com.alibaba.fastjson.util.TypeUtils.castToDouble;
-import static com.alibaba.fastjson.util.TypeUtils.castToInt;
-import static com.alibaba.fastjson.util.TypeUtils.castToLong;
-import static com.alibaba.fastjson.util.TypeUtils.castToSqlDate;
-import static com.alibaba.fastjson.util.TypeUtils.castToTimestamp;
+import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.webenv.WebEnv;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,24 +20,10 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
-
-import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.exception.ResultException;
-import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.base.webenv.WebEnv;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static com.alibaba.fastjson.util.TypeUtils.*;
 
 /**
- * HTTP请求最外层响应对象，更适应Restful风格API
+ * HTTP请求最外层响应对象，更适应RESTful风格API
  * 
  * @author	ylyue
  * @since	2017年10月8日

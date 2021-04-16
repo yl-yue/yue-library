@@ -37,7 +37,7 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "yue.exception-handler", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class ResultExceptionHandler extends AbstractExceptionHandler {
 	
-    // Restful 异常拦截
+    // RESTful 异常拦截
 	
 	/**
 	 * 异常结果处理-synchronized

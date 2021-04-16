@@ -50,8 +50,9 @@
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.5.8</hutool.version>
-		<fastjson.version>1.2.75</fastjson.version>
+		<hutool.version>5.6.3</hutool.version>
+		<bouncycastle.version>1.68</bouncycastle.version>
+		<fastjson.version>1.2.76</fastjson.version>
 		<dynamic-datasource.version>3.3.1</dynamic-datasource.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.2.0</easypoi.version>
@@ -137,6 +138,11 @@
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-crypto</artifactId>
 				<version>${hutool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15to18</artifactId><!-- sm2、sm3、sm4国密算法 -->
+				<version>${bouncycastle.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>

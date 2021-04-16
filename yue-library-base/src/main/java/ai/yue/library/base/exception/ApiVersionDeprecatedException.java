@@ -3,7 +3,7 @@ package ai.yue.library.base.exception;
 import lombok.NoArgsConstructor;
 
 /**
- * Restful API接口版本弃用异常
+ * RESTful API接口版本弃用异常
  * 
  * @author	ylyue
  * @since	2018年2月3日

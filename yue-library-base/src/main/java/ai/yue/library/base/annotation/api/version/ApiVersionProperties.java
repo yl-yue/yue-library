@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.Data;
 
 /**
- * Restful API接口版本定义自动配置属性
+ * RESTful API接口版本定义自动配置属性
  * 
  * @author	ylyue
  * @since	2018年11月6日
@@ -16,7 +16,7 @@ import lombok.Data;
 public class ApiVersionProperties {
 	
 	/**
-	 * 是否启用 <code style="color:red">Restful API接口版本控制</code>
+	 * 是否启用 <code style="color:red">RESTful API接口版本控制</code>
 	 * <p>
 	 * 默认：true
 	 */

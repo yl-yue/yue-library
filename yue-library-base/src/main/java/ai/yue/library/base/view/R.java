@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 便捷返回 {@linkplain Result}，构建 {@code Restful} 风格API结果
+ * 便捷返回 {@linkplain Result}，构建 {@code RESTful} 风格API结果
  *
  * @author ylyue
  * @since 2017年7月31日

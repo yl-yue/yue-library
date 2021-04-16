@@ -6,9 +6,10 @@
 * yue-library-base（必备）
 
   * [介绍](base/介绍.md "yue-library-base介绍")
-  * [Restful](base/Restful.md)
+  * [RESTful](base/RESTful.md)
   * [校验](base/校验.md "校验框架")
   * [参数解析器](base/参数解析器.md)
+  * [类型转换器](base/类型转换器.md)
   * [统一异常处理](base/统一异常处理.md)
   * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)

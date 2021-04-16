@@ -1,12 +1,11 @@
 package ai.yue.library.test.controller.base.crypto;
 
+import ai.yue.library.base.crypto.annotation.key.exchange.RequestDecrypt;
 import ai.yue.library.base.crypto.annotation.key.exchange.ResponseEncrypt;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import ai.yue.library.test.ipo.UserIPO;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 加密测试
@@ -17,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/controllerEncrypt")
 public class ControllerEncryptTest {
+
+    @RequestDecrypt
+    @PostMapping("/decrypt")
+    public Result<?> decrypt(@RequestBody UserIPO userIPO) {
+        return R.success(userIPO);
+    }
 
     @ResponseEncrypt
     @GetMapping("/{encrypt}")

@@ -1,5 +1,6 @@
 package ai.yue.library.base.crypto.config;
 
+import ai.yue.library.base.crypto.annotation.key.exchange.RequestDecryptHandler;
 import ai.yue.library.base.crypto.annotation.key.exchange.ResponseEncryptHandler;
 import ai.yue.library.base.crypto.config.properties.KeyExchangeProperties;
 import ai.yue.library.base.crypto.controller.key.exchange.KeyExchangeController;
@@ -28,7 +29,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Slf4j
 @Configuration
-@Import({KeyExchangeController.class, ResponseEncryptHandler.class})
+@Import({KeyExchangeController.class, RequestDecryptHandler.class, ResponseEncryptHandler.class})
 @EnableConfigurationProperties({ KeyExchangeProperties.class })
 @ConditionalOnProperty(prefix = KeyExchangeProperties.PREFIX, name = "enabled", havingValue = "true")
 public class KeyExchangeConfig {

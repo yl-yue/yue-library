@@ -1,32 +1,5 @@
 package ai.yue.library.web.util.servlet;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.web.util.servlet.multipart.MultipartFormData;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -37,12 +10,23 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.CaseInsensitiveMap;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Servlet相关工具类封装<br>
@@ -62,6 +46,8 @@ public class ServletUtils {
 	public static final String METHOD_TRACE = "TRACE";
 	public static final String HTTP_TCP_NAME = "http://";
 	public static final String HTTPS_TCP_NAME = "https://";
+	public static final String BEARER_TYPE = "Bearer ";
+	public static final String ACCESS_TOKEN = "access_token";
 
 	/**
 	 * HttpAspect请求切入点
@@ -105,6 +91,30 @@ public class ServletUtils {
 	 */
 	public static HttpSession getSession() {
 		return getRequest().getSession();
+	}
+
+	/**
+	 * 获得请求中的OAuth2 Token
+	 *
+	 * @return token
+	 */
+	public static String getAuthToken() {
+		return getAuthToken(getRequest());
+	}
+
+	/**
+	 * 获得请求中的OAuth2 Token
+	 *
+	 * @param request 请求对象{@link ServletRequest}
+	 * @return token
+	 */
+	public static String getAuthToken(HttpServletRequest request) {
+		String authToken = StrUtil.subAfter(request.getHeader(HttpHeaders.AUTHORIZATION), BEARER_TYPE, false);
+		if (StrUtil.isBlank(authToken)) {
+			authToken = request.getParameter(ACCESS_TOKEN);
+		}
+
+		return authToken;
 	}
 
 	/**

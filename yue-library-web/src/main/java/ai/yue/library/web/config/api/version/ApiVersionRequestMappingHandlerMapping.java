@@ -1,22 +1,21 @@
 package ai.yue.library.web.config.api.version;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
-
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.condition.RequestCondition;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.condition.RequestCondition;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
- * Restful API接口版本控制
+ * RESTful API接口版本控制
  * 
  * @author	ylyue
  * @since	2020年2月27日

@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * RSA密钥交换加密
+ * <p>1. 前端大写UUID     →     后端返回RSA公钥</p>
+ * <p>2. 前端生成RSA密钥对 → 前端通过后端RSA公钥加密前端RSA公钥并传输给后端     →     后端通过私钥解密前端的RSA公钥 → 后端通过前端RSA公钥加密AES密钥响应给前端</p>
+ *
+ * 好处：
+ * <p>1. 最终的对称加密（AES）密钥未在传输过程中泄露</p>
+ * <p>2. 每次会话生命周期中的加密密钥都是随机的</p>
  *
  * @author ylyue
  * @since 2021/4/12
@@ -34,13 +40,13 @@ public class KeyExchangeController {
     private Validator validator;
 
     /**
-     * 通信过程加密
-     * 1. 前端大写UUID     →     后端返回RSA公钥
-     * 2. 前端生成RSA密钥对 → 前端通过后端RSA公钥加密前端RSA公钥并传输给后端     →     后端通过私钥解密前端的RSA公钥 → 后端通过前端RSA公钥加密AES密钥响应给前端
+     * 获得交换密钥
      *
-     * 好处：
-     * 1. 最终的对称加密（AES）密钥未在传输过程中泄露
-     * 2. 每次会话生命周期中的加密密钥都是随机的
+     * @param storageKey               密钥存储标识
+     * @param exchangeKeyType          交换密钥类型
+     * @param encryptedClientPublicKey 服务端公钥加密的客户端公钥（第二步逻辑必填参数）
+     * @return 第一次返回：服务端公钥
+     * <p>第二次返回：客户端公钥加密的交换密钥</p>
      */
     @PostMapping("/{storageKey}")
     public Result<?> getExchangeKey(@PathVariable String storageKey, ExchangeKeyEnum exchangeKeyType, @Nullable String encryptedClientPublicKey) {

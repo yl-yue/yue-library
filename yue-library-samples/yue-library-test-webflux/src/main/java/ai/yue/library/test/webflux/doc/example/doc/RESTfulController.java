@@ -1,14 +1,13 @@
 package ai.yue.library.test.webflux.doc.example.doc;
 
-import javax.validation.Valid;
-
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import ai.yue.library.test.webflux.ipo.ValidationIPO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
-import ai.yue.library.test.webflux.ipo.ValidationIPO;
+import javax.validation.Valid;
 
 /**
  * @author	ylyue
@@ -16,7 +15,7 @@ import ai.yue.library.test.webflux.ipo.ValidationIPO;
  */
 @RestController
 @RequestMapping("/restful")
-public class RestfulController {
+public class RESTfulController {
 
 	/**
 	 * valid

@@ -3,7 +3,7 @@ package ai.yue.library.test.base.crypto;
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.util.IdUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.test.TestApplication;
+import ai.yue.library.test.ipo.UserIPO;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -13,14 +13,17 @@ import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDate;
 
 /**
  * 密钥交换
@@ -28,9 +31,8 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author ylyue
  * @since 2021/4/12
  */
-//@SpringBootTest
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class KeyExchangeTest {
 
     /**
@@ -40,16 +42,18 @@ public class KeyExchangeTest {
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
+//    private TestRestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    private String serverUrl;
+//    private String serverUrl;
+    private String serverUrl = "http://localhost:8080";
 
-    @Before
-    public void setUp() throws Exception {
-        serverUrl = String.format("http://localhost:%d/", port);
-        System.out.println(serverUrl);
-        System.out.println(String.format("port is : [%d]", port));
-    }
+//    @Before
+//    public void setUp() throws Exception {
+//        serverUrl = String.format("http://localhost:%d/", port);
+//        System.out.println(serverUrl);
+//        System.out.println(String.format("port is : [%d]", port));
+//    }
 
     /**
      * 通信过程加密
@@ -82,16 +86,31 @@ public class KeyExchangeTest {
         System.out.println(decryptStr);
         Assert.assertEquals("123456", decryptStr);
 
-        // 业务接口响应加密测试
+        // 第三步
         String storageKeyAlias = IdUtils.getSimpleUUID();
         JSONObject paramJson2 = new JSONObject();
         paramJson2.put("storageKeyAlias", storageKeyAlias);
         Result exchangeKeyResult3 = restTemplate.postForObject(serverUrl + "/open/v2.3/keyExchange/" + uuid + "/addAlias", paramJson2, Result.class, ExchangeKeyEnum.RSA_AES);
         exchangeKeyResult3.successValidate();
 
-        Result exchangeKeyResult4 = restTemplate.getForObject(serverUrl + "/controllerEncrypt/encrypt?access_token=" + storageKeyAlias, Result.class);
+        // 业务接口请求解密测试
+        UserIPO userIPO = new UserIPO();
+        userIPO.setCellphone("18523146311");
+        userIPO.setNickname("123456");
+        userIPO.setBirthday(LocalDate.now());
+        String userIPOToEncryptBase64 = aes.encryptBase64(JSONObject.toJSONString(userIPO));
+        System.out.println(userIPOToEncryptBase64);
+        MultiValueMap headers = new LinkedMultiValueMap();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity httpEntity = new HttpEntity<>(userIPOToEncryptBase64, headers);
+        Result exchangeKeyResult4 = restTemplate.postForObject(serverUrl + "/controllerEncrypt/decrypt?access_token=" + storageKeyAlias, httpEntity, Result.class);
         exchangeKeyResult4.successValidate();
-        String serverEncryptContent = (String) exchangeKeyResult4.getData();
+        System.out.println(exchangeKeyResult4);
+
+        // 业务接口响应加密测试
+        Result exchangeKeyResult5 = restTemplate.getForObject(serverUrl + "/controllerEncrypt/encrypt?access_token=" + storageKeyAlias, Result.class);
+        exchangeKeyResult5.successValidate();
+        String serverEncryptContent = (String) exchangeKeyResult5.getData();
         Assert.assertEquals("encrypt", aes.decryptStr(serverEncryptContent));
     }
 

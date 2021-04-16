@@ -1,33 +1,21 @@
 package ai.yue.library.base.config.exception;
 
-import java.io.IOException;
-
-import javax.annotation.PostConstruct;
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import ai.yue.library.base.exception.ApiVersionDeprecatedException;
-import ai.yue.library.base.exception.AttackException;
-import ai.yue.library.base.exception.AuthorizeException;
-import ai.yue.library.base.exception.ClientFallbackException;
-import ai.yue.library.base.exception.DbException;
-import ai.yue.library.base.exception.ForbiddenException;
-import ai.yue.library.base.exception.LoginException;
-import ai.yue.library.base.exception.ParamDecryptException;
-import ai.yue.library.base.exception.ParamException;
-import ai.yue.library.base.exception.ParamVoidException;
-import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * 全局统一异常处理
@@ -43,7 +31,7 @@ public abstract class AbstractExceptionHandler {
     	log.info("【初始化配置-全局统一异常处理】拦截所有Controller层异常，返回HTTP请求最外层对象 ... 已初始化完毕。");
     }
     
-    // Restful 异常拦截
+    // RESTful 异常拦截
     
 	/**
 	 * 异常结果处理-synchronized

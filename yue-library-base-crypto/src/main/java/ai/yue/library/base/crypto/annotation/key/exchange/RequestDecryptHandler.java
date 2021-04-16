@@ -2,69 +2,59 @@ package ai.yue.library.base.crypto.annotation.key.exchange;
 
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.crypto.dao.key.exchange.KeyExchangeStorage;
-import ai.yue.library.base.crypto.util.EncryptParamUtils;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.base.view.Result;
 import ai.yue.library.web.util.servlet.ServletUtils;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 
 /**
- * 响应加密处理器
+ * 请求解密处理器
  *
  * @author	ylyue
  * @since	2020年9月18日
  */
 @ControllerAdvice
 @ConditionalOnClass(HttpServletRequest.class)
-public class ResponseEncryptHandler<T> implements ResponseBodyAdvice<T> {
+public class RequestDecryptHandler extends RequestBodyAdviceAdapter {
 
 	@Override
-	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-		return returnType.hasMethodAnnotation(ResponseEncrypt.class) && returnType.getMethod().getReturnType() == Result.class;
+	public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+		return methodParameter.hasMethodAnnotation(RequestDecrypt.class);
 	}
-	
-	@Override
-	public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType,
-			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
-			ServerHttpResponse response) {
-		// NULL值与错误Result不做加密处理
-		if (body == null) {
-			return body;
-		}
-		Result<Object> result = (Result<Object>) body;
-		if (result.isFlag() == false) {
-			return body;
-		}
 
+	@Override
+	public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
 		// 根据注解参数创建对应的加密算法实例
-		ResponseEncrypt methodAnnotation = returnType.getMethodAnnotation(ResponseEncrypt.class);
-		boolean enableExchangeKeyEncrypt = methodAnnotation.enableExchangeKeyEncrypt();
+		RequestDecrypt methodAnnotation = parameter.getMethodAnnotation(RequestDecrypt.class);
+		boolean enableExchangeKeyDecrypt = methodAnnotation.enableExchangeKeyDecrypt();
 		SymmetricCrypto symmetricCrypto = null;
-		if (enableExchangeKeyEncrypt == true) {
+		if (enableExchangeKeyDecrypt == true) {
 			// 使用交换密钥创建加密算法实例
 			String keyExchangeStorageKey = null;
-			HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
 			if (methodAnnotation.useAuthTokenGetExchangeKey()) {
-				keyExchangeStorageKey = ServletUtils.getAuthToken(servletRequest);
+				keyExchangeStorageKey = ServletUtils.getAuthToken();
 			} else {
 				String headerNameGetExchangeKey = methodAnnotation.headerNameGetExchangeKey();
 				String paramNameGetExchangeKey = methodAnnotation.paramNameGetExchangeKey();
-				keyExchangeStorageKey = servletRequest.getHeader(headerNameGetExchangeKey);
+				keyExchangeStorageKey = ServletUtils.getRequest().getHeader(headerNameGetExchangeKey);
 				if (StrUtil.isBlank(keyExchangeStorageKey)) {
-					keyExchangeStorageKey = servletRequest.getParameter(paramNameGetExchangeKey);
+					keyExchangeStorageKey = ServletUtils.getRequest().getParameter(paramNameGetExchangeKey);
 				}
 			}
 
@@ -82,10 +72,19 @@ public class ResponseEncryptHandler<T> implements ResponseBodyAdvice<T> {
 			symmetricCrypto = methodAnnotation.exchangeKeyType().getSymmetricCrypto(methodAnnotation.key().getBytes());
 		}
 
-		// 加密Data
-		String encryptedBase64 = symmetricCrypto.encryptBase64(EncryptParamUtils.toEncryptByte(result.getData()));
-		result.setData(encryptedBase64);
-		return body;
+		// 解密Data
+		SymmetricCrypto finalSymmetricCrypto = symmetricCrypto;
+		return new HttpInputMessage() {
+			@Override
+			public InputStream getBody() throws IOException {
+				return new ByteArrayInputStream(finalSymmetricCrypto.decrypt(StreamUtils.copyToString(inputMessage.getBody(), Charset.defaultCharset())));
+			}
+
+			@Override
+			public HttpHeaders getHeaders() {
+				return inputMessage.getHeaders();
+			}
+		};
 	}
 
 }

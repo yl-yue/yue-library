@@ -114,7 +114,7 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 解释：j8对应Java 8，详情查看版本区别说明
 
 ### 新特性
-此版本主要实现`HttpServletRequest`输入流可反复读取，重点解决全局异常捕获（包括过滤器中的异常）问题，规范Restful处理让body中的code值与http状态码保持一致。此版本关键依赖定义如下：
+此版本主要实现`HttpServletRequest`输入流可反复读取，重点解决全局异常捕获（包括过滤器中的异常）问题，规范RESTful处理让body中的code值与http状态码保持一致。此版本关键依赖定义如下：
 
 |依赖					|版本			|
 |--						|--				|
@@ -155,7 +155,7 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 [点击查看更多依赖版本定义](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
 - 【base】提供`yml`默认配置支持，一键解决常规坑点困扰（如：时间格式化、可执行SQL打印、接口定义打印等），更适合国内标准
-- 【base】`@ApiVersion` 注解可优雅的实现接口版本控制，只为更好的Restful
+- 【base】`@ApiVersion` 注解可优雅的实现接口版本控制，只为更好的RESTful
 - 【web】实用的参数解析器（解决参数获取困扰，不再区分Query传参与Body传参，Request请求参数智能解析），并提供`RequestParamUtils`工具类适用于各种环境下获取请求参数
 - 【web】HTTP消息转换器增强，fastjson与jackson一键切换
 - 【redis】规范redis包名标准，分离OAuth认证体系
@@ -230,15 +230,15 @@ yue-library的版本命名方式，采用SpringCloud版本名作为前缀，然�
 ### 变更
 - 【yue】全类标准化：规划版本、优化细节、删除部分失效方法（为强迫症代言）
 - 【yue】升级`hutool`依赖为`4.5.16`
-- 【base】规划 `Result` ，移除部分方法，优化提示，建立强标准。只为更好的 `Restful`
-- 【base】优化部分异常类，只为更好的 `Restful`
+- 【base】规划 `Result` ，移除部分方法，优化提示，建立强标准。只为更好的 `RESTful`
+- 【base】优化部分异常类，只为更好的 `RESTful`
 - 【base】 `ObjectUtils.to*` 增强，关联类型转换器 `Convert`
 
 ### Bug修复
 
 ## Greenwich.SR1.SR1【2019-07-22】
 ### 重大升级
-- **校验框架**：提供强大而全面的校验框架，支持多种校验方式，国内常用校验一网打尽，友好的`Restful`风格提示，更贴切国内使用
+- **校验框架**：提供强大而全面的校验框架，支持多种校验方式，国内常用校验一网打尽，友好的`RESTful`风格提示，更贴切国内使用
 - **异步线程池**：提供默认异步线程池（可配置），`@Async` 共用父线程上下文环境，异步执行任务时不丢失token
 - **全局统一异常处理**：默认全局统一异常处理（不再需要手动继承）
 

@@ -1,7 +1,7 @@
 package ai.yue.library.base.view;
 
 /**
- * 便捷返回 - {@code Restful} 风格API结果
+ * 便捷返回 - {@code RESTful} 风格API结果
  * 
  * @deprecated 请使用 {@linkplain R}
  * @author	ylyue
