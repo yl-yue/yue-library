@@ -7,6 +7,7 @@ import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.web.util.servlet.ServletUtils;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ import java.nio.charset.Charset;
  * @author	ylyue
  * @since	2020年9月18日
  */
+@Slf4j
 @ControllerAdvice
 @ConditionalOnClass(HttpServletRequest.class)
 public class RequestDecryptHandler extends RequestBodyAdviceAdapter {
@@ -65,6 +67,7 @@ public class RequestDecryptHandler extends RequestBodyAdviceAdapter {
 			// 创建加密算法实例
 			KeyExchangeStorage keyExchangeStorage = SpringUtils.getBean(KeyExchangeStorage.class);
 			String exchangeKey = keyExchangeStorage.getExchangeKey(keyExchangeStorageKey);
+			log.debug("【密钥交换-解密】keyExchangeStorageKey={}，exchangeKey={}", keyExchangeStorageKey, exchangeKey);
 			ExchangeKeyEnum exchangeKeyType = methodAnnotation.exchangeKeyType();
 			symmetricCrypto = exchangeKeyType.getSymmetricCrypto(exchangeKey.getBytes());
 		} else {
@@ -77,7 +80,9 @@ public class RequestDecryptHandler extends RequestBodyAdviceAdapter {
 		return new HttpInputMessage() {
 			@Override
 			public InputStream getBody() throws IOException {
-				return new ByteArrayInputStream(finalSymmetricCrypto.decrypt(StreamUtils.copyToString(inputMessage.getBody(), Charset.defaultCharset())));
+				String decryptStr = StreamUtils.copyToString(inputMessage.getBody(), Charset.defaultCharset());
+				log.debug("【密钥交换-解密】decryptStr={}", decryptStr);
+				return new ByteArrayInputStream(finalSymmetricCrypto.decrypt(decryptStr));
 			}
 
 			@Override

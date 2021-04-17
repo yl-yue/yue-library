@@ -1,6 +1,5 @@
 package ai.yue.library.data.jdbc.client;
 
-import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
@@ -8,7 +7,6 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
-import ai.yue.library.data.jdbc.config.properties.DataEncrypt;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
@@ -629,32 +627,32 @@ public class DbBase {
 
     }
 
-    protected void dataEncrypt(String tableName, JSONObject paramJson) {
-        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
-        if (ListUtils.isNotEmpty(dataEncryptConfigList)) {
-            for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
-                String dataEncryptTableName = dataEncryptConfig.getTableName();
-                if (tableName.equalsIgnoreCase(dataEncryptTableName)) {
-                    List<String> fieldNameList = dataEncryptConfig.getFieldNames();
-                    for (String fieldName : fieldNameList) {
-                        paramJson.replace(fieldName, SecureSingleton.getAES().encryptBase64(paramJson.getString(fieldName)));
-                    }
-
-                    break;
-                }
-            }
-        }
-    }
-
-    protected void audit(String tableName, JSONObject paramJson) {
-        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
-        if (ListUtils.isNotEmpty(auditTableNames)) {
-            for (String auditTableName : auditTableNames) {
-                if (tableName.equalsIgnoreCase(auditTableName)) {
-                    paramJson.put("","");
-                }
-            }
-        }
-    }
+//    protected void dataEncrypt(String tableName, JSONObject paramJson) {
+//        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
+//        if (ListUtils.isNotEmpty(dataEncryptConfigList)) {
+//            for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
+//                String dataEncryptTableName = dataEncryptConfig.getTableName();
+//                if (tableName.equalsIgnoreCase(dataEncryptTableName)) {
+//                    List<String> fieldNameList = dataEncryptConfig.getFieldNames();
+//                    for (String fieldName : fieldNameList) {
+//                        paramJson.replace(fieldName, SecureSingleton.getAES().encryptBase64(paramJson.getString(fieldName)));
+//                    }
+//
+//                    break;
+//                }
+//            }
+//        }
+//    }
+//
+//    protected void audit(String tableName, JSONObject paramJson) {
+//        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
+//        if (ListUtils.isNotEmpty(auditTableNames)) {
+//            for (String auditTableName : auditTableNames) {
+//                if (tableName.equalsIgnoreCase(auditTableName)) {
+//                    paramJson.put("","");
+//                }
+//            }
+//        }
+//    }
 
 }

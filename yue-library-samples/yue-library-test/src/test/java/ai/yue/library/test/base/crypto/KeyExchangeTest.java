@@ -4,6 +4,7 @@ import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.util.IdUtils;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.test.ipo.UserIPO;
+import cn.hutool.core.lang.Console;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -12,6 +13,7 @@ import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,29 +33,10 @@ import java.time.LocalDate;
  * @author ylyue
  * @since 2021/4/12
  */
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class KeyExchangeTest {
 
-    /**
-     * @LocalServerPort 提供了 @Value("${local.server.port}") 的代替
-     */
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-//    private TestRestTemplate restTemplate;
     private RestTemplate restTemplate = new RestTemplate();
-
-//    private String serverUrl;
     private String serverUrl = "http://localhost:8080";
-
-//    @Before
-//    public void setUp() throws Exception {
-//        serverUrl = String.format("http://localhost:%d/", port);
-//        System.out.println(serverUrl);
-//        System.out.println(String.format("port is : [%d]", port));
-//    }
 
     /**
      * 通信过程加密
@@ -63,8 +46,8 @@ public class KeyExchangeTest {
     @Test
     public void aes() {
         // 第一步
-        String uuid = IdUtils.getSimpleUUID();
-        String url = serverUrl + "/open/v2.3/keyExchange/" + uuid + "?exchangeKeyType={exchangeKeyType}";
+        String storageKey = IdUtils.getSimpleUUID();
+        String url = serverUrl + "/open/v2.3/keyExchange/" + storageKey + "?exchangeKeyType={exchangeKeyType}";
         Result exchangeKeyResult = restTemplate.postForObject(url, null, Result.class, ExchangeKeyEnum.RSA_AES);
         exchangeKeyResult.successValidate();
         String data = (String) exchangeKeyResult.getData();
@@ -90,7 +73,7 @@ public class KeyExchangeTest {
         String storageKeyAlias = IdUtils.getSimpleUUID();
         JSONObject paramJson2 = new JSONObject();
         paramJson2.put("storageKeyAlias", storageKeyAlias);
-        Result exchangeKeyResult3 = restTemplate.postForObject(serverUrl + "/open/v2.3/keyExchange/" + uuid + "/addAlias", paramJson2, Result.class, ExchangeKeyEnum.RSA_AES);
+        Result exchangeKeyResult3 = restTemplate.postForObject(serverUrl + "/open/v2.3/keyExchange/" + storageKey + "/addAlias", paramJson2, Result.class, ExchangeKeyEnum.RSA_AES);
         exchangeKeyResult3.successValidate();
 
         // 业务接口请求解密测试
@@ -122,8 +105,8 @@ public class KeyExchangeTest {
     @Test
     public void sm4() {
         // 第一步
-        String uuid = IdUtils.getSimpleUUID();
-        String url = serverUrl + "/open/v2.3/keyExchange/" + uuid + "?exchangeKeyType={exchangeKeyType}";
+        String storageKey = IdUtils.getSimpleUUID();
+        String url = serverUrl + "/open/v2.3/keyExchange/" + storageKey + "?exchangeKeyType={exchangeKeyType}";
         Result exchangeKeyResult = restTemplate.postForObject(url, null, Result.class, ExchangeKeyEnum.SM2_SM4);
         exchangeKeyResult.successValidate();
         String data = (String) exchangeKeyResult.getData();
@@ -137,13 +120,43 @@ public class KeyExchangeTest {
         Result exchangeKeyResult2 = restTemplate.postForObject(url, paramJson, Result.class, ExchangeKeyEnum.SM2_SM4);
         exchangeKeyResult2.successValidate();
         String serverRsaEncryptClientAesKey = (String) exchangeKeyResult2.getData();
-        String clientAesKey = sm2.decryptStr(serverRsaEncryptClientAesKey, KeyType.PrivateKey);
-        SymmetricCrypto sm4 = SmUtil.sm4(clientAesKey.getBytes());
+        String exchangeKey = sm2.decryptStr(serverRsaEncryptClientAesKey, KeyType.PrivateKey);
+        SymmetricCrypto sm4 = SmUtil.sm4(exchangeKey.getBytes());
         String encryptBase64 = sm4.encryptBase64("123456");
         System.out.println(encryptBase64);
         String decryptStr = sm4.decryptStr(encryptBase64);
         System.out.println(decryptStr);
         Assert.assertEquals("123456", decryptStr);
+
+        // 第三步
+        String storageKeyAlias = IdUtils.getSimpleUUID();
+        JSONObject paramJson2 = new JSONObject();
+        paramJson2.put("storageKeyAlias", storageKeyAlias);
+        Result exchangeKeyResult3 = restTemplate.postForObject(serverUrl + "/open/v2.3/keyExchange/" + storageKey + "/addAlias", paramJson2, Result.class, ExchangeKeyEnum.SM2_SM4);
+        exchangeKeyResult3.successValidate();
+
+        // 业务接口请求解密测试
+        UserIPO userIPO = new UserIPO();
+        userIPO.setCellphone("18523146311");
+        userIPO.setNickname("123456");
+        userIPO.setBirthday(LocalDate.now());
+        String userIPOToEncryptBase64 = sm4.encryptBase64(JSONObject.toJSONString(userIPO));
+        Console.log("storageKey={}", storageKey);
+        Console.log("storageKeyAlias={}", storageKeyAlias);
+        Console.log("exchangeKey={}", exchangeKey);
+        Console.log("userIPOToEncryptBase64={}", userIPOToEncryptBase64);
+        MultiValueMap headers = new LinkedMultiValueMap();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity httpEntity = new HttpEntity<>(userIPOToEncryptBase64, headers);
+        Result exchangeKeyResult4 = restTemplate.postForObject(serverUrl + "/controllerEncrypt/decrypt/SM2_SM4?access_token=" + storageKeyAlias, httpEntity, Result.class);
+        exchangeKeyResult4.successValidate();
+        System.out.println(exchangeKeyResult4);
+
+        // 业务接口响应加密测试
+        Result exchangeKeyResult5 = restTemplate.getForObject(serverUrl + "/controllerEncrypt/encrypt/SM2_SM4?access_token=" + storageKeyAlias, Result.class);
+        exchangeKeyResult5.successValidate();
+        String serverEncryptContent = (String) exchangeKeyResult5.getData();
+        Assert.assertEquals("encrypt", sm4.decryptStr(serverEncryptContent));
     }
 
 }
