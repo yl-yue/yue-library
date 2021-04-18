@@ -17,15 +17,64 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 ### Maven仓库实际发布版本号
 `j8.2.4.0`、`j11.2.4.0`
 
-[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.4.0/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
-|spring-boot			|2.3.5.RELEASE	|
-|spring-cloud			|Hoxton.SR9		|
-|spring-cloud-alibaba	|2.2.3.RELEASE	|
-|hutool					|5.4.4			|
-|fastjson				|1.2.74			|
+|spring-boot			|2.3.8.RELEASE	|
+|spring-cloud			|Hoxton.SR10	|
+|spring-cloud-alibaba	|2.2.5.RELEASE	|
+|hutool					|5.6.3			|
+|fastjson				|1.2.76			|
+
+## 2.3.2【2021-04-17】
+此版本重点实现：**密钥交换加解密**、**增强Bean转换能力**、**JDBC新增Elasticsearch-SQL、达梦、PostgreSQL方言**。
+
+### 新特性
+- 【base】ParamUtils提示优化，添加错误原因
+- 【base】添加JSONListConverter类型转换器从而支持`List<JSONObject>`类型处理（JDBC实体数据库查询映射时JSONArray格式文本数据不支持映射成`List<JSONObject>`）
+- 【base】优化fastjson bean转换的jsonstr识别方式
+- 【base】增强DateUtils与规范UUID工具类为IdUtils并优化IdUtils实现
+- 【base】增强fastjson JavaBean转换能力，支持Character类型
+- 【base】MapUtils增强值提取，支持list根据key提取map提取值支持map、fastjson [pulls !17](https://gitee.com/yl-yue/yue-library/pulls/17)
+- 【crypto】新增重磅特性-密钥交换加密：支持`@RequestDecrypt`注解实现请求自动解密
+- 【crypto】新增重磅特性-密钥交换加密：支持`@ResponseEncrypt`注解实现响应内容加密
+- 【crypto】密钥交换加密：默认提供本地Map与Redis两种交换密钥存储方案
+- 【crypto】密钥交换加密：`@RequestDecrypt`与`@ResponseEncrypt`注解支持使用交换密钥加密或自定义密钥等特性
+- 【web】修复ApiVersion注解minimumVersion值等于的情况下410
+- 【web】优化响应结果处理器在标准HTTP状态码时的空值处理
+- 【web】新增ServletUtils.getAuthToken()方法，获取请求中的OAuth2 Token
+- 【webflux】修复ApiVersion注解minimumVersion值等于的情况下410
+- 【jdbc】对jdbc方言实现进行完善与优化，新增Elasticsearch-SQL、达梦、PostgreSQL方言
+- 【jdbc】db.queryForObject 自动识别Bean类型与简单类型
+- 【jdbc】参数美化增强支持JSONArray数据类型与`List<JSONObject>`数据类型
+- 【jdbc】优化多行查询结果转换为单行查询结果实现
+- 【jdbc】所有mappedClass查询方法自动识别所需RowMapper类型，实现JavaBean、map、基本类型结果自动匹配
+- 【jdbc】规范内部部分常量命名与移除分页中不优雅的泛型实例PageTVO
+- 【jdbc】增强自动方言识别，根据驱动类自动识别所需方言类型
+- 【jdbc】默认Db Bean实现根据不同驱动类型，使用对应方言配置
+- 【jdbc】优化DAO实现，抽象基础DAO
+- 【jdbc】优化所有jdbc方法注释，描述更简洁，表达更清晰，注释更规范
+- 【jdbc】删除早期存在的部分过时方法
+- 【es】支持配置ConnectTimeout与SocketTimeout，并调大各自默认值为25与15秒
+
+### Bug修复
+- 【base】修复fastjson JavaBean转换BUG [#3688](https://github.com/alibaba/fastjson/pull/3688)
+- 【jdbc】修复isDataSize()方法可能因为数据库存在多行数据，而返回false的隐患
+- 【jdbc】修复因错误测试而删除的参数类型美化（现已支持：Character、JSONObject、LocalDateTime进行特殊转换处理与布尔值映射识别）
+
+### Maven仓库实际发布版本号
+`j8.2.3.2`、`j11.2.3.2`
+
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.2/pom.xml)
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.3.8.RELEASE	|
+|spring-cloud			|Hoxton.SR10	|
+|spring-cloud-alibaba	|2.2.5.RELEASE	|
+|hutool					|5.6.3			|
+|fastjson				|1.2.76			|
 
 ## 2.3.1【2021-02-18】
 ### 新特性
@@ -51,7 +100,7 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 ### Maven仓库实际发布版本号
 `j8.2.3.1`、`j11.2.3.1`
 
-[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.1/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
