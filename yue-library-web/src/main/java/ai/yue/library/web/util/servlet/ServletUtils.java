@@ -12,6 +12,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.*;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,6 +46,8 @@ public class ServletUtils {
 	public static final String METHOD_TRACE = "TRACE";
 	public static final String HTTP_TCP_NAME = "http://";
 	public static final String HTTPS_TCP_NAME = "https://";
+	public static final String BEARER_TYPE = "Bearer ";
+	public static final String ACCESS_TOKEN = "access_token";
 
 	/**
 	 * HttpAspect请求切入点
@@ -88,6 +91,30 @@ public class ServletUtils {
 	 */
 	public static HttpSession getSession() {
 		return getRequest().getSession();
+	}
+
+	/**
+	 * 获得请求中的OAuth2 Token
+	 *
+	 * @return token
+	 */
+	public static String getAuthToken() {
+		return getAuthToken(getRequest());
+	}
+
+	/**
+	 * 获得请求中的OAuth2 Token
+	 *
+	 * @param request 请求对象{@link ServletRequest}
+	 * @return token
+	 */
+	public static String getAuthToken(HttpServletRequest request) {
+		String authToken = StrUtil.subAfter(request.getHeader(HttpHeaders.AUTHORIZATION), BEARER_TYPE, false);
+		if (StrUtil.isBlank(authToken)) {
+			authToken = request.getParameter(ACCESS_TOKEN);
+		}
+
+		return authToken;
 	}
 
 	/**
@@ -137,18 +164,14 @@ public class ServletUtils {
 		Console.log();
 		Console.log("打印请求头：");
 		Console.log("Headers：");
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String headerName = (String) headerNames.nextElement();
+		request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
 			StringBuilder headerValues = new StringBuilder();
-			Enumeration<String> headerNames2 = request.getHeaders(headerName);
-			while (headerNames2.hasMoreElements()) {
-				String headerValue = (String) headerNames2.nextElement();
+			request.getHeaders(headerName).asIterator().forEachRemaining(headerValue -> {
 				headerValues.append(headerValue);
-			}
+			});;
 			Console.log("　　{}：{}", headerName, headerValues);
-		}
-		
+		});;
+
 		// 5. 打印Cookie
 		Console.log();
 		Console.log("Cookies：");

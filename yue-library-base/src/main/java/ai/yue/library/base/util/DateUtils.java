@@ -146,12 +146,22 @@ public class DateUtils extends DateUtil {
 	/**
 	 * 获得当前时间戳
 	 * 
-	 * @return 时间戳
+	 * @return 当前时间戳
 	 */
-	public static Long getTimestamp() {
+	public static long getTimestamp() {
 		return System.currentTimeMillis();
 	}
-	
+
+	/**
+	 * 获得当前时间偏移后的时间戳
+	 *
+	 * @param offsetMillis 偏移毫秒
+	 * @return 当前时间偏移后的时间戳
+	 */
+	public static long getTimestamp(int offsetMillis) {
+		return getTimestamp() + offsetMillis;
+	}
+
 	/**
 	 * 获得当前日期的标准字符串格式
 	 * 

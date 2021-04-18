@@ -120,8 +120,8 @@ public enum ResultEnum {
 	GATEWAY_TIMEOUT(504, "Gateway Timeout"),
 	DATA_STRUCTURE(505, "数据结构异常"),
 	DB_ERROR(506, "数据结构异常，请检查相应数据结构一致性"),
-    CLIENT_FALLBACK(507, "哎哟喂！网络开小差了，请稍后重试..."),
-    CLIENT_FALLBACK_ERROR(508, "哎哟喂！服务都被您挤爆了..."),
+    CLIENT_FALLBACK(507, "网络开小差了，请稍后重试..."),
+    CLIENT_FALLBACK_ERROR(508, "当前阶段服务压力过大，请稍后重试..."),
     TYPE_CONVERT_ERROR(509, "类型转换错误"),
     
 	// 600 - 自定义错误提示

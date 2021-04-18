@@ -1,12 +1,13 @@
 package ai.yue.library.test.controller.data.jdbc.query.map;
 
-import com.alibaba.fastjson.JSONArray;
+import cn.hutool.core.annotation.Alias;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 人员dto
@@ -134,7 +135,7 @@ public class PersonVO implements Serializable {
     /**
      * 人员照片集,json数组
      */
-    private JSONArray personPhotos;
+    private List<JSONObject> personPhotos;
 
     /**
      * 婚姻
@@ -159,7 +160,8 @@ public class PersonVO implements Serializable {
     /**
      * 是否激活为登录用户
      */
-    private boolean isActUser;
+    @Alias("is_act_user")
+    private boolean actUser;
 
     /**
      * 激活为登录用户时间
@@ -169,7 +171,7 @@ public class PersonVO implements Serializable {
     /**
      * 人员状态
      */
-    private String personStatus;
+    private PersonStatusEnum personStatus;
 
     /**
      * 扩展信息

@@ -10,16 +10,32 @@
 	<artifactId>yue-library-base-crypto</artifactId>
 	<name>${project.artifactId}</name>
 	<description>yue-library 加密解密</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-base</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-redis</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-web</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15to18</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

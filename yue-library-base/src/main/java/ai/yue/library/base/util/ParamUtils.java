@@ -1,10 +1,5 @@
 package ai.yue.library.base.util;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ParamVoidException;
@@ -13,6 +8,11 @@ import ai.yue.library.base.ipo.ParamFormatIPO;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.webenv.WebEnv;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 参数处理工具类
@@ -180,21 +180,27 @@ public class ParamUtils {
 	public static void paramValidate(JSONObject paramJson, String[] mustContainKeys, String... canContainKeys) {
 		// 1. 判断Map数据结构key的一致性
 		boolean isHint = false;
+		String hintMsg = "";
 		if (!MapUtils.isKeys(paramJson, mustContainKeys, canContainKeys)) {
 			isHint = true;
+			hintMsg = "【错误提示】：要求的参数key不一致，";
 		}
-		
+
 		// 2. 必传参数是否为空字符串
-		for (String key : mustContainKeys) {
-			if (StringUtils.isEmptyIfStr(paramJson.get(key))) {
-				isHint = true;
-				break;
+		if (!isHint) {
+			for (String key : mustContainKeys) {
+				if (StringUtils.isEmptyIfStr(paramJson.get(key))) {
+					isHint = true;
+					hintMsg = StrUtil.format("【错误提示】：必传参数 {} 的值为空，", key);
+					break;
+				}
 			}
 		}
-		
+
 		// 3. 提示
 		if (isHint) {
 			StringBuffer paramHint = new StringBuffer();
+			paramHint.append(hintMsg);
 			paramHint.append(PARAM_PREFIX_MUST + Arrays.toString(mustContainKeys));
 			paramHint.append("，");
 			paramHint.append(PARAM_PREFIX_CAN + Arrays.toString(canContainKeys));

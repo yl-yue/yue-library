@@ -6,9 +6,10 @@
 * yue-library-base（必备）
 
   * [介绍](base/介绍.md "yue-library-base介绍")
-  * [Restful](base/Restful.md)
+  * [RESTful](base/RESTful.md)
   * [校验](base/校验.md "校验框架")
   * [参数解析器](base/参数解析器.md)
+  * [类型转换器](base/类型转换器.md)
   * [统一异常处理](base/统一异常处理.md)
   * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)
@@ -17,13 +18,13 @@
 * yue-library-base-crypto
 
   * [介绍](base-crypto/介绍.md "yue-library-base-crypto介绍")
+  * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
 
 * yue-library-data-jdbc（推荐）
 
   * [介绍](data/jdbc/介绍.md "yue-library-data-jdbc介绍")
   * [增删改查](data/jdbc/增删改查.md)
-  * [AbstractDAO](data/jdbc/AbstractDAO.md)
-  * [AbstractRepository](data/jdbc/AbstractRepository.md)
+  * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
   * [动态数据源](data/jdbc/动态数据源.md)
 
 * yue-library-data-redis

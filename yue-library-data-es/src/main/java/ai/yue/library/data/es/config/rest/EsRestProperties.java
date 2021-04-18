@@ -1,10 +1,9 @@
 package ai.yue.library.data.es.config.rest;
 
-import java.util.List;
-
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Data;
+import java.util.List;
 
 /**
  * ES REST 可配置属性定义
@@ -47,5 +46,13 @@ public class EsRestProperties {
 	private boolean hostnameVerification = false;
 	private String username;
 	private String password;
-    
+	/**
+	 * 连接超时毫秒
+	 */
+	private long connectTimeoutMillis = 25000L;
+	/**
+	 * socket超时毫秒
+	 */
+	private long socketTimeoutMillis = 15000L;
+
 }

@@ -1,10 +1,12 @@
 package ai.yue.library.test.controller.base.validation;
 
+import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.test.ipo.ValidationIPO;
 import ai.yue.library.test.ipo.ValidationIPO2;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,6 +89,14 @@ public class ValidationController {
 	public Result<?> valid2(ValidationIPO2 validationIPO2) {
 		System.out.println(validationIPO2);
 		return R.success(validationIPO2);
+	}
+
+	@PostMapping("/validJson")
+	public Result<?> validJson(JSONObject paramJson) {
+		String[] mustContainKeys = {"name", "birthday", "idcard"};
+		String[] canContainKeys = {"age", "cellphone"};
+		ParamUtils.paramValidate(paramJson, mustContainKeys, canContainKeys);
+		return R.success(paramJson);
 	}
 
 }

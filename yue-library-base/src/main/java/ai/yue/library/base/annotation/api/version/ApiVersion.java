@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Restful API接口版本定义
+ * RESTful API接口版本定义
  * <p>为接口提供优雅的版本路径，效果如下：
  * <blockquote>
  * 	<p>&#064;ApiVersion(1)
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 public @interface ApiVersion {
 
 	/**
-	 * Restful API接口版本号
+	 * RESTful API接口版本号
 	 * <p>最近优先原则：在方法上的 {@link ApiVersion} 可覆盖在类上面的 {@link ApiVersion}，如下：
 	 * <p>类上面的 {@link #value()} 值 = 1.1，
 	 * <p>方法上面的 {@link #value()} 值 = 2.1，

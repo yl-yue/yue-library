@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>j11.2.3.1-SNAPSHOT</version>
+		<version>j11.2.3.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-test</artifactId>
 	<name>${project.artifactId}</name>
@@ -59,7 +59,13 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-extra</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15to18</artifactId>
+			<version>1.66</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.egzosn</groupId>
 			<artifactId>pay-java-wx</artifactId>

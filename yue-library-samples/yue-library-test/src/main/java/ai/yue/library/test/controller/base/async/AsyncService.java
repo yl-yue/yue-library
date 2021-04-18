@@ -2,7 +2,7 @@ package ai.yue.library.test.controller.base.async;
 
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.data.jdbc.vo.PageTVO;
+import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDAO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDO;
 import ai.yue.library.web.util.servlet.ServletUtils;
@@ -33,7 +33,7 @@ public class AsyncService {
         HttpServletRequest request = ServletUtils.getRequest();
         log.info("request: {}", request);
         log.info("3. asyncContext: {}", request.getHeader("asyncContext"));
-        PageTVO<PersonDO> pageTVO = personDAO.page(PageIPO.parsePageIPO(paramJson));
+        PageVO<PersonDO> pageTVO = personDAO.page(PageIPO.parsePageIPO(paramJson));
         log.info("4. 异步测试-异步方法执行完毕，分页数据大小：{}", pageTVO.getCount());
         HttpServletRequest request2 = ServletUtils.getRequest();
         log.info("request2: {}", request2);
@@ -42,7 +42,7 @@ public class AsyncService {
 
     public Result<List<PersonDO>> sync() {
         PageIPO pageIPO = PageIPO.builder().page(1).limit(10).build();
-        PageTVO<PersonDO> pageTVO = personDAO.page(pageIPO);
+        PageVO<PersonDO> pageTVO = personDAO.page(pageIPO);
         log.info("2. 同步-同步方法执行完毕，分页数据大小：{}", pageTVO.getCount());
         String syncContext = ServletUtils.getRequest().getHeader("syncContext");
         log.info("3. 同步-syncContext: {}", syncContext);

@@ -1,15 +1,14 @@
 package ai.yue.library.data.jdbc.vo;
 
-import java.util.List;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 分页查询结果
@@ -18,15 +17,15 @@ import lombok.NoArgsConstructor;
  * @since	2018年7月18日
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageVO {
+public class PageVO<T> {
 	
 	/** 总数 */
 	Long count;
 	/** 分页列表数据 */
-	List<JSONObject> data;
+	List<T> data;
 	
 	public JSONObject toJSONObject() {
 		JSONObject json = new JSONObject();
@@ -40,7 +39,7 @@ public class PageVO {
 	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public Result<List<JSONObject>> toResult() {
+	public Result<List<T>> toResult() {
 		return R.success(count, data);
 	}
 	

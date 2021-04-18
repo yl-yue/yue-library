@@ -51,8 +51,8 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 向表中插入一条数据，主键默认为id时使用。
-	 * 
+	 * 插入一条数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}
+	 *
 	 * @param tableName 表名
 	 * @param paramJson 参数
 	 * @return 返回主键值
@@ -73,7 +73,7 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 向表中插入一条数据
+	 * 插入一条数据
 	 * 
 	 * @param tableName 表名
 	 * @param paramJson 参数
@@ -94,8 +94,8 @@ class DbInsert extends DbDelete {
 	}
 	
 	/**
-	 * <h1>向表中插入一条数据，并自动递增 <i>sort_idx</i></h1>
-	 * 
+	 * 插入一条数据，并自动递增 <i>sort_idx</i>
+	 *
 	 * <blockquote>
 	 * <b>使用条件：</b>
 	 * <pre>1. id 默认为主键</pre>
@@ -112,36 +112,31 @@ class DbInsert extends DbDelete {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
-		String sortFieldName = "sort_idx";
-		String sortFieldNameWrapped = dialect.getWrapper().wrap(sortFieldName);
+		String fieldDefinitionSortIdxWrapped = dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_SORT_IDX);
 		paramFormat(paramJson);
 
 		// 2. 组装最大sort_idx值查询SQL
-		int sort_idx = 1;
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT " + sortFieldNameWrapped + " FROM ");
+		sql.append("SELECT " + fieldDefinitionSortIdxWrapped + " FROM ");
 		sql.append(tableName);
-		String whereSql = paramToWhereSql(paramJson, uniqueKeys);
-		sql.append(whereSql);
-		sql.append(" ORDER BY " + sortFieldNameWrapped + " DESC LIMIT 1");
-		
+		sql.append(paramToWhereSql(paramJson, uniqueKeys));
+		sql.append(" ORDER BY " + fieldDefinitionSortIdxWrapped + " DESC LIMIT 1");
+
 		// 3. 查询最大sort_idx值
 		paramJson = dialect.getWrapper().wrap(paramJson);
-		JSONObject result = queryForJson(sql.toString(), paramJson);
-		if (result != null) {
-			sort_idx = result.getInteger(sortFieldName) + 1;
-		}
-		
+		Long sort_idx = queryForObject(sql.toString(), paramJson, Long.class);
+		sort_idx = sort_idx == null ? 1L : sort_idx++;
+
 		// 4. put sort_idx值
-		paramJson.put(sortFieldNameWrapped, sort_idx);
+		paramJson.put(fieldDefinitionSortIdxWrapped, sort_idx);
 		
 		// 5. 执行
 		return insert(tableName, paramJson);
 	}
 	
 	/**
-	 * 向表中批量插入数据，主键默认为id时使用。
-	 * 
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}
+	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数
 	 */
@@ -159,7 +154,7 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 向表中批量插入数据，主键默认为id时使用（不调用 {@link #paramFormat(JSONObject)} 方法）。
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}（不调用 {@link #paramFormat(JSONObject)} 方法）。
 	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数
@@ -184,23 +179,24 @@ class DbInsert extends DbDelete {
 	}
 
 	// InsertOrUpdate
-	
-    /**
-     * <h2>插入或更新</h2>
-     * <i>表中必须存在数据唯一性约束</i>
-     * <p>更新触发条件：此数据若存在唯一性约束则更新，否则便执行插入数据
-     * <p><b>MySQL执行示例：</b><br>
-     * <code>INSERT INTO table (param1, param2, ...)</code><br>
-     * <code>VALUES</code><br>
-     * <code>(:param1, :param2, ...)</code><br>
-     * <code>ON DUPLICATE KEY UPDATE</code><br>
-     * <code>condition = condition + :condition, ...</code>
-     * @param tableName		表名
-     * @param paramJson		插入或更新所用到的参数
-     * @param conditions	更新条件（对应paramJson内的key值）
-     * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
-     * @return 受影响的行数
-     */
+
+	/**
+	 * <b>插入或更新</b><br>
+	 * <i>表中必须存在数据唯一性约束</i>
+	 * <p>更新触发条件：此数据若存在唯一性约束则更新，否则便执行插入数据
+	 * <p><b>MySQL执行示例：</b><br>
+	 * <code>INSERT INTO table (param1, param2, ...)</code><br>
+	 * <code>VALUES</code><br>
+	 * <code>(:param1, :param2, ...)</code><br>
+	 * <code>ON DUPLICATE KEY UPDATE</code><br>
+	 * <code>condition = condition + :condition, ...</code>
+	 *
+	 * @param tableName    表名
+	 * @param paramJson    插入或更新所用到的参数
+	 * @param conditions   更新条件（对应paramJson内的key值）
+	 * @param dBUpdateEnum 更新类型 {@linkplain DbUpdateEnum}
+	 * @return 受影响的行数
+	 */
     @Transactional
     public Long insertOrUpdate(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
     	return dialect.insertOrUpdate(tableName, paramJson, conditions, dBUpdateEnum);

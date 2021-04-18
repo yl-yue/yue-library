@@ -1,9 +1,40 @@
-# Restful
-## Restful Result
-　　`ai.yue.library.base.view.Result<T>` 定义为最外层响应对象，`ai.yue.library.base.view.R` 定义为工具类可便捷返回 Restful 风格API结果。
+# RESTful
+RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，yue-library在 [接口质检标准](规约/接口质检标准.md) 的介绍中，已对RESTful风格的API进行了详细的阐述与定义。
 
-### 示例
-**代码如下：**
+## 统一响应体定义（详见：[👉接口质检标准](规约/接口质检标准.md)）
+响应体参数介绍：
+
+|参数名称	|参数类型	|最大长度	|描述													|示例																	|
+|--			|--			|--			|--														|--																		|
+|code		|Int		|3			|请求状态码（同步HTTP状态码）							|200																	|
+|msg		|String		|30			|请求提示（除状态码600外，此msg皆表示给开发者的提示）	|成功																	|
+|flag		|Boolean	|			|请求状态												|true																	|
+|count		|Int		|			|分页统计条数											|null																	|
+|data		|Object		|			|响应数据												|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}	|
+
+msg提示约定：
+- 除状态码600外，此msg皆表示服务端给客户端（即开发者）的请求提示
+- 一般情况其它错误提示，如：500，服务器内部错误等，需前端结合各自业务情况统一拦截处理，转换为优化的用户提示，如：`网络开小差了，请稍后重试...`
+- 优好的用户提示，甚至可到页面步骤级别，不同步骤错误基于不同的友好提示。
+
+响应示例：
+```json
+{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+    "count": null,
+    "data": "【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}"
+}
+```
+
+## RESTful与Result
+- `ai.yue.library.base.view.Result<T>` 定义为HTTP请求最外层响应对象，更适应RESTful风格API。
+- `ai.yue.library.base.view.ResultEnum` 定义Result HTTP状态码枚举与默认的提示信息。
+- `ai.yue.library.base.view.R` 定义为工具类便捷返回`Result`，构建RESTful风格API结果。
+
+### Result使用示例
+**Controller定义：**
 ```java
 @PostMapping("/valid")
 public Result<?> valid(@Valid ValidationIPO validationIPO) {
@@ -13,10 +44,10 @@ public Result<?> valid(@Valid ValidationIPO validationIPO) {
 
 **响应结果如下图所示**：多了一层最外层响应对象
 
-![请求参数与响应结果](Restful_files/1.jpg)
+![请求参数与响应结果](RESTful_files/1.jpg)
 
 ## API接口版本控制
-　　在前后端分离、Restful 接口盛行的当下，接口的版本控制是一个成熟的系统所应该拥有的。web模块提供的版本控制，可以方便我们快速构建一个基于版本的api接口。<br>
+　　在前后端分离、RESTful 接口盛行的当下，接口的版本控制是一个成熟的系统所应该拥有的。web模块提供的版本控制，可以方便我们快速构建一个基于版本的api接口。<br>
 　　通过 `@ApiVersion` 注解可优雅的实现接口版本控制，注解定义如下：
 ```java
 @Retention(RetentionPolicy.RUNTIME)
@@ -24,7 +55,7 @@ public Result<?> valid(@Valid ValidationIPO validationIPO) {
 public @interface ApiVersion {
 
 	/**
-	 * Restful API接口版本号
+	 * RESTful API接口版本号
 	 * <p>最近优先原则：在方法上的 {@link ApiVersion} 可覆盖在类上面的 {@link ApiVersion}，如下：
 	 * <p>类上面的 {@link #value()} 值 = 1.1，
 	 * <p>方法上面的 {@link #value()} 值 = 2.1，
@@ -153,6 +184,3 @@ yue:
     "data": null
 }
 ```
-
-## 接口质检标准
-　　[接口质检标准参考文档](规约/接口质检标准.md)

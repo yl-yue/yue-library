@@ -45,12 +45,16 @@ class DbDelete extends DbUpdate {
 		// 2. 确认数据
 		JSONObject data = null;
 		String key = null;
-		if (uk instanceof Long) {
-			data = getById(tableName, (Long) uk);
-			key = DbConstant.PRIMARY_KEY;
-		} else if (uk instanceof String) {
-			data = getByBusinessUk(tableName, (String) uk);
-			key = getJdbcProperties().getBusinessUk();
+		try {
+			if (uk instanceof Long) {
+				data = getById(tableName, (Long) uk);
+				key = DbConstant.PRIMARY_KEY;
+			} else if (uk instanceof String) {
+				data = getByBusinessUk(tableName, (String) uk);
+				key = getJdbcProperties().getBusinessUk();
+			}
+		} catch (Exception e) {
+			data = null;
 		}
 		if (data == null || data.isEmpty()) {
 			throw new DbException("执行单行删除命令失败，数据结构异常，可能原因是：数据不存在或存在多条数据", true);
@@ -148,8 +152,9 @@ class DbDelete extends DbUpdate {
     }
 
 	/**
-	 * 删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * <b>删除-批量</b>
+	 * <p>不调用 {@link #paramFormat(JSONObject)} 方法</p>
+	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key</p>
 	 *
 	 * @param tableName		表名
 	 * @param paramJsons	条件数组
@@ -171,13 +176,14 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-     * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
-     * <p>指定SQL语句以创建预编译执行SQL和绑定删除参数
-     * <p>示例：<code>DELETE FROM table WHERE id = :id</code><br>
-     * @param sql			要执行的删除SQL
-     * @param paramJsons	删除所用到的条件数组
+	 * <b>删除-批量</b>
+	 * <p>同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}</p>
+	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
+	 *
+	 * @param sql        要执行的删除SQL
+	 * @param paramJsons 删除所用到的条件数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
-     */
+	 */
 	@Transactional
 	public int[] deleteBatch2(String sql, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
@@ -188,11 +194,13 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
-	 * <p>指定SQL语句以创建预编译执行SQL和绑定删除参数
-	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code><br>
-	 * @param sql			要执行的删除SQL
-	 * @param paramJsons	删除所用到的条件数组（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * <b>删除-批量</b>
+	 * <p>不调用 {@link #paramFormat(JSONObject)} 方法</p>
+	 * <p>同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}</p>
+	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
+	 *
+	 * @param sql        要执行的删除SQL
+	 * @param paramJsons 删除所用到的条件数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
 	@Transactional
@@ -212,7 +220,7 @@ class DbDelete extends DbUpdate {
 		paramJson.put(DbConstant.FIELD_DEFINITION_DELETE_TIME, System.currentTimeMillis());
 		
 		// 3. 返回结果
-		return dialect.updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+		return updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
 	}
 
 	private void deleteLogicByUk(String tableName, Object uk) {
@@ -281,7 +289,7 @@ class DbDelete extends DbUpdate {
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
-		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
+		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
 	/**

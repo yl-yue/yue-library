@@ -1,7 +1,6 @@
 package ai.yue.library.web.config.exception;
 
-import javax.servlet.http.HttpServletResponse;
-
+import ai.yue.library.base.view.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,7 +10,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import ai.yue.library.base.view.Result;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 响应结果处理器
@@ -36,7 +35,7 @@ public class ResultResponseBodyHandler<T> implements ResponseBodyAdvice<T> {
 	public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType,
 			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
 			ServerHttpResponse response) {
-		Integer code = ((Result<?>) body).getCode();
+		Integer code = body == null ? null : ((Result<?>) body).getCode();
 		HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
 		int status = servletResponse.getStatus();
 		if (code != null && code != status) {

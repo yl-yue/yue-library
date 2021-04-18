@@ -28,7 +28,7 @@ public class WebFluxRegistrationsConfig implements WebFluxRegistrations {
 			return WebFluxRegistrations.super.getRequestMappingHandlerMapping();
 		}
 		
-		log.info("【初始化配置-ApiVersionRequestMappingHandlerMapping】默认配置为true，当前环境为true：Restful API接口版本控制，执行初始化 ...");
+		log.info("【初始化配置-ApiVersionRequestMappingHandlerMapping】默认配置为true，当前环境为true：RESTful API接口版本控制，执行初始化 ...");
 		return new ApiVersionRequestMappingHandlerMapping(apiVersionProperties);
 	}
     

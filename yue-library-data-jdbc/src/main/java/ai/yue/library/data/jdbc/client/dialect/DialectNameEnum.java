@@ -10,7 +10,7 @@ package ai.yue.library.data.jdbc.client.dialect;
 public enum DialectNameEnum {
 
 	/**
-	 * SQL92
+	 * SQL92、SQL99
 	 */
 	ANSI,
 
@@ -22,6 +22,11 @@ public enum DialectNameEnum {
 	/**
 	 * PostgreSQL
 	 */
-	POSTGRESQL
+	POSTGRESQL,
+
+	/**
+	 * 达梦
+	 */
+	DM
 
 }

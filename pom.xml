@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Hoxton.SR9</version>
+		<version>Hoxton.SR10</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
@@ -41,17 +41,18 @@
 	</modules>
 	
 	<properties>
-		<revision>j${java.version}.2.3.1</revision>
+		<revision>j${java.version}.2.3.2</revision>
 		<sha1 />
 		<changelist>-SNAPSHOT</changelist>
-		<spring-cloud-alibaba.version>2.2.3.RELEASE</spring-cloud-alibaba.version>
+		<spring-cloud-alibaba.version>2.2.5.RELEASE</spring-cloud-alibaba.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.4.4</hutool.version>
-		<fastjson.version>1.2.74</fastjson.version>
+		<hutool.version>5.6.3</hutool.version>
+		<bouncycastle.version>1.68</bouncycastle.version>
+		<fastjson.version>1.2.76</fastjson.version>
 		<dynamic-datasource.version>3.3.1</dynamic-datasource.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.2.0</easypoi.version>
@@ -137,6 +138,11 @@
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-crypto</artifactId>
 				<version>${hutool.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15to18</artifactId><!-- sm2、sm3、sm4国密算法 -->
+				<version>${bouncycastle.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>

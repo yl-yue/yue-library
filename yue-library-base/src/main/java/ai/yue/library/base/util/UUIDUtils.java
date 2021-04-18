@@ -1,18 +1,20 @@
 package ai.yue.library.base.util;
 
+import cn.hutool.core.util.IdUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
-import cn.hutool.core.util.IdUtil;
-
 /**
  * UUID工具类
- * 
+ *
+ * @deprecated 请使用 {@link IdUtils}
  * @author	ylyue
  * @since	2018年1月19日
  */
+@Deprecated
 public class UUIDUtils extends IdUtil {
 
 	/**

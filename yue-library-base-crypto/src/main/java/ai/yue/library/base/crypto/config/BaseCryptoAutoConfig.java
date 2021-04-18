@@ -1,14 +1,13 @@
 package ai.yue.library.base.crypto.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
 import ai.yue.library.base.crypto.config.properties.CryptoProperties;
 import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.crypto.SecureUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * base-crypto配置，提供自动配置项支持与增强

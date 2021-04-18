@@ -1,5 +1,9 @@
 package ai.yue.library.data.es.config.rest;
 
+import ai.yue.library.base.config.net.http.SkipHostnameVerifier;
+import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,11 +15,6 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration.MaybeSecureClientConfigurationBuilder;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
-
-import ai.yue.library.base.config.net.http.SkipHostnameVerifier;
-import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * ES REST 配置
@@ -54,7 +53,9 @@ public class EsRestConfig extends AbstractElasticsearchConfiguration {
 		if (StrUtil.isNotEmpty(username) && StrUtil.isNotEmpty(password)) {
 			clientConfigurationBuilder.withBasicAuth(username, password);
 		}
-		
+
+		clientConfigurationBuilder.withConnectTimeout(esRestProperties.getConnectTimeoutMillis());
+		clientConfigurationBuilder.withSocketTimeout(esRestProperties.getSocketTimeoutMillis());
 		return RestClients.create(clientConfigurationBuilder.build()).rest();                   
     }
 	

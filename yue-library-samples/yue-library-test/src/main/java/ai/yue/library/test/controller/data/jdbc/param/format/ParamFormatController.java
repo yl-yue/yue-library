@@ -1,6 +1,5 @@
 package ai.yue.library.test.controller.data.jdbc.param.format;
 
-import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.R;
@@ -9,6 +8,7 @@ import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.test.ipo.ParamFormatIPO;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,11 +43,10 @@ public class ParamFormatController {
     
     @PostMapping("/insertNotParamFormat")
     public Result<?> insertNotParamFormat(ParamFormatIPO paramFormatIPO) {
-//    public Result<?> insertNotParamFormat(JSONObject paramJson) {
-        JSONObject paramJson = Convert.toJSONObject(paramFormatIPO);
-
         // 1. 移除空对象
+        JSONObject paramJson = getParamJson(paramFormatIPO);
         MapUtils.removeEmpty(paramJson);
+
         // 2. 插入源初始化
         tableName = db.getDialect().getWrapper().wrap(tableName);
         paramJson = db.getDialect().getWrapper().wrap(paramJson);
@@ -69,25 +70,43 @@ public class ParamFormatController {
 
     @PostMapping("/insert")
     public Result<?> insert(ParamFormatIPO paramFormatIPO) {
-        return R.success(db.insert(tableName, Convert.toJSONObject(paramFormatIPO)));
+        JSONObject paramJson = getParamJson(paramFormatIPO);
+        return R.success(db.insert(tableName, paramJson));
     }
 
     @PutMapping("/updateByIdNotParamFormat")
     public Result<?> updateByIdNotParamFormat(ParamFormatIPO paramFormatIPO) {
-        String[] conditions = { DbConstant.PRIMARY_KEY };
-        JSONObject paramJson = Convert.toJSONObject(paramFormatIPO);
-        String sql = db.getDialect().updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
-        int updateRowsNumber = namedParameterJdbcTemplate.update(sql, paramJson);
-        int expectedValue = 1;
-        db.updateAndExpectedEqual(updateRowsNumber, expectedValue);
+        JSONObject paramJson = getParamJson(paramFormatIPO);
+        List<JSONObject> paramList = new ArrayList<>();
+        paramList.add(paramJson);
+        db.updateByIdNotParamFormat(tableName, ListUtils.toJsons(paramList), DbUpdateEnum.NORMAL);
         return R.success();
     }
 
     @PutMapping("/updateById")
     public Result<?> updateById(ParamFormatIPO paramFormatIPO) {
-        JSONObject paramJson = Convert.toJSONObject(paramFormatIPO);
+        JSONObject paramJson = getParamJson(paramFormatIPO);
         db.updateById(tableName, paramJson);
         return R.success();
+    }
+
+    private JSONObject getParamJson(ParamFormatIPO paramFormatIPO) {
+        Long id = paramFormatIPO.getId();
+        Character character = paramFormatIPO.getCharacter();
+        LocalDateTime localDateTime = paramFormatIPO.getLocalDateTime();
+        JSONObject jsonObject = paramFormatIPO.getJsonObject();
+        List<JSONObject> jsonObjectList = paramFormatIPO.getJsonObjectList();
+        JSONArray jsonArray = paramFormatIPO.getJsonArray();
+        JSONObject paramJson = new JSONObject();
+        if (id != null) {
+            paramJson.put("id", id);
+        }
+        paramJson.put("character", character);
+        paramJson.put("localDateTime", localDateTime);
+        paramJson.put("jsonObject", jsonObject);
+        paramJson.put("jsonObjectList", jsonObjectList);
+        paramJson.put("jsonArray", jsonArray);
+        return paramJson;
     }
 
 }

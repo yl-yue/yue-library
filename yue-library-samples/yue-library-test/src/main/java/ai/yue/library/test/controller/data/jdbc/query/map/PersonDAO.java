@@ -18,4 +18,14 @@ public class PersonDAO extends AbstractRepository<PersonDO> {
 		return "base_person";
 	}
 
+	/**
+	 * 单个
+	 *
+	 * @param id
+	 * @return
+	 */
+	public PersonVO getPersonVO(Long id) {
+		return db.getById(tableName(), id, PersonVO.class);
+	}
+
 }

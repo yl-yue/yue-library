@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.base.crypto.config.BaseCryptoAutoConfig
+ai.yue.library.base.crypto.config.BaseCryptoAutoConfig,\
+ai.yue.library.base.crypto.config.KeyExchangeConfig

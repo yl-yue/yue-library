@@ -1,10 +1,5 @@
 package ai.yue.library.web.config.api.version;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.condition.RequestCondition;
-
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.exception.ApiVersionDeprecatedException;
@@ -13,8 +8,14 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.condition.RequestCondition;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 优雅的接口版本控制，URL匹配器
+ *
  * @author	ylyue
  * @since	2020年2月26日
  */
@@ -42,19 +43,23 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     	String[] versionPaths = StringUtils.split(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
 		
-		// 如果当前url中传递的版本信息高于(或等于)申明(或默认)版本，则用url的版本
+		// pathVersion的值大于等于apiVersionValue皆可匹配，除非ApiVersion的deprecated值已被标注为true
 		double apiVersionValue = this.getApiVersion().value();
 		if (pathVersion >= apiVersionValue) {
 			double minimumVersion = apiVersionProperties.getMinimumVersion();
-			if ((this.getApiVersion().deprecated() || minimumVersion >= pathVersion) && pathVersion == apiVersionValue) {
+			if ((this.getApiVersion().deprecated() || minimumVersion > pathVersion) && NumberUtil.equals(pathVersion, apiVersionValue)) {
+				// 匹配到弃用版本接口
 				throw new ApiVersionDeprecatedException(StrUtil.format("客户端调用弃用版本API接口，requestURI：{}", requestURI));
 			} else if (this.getApiVersion().deprecated()) {
+				// 继续匹配
 				return null;
 			}
-            
+
+			// 匹配成功
 			return this;
 		}
-		
+
+		// 继续匹配
 		return null;
 	}
     

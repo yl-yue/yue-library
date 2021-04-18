@@ -1,15 +1,10 @@
 package ai.yue.library.data.jdbc.ipo;
 
 import com.alibaba.fastjson.JSONObject;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 /**
- * 分页查询对象，用于SQL分页查询
+ * 经过方言处理的分页查询参数，用于SQL分页查询
  * 
  * @author	ylyue
  * @since	2018年4月13日
@@ -19,21 +14,27 @@ import lombok.NonNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Page {
-	
-	/** LIMIT关键字 */
-	public static final String LIMIT_KEYWORD = "LIMIT";
-	
-	/** 分页查询起始行命名占位符 **/
-	public static final String PAGE_NAMED_PARAMETER = ":page";
-	
-	/** 分页查询限制数量命名占位符 */
-	public static final String LIMIT_NAMED_PARAMETER = ":limit";
-	
-	/** page参数名 **/
-	public static final String PAGE_PARAM_NAME = "page";
-	
-	/** limit参数名 */
-	public static final String LIMIT_PARAM_NAME = "limit";
+
+	// ---------- 关键字定义 ----------
+
+	/** 关键字-LIMIT */
+	public static final String KEYWORD_LIMIT = "LIMIT";
+	/** 关键字-OFFSET */
+	public static final String KEYWORD_OFFSET = "OFFSET";
+
+	// ---------- 命名占位符定义 ----------
+
+	/** 命名占位符-分页查询起始行 */
+	public static final String NAMED_PARAMETER_PAGE = ":page";
+	/** 命名占位符-分页查询限制数量 */
+	public static final String NAMED_PARAMETER_LIMIT = ":limit";
+
+	// ---------- 参数名定义 ----------
+
+	/** 参数名-page */
+	public static final String PARAM_NAME_PAGE = "page";
+	/** 参数名-limit */
+	public static final String PARAM_NAME_LIMIT = "limit";
 	
 	/**
 	 * 查询起始行，从0开始计数，包含关系
@@ -61,8 +62,8 @@ public class Page {
 	 */
 	public JSONObject toParamJson() {
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(PAGE_PARAM_NAME, this.page);
-		paramJson.put(LIMIT_PARAM_NAME, this.limit);
+		paramJson.put(PARAM_NAME_PAGE, this.page);
+		paramJson.put(PARAM_NAME_LIMIT, this.limit);
 		if (null != conditions && !conditions.isEmpty()) {
 			paramJson.putAll(conditions);
 		}
