@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>j11.2.3.2-SNAPSHOT</version>
+		<version>j8.2.3.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-test</artifactId>
 	<name>${project.artifactId}</name>
@@ -71,4 +71,13 @@
 			<artifactId>pay-java-wx</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
