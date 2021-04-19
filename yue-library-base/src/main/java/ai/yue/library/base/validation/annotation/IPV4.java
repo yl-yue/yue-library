@@ -9,6 +9,7 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotNull;
 @Retention(RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Constraint(validatedBy = { IPV4Validator.class })
+@Repeatable(IPV4.List.class)
 public @interface IPV4 {
 	
 	/**
@@ -39,5 +41,15 @@ public @interface IPV4 {
 	Class<?>[] groups() default {};
 	
 	Class<? extends Payload>[] payload() default {};
-	
+
+	/**
+	 * Defines several {@code @IPV4} annotations on the same element.
+	 */
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+	@Retention(RUNTIME)
+	@Documented
+	public @interface List {
+		IPV4[] value();
+	}
+
 }

@@ -185,8 +185,11 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 
 					// 确认校验
 					boolean verify = false;
+					Class<?>[] groups = {};
 					if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
 						verify = true;
+						Validated validated = parameter.getParameterAnnotation(Validated.class);
+						groups = validated != null ? validated.value() : groups;
 					}
 					if (verify == false && value != null && value.size() > 0) {
 						Object verifyObject = value.get(0);
@@ -199,9 +202,9 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 					// 执行校验
 					if (verify) {
 						Validator validator = SpringUtils.getBean(Validator.class);
-						value.forEach(javaBean -> {
-							validator.valid(javaBean);
-						});
+						for (Object javaBean : value) {
+							validator.valid(javaBean, groups);
+						}
 					}
 				} else {
 					arg = Convert.toList(actualTypeArgument, body);

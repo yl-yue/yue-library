@@ -64,8 +64,11 @@ public class JavaBeanArgumentResolver implements HandlerMethodArgumentResolver {
 
 		// 3. 确认校验
 		boolean verify = false;
+		Class<?>[] groups = {};
 		if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
 			verify = true;
+			Validated validated = parameter.getParameterAnnotation(Validated.class);
+			groups = validated != null ? validated.value() : groups;
 		}
 		if (verify == false && param != null) {
 			Class<?> paramClass = param.getClass();
@@ -76,7 +79,7 @@ public class JavaBeanArgumentResolver implements HandlerMethodArgumentResolver {
 
 		// 4. 执行校验
 		if (verify) {
-			SpringUtils.getBean(Validator.class).valid(param);
+			SpringUtils.getBean(Validator.class).valid(param, groups);
 		}
 
 		// 5. 返回结果

@@ -10,13 +10,15 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 /**
+ * 将`@Valid`注解添加到POJO类上
+ *
  * @author  ylyue
  * @version 创建时间：2018年9月25日
  */
 @Data
 @Valid
 //@Validated
-public class ValidationIPO2 {
+public class ValidationAnnotationInIPO {
 
     @NotEmpty(message = "姓名不能为空")
     @Length(max = 20, message = "姓名不能超过20个字")
@@ -24,7 +26,7 @@ public class ValidationIPO2 {
     
     private LocalDate birthday;
     
-    @IdCard
+    @IdCard(notNull = false)
     private String idcard;
     
     @Max(30)

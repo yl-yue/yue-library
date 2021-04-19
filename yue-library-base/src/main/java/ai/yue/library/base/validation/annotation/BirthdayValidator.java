@@ -12,6 +12,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Validator;
 
 /**
+ * 生日格式校验器
+ *
  * @author	ylyue
  * @since	2019年5月8日
  */

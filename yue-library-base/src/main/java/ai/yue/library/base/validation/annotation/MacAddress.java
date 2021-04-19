@@ -9,6 +9,7 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotNull;
 @Retention(RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Constraint(validatedBy = { MacAddressValidator.class })
+@Repeatable(MacAddress.List.class)
 public @interface MacAddress {
 	
 	/**
@@ -39,5 +41,15 @@ public @interface MacAddress {
 	Class<?>[] groups() default {};
 	
 	Class<? extends Payload>[] payload() default {};
-	
+
+	/**
+	 * Defines several {@code @MacAddress} annotations on the same element.
+	 */
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+	@Retention(RUNTIME)
+	@Documented
+	public @interface List {
+		MacAddress[] value();
+	}
+
 }
