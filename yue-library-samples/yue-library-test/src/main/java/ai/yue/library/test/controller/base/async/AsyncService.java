@@ -5,7 +5,7 @@ import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDAO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDO;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

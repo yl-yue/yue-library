@@ -2,10 +2,12 @@ package ai.yue.library.data.jdbc.config.properties;
 
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.convert.Convert;
+import ai.yue.library.data.jdbc.constant.EncryptAlgorithmEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * jdbc可配置属性
@@ -54,6 +56,26 @@ public class JdbcProperties implements Serializable, Cloneable {
 	 * <p>默认：true
 	 */
 	private boolean enableBooleanMapRecognition = true;
+
+	/**
+	 * 数据加密算法
+	 */
+	private EncryptAlgorithmEnum dataEncryptAlgorithm = EncryptAlgorithmEnum.AES;
+
+	/**
+	 * 数据加密密钥
+	 */
+	private String dataEncryptKey;
+
+	/**
+	 * 数据加密配置
+	 */
+	private List<DataEncrypt> dataEncryptConfigs;
+
+	/**
+	 * JDBC审计表名
+	 */
+	private List<String> auditTableNames;
 
 	@Override
 	public JdbcProperties clone() {

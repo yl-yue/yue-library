@@ -4,8 +4,7 @@ import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
-import ai.yue.library.web.util.RequestParamUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -156,7 +155,7 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 		if (arg == null) {
 			JSONObject param = null;
 			try {
-				param = RequestParamUtils.getParam();
+				param = ServletUtils.getParamToJson(servletRequest);
 			} catch (Exception e) {
 				// 忽略
 			}

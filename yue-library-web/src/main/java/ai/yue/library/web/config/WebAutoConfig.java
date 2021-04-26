@@ -9,7 +9,6 @@ import ai.yue.library.web.config.properties.JacksonHttpMessageConverterPropertie
 import ai.yue.library.web.config.properties.WebProperties;
 import ai.yue.library.web.config.thread.pool.ContextDecorator;
 import ai.yue.library.web.env.WebMvcEnv;
-import ai.yue.library.web.util.servlet.multipart.UploadProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -35,9 +34,8 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@Import({ WebMvcConfig.class, WebMvcRegistrationsConfig.class, CustomArgumentResolversConfig.class, WebMvcEnv.class })
-@EnableConfigurationProperties({ WebProperties.class, JacksonHttpMessageConverterProperties.class,
-		FastJsonHttpMessageConverterProperties.class, UploadProperties.class })
+@Import({WebMvcConfig.class, WebMvcRegistrationsConfig.class, CustomArgumentResolversConfig.class, WebMvcEnv.class})
+@EnableConfigurationProperties({WebProperties.class, JacksonHttpMessageConverterProperties.class, FastJsonHttpMessageConverterProperties.class})
 public class WebAutoConfig {
 	
 	@Autowired

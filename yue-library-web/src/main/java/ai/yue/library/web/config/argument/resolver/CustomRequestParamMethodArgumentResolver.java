@@ -1,12 +1,6 @@
 package ai.yue.library.web.config.argument.resolver;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-
+import ai.yue.library.web.util.ServletUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
@@ -31,7 +25,11 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import ai.yue.library.web.util.RequestParamUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@linkplain RequestParamMethodArgumentResolver} 增强
@@ -151,7 +149,7 @@ public class CustomRequestParamMethodArgumentResolver extends AbstractNamedValue
 		
 		// yue-library
 		if (arg == null) {
-			arg = RequestParamUtils.getParam().get(name);
+			arg = ServletUtils.getParamToJson(servletRequest).get(name);
 		}
 		
 		return arg;

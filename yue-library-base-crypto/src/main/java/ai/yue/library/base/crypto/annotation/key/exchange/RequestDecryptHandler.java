@@ -4,7 +4,7 @@ import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.crypto.dao.key.exchange.KeyExchangeStorage;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import lombok.extern.slf4j.Slf4j;

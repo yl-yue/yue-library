@@ -2,7 +2,6 @@ package ai.yue.library.web.util;
 
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.web.ipo.CaptchaIPO;
-import ai.yue.library.web.util.servlet.ServletUtils;
 import ai.yue.library.web.vo.CaptchaVO;
 
 import javax.servlet.http.HttpSession;

@@ -7,13 +7,22 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.config.properties.DataEncrypt;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
+import ai.yue.library.data.jdbc.constant.EncryptAlgorithmEnum;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidPooledConnection;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
+import com.alibaba.druid.stat.TableStat;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
@@ -26,13 +35,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -68,6 +75,27 @@ public class DbBase {
     }
 
     /**
+     * 获得Druid数据源
+     *
+     * @return Druid数据源
+     */
+    public DruidDataSource getDruidDataSource() {
+        DataSource dataSource = getDataSource();
+        DruidDataSource druidDataSource = null;
+        try {
+            if (dataSource instanceof DruidDataSource) {
+                druidDataSource = (DruidDataSource) dataSource;
+            } else {
+                druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return druidDataSource;
+    }
+
+    /**
      * 设置数据源
      *
      * @param dataSource 数据源
@@ -88,12 +116,12 @@ public class DbBase {
         return dialect.getJdbcProperties();
     }
 
-    public <T> RowMapper<T> getRowMapper(Class<T> mappedClass) {
+    public <T> RowMapper<T> getRowMapper(Class<T> mappedClass, DbBase dbBase, String... tableNames) {
         RowMapper<T> rowMapper;
         if (mappedClass == null || Map.class.isAssignableFrom(mappedClass)) {
-            rowMapper = (RowMapper<T>) new ColumnMapRowMapper();
+            rowMapper = (RowMapper<T>) new ColumnMapRowMapper(dbBase, tableNames);
         } else {
-            rowMapper = ClassUtils.isSimpleValueType(mappedClass) ? SingleColumnRowMapper.newInstance(mappedClass) : BeanPropertyRowMapper.newInstance(mappedClass);
+            rowMapper = ClassUtils.isSimpleValueType(mappedClass) ? SingleColumnRowMapper.newInstance(mappedClass) : new BeanPropertyRowMapper(mappedClass, dbBase, tableNames);
         }
 
         return rowMapper;
@@ -182,12 +210,14 @@ public class DbBase {
     /**
      * <b>查询多行数据</b>
      * <p>同 {@linkplain NamedParameterJdbcTemplate#queryForRowSet(String, Map)}</p>
+     * <p>不支持数据自动解密</p>
      *
      * @param sql       要执行的SQL查询
      * @param paramJson 要绑定到查询的参数映射
      * @return 可用于方便的获取各种数据类型的结果集
      */
     public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
+        aopBefore(sql, null, paramJson);
         return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
     }
 
@@ -213,7 +243,22 @@ public class DbBase {
      * @return 多行查询结果
      */
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
-        return getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass));
+        aopBefore(sql, null, paramJson);
+        String[] tables = extractTables(sql);
+        List<T> resultList = getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass, this, tables));
+        if (mappedClass != null && CharSequence.class.isAssignableFrom(mappedClass) && resultList.size() == 1) {
+            List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
+            TableStat.Column column = ((ArrayList<TableStat.Column>) schemaStatVisitorList.get(0).getColumns()).get(0);
+            String columnName = column.getName();
+            JSONObject resultJson = new JSONObject();
+            resultJson.put(columnName, resultList.get(0));
+            aopAfter(tables, resultJson);
+            String resultDataStr = resultJson.getString(columnName);
+            resultList.clear();
+            resultList.add((T) resultDataStr);
+        }
+
+        return resultList;
     }
 
     // is
@@ -623,36 +668,182 @@ public class DbBase {
 
     // ========== 数据脱敏、JDBC审计 ==========
 
-    protected void aop(String tableName, JSONObject paramJson) {
+    protected List<SchemaStatVisitor> extractSchemaStatVisitor(String sql) {
+        DruidDataSource druidDataSource = getDruidDataSource();
+        DbType dbType = DbType.of(druidDataSource.getDbType());
+        List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, dbType);
+        List<SchemaStatVisitor> schemaStatVisitorList = new ArrayList<>();
+        for (SQLStatement sqlStatement : sqlStatements) {
+            SchemaStatVisitor visitor = new SchemaStatVisitor();
+            sqlStatement.accept(visitor);
+            schemaStatVisitorList.add(visitor);
+        }
 
+        return schemaStatVisitorList;
     }
 
-//    protected void dataEncrypt(String tableName, JSONObject paramJson) {
-//        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
-//        if (ListUtils.isNotEmpty(dataEncryptConfigList)) {
-//            for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
-//                String dataEncryptTableName = dataEncryptConfig.getTableName();
-//                if (tableName.equalsIgnoreCase(dataEncryptTableName)) {
-//                    List<String> fieldNameList = dataEncryptConfig.getFieldNames();
-//                    for (String fieldName : fieldNameList) {
-//                        paramJson.replace(fieldName, SecureSingleton.getAES().encryptBase64(paramJson.getString(fieldName)));
-//                    }
-//
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    protected void audit(String tableName, JSONObject paramJson) {
-//        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
-//        if (ListUtils.isNotEmpty(auditTableNames)) {
-//            for (String auditTableName : auditTableNames) {
-//                if (tableName.equalsIgnoreCase(auditTableName)) {
-//                    paramJson.put("","");
-//                }
-//            }
-//        }
-//    }
+    protected String[] extractTables(String sql) {
+        List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
+        List<String> tableNameList = new ArrayList<>();
+        for (SchemaStatVisitor schemaStatVisitor : schemaStatVisitorList) {
+            Set<TableStat.Name> names = schemaStatVisitor.getTables().keySet();
+            Iterator<TableStat.Name> iterator = names.iterator();
+            List<String> currentTableNameList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                currentTableNameList.add(iterator.next().getName());
+            }
+
+            tableNameList.addAll(currentTableNameList);
+        }
+
+        String[] tableNames = new String[tableNameList.size()];
+        return tableNameList.toArray(tableNames);
+    }
+
+    /**
+     * 动作执行前
+     *
+     * @param tableName 表名
+     * @param paramJson 参数
+     */
+    protected void aopBefore(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject paramJson) {
+        JSONObject[] paramJsons = {paramJson};
+        aopBefore(sql, tableName, paramJsons);
+    }
+
+    /**
+     * 动作执行前
+     *
+     * @param tableName  表名
+     * @param paramJsons 参数
+     */
+    protected void aopBefore(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] paramJsons) {
+        // 数据加密
+        if (tableName == null) {
+            String[] names = extractTables(sql);
+            for (String name : names) {
+                dataEncryptOrDecrypt(name, paramJsons, true);
+            }
+        } else {
+            dataEncryptOrDecrypt(tableName, paramJsons, true);
+        }
+
+        // 审计
+    }
+
+    /**
+     * 动作执行后（这是一个不适用于业务中调用的方法，请忽略）
+     *
+     * @param tableNames 表名
+     * @param resultJson 单行结果数据
+     */
+    public void aopAfter(String[] tableNames, JSONObject resultJson) {
+        JSONObject[] resultJsons = {resultJson};
+        for (String tableName : tableNames) {
+            aopAfter(null, tableName, resultJsons);
+        }
+    }
+
+    /**
+     * 动作执行后
+     *
+     * @param tableName  表名
+     * @param resultJson 单行结果数据
+     */
+    protected void aopAfter(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject resultJson) {
+        JSONObject[] resultJsons = {resultJson};
+        aopAfter(sql, tableName, resultJsons);
+    }
+
+    /**
+     * 动作执行后
+     *
+     * @param tableName   表名
+     * @param resultJsons 多行结果数据
+     */
+    protected void aopAfter(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] resultJsons) {
+        // 数据解密
+        if (tableName == null) {
+            String[] names = extractTables(sql);
+            for (String name : names) {
+                dataEncryptOrDecrypt(name, resultJsons, false);
+            }
+        } else {
+            dataEncryptOrDecrypt(tableName, resultJsons, false);
+        }
+
+        // 审计
+    }
+
+    /**
+     * 数据加密或解密
+     *
+     * @param tableName  表名
+     * @param paramJsons 参数
+     * @param encrypt    true == 加密，false == 解密
+     */
+    private void dataEncryptOrDecrypt(String tableName, JSONObject[] paramJsons, boolean encrypt) {
+        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
+        if (ListUtils.isEmpty(dataEncryptConfigList)) {
+            return;
+        }
+
+        for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
+            String dataEncryptTableName = dataEncryptConfig.getTableName();
+            if (tableName.equalsIgnoreCase(dataEncryptTableName) == false) {
+                continue;
+            }
+
+            // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
+            EncryptAlgorithmEnum dataEncryptAlgorithm = dataEncryptConfig.getDataEncryptAlgorithm();
+            String dataEncryptKey = dataEncryptConfig.getDataEncryptKey();
+            if (dataEncryptAlgorithm == null) {
+                dataEncryptAlgorithm = getJdbcProperties().getDataEncryptAlgorithm();
+            }
+            if (dataEncryptKey == null) {
+                dataEncryptKey = getJdbcProperties().getDataEncryptKey();
+            }
+
+            // 字段加密
+            List<String> fieldNameList = dataEncryptConfig.getFieldNames();
+            for (String fieldName : fieldNameList) {
+                for (JSONObject paramJson : paramJsons) {
+                    String data = paramJson.getString(fieldName);
+                    if (encrypt == true) {
+                        if (data == null) {
+                            log.warn("【字段加密】未能获得加密数据，当前加密表：{}，加密字段：{}", tableName, fieldName);
+                            continue;
+                        }
+
+                        String encryptedBase64 = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).encryptBase64(data);
+                        paramJson.replace(fieldName, encryptedBase64);
+                        log.debug("【字段加密】当前加密表：{}，加密字段：{}，加密前数据：{}，加密后数据：{}", tableName, fieldName, data, encryptedBase64);
+                    } else {
+                        if (data == null) {
+                            log.warn("【字段解密】未能获得解密数据，当前解密表：{}，解密字段：{}", tableName, fieldName);
+                            continue;
+                        }
+
+                        String decryptStr = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).decryptStr(data);
+                        paramJson.replace(fieldName, decryptStr);
+                        log.debug("【字段解密】当前解密表：{}，解密字段：{}，解密前数据：{}，解密后数据：{}", tableName, fieldName, data, decryptStr);
+                    }
+                }
+            }
+
+            break;
+        }
+    }
+
+    protected void audit(String tableName, JSONObject paramJson) {
+        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
+        if (ListUtils.isNotEmpty(auditTableNames)) {
+            for (String auditTableName : auditTableNames) {
+                if (tableName.equalsIgnoreCase(auditTableName)) {
+                    paramJson.put("","");
+                }
+            }
+        }
+    }
 
 }

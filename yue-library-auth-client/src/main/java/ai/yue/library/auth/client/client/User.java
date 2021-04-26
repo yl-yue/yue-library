@@ -1,18 +1,16 @@
 package ai.yue.library.auth.client.client;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.auth.client.config.properties.AuthProperties;
 import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
+import com.alibaba.fastjson.JSONObject;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <b>User客户端</b>
@@ -36,7 +34,7 @@ public class User {
 	 * @return
 	 */
 	public String getRequestToken() {
-		Cookie cookie = ServletUtils.getCookie(authProperties.getCookieTokenKey());
+		Cookie cookie = ServletUtils.getCookie(request, authProperties.getCookieTokenKey());
 		String token = "";
 		if (cookie != null) {
 			token = cookie.getValue();
@@ -49,7 +47,7 @@ public class User {
 	
 	/**
 	 * 获得用户ID
-	 * <p><code style="color:red"><b>注意：若 userId == null ，请先确认 {@linkplain ai.yue.library.auth.service.client.User#login(Object)} 方法是否存入 {@linkplain AuthProperties#getUserKey()} 字段，此处可以传 JSON 与 POJO 对象</b></code>
+	 * <p><code style="color:red"><b>注意：若 userId == null ，请先确认 auth-service模块的login(Object) 方法是否存入 {@linkplain AuthProperties#getUserKey()} 字段，此处可以传 JSON 与 POJO 对象</b></code>
 	 * 
 	 * @return userId
 	 */

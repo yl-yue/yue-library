@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Hoxton.SR10</version>
+		<version>Hoxton.SR11</version>
 	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
-	<description>yue-library是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。</description>
+	<description>yue-library是一个基于SpringBoot封装的增强库，内置丰富的JDK工具，自动装配了一系列的基础Bean与环境配置项，可用于快速构建SpringCloud项目，让微服务变得更简单。</description>
 	<url>https://ylyue.cn</url>
 	
 	<modules>
@@ -53,6 +53,7 @@
 		<hutool.version>5.6.3</hutool.version>
 		<bouncycastle.version>1.68</bouncycastle.version>
 		<fastjson.version>1.2.76</fastjson.version>
+		<druid.version>1.2.5</druid.version>
 		<dynamic-datasource.version>3.3.1</dynamic-datasource.version>
 		<pay.version>2.12.8</pay.version>
 		<easypoi.version>4.2.0</easypoi.version>
@@ -165,6 +166,11 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid-spring-boot-starter</artifactId>
+				<version>${druid.version}</version>
 			</dependency>
 			<dependency>
 			    <groupId>com.alibaba</groupId>
