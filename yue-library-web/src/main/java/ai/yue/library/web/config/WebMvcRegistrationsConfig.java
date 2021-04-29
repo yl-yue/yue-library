@@ -11,6 +11,8 @@ import ai.yue.library.web.config.api.version.ApiVersionRequestMappingHandlerMapp
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * WebMvcRegistrations
+ *
  * @author	ylyue
  * @since	2020年2月27日
  */

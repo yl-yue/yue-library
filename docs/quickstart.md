@@ -66,7 +66,7 @@ public class QuickstartController {
 
 	@GetMapping("/get")
 	public Result<?> get(JSONObject paramJson) {
-		return ResultInfo.success(paramJson);
+		return R.success(paramJson);
 	}
 	
 }

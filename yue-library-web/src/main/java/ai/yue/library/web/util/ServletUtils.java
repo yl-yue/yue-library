@@ -393,6 +393,31 @@ public class ServletUtils {
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
 	 *
+	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
+	 * @return IP地址
+	 */
+	public static String getClientIP(String... otherHeaderNames) {
+		return getClientIP(ServletUtils.getRequest(), otherHeaderNames);
+	}
+
+	/**
+	 * 获取客户端IP
+	 *
+	 * <p>
+	 * 默认检测的Header:
+	 *
+	 * <pre>
+	 * 1、X-Forwarded-For
+	 * 2、X-Real-IP
+	 * 3、Proxy-Client-IP
+	 * 4、WL-Proxy-Client-IP
+	 * </pre>
+	 *
+	 * <p>
+	 * otherHeaderNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
+	 *
 	 * @param request          请求对象{@link HttpServletRequest}
 	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址

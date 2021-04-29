@@ -79,21 +79,21 @@ public class DbBase {
      *
      * @return Druid数据源
      */
-    public DruidDataSource getDruidDataSource() {
-        DataSource dataSource = getDataSource();
-        DruidDataSource druidDataSource = null;
-        try {
-            if (dataSource instanceof DruidDataSource) {
-                druidDataSource = (DruidDataSource) dataSource;
-            } else {
-                druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
-            }
-        } catch (Exception e) {
-            // ignore
-        }
-
-        return druidDataSource;
-    }
+//    public DruidDataSource getDruidDataSource() {
+//        DataSource dataSource = getDataSource();
+//        DruidDataSource druidDataSource = null;
+//        try {
+//            if (dataSource instanceof DruidDataSource) {
+//                druidDataSource = (DruidDataSource) dataSource;
+//            } else {
+//                druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
+//            }
+//        } catch (Exception e) {
+//            // ignore
+//        }
+//
+//        return druidDataSource;
+//    }
 
     /**
      * 设置数据源
@@ -246,17 +246,17 @@ public class DbBase {
         aopBefore(sql, null, paramJson);
         String[] tables = extractTables(sql);
         List<T> resultList = getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass, this, tables));
-        if (mappedClass != null && CharSequence.class.isAssignableFrom(mappedClass) && resultList.size() == 1) {
-            List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
-            TableStat.Column column = ((ArrayList<TableStat.Column>) schemaStatVisitorList.get(0).getColumns()).get(0);
-            String columnName = column.getName();
-            JSONObject resultJson = new JSONObject();
-            resultJson.put(columnName, resultList.get(0));
-            aopAfter(tables, resultJson);
-            String resultDataStr = resultJson.getString(columnName);
-            resultList.clear();
-            resultList.add((T) resultDataStr);
-        }
+//        if (mappedClass != null && CharSequence.class.isAssignableFrom(mappedClass) && resultList.size() == 1) {
+//            List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
+//            TableStat.Column column = ((ArrayList<TableStat.Column>) schemaStatVisitorList.get(0).getColumns()).get(0);
+//            String columnName = column.getName();
+//            JSONObject resultJson = new JSONObject();
+//            resultJson.put(columnName, resultList.get(0));
+//            aopAfter(tables, resultJson);
+//            String resultDataStr = resultJson.getString(columnName);
+//            resultList.clear();
+//            resultList.add((T) resultDataStr);
+//        }
 
         return resultList;
     }
@@ -668,36 +668,37 @@ public class DbBase {
 
     // ========== 数据脱敏、JDBC审计 ==========
 
-    protected List<SchemaStatVisitor> extractSchemaStatVisitor(String sql) {
-        DruidDataSource druidDataSource = getDruidDataSource();
-        DbType dbType = DbType.of(druidDataSource.getDbType());
-        List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, dbType);
-        List<SchemaStatVisitor> schemaStatVisitorList = new ArrayList<>();
-        for (SQLStatement sqlStatement : sqlStatements) {
-            SchemaStatVisitor visitor = new SchemaStatVisitor();
-            sqlStatement.accept(visitor);
-            schemaStatVisitorList.add(visitor);
-        }
-
-        return schemaStatVisitorList;
-    }
+//    protected List<SchemaStatVisitor> extractSchemaStatVisitor(String sql) {
+//        DruidDataSource druidDataSource = getDruidDataSource();
+//        DbType dbType = DbType.of(druidDataSource.getDbType());
+//        List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, dbType);
+//        List<SchemaStatVisitor> schemaStatVisitorList = new ArrayList<>();
+//        for (SQLStatement sqlStatement : sqlStatements) {
+//            SchemaStatVisitor visitor = new SchemaStatVisitor();
+//            sqlStatement.accept(visitor);
+//            schemaStatVisitorList.add(visitor);
+//        }
+//
+//        return schemaStatVisitorList;
+//    }
 
     protected String[] extractTables(String sql) {
-        List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
-        List<String> tableNameList = new ArrayList<>();
-        for (SchemaStatVisitor schemaStatVisitor : schemaStatVisitorList) {
-            Set<TableStat.Name> names = schemaStatVisitor.getTables().keySet();
-            Iterator<TableStat.Name> iterator = names.iterator();
-            List<String> currentTableNameList = new ArrayList<>();
-            while (iterator.hasNext()) {
-                currentTableNameList.add(iterator.next().getName());
-            }
-
-            tableNameList.addAll(currentTableNameList);
-        }
-
-        String[] tableNames = new String[tableNameList.size()];
-        return tableNameList.toArray(tableNames);
+        return null;
+//        List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
+//        List<String> tableNameList = new ArrayList<>();
+//        for (SchemaStatVisitor schemaStatVisitor : schemaStatVisitorList) {
+//            Set<TableStat.Name> names = schemaStatVisitor.getTables().keySet();
+//            Iterator<TableStat.Name> iterator = names.iterator();
+//            List<String> currentTableNameList = new ArrayList<>();
+//            while (iterator.hasNext()) {
+//                currentTableNameList.add(iterator.next().getName());
+//            }
+//
+//            tableNameList.addAll(currentTableNameList);
+//        }
+//
+//        String[] tableNames = new String[tableNameList.size()];
+//        return tableNameList.toArray(tableNames);
     }
 
     /**
@@ -719,14 +720,14 @@ public class DbBase {
      */
     protected void aopBefore(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] paramJsons) {
         // 数据加密
-        if (tableName == null) {
-            String[] names = extractTables(sql);
-            for (String name : names) {
-                dataEncryptOrDecrypt(name, paramJsons, true);
-            }
-        } else {
-            dataEncryptOrDecrypt(tableName, paramJsons, true);
-        }
+//        if (tableName == null) {
+//            String[] names = extractTables(sql);
+//            for (String name : names) {
+//                dataEncryptOrDecrypt(name, paramJsons, true);
+//            }
+//        } else {
+//            dataEncryptOrDecrypt(tableName, paramJsons, true);
+//        }
 
         // 审计
     }
@@ -738,10 +739,10 @@ public class DbBase {
      * @param resultJson 单行结果数据
      */
     public void aopAfter(String[] tableNames, JSONObject resultJson) {
-        JSONObject[] resultJsons = {resultJson};
-        for (String tableName : tableNames) {
-            aopAfter(null, tableName, resultJsons);
-        }
+//        JSONObject[] resultJsons = {resultJson};
+//        for (String tableName : tableNames) {
+//            aopAfter(null, tableName, resultJsons);
+//        }
     }
 
     /**
@@ -763,14 +764,14 @@ public class DbBase {
      */
     protected void aopAfter(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] resultJsons) {
         // 数据解密
-        if (tableName == null) {
-            String[] names = extractTables(sql);
-            for (String name : names) {
-                dataEncryptOrDecrypt(name, resultJsons, false);
-            }
-        } else {
-            dataEncryptOrDecrypt(tableName, resultJsons, false);
-        }
+//        if (tableName == null) {
+//            String[] names = extractTables(sql);
+//            for (String name : names) {
+//                dataEncryptOrDecrypt(name, resultJsons, false);
+//            }
+//        } else {
+//            dataEncryptOrDecrypt(tableName, resultJsons, false);
+//        }
 
         // 审计
     }
