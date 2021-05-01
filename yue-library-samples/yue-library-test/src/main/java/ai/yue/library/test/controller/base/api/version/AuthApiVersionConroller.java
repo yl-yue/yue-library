@@ -66,5 +66,17 @@ public class AuthApiVersionConroller {
 	public Result<?> get4(@PathVariable String version) {
 		return R.success("get4：" + version);
 	}
-	
+
+	/**
+	 * get4
+	 *
+	 * @param version
+	 * @return
+	 */
+	@ApiVersion(5)
+	@GetMapping("/get")
+	public Result<?> get5(@PathVariable String version, String cellphone, Long id) {
+		return R.success(cellphone+id);
+	}
+
 }
