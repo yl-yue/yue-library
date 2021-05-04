@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 /**
+ * RestTemplate HTTP/HTTPS客户端配置
+ *
  * @author	ylyue
  * @since	2018年11月6日
  */

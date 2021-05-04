@@ -8,17 +8,22 @@
   * [介绍](base/介绍.md "yue-library-base介绍")
   * [RESTful](base/RESTful.md)
   * [校验](base/校验.md "校验框架")
-  * [参数解析器](base/参数解析器.md)
   * [类型转换器](base/类型转换器.md)
   * [统一异常处理](base/统一异常处理.md)
   * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)
-  * [工具类](base/工具类.md)
+  * [HTTP客户端](base/HTTP客户端.md)
 
 * yue-library-base-crypto
 
   * [介绍](base-crypto/介绍.md "yue-library-base-crypto介绍")
   * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
+
+* yue-library-web/webflux（必备）
+
+  * [介绍](web/介绍.md "yue-library-web/webflux介绍")
+  * [请求参数解析与包装](web/请求参数解析与包装.md)
+  * [响应消息转换器](web/响应消息转换器.md)
 
 * yue-library-data-jdbc（推荐）
 

@@ -1,13 +1,12 @@
 package ai.yue.library.test.controller.base.api.version;
 
+import ai.yue.library.base.annotation.api.version.ApiVersion;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue
@@ -68,14 +67,11 @@ public class AuthApiVersionConroller {
 	}
 
 	/**
-	 * get4
-	 *
-	 * @param version
-	 * @return
+	 * 性能测试
 	 */
-	@ApiVersion(5)
-	@GetMapping("/get")
-	public Result<?> get5(@PathVariable String version, String cellphone, Long id) {
+	@ApiVersion(5.2)
+	@GetMapping("/performance")
+	public Result<?> performance(@PathVariable String version, String cellphone, Long id) {
 		return R.success(cellphone+id);
 	}
 

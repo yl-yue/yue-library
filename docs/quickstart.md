@@ -1,8 +1,8 @@
 ## 工程结构
 ```
 . yue-library
-├── yue-library  基础库
-│   ├── yue-library-dependencies  父pom
+├── yue-library  父pom
+│   ├── yue-library-dependencies  dependencies版本控制
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
 │   ├── yue-library-base-crypto   基于Hutool实现的加解密模块，提供诸如数据脱敏此类的更多特性
 │   ├── yue-library-web           基础库WebMvc实现，用于servlet项目
@@ -11,14 +11,12 @@
 │   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
 │   ├── yue-library-auth-service  基于SpringSecurity进行二次封装，更简单灵活，提供全局token与登录等特性
 │   ├── yue-library-auth-client   auth-client为auth-service客户端模块，提供获取当前登录用户状态信息等特性
-│   ├── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
-│   ├── yue-library-cloud-oss
-│   └── yue-library-cloud-sms
+│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
 ├── yue-library-samples  基础库示例
-│   ├── yue-library-test				yue-library-web代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-test-webflux		yue-library-webflux代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-template-simple		yue-library模版：SpringBoot项目模版
-│   └── yue-library-template-ssc		yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
+│   ├── yue-library-test                yue-library-web代码测试项目：单元测试、接口测试、代码示例
+│   ├── yue-library-test-webflux        yue-library-webflux代码测试项目：单元测试、接口测试、代码示例
+│   ├── yue-library-template-simple     yue-library模版：SpringBoot项目模版
+│   └── yue-library-template-ssc        yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
 └── yue
 ```
 

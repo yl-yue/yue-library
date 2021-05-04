@@ -56,8 +56,8 @@
 ## 工程结构
 ```
 . yue-library
-├── yue-library  基础库
-│   ├── yue-library-dependencies  父pom
+├── yue-library  父pom
+│   ├── yue-library-dependencies  dependencies版本控制
 │   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
 │   ├── yue-library-base-crypto   基于Hutool实现的加解密模块，提供诸如数据脱敏此类的更多特性
 │   ├── yue-library-web           基础库WebMvc实现，用于servlet项目
@@ -66,14 +66,12 @@
 │   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
 │   ├── yue-library-auth-service  基于SpringSecurity进行二次封装，更简单灵活，提供全局token与登录等特性
 │   ├── yue-library-auth-client   auth-client为auth-service客户端模块，提供获取当前登录用户状态信息等特性
-│   ├── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
-│   ├── yue-library-cloud-oss
-│   └── yue-library-cloud-sms
+│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
 ├── yue-library-samples  基础库示例
-│   ├── yue-library-test				yue-library-web代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-test-webflux		yue-library-webflux代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-template-simple		yue-library模版：SpringBoot项目模版
-│   └── yue-library-template-ssc		yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
+│   ├── yue-library-test                yue-library-web代码测试项目：单元测试、接口测试、代码示例
+│   ├── yue-library-test-webflux        yue-library-webflux代码测试项目：单元测试、接口测试、代码示例
+│   ├── yue-library-template-simple     yue-library模版：SpringBoot项目模版
+│   └── yue-library-template-ssc        yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
 └── yue
 ```
 
@@ -112,45 +110,46 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 
 更多细节，请查看[中文文档](https://ylyue.cn)
 
-## 模块说明
+## 核心模块说明
 ### yue-library-base（必备）
-　　`yue-library-base`提供了丰富的Java工具包，它能够帮助我们简化每一行代码（集成[Hutool](https://hutool.cn)工具包）。<br>
-　　同时也自动装配了一系列基础Bean，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
+　　base模块提供了丰富的Java工具类库，它能够帮助我们简化每一行代码（增强[Hutool](https://hutool.cn)工具包）。<br>
+　　同时提供优越的Spring本土化环境配置，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
 - 丰富的Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装
-- 默认开启热加载、热部署、支持跨域，一键解决联调问题
-- 全局统一异常处理基类，结合`Result`对象，定位异常更轻松，前端显示更贴切
-- 异步线程池：共用父线程上下文环境，异步执行任务时不丢失token
-- `Result`Http最外层响应对象，更适应RESTful风格API
-- `validator`参数校验器，支持单参数连写与POJO对象（注解）校验等，更多的校验规则，更贴切的国内校验场景。（如：手机号、身份证号码）
-- `Convert`类型转换器，内置hutool、fastjson、yue三种类型转换规则，判断精确性能强大，未知类型兼容性更强
+- 完善的RESTful支持，使用HTTP响应包装对象`Result`，友好返回接口响应内容
+- 完善的异常处理机制，RESTful状态码与HTTP状态码自动同步，异常提示简单易懂
+- 出色的服务端校验框架`validator`，支持多种校验方式，简单易用，校验规则丰富，更贴切国内校验场景
+- 强大的类型转换器`Convert`，优越的性能，超强的容错能力，妈妈再也不用担心我找不到好用的“BeanUtils”了
+- 安全的异步线程池，完美解决子线程上下文环境问题，就算是高并发下，异步执行任务时再也不丢失token等参数了
+- 优雅的密钥交换加密，安全高效的解决HTTP通信传输安全
+- 简洁完善的Java全局网络代理，轻松解决内网部署时的网络代理需求
 
-　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
+### yue-library-web/webflux（必备）
+　　web/webflux模块提供友好的JavaWeb开发环境，免去本土化烦恼，提供友好的默认配置，解决开发中常遇的槽点，提升大家的开发质量与效率，降低企业研发成本。
+- 美妙愉悦的开发体验，让跨域、热加载、时间格式、参数获取等，低级而又普遍存在的问题都见鬼去吧
+- 强大的HTTP请求参数解析器，解决参数获取困扰，Request请求参数智能解析，让前后端联调和平相处
+- 强大的HTTP响应消息转换器，优雅实现固定类型参数格式化、NULL值处理等，轻松收到来至前端同事的致谢
+- 强大的HTTP请求包装器，解决Servlet输入流被前置的某个拦截器读取一空，导致请求参数获取不到
+- 强大的`ServletUtils`，让我们在任何时候任何地方，对接口的请求参数与响应内容都能为所欲为
+- 优雅的接口版本控制`@ApiVersion`，再也不用担心团队成员对接口规范视若无睹为所欲为了
 
 ### yue-library-data-jdbc<font color=red>（强烈推荐）</font>
-　　data-jdbc库基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活。特性如下：
-- 比SpringJDBC更方便好用、比SpringJPA更简单灵活
-- **无侵入**：data-jdbc 在 SpringJDBC 的基础上进行扩展，只做增强不做改变，简化`CRUD`操作
+　　data-jdbc模块基于SpringJdbc封装的ORM框架，拥有着强大性能的同时又不失简单灵活，特性如下：
+- **强大易用**：比SpringJdbc更方便好用、比SpringJpa更简单灵活
+- **无侵入**：data-jdbc在SpringJdbc的基础上进行扩展，只做增强不做改变，简化`CRUD`等操作
 - **依赖管理**：引入即可启动项目，关联druid实现SQL全监控
 - **预防Sql注入**：内置Sql注入剥离器，有效预防Sql注入攻击
-- **损耗小**：封装大量经过SQL优化处理的CRUD方法，直接面向对象操作，对比原生级CRUD处理，性能基本无损耗甚至更优
-- **通用CRUD操作**：内置通用 DAO，通过继承方式即可实现单表大部分 CRUD 操作
-- **更科学的分页**：分页参数自动解析，写分页等同于写基本List查询。更有优化型分页SQL检查
+- **损耗小**：封装大量经过SQL优化处理的CRUD方法，直接面向对象操作，对比原生级CRUD处理，性能基本无损甚至更优
+- **通用CRUD操作**：内置通用DAO，通过继承方式即可实现单表大部分CRUD操作
+- **更科学的分页**：分页参数自动解析，写分页等同于写基本List查询，更有优化型分页SQL检查
 - **内置性能分析插件**：可输出Sql语句以及其执行时间，建议开发测试时启用该功能，能有效解决慢查询
-- **类型强化**：支持原生级SQL查询，并强化原生查询结果，简单便捷 + 可维护组合（支持全JSON或全DO）
+- **类型强化**：支持原生级SQL查询，并强化原生查询结果，简单便捷+可维护组合（支持全Json或全DO）
 - **CRUD校验**：CRUD操作是否符合预期，更好的避免脏数据的产生与违规操作
+- **JDBC审计**：敏感操作全覆盖，简单实现对数据变动的审计需求
+- **数据脱敏**：只需简单的配置即可实现对数据脱敏存储需求，操作时自动加解密
 - **全局异常处理**：CRUD操作相关异常统一处理，定位更精准，提示更友好，实现全局RESTful风格
 
-　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
-
-### yue-library-data-redis（推荐）
-　　data-redis库基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录等特性：
-- 简化使用并拥有Redis原生常用命令所对应的方法
-- 保留SpringRedis所有常用特性：分布式缓存
-- 提供分布式token、分布式锁
-- 封装大量第三方登录特性，使登录更简单易于维护
-- 封装常用的登录判断操作与redis-token解析
-
-　　更多详细介绍，请查看[中文文档](https://ylyue.cn)
+### 更多模块
+　　关于`data-redis`、`data-es`、`auth-service`、`auth-client`等模块的特性介绍与更详细的使用说明，请查看[中文文档](https://ylyue.cn)
 
 ## 社区
 　　在[Gitter](https://gitter.im/yl-yue/yue-library)的社区里可以找到yue-library的用户和开发者团队。
@@ -160,20 +159,20 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 
 - 贡献代码：代码地址 [yue-library](https://gitee.com/yl-yue/yue-library) ，欢迎提交 Issue 或者 Pull Requests
 
-> 1. Fork 本仓库并从 <font color=red>JDK对应的分支或对应的某个版本</font> 创建你的分支
+> 1. Fork本仓库并从<font color=red>master分支</font>创建你的分支
 > 2. 如果你添加的代码需要测试，请添加测试，确保单元测试通过（测试代码请放在：`yue-library-test`中）
-> 3. 如果你修改了 API，请更新文档
+> 3. 如果你修改了API，请更新文档
 > 4. 确保代码风格一致
 > 5. 提交代码
-> 6. 新建 Pull Request
+> 6. 新建Pull Request
 > 7. 等待维护者合并
 
 - 维护文档：文档地址 [yue-library-doc](https://gitee.com/yl-yue/yue-library/tree/master/docs) ，欢迎参与翻译和修订
 
 ### PR遵照原则
-yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源共建/开源共建)，不过yue-library的维护者（同Hutool的维护者）是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合如下规范：
-- 关于注释：提供完备的注释，尤其对每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，必要时请添加单元测试，如果愿意，也可以加上你的大名。
-- 关于缩进：采用IDEA中默认的 <font color=red>**`空格`**</font> 作为标准，可设置一个 `tab` 四个空格
+yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源共建/开源共建)，提交的pr（pull request）需符合如下规范：
+- 关于注释：提供完备的注释，尤其对每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，亦可加上署名，必要时请添加单元测试
+- 关于缩进：采用IDEA中默认的<font color=red>**`空格`**</font>作为标准，可设置一个`tab`四个空格
 - 关于三方库：新加的方法不要使用第三方库的方法，yue-library遵循无依赖原则
 
 ## 特别鸣谢

@@ -32,7 +32,12 @@
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-data-redis</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-es</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-pay</artifactId>
