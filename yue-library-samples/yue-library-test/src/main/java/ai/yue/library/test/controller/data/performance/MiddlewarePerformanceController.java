@@ -83,6 +83,11 @@ public class MiddlewarePerformanceController {
 		esJdbcTemplate = new JdbcTemplate(ds);
 	}
 
+	@GetMapping("/java")
+	public Result<?> java() {
+		return R.success();
+	}
+
 	@GetMapping("/mysql")
 	public Result<?> mysql() {
 		JSONObject paramJson = new JSONObject();
