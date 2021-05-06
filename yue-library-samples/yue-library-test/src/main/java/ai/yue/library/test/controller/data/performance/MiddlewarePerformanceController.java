@@ -18,6 +18,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
@@ -37,6 +38,7 @@ import java.util.Properties;
  * @author	ylyue
  * @since	2020年2月21日
  */
+@Profile("test-performance")
 @RestController
 @RequestMapping("/middlewarePerformance")
 public class MiddlewarePerformanceController {

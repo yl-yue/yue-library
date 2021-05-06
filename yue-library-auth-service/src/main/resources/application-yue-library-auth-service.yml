@@ -1,5 +1,4 @@
 spring:
-  profiles:
-    include:
-    - yue-library-web
-    - yue-library-data-redis
+  config:
+    activate:
+      on-profile: yue-library-auth-service

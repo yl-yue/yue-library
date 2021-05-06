@@ -2,11 +2,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>Hoxton.SR11</version>
-	</parent>
 	<groupId>ai.ylyue</groupId>
 	<artifactId>yue-library</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
@@ -44,10 +39,11 @@
 	</modules>
 	
 	<properties>
-		<revision>j${java.version}.2.3.3</revision>
+		<revision>j${java.version}.2.4.0</revision>
 		<sha1 />
 		<changelist>-SNAPSHOT</changelist>
-		<spring-cloud-alibaba.version>2.2.5.RELEASE</spring-cloud-alibaba.version>
+		<spring-cloud.version>2020.0.2</spring-cloud.version>
+		<spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
@@ -67,6 +63,13 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- spring-cloud-alibaba -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-parent</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 	        <dependency>
 	            <groupId>com.alibaba.cloud</groupId>
 	            <artifactId>spring-cloud-alibaba-dependencies</artifactId>

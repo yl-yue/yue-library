@@ -13,11 +13,8 @@ import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -67,7 +64,7 @@ public class KeyExchangeTest {
         System.out.println(encryptBase64);
         String decryptStr = aes.decryptStr(encryptBase64);
         System.out.println(decryptStr);
-        Assert.assertEquals("123456", decryptStr);
+        Assertions.assertEquals("123456", decryptStr);
 
         // 第三步
         String storageKeyAlias = IdUtils.getSimpleUUID();
@@ -94,7 +91,7 @@ public class KeyExchangeTest {
         Result exchangeKeyResult5 = restTemplate.getForObject(serverUrl + "/controllerEncrypt/encrypt?access_token=" + storageKeyAlias, Result.class);
         exchangeKeyResult5.successValidate();
         String serverEncryptContent = (String) exchangeKeyResult5.getData();
-        Assert.assertEquals("encrypt", aes.decryptStr(serverEncryptContent));
+        Assertions.assertEquals("encrypt", aes.decryptStr(serverEncryptContent));
     }
 
     /**
@@ -126,7 +123,7 @@ public class KeyExchangeTest {
         System.out.println(encryptBase64);
         String decryptStr = sm4.decryptStr(encryptBase64);
         System.out.println(decryptStr);
-        Assert.assertEquals("123456", decryptStr);
+        Assertions.assertEquals("123456", decryptStr);
 
         // 第三步
         String storageKeyAlias = IdUtils.getSimpleUUID();
@@ -156,7 +153,7 @@ public class KeyExchangeTest {
         Result exchangeKeyResult5 = restTemplate.getForObject(serverUrl + "/controllerEncrypt/encrypt/SM2_SM4?access_token=" + storageKeyAlias, Result.class);
         exchangeKeyResult5.successValidate();
         String serverEncryptContent = (String) exchangeKeyResult5.getData();
-        Assert.assertEquals("encrypt", sm4.decryptStr(serverEncryptContent));
+        Assertions.assertEquals("encrypt", sm4.decryptStr(serverEncryptContent));
     }
 
 }

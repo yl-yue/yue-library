@@ -3,6 +3,9 @@ server:
     remote:
       port-header: GET, POST, PUT, DELETE
 spring:
+  config:
+    activate:
+      on-profile: yue-library-base
   servlet:
     multipart:
       max-file-size: 512MB

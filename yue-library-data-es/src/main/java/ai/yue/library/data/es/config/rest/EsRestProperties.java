@@ -3,6 +3,7 @@ package ai.yue.library.data.es.config.rest;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -46,13 +47,17 @@ public class EsRestProperties {
 	private boolean hostnameVerification = false;
 	private String username;
 	private String password;
+
 	/**
-	 * 连接超时毫秒
+	 * 连接超时
+	 * <p>默认：3s（3秒），支持携带时间单位</p>
 	 */
-	private long connectTimeoutMillis = 25000L;
+	private Duration connectionTimeout = Duration.ofSeconds(3);
+
 	/**
-	 * socket超时毫秒
+	 * 读取超时
+	 * <p>默认：30s（30秒），支持携带时间单位</p>
 	 */
-	private long socketTimeoutMillis = 15000L;
+	private Duration readTimeout = Duration.ofSeconds(30);
 
 }

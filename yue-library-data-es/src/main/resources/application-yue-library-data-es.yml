@@ -1,4 +1,4 @@
 spring:
-  profiles:
-    include:
-    - yue-library-base
+  config:
+    activate:
+      on-profile: yue-library-data-es

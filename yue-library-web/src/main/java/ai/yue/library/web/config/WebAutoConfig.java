@@ -53,7 +53,7 @@ public class WebAutoConfig {
 		config.setAllowCredentials(true);
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowedMethods(Arrays.asList("*"));
-		config.setAllowedOrigins(Arrays.asList("*"));
+		config.setAllowedOriginPatterns(Arrays.asList("*"));
 		config.setMaxAge(3600L);
 		
 		// 设置response允许暴露的Headers

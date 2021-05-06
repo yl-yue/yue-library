@@ -2,7 +2,7 @@ package ai.yue.library.test.base.api.version;
 
 import ai.yue.library.base.view.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -20,7 +20,7 @@ public class ApiVersionTest {
 	public void apiVersionPerformanceTest() {
 		for (int i = 0; i < 10000; i++) {
 			Result forObject = restTemplate.getForObject("http://localhost:8080/auth/v5.0/apiVersion/get?cellphone=18523146316&id=1", Result.class);
-			Assert.assertEquals("185231463161", forObject.getData());
+			Assertions.assertEquals("185231463161", forObject.getData());
 		}
 	}
 

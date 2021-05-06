@@ -28,7 +28,7 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 public class EsRestConfig extends AbstractElasticsearchConfiguration {
 
 	@Autowired
-	EsRestProperties esRestProperties;
+	private EsRestProperties esRestProperties;
 	
 	@Bean
 	@Primary
@@ -54,8 +54,8 @@ public class EsRestConfig extends AbstractElasticsearchConfiguration {
 			clientConfigurationBuilder.withBasicAuth(username, password);
 		}
 
-		clientConfigurationBuilder.withConnectTimeout(esRestProperties.getConnectTimeoutMillis());
-		clientConfigurationBuilder.withSocketTimeout(esRestProperties.getSocketTimeoutMillis());
+		clientConfigurationBuilder.withConnectTimeout(esRestProperties.getConnectionTimeout());
+		clientConfigurationBuilder.withSocketTimeout(esRestProperties.getReadTimeout());
 		return RestClients.create(clientConfigurationBuilder.build()).rest();                   
     }
 	
