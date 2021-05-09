@@ -1,0 +1,10 @@
+{
+	"name": "yue-library-docs-ssr",
+	"scripts": {
+		"start": "docsify start . -c ssr.config.js",
+		"deploy": "now -p"
+	},
+	"files": [
+		"docs"
+	]
+}
