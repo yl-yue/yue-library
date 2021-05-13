@@ -6,6 +6,7 @@ spring:
   profiles:
     group:
       "test": "yue-library-base,yue-library-data-jdbc,test-confidential"
+#      "test": "test-confidential"
       "test-performance": "yue-library-base,yue-library-data-jdbc,test-confidential-performance"
     active: test
 
