@@ -123,7 +123,7 @@ public class AsyncProperties {
 	private boolean enableServletAsyncContext = false;
 
 	/**
-	 * ServletAsyncContext阻塞超时时长（单位：毫秒）
+	 * ServletAsyncContext阻塞超时时长（单位：毫秒），异步上下文最长生命周期（最大阻塞父线程多久）
 	 * <p>
 	 *     单个方法的阻塞超时时间需要更长时，可以使用 {@code ServletUtils.getRequest().setAttribute(AsyncProperties.SERVLET_ASYNC_CONTEXT_TIMEOUT_MILLIS, 2000)}，为单个异步方法设置单独的超时时长。
 	 * </p>

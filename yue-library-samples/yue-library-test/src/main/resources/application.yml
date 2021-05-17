@@ -5,10 +5,11 @@ spring:
     name: yue-library-test
   profiles:
     group:
-      "test": "yue-library-base,yue-library-data-jdbc,test-confidential"
-#      "test": "test-confidential"
-      "test-performance": "yue-library-base,yue-library-data-jdbc,test-confidential-performance"
-    active: test
+      "yue": "yue-library-base,yue-library-data-jdbc"
+      "test": "test-confidential"
+      "test-performance": "test-confidential-performance"
+    active: yue,test
+#    active: yue,test-performance
 
 logging:
   level:
