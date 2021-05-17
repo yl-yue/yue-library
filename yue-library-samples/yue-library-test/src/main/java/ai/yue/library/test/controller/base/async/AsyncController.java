@@ -34,6 +34,15 @@ public class AsyncController {
         return R.success();
     }
 
+    @GetMapping("/asyncException")
+    public Result<?> asyncException(JSONObject paramJson) {
+        String asyncContext = ServletUtils.getRequest().getHeader("asyncContext");
+        log.info("1. 异步测试-开始调用异步方法，asyncContext：{}", asyncContext);
+        asyncService.asyncException(paramJson);
+        log.info("2. 异步测试-异步方法正在执行");
+        return R.success();
+    }
+
     @GetMapping("/sync")
     public Result<?> sync() {
         log.info("1. 同步-开始调用同步方法");

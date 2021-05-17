@@ -8,8 +8,8 @@ spring:
     - yue-library-data-jdbc
     - yue-library-data-redis
     active:
-#    - test-confidential
-    - test-confidential-performance
+    - test-confidential
+#    - test-confidential-performance
 
 logging:
   level:

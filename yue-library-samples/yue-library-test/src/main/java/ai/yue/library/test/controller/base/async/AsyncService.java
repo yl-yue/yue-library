@@ -1,5 +1,6 @@
 package ai.yue.library.test.controller.base.async;
 
+import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
@@ -38,6 +39,12 @@ public class AsyncService {
         HttpServletRequest request2 = ServletUtils.getRequest();
         log.info("request2: {}", request2);
         log.info("5. asyncContext: {}", request2.getHeader("asyncContext"));
+    }
+
+    @Async
+    public void asyncException(JSONObject paramJson) {
+        async(paramJson);
+        throw new ResultException("异步异常测试");
     }
 
     public Result<List<PersonDO>> sync() {
