@@ -3,6 +3,8 @@ package ai.yue.library.test.dataobject.jdbc;
 import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
 import ai.yue.library.test.constant.RoleEnum;
 import ai.yue.library.test.constant.UserStatusEnum;
+import cn.hutool.core.annotation.Alias;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,6 +29,8 @@ public class UserDO extends BaseCamelCaseDO {
 	/** 用户手机号码 */
 	String cellphone;
 	/** 密码 */
+//	@Alias(value = "pwd")
+//	@JSONField(name = "pwd")
 	String password;
 	/** 用户昵称 */
 	String nickname;
@@ -40,7 +44,6 @@ public class UserDO extends BaseCamelCaseDO {
 	LocalDate birthday;
 	/** 用户状态 */
 	UserStatusEnum userStatus;
-//	@FieldName("is_temp_user")
 	/** 是否临时用户 */
 	boolean tempUser;
 	

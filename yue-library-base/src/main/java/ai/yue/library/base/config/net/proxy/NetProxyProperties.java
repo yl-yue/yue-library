@@ -119,7 +119,7 @@ public class NetProxyProperties {
      * 额外忽略地址（适用于不想覆盖默认值进行配置）
      * <p>使用（{@code | 或 ,}）对多个地址进行分割，支持通配符配置，如：{@code 192.168.0.*,*.ylyue.cn}
      */
-    private String nonProxyHostsAdditional;
+    private String nonProxyHostsAdditional = NetProxy.ADD_NON_PROXY_VAL;
 
     // 其它属性
 
