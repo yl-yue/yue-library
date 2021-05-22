@@ -28,43 +28,8 @@ import java.util.Map;
 @Slf4j
 class DbQuery extends DbJdbcTemplate {
 
-    // query
-
-    /**
-     * 同 {@linkplain NamedParameterJdbcTemplate#queryForObject(String, Map, Class)}
-     * <p>指定SQL语句以创建预编译执行SQL和绑定查询参数，结果映射应该是一个单行查询否则结果为null。
-     *
-     * @deprecated 请使用：{@linkplain #queryForObject(String, JSONObject, Class)}
-     * @param sql         要执行的SQL查询
-     * @param paramJson   要绑定到查询的参数映射
-     * @param mappedClass 结果对象期望匹配的普通类型
-     * @return 所需普通类型的结果对象（如：Long, String, Boolean）或null
-     */
-    @Deprecated
-    public <T> T queryObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
-        try {
-            return getNamedParameterJdbcTemplate().queryForObject(sql, paramJson, mappedClass);
-        } catch (Exception e) {
-            log.warn(e.getMessage());
-            return null;
-        }
-    }
-
     // is
 
-    /**
-     * 是否有数据
-     *
-     * @deprecated 请使用：{@linkplain #isExistData(String, JSONObject)}
-     * @param tableName 表名
-     * @param paramJson 查询参数
-     * @return 是否有数据
-     */
-    @Deprecated
-    public boolean isDataSize(String tableName, JSONObject paramJson) {
-        return isExistData(tableName, paramJson);
-    }
-    
     /**
      * 是否有数据
      *
@@ -112,11 +77,8 @@ class DbQuery extends DbJdbcTemplate {
         columnName = dialect.getWrapper().wrap(columnName);
         StringBuffer sql = new StringBuffer("SELECT * FROM ");
         sql.append(tableName);
-        sql.append(" WHERE ").append(columnName).append(" = :").append(columnName);
-        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
-            sql.append(" AND ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
-                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
-        }
+        sql.append(getDeleteWhereSql());
+        sql.append(" AND ").append(columnName).append(" = :").append(columnName);
 
         return sql.toString();
     }
@@ -143,10 +105,8 @@ class DbQuery extends DbJdbcTemplate {
     public long getCount(String tableName) {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT count(*) count FROM ");
-        sql.append(tableName);
-        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
-            sql.append(getDeleteWhereSql());
-        }
+        sql.append(dialect.getWrapper().wrap(tableName));
+        sql.append(getDeleteWhereSql());
         return queryForObject(sql.toString(), null, Long.class);
     }
 
@@ -318,11 +278,7 @@ class DbQuery extends DbJdbcTemplate {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * FROM ");
         sql.append(dialect.getWrapper().wrap(tableName));
-        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
-            sql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
-                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
-        }
-
+        sql.append(getDeleteWhereSql());
         return queryForList(sql.toString(), MapUtils.FINAL_EMPTY_JSON, mappedClass);
     }
 

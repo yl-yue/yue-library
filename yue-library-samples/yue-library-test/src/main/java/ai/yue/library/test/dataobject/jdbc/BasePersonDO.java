@@ -1,15 +1,14 @@
 package ai.yue.library.test.dataobject.jdbc;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 人员
@@ -375,17 +374,4 @@ public class BasePersonDO implements Serializable {
 	 */
 	private boolean fuyi;
 
-//	public void setExtendField(JSONObject extendField) {
-//		this.extendField = extendField;
-//	}
-
-//	public void setExtendField(String extendField) {
-//		this.extendField = Convert.toJSONObject(extendField);
-//	}
-	
-//	public void setExtendField(Object extendField) {
-//		System.out.println(extendField);
-//		this.extendField = Convert.toJSONObject(extendField);
-//	}
-	
 }

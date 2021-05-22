@@ -48,6 +48,7 @@ public class NetProxy {
     // 系统属性
     public static final String USE_SYSTEM_PROXIES = "java.net.useSystemProxies";
     public static final String DEF_NON_PROXY_VAL = "localhost|127.*|[::1]|0.0.0.0|[::0]";
+    public static final String ADD_NON_PROXY_VAL = "10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*";
 
     @Autowired
     NetProxyProperties netProxyProperties;

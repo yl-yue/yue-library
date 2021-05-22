@@ -19,6 +19,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -92,9 +93,9 @@ public class WebAutoConfig {
 	 * Servlet子线程上下文装饰器
 	 */
 	@Bean
-	@ConditionalOnMissingBean
+	@ConditionalOnMissingBean({TaskDecorator.class, ContextDecorator.class})
 	@ConditionalOnBean(AsyncProperties.class)
-	public ContextDecorator contextDecorator(AsyncProperties asyncProperties) {
+	public TaskDecorator taskDecorator(AsyncProperties asyncProperties) {
 		return new ContextDecorator(asyncProperties);
 	}
 

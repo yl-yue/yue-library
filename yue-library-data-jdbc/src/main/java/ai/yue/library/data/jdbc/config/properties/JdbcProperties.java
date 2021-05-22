@@ -28,7 +28,7 @@ public class JdbcProperties implements Serializable, Cloneable {
 	private String businessUk = "key";
 
 	/**
-	 * 启用删除查询过滤
+	 * 启用删除查询过滤（只对自动生成的查询sql生效）
 	 * <p>默认：false</p>
 	 */
 	private boolean enableDeleteQueryFilter = false;
