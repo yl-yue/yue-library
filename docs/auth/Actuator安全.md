@@ -1,19 +1,5 @@
-# 一文读懂99%的开发者常犯的低级安全错误
-!> 不要以为服务部署在内网就可以无情裸奔！！！
-
-!> 不要以为服务部署在内网就可以无情裸奔！！！
-
-!> 不要以为服务部署在内网就可以无情裸奔！！！
-
-安全往往是容易在系统建设初期忽视的重要环节，如何低成本实现相对安全的软件运行环境，是本文探讨重点。
-
-## 中间件安全
-中间件本文泛指如：Nacos、MySQL、Redis、RocketMQ、Elasticserch、Kibana、Rancher、zipkin、plumelog等
-
-中间件使用**默认密码**、**弱密码**、**无密码**都是最低级的安全问题，养成良好习惯改个密码不费事（包括你的开发环境、测试环境）。
-
-## SpringBoot安全
-### 应用监控Actuator安全隐患（严重）
+# Actuator安全
+## Actuator安全引发介绍
 当你使用百度搜索Actuator相关博客时，你会看到清一色的如下配置：
 ```yml
 management:
@@ -36,15 +22,23 @@ management:
 [👉扩展阅读：SpringBoot渗透之Actuator获取数据库密码](https://github.com/xx-zhang/SpringBootVul#%E4%B8%80%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2)<br>
 [👉扩展阅读：Springboot之actuator配置不当的漏洞利用](https://www.freebuf.com/news/193509.html)
 
-`yue-library-auth-*`模块针对Actuator组件的安全问题进行了严谨的处理，其中就包括对`actuator/`端点配置了独立的访问密码（默认为随机密码），
-未进行Actuator安全处理的项目，可依赖或参考`yue-library-auth-*`任意模块实现Actuator安全。
+## yue-library的处理
+```java
+@Bean
+public SecurityFilterChain endpointRequestSecurityFilterChain(HttpSecurity http) throws Exception {
+	http.requestMatcher(EndpointRequest.toAnyEndpoint()).authorizeRequests((requests) ->
+			requests.anyRequest().hasRole("ENDPOINT_ADMIN"));
+	http.httpBasic();
+	return http.build();
+}
+```
 
-## 认证授权
-
-## 备份
-
-## 审计
-## 传输加密与存储加密
-## 幂等性与事务
-## 网络代理、防火墙、白名单
-## 微服务安全
+```yml
+spring:
+  config:
+    activate:
+      on-profile: yue-library-auth-client
+  security:
+    user:
+      roles: ENDPOINT_ADMIN
+```

@@ -16,13 +16,6 @@ import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.druid.DbType;
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidPooledConnection;
-import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
-import com.alibaba.druid.stat.TableStat;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
@@ -39,7 +32,10 @@ import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -154,31 +150,6 @@ public class DbBase {
         return list.get(0);
     }
 
-    /**
-     * 为 {@linkplain DbQuery#queryForJson(String, JSONObject)} 提供安全的查询结果获取
-     *
-     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
-     * @param list {@linkplain DbQuery#queryForList(String, JSONObject)} 查询结果
-     * @return JSON数据
-     */
-    @Deprecated
-    public JSONObject resultToJson(List<JSONObject> list) {
-        return listResultToGetResult(list);
-    }
-
-    /**
-     * 为 {@linkplain DbQuery#queryForObject(String, JSONObject, Class)} 提供安全的查询结果获取
-     *
-     * @deprecated 请使用：{@linkplain #listResultToGetResult(List)}
-     * @param <T>  泛型
-     * @param list {@linkplain DbQuery#queryForList(String, JSONObject, Class)} 查询结果
-     * @return POJO对象
-     */
-    @Deprecated
-    public <T> T resultToObject(List<T> list) {
-        return listResultToGetResult(list);
-    }
-
     // queryFor
 
     /**
@@ -262,18 +233,6 @@ public class DbBase {
     }
 
     // is
-
-    /**
-     * 是否有数据
-     *
-     * @deprecated 请自行条件判断
-     * @param dataSize 数据大小
-     * @return 是否 <b>&gt;</b> 0
-     */
-    @Deprecated
-    public boolean isDataSize(long dataSize) {
-        return dataSize > 0;
-    }
 
     /**
      * 判断更新所影响的行数是否 <b>等于</b> 预期值
@@ -446,32 +405,28 @@ public class DbBase {
      * @return whereSql
      */
     public String paramToWhereSql(JSONObject paramJson) {
-        StringBuffer whereSql = new StringBuffer();
-        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
-            whereSql.append(" WHERE ").append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
-                    .append(" = ").append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
-        } else {
-            whereSql.append(" WHERE 1 = 1 ");
-        }
-
+        StringBuffer whereSql = new StringBuffer(getDeleteWhereSql());
         paramJson.keySet().forEach(condition -> paramToWhereSql(whereSql, paramJson, condition));
-
         return whereSql.toString();
     }
 
     /**
-     * @return 逻辑删除条件SQL
+     * 获得逻辑删除条件SQL
+     *
+     * @return 携带WHERE关键字的逻辑删除条件SQL
      */
     public String getDeleteWhereSql() {
-        StringBuffer sql = new StringBuffer();
+        StringBuffer whereSql = new StringBuffer();
         if (getJdbcProperties().isEnableDeleteQueryFilter()) {
-            sql.append(" WHERE ")
+            whereSql.append(" WHERE ")
             .append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
             .append(" = ")
             .append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+        } else {
+            whereSql.append(" WHERE 1 = 1 ");
         }
 
-        return sql.toString();
+        return whereSql.toString();
     }
 
     // ParamValidate

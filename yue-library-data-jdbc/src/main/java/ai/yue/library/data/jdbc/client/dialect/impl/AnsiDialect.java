@@ -15,6 +15,7 @@ import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -177,6 +178,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 
 		// 2. 处理分页参数
 		JSONObject conditions = pageIPO.getConditions();
+		tableName = wrapper.wrap(tableName);
 
 		// 3. 预编译SQL拼接
 		StringBuffer querySql = new StringBuffer();
@@ -215,6 +217,10 @@ public class AnsiDialect extends DbBase implements Dialect {
 	public <T> PageVO<T> pageWhere(String tableName, String whereSql, PageIPO pageIPO, Class<T> mappedClass) {
 		// 1. 参数验证
 		paramValidate(tableName, whereSql);
+		tableName = wrapper.wrap(tableName);
+		if (jdbcProperties.isEnableDeleteQueryFilter() && !StrUtil.containsIgnoreCase(whereSql, DbConstant.FIELD_DEFINITION_DELETE_TIME)) {
+			whereSql = getDeleteWhereSql() + StrUtil.replaceIgnoreCase(whereSql, "WHERE", "AND");
+		}
 
 		// 2. 预编译SQL拼接
 		StringBuffer querySql = new StringBuffer();

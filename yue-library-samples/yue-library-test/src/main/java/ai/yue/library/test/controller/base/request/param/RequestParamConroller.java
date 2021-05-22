@@ -1,23 +1,15 @@
 package ai.yue.library.test.controller.base.request.param;
 
-import java.util.List;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import ai.yue.library.test.constant.TestEnum;
+import ai.yue.library.test.ipo.ParamParseIPO;
+import ai.yue.library.test.ipo.ValidationIPO;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
-import ai.yue.library.test.constant.TestEnum;
-import ai.yue.library.test.ipo.ValidationIPO;
+import java.util.List;
 
 /**
  * @author	ylyue
@@ -128,5 +120,12 @@ public class RequestParamConroller {
 	public Result<?> list5(@Valid List<ValidationIPO> validationIPOs) {
 		return R.success(validationIPOs);
 	}
-	
+
+	// 其它
+
+	@GetMapping("/paramParseIPO")
+	public Result<?> paramParseIPO(ParamParseIPO paramParseIPO) {
+		return R.success(paramParseIPO);
+	}
+
 }

@@ -17,6 +17,8 @@
 * yue-library-base-crypto
 
   * [介绍](base-crypto/介绍.md "yue-library-base-crypto介绍")
+  * [快速开始](base-crypto/快速开始.md "yue-library-base-crypto快速开始")
+  * [常用业务加解密](base-crypto/常用业务加解密.md "yue-library-base-crypto常用业务加解密")
   * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
 
 * yue-library-web/webflux（必备）
@@ -28,17 +30,34 @@
 * yue-library-data-jdbc（推荐）
 
   * [介绍](data/jdbc/介绍.md "yue-library-data-jdbc介绍")
+  * [快速开始](data/jdbc/快速开始.md "yue-library-data-jdbc快速开始")
   * [增删改查](data/jdbc/增删改查.md)
   * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
+  * [工具方法](data/jdbc/工具方法.md "yue-library-data-jdbc工具方法")
+  * [DO基类](data/jdbc/DO基类.md "yue-library-data-jdbcDO基类")
+  * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")
+  * [JDBC审计](data/jdbc/JDBC.md)
+  * [数据脱敏](data/jdbc/数据脱敏.md)
   * [动态数据源](data/jdbc/动态数据源.md)
 
 * yue-library-data-redis
 
   * [介绍](data/redis/介绍.md "yue-library-data-redis介绍")
+  * [快速开始](data/redis/快速开始.md "yue-library-data-redis快速开始")
+  * [分布式锁](data/redis/分布式锁.md "yue-library-data-redis分布式锁")
+  * [分布式缓存](data/redis/分布式缓存.md "yue-library-data-redis分布式缓存")
+
+* yue-library-data-es
+
+  * [介绍](data/es/介绍.md "yue-library-data-es介绍")
+
+* yue-library-auth
+
+  * [介绍](auth/介绍.md "yue-library-auth介绍")
 
 * yue-library-pay
 
-  * [介绍](pay/介绍.md "yue-library-pay介绍")
+  * [快速开始](pay/快速开始.md "yue-library-pay快速开始")
 
 * yue-规约
 

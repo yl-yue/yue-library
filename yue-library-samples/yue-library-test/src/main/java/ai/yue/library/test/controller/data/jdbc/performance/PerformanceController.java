@@ -45,16 +45,16 @@ public class PerformanceController {
 				"WHERE\n" +
 				"	id > 223150 \n" +
 				"	LIMIT 10000";
-		
+
 		TimeInterval timer = DateUtil.timer();
 		List<Map<String, Object>> maps = namedParameterJdbcTemplate.queryForList(sql, paramJson);
-    	Console.log("{}条map数据查询耗时：{}", maps.size(), timer.intervalRestart());
+		Console.log("{}条map数据查询耗时：{}", maps.size(), timer.intervalRestart());
 
 		List<JSONObject> jsons = db.queryForList(sql, paramJson);
-    	Console.log("{}条Json数据查询耗时：{}", jsons.size(), timer.intervalRestart());
+		Console.log("{}条Json数据查询耗时：{}", jsons.size(), timer.intervalRestart());
 
 		List<BasePersonDO> springOriginalConvert = namedParameterJdbcTemplate.query(sql, paramJson, org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance(BasePersonDO.class));
-		Console.log("{}条JavaBean数据查询，使用Spring原生转换耗时：{}", timer.intervalRestart(), springOriginalConvert.size());
+		Console.log("{}条JavaBean数据查询，使用Spring原生转换耗时：{}", springOriginalConvert.size(), timer.intervalRestart());
 
 		List<BasePersonDO> javaBeans = db.queryForList(sql, paramJson, BasePersonDO.class);
 		Console.log("{}条JavaBean数据查询，使用yue-library Convert转换耗时：{}", javaBeans.size(), timer.intervalRestart());

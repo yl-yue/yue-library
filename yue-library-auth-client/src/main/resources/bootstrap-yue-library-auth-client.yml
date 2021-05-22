@@ -6,10 +6,14 @@ spring:
     user:
       roles: ENDPOINT_ADMIN
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
   endpoint:
+    env:
+      enabled: false
+    heapdump:
+      enabled: false
+    threaddump:
+      enabled: false
+    httptrace:
+      enabled: false
     health:
       show-details: when_authorized

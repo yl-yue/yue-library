@@ -1,23 +1,23 @@
-package ai.yue.library.web.config.thread.pool;
+package ai.yue.library.test.config;
 
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
-import org.slf4j.MDC;
+import ai.yue.library.web.config.thread.pool.AbstractContextDecorator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Map;
-
 /**
- * <h2>子线程上下文装饰器</h2>
- * <p>https://stackoverflow.com/questions/23732089/how-to-enable-request-scope-in-async-task-executor</p>
- * <p>传递：RequestAttributes and MDC and SecurityContext</p>
+ * 自定义上下文装饰器
  *
  * @author ylyue
- * @since  2020/12/26
+ * @since 2021/5/21
  */
-public class ContextDecorator extends AbstractContextDecorator {
+@Slf4j
+//@Component
+public class CustomContextDecorator extends AbstractContextDecorator {
 
-    public ContextDecorator(AsyncProperties asyncProperties) {
+    public CustomContextDecorator(AsyncProperties asyncProperties) {
         super(asyncProperties);
     }
 
@@ -25,22 +25,18 @@ public class ContextDecorator extends AbstractContextDecorator {
     public Runnable decorate(Runnable runnable) {
         // Servlet上下文
         ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
-        // 日志上下文
-        Map<String, String> previous = MDC.getCopyOfContextMap();
         // ServletAsyncContext-enable：异步上下文最长生命周期（最大阻塞父线程多久）
+        log.info("自定义上下文装饰器-ServletAsyncContext-enable：异步上下文最长生命周期（最大阻塞父线程多久）");
         enableServletAsyncContext(context, asyncProperties);
         return () -> {
             try {
                 RequestContextHolder.setRequestAttributes(context);
-                if (previous != null) {
-                    MDC.setContextMap(previous);
-                }
                 runnable.run();
             } finally {
                 RequestContextHolder.resetRequestAttributes();
-                MDC.clear();
                 // ServletAsyncContext-complete：完成异步请求处理并关闭响应流
                 completeServletAsyncContext(context, asyncProperties);
+                log.info("自定义上下文装饰器-ServletAsyncContext-complete：完成异步请求处理并关闭响应流");
             }
         };
     }

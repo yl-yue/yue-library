@@ -88,26 +88,6 @@ class DbDelete extends DbUpdate {
     }
 	
 	/**
-	 * 删除-安全的
-     * <p>数据删除前会先进行条数确认
-	 * 
-	 * @deprecated 请使用：{@link #delete(String, Long)}
-     * @param tableName	表名
-     * @param id     	主键id
-     */
-	@Deprecated
-    public void deleteSafe(String tableName, Long id) {
-		// 1. 确认数据
-    	JSONObject data = getById(tableName, id);
-		if (data == null || data.isEmpty()) {
-			throw new DbException("执行单行删除命令失败，数据结构异常，可能原因是：数据不存在或存在多条数据", true);
-		}
-		
-		// 2. 删除数据
-		delete(tableName, id);
-    }
-
-	/**
 	 * 删除-通过表业务键
 	 * <p>数据删除前会先进行条数确认
 	 * <p>默认业务键为key
