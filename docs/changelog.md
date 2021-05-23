@@ -27,6 +27,22 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 |hutool					|5.6.3			|
 |fastjson				|1.2.76			|
 
+## 2.3.3【即将发布】
+### 新特性
+### Bug修复
+### Maven仓库实际发布版本号
+`j8.2.3.3`、`j11.2.3.3`
+
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.3/pom.xml)
+
+|依赖					|版本			|
+|--						|--				|
+|spring-boot			|2.3.8.RELEASE	|
+|spring-cloud			|Hoxton.SR10	|
+|spring-cloud-alibaba	|2.2.5.RELEASE	|
+|hutool					|5.6.3			|
+|fastjson				|1.2.76			|
+
 ## 2.3.2【2021-04-17】
 此版本重点实现：**密钥交换加解密**、**增强Bean转换能力**、**JDBC新增Elasticsearch-SQL、达梦、PostgreSQL方言**。
 
