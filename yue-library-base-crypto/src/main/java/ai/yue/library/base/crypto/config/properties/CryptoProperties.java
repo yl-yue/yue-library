@@ -1,8 +1,7 @@
 package ai.yue.library.base.crypto.config.properties;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 加解密自动配置属性
@@ -18,6 +17,7 @@ public class CryptoProperties {
 	 * Prefix of {@link CryptoProperties}.
 	 */
 	public static final String PREFIX = "yue.crypto";
+	public static final String REDIS_PREFIX = "yue:crypto";
 
 	/**
 	 * AES密钥

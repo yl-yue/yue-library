@@ -16,7 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @AllArgsConstructor
 public class RedisKeyExchangeStorage implements KeyExchangeStorage {
 
-    private static final String REDIS_PREFIX = Redis.separatorJoin(CryptoProperties.PREFIX, "key-exchange");
+    private static final String REDIS_PREFIX = Redis.separatorJoin(CryptoProperties.REDIS_PREFIX, "key_exchange");
     private RedisTemplate<String, KeyExchangeDTO> redisTemplate;
 
     private String getRedisKey(String storageKey) {

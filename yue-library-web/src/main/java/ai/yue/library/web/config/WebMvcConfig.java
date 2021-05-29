@@ -6,6 +6,7 @@ import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
+import ai.yue.library.web.config.idempotent.IdempotentInterceptorRegistry;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
 import cn.hutool.core.collection.CollUtil;
@@ -28,10 +29,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
@@ -41,18 +44,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * WebMvc配置
+ *
  * @author	ylyue
  * @since	2020年4月5日
  */
 @Slf4j
 @Configuration
+@Import(IdempotentInterceptorRegistry.class)
 public class WebMvcConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	FastJsonHttpMessageConverterProperties fastJsonProperties;
 	@Autowired
 	JacksonHttpMessageConverterProperties jacksonProperties;
-	
+	@Autowired(required = false)
+	IdempotentInterceptorRegistry idempotentInterceptorRegistry;
+
 	/**
 	 * 扩展HTTP消息转换器做Json解析处理
 	 */
@@ -201,5 +209,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		resolvers.add(new ArrayArgumentResolver(true));
 		resolvers.add(new CustomRequestParamMethodArgumentResolver(true));
 	}
-	
+
+	/**
+	 * 添加自定义拦截器
+	 */
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		// 添加幂等性拦截器
+		if (idempotentInterceptorRegistry != null) {
+			idempotentInterceptorRegistry.registry(registry);
+		}
+	}
+
 }

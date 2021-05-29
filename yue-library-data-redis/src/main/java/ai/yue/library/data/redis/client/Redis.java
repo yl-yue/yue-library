@@ -125,11 +125,12 @@ public class Redis {
 	
 	/**
 	 * 实现命令：DEL key，删除一个key
-	 * 
+	 *
 	 * @param key 不能为空
+	 * @return
 	 */
-	public void del(String key) {
-		stringRedisTemplate.delete(key);
+	public Boolean del(String key) {
+		return stringRedisTemplate.delete(key);
 	}
 	
 	// get set ...

@@ -1,0 +1,62 @@
+spring:
+  datasource: 
+    druid: 
+      url: jdbc:mysql://localhost:3306/yue_library_test?characterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123456
+  redis:
+    host: localhost
+    port: 6379
+  elasticsearch:
+    rest:
+      uris:
+      - https://localhost:30292
+      username: admin
+      password: 123456
+yue:
+  api-version:
+    minimum-version: 1
+  web:
+#    enabled-repeatedly-read-servlet-request: true
+#    enabled-repeatedly-read-servlet-request: false
+    http-message-converter:
+      jackson:
+        enabled: true
+#        write-null-number-as-zero: true
+#    http-message-converter:
+#      fastjson:
+#        enabled: true
+  net:
+    proxy:
+      enabled: true
+      http-server-enabled: true
+      http-server-host: 127.0.0.1
+      http-server-port: 80
+      https-server-enabled: true
+      https-server-host: 127.0.0.1
+      https-server-port: 443
+      ftp-server-enabled: true
+      ftp-server-host: 127.0.0.1
+      ftp-server-port: 80
+      socks-server-enabled: true
+      socks-server-host: 127.0.0.1
+      socks-server-port: 1080
+      socks-proxy-version: 5
+      non-proxy-hosts: localhost|127.*|[::1]|0.0.0.0|[::0]
+      non-proxy-hosts-additional: ai.ylyue.cn|*.ylyue.cn
+      basic-authenticator-username: ylyue
+      basic-authenticator-password: ylyue
+  thread-pool:
+    async:
+      enabled: true                                         # 启用异步线程池
+      thread-name-prefix: async-exec-                       # 线程池名的前缀
+      core-pool-size: 10                                    # 核心线程数
+      max-pool-size: 20                                     # 最大线程数
+      queue-capacity: 200                                   # 任务队列容量（阻塞队列）
+      allow-core-thread-time-out: false                     # 是否允许核心线程超时
+      keep-alive-seconds: 60                                # 允许线程的空闲时间（单位：秒）
+      wait-for-tasks-to-complete-on-shutdown: true          # 应用关闭时-是否等待未完成任务继续执行，再继续销毁其他的Bean
+      await-termination-seconds: 5                          # 应用关闭时-继续等待时间（单位：秒）
+      rejected-execution-handler-policy: caller_runs_policy # 线程池拒绝策略
+      enable-servlet-async-context: true                    # 是否开启 ServletAsyncContext
+      servlet-async-context-timeout-millis: 600             # ServletAsyncContext阻塞超时时长（单位：毫秒），异步上下文最长生命周期（最大阻塞父线程多久）

@@ -4,6 +4,8 @@ import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
 import ai.yue.library.data.redis.constant.RedisSerializerEnum;
+import ai.yue.library.data.redis.idempotent.ApiIdempotentController;
+import ai.yue.library.data.redis.idempotent.ApiIdempotentProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,8 +30,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Slf4j
 @Configuration
+@Import(ApiIdempotentController.class)
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableConfigurationProperties({ RedisProperties.class })
+@EnableConfigurationProperties({RedisProperties.class})
 public class RedisAutoConfig {
 	
 	@Autowired

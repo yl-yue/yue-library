@@ -22,7 +22,10 @@ management:
 [👉扩展阅读：SpringBoot渗透之Actuator获取数据库密码](https://github.com/xx-zhang/SpringBootVul#%E4%B8%80%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2)<br>
 [👉扩展阅读：Springboot之actuator配置不当的漏洞利用](https://www.freebuf.com/news/193509.html)
 
-## yue-library的处理
+## yue-library做的安全处理
+针对`actuator/*`的访问，启用独立的Basic认证。
+- 默认用户名为：`user`
+- 默认密码用户在未配置的情况下，会在控制台打印**随机密码**，也可以通过`spring.security.user.password`配置。
 ```java
 @Bean
 public SecurityFilterChain endpointRequestSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -33,6 +36,7 @@ public SecurityFilterChain endpointRequestSecurityFilterChain(HttpSecurity http)
 }
 ```
 
+默认禁用拥有重大安全隐患的端点，用户在需要时并做好安全防护之后开启。
 ```yml
 spring:
   config:
@@ -41,4 +45,30 @@ spring:
   security:
     user:
       roles: ENDPOINT_ADMIN
+management:
+  server:
+    port: 32222 # 默认actuator端点使用32222端口进行访问，与API服务端口进行区分，保持良好的安全忧患意识。
+  endpoint:
+    env:
+      enabled: false
+    heapdump:
+      enabled: false
+    threaddump:
+      enabled: false
+    httptrace:
+      enabled: false
+    health:
+      show-details: when_authorized
 ```
+
+使用yue-library做的优化配置，只需在 `application.yml` 或 `bootstrap.yml` 文件中添加如下示例配置：
+```yml
+spring:
+  profiles:
+    group:
+      "yue": "yue-library-auth-client"
+    active: yue
+    ...
+```
+
+!> 注意：默认`actuator`端点使用`32222`端口进行访问，与API服务端口进行区分，保持良好的安全忧患意识。
