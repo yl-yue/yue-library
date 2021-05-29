@@ -11,18 +11,30 @@ yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发�
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.4.0【规划中】
-### 新特性
-### Bug修复
-### Maven仓库实际发布版本号
-`j8.2.4.0`、`j11.2.4.0`
+## 2.3.3【2021-05-30】
+2.3.3主要为bug修复与安全加固版本，并优化了大量文档细节
 
-[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.4.0/pom.xml)
+### 新特性
+- 【base】校验框架提供静态方法`Validator.getValidatorAndSetParam(Object param)`获取参数校验器，无需bean注入
+- 【base】校验框架实现分组校验与提供默认分组`ValidationGroups`
+- 【base】新增`@CarDrivingLicence`、`@CarVin`、`@CreditCode`、`@ZipCode`四个校验注解
+- 【web】迁移RequestParamUtils实现至ServletUtils，并优化参数获取方式
+- 【web】优化ServletUtils内部实现，移除multipart相关类改用hutool提供
+- 【jdbc】从**2.3.3**开始使用（强依赖）druid进行连接池管理与SQL解析
+
+### Bug修复
+- 【base】移除actuator配置
+- 【web】修复异步线程装饰器在开启ServletAsyncContext时，接口响应被无故追加404异常 [#I3HTAW](https://gitee.com/yl-yue/yue-library/issues/I3HTAW)
+
+### Maven仓库实际发布版本号
+`j8.2.3.3`、`j11.2.3.3`
+
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.3.3/pom.xml)
 
 |依赖					|版本			|
 |--						|--				|
-|spring-boot			|2.3.8.RELEASE	|
-|spring-cloud			|Hoxton.SR10	|
+|spring-boot			|2.3.10.RELEASE	|
+|spring-cloud			|Hoxton.SR11	|
 |spring-cloud-alibaba	|2.2.5.RELEASE	|
 |hutool					|5.6.3			|
 |fastjson				|1.2.76			|

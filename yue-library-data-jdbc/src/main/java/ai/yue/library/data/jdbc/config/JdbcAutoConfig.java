@@ -7,9 +7,9 @@ import ai.yue.library.data.jdbc.client.dialect.impl.DmDialect;
 import ai.yue.library.data.jdbc.client.dialect.impl.MysqlDialect;
 import ai.yue.library.data.jdbc.client.dialect.impl.PostgresqlDialect;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
-import com.alibaba.druid.util.JdbcConstants;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
@@ -50,11 +50,11 @@ public class JdbcAutoConfig {
 		Dialect dialect;
 		if (druidDataSource != null) {
 			String dbType = druidDataSource.getDbType();
-			if (JdbcConstants.MYSQL.equalsIgnoreCase(dbType)) {
+			if (DbType.mysql.equals(dbType)) {
 				dialect = new MysqlDialect(namedParameterJdbcTemplate, jdbcProperties);
-			} else if (JdbcConstants.POSTGRESQL.equalsIgnoreCase(dbType)) {
+			} else if (DbType.postgresql.equals(dbType)) {
 				dialect = new PostgresqlDialect(namedParameterJdbcTemplate, jdbcProperties);
-			} else if (JdbcConstants.DM.equalsIgnoreCase(dbType)) {
+			} else if (DbType.dm.equals(dbType)) {
 				dialect = new DmDialect(namedParameterJdbcTemplate, jdbcProperties);
 			} else {
 				dialect = new AnsiDialect(namedParameterJdbcTemplate, jdbcProperties);

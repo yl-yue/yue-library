@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ai.yue.library.web.util.CaptchaUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

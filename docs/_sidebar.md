@@ -8,32 +8,57 @@
   * [介绍](base/介绍.md "yue-library-base介绍")
   * [RESTful](base/RESTful.md)
   * [校验](base/校验.md "校验框架")
-  * [参数解析器](base/参数解析器.md)
   * [类型转换器](base/类型转换器.md)
   * [统一异常处理](base/统一异常处理.md)
   * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)
-  * [工具类](base/工具类.md)
+  * [HTTP客户端](base/HTTP客户端.md)
 
 * yue-library-base-crypto
 
   * [介绍](base-crypto/介绍.md "yue-library-base-crypto介绍")
+  * [快速开始](base-crypto/快速开始.md "yue-library-base-crypto快速开始")
+  * [常用业务加解密](base-crypto/常用业务加解密.md "yue-library-base-crypto常用业务加解密")
   * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
+
+* yue-library-web/webflux（必备）
+
+  * [介绍](web/介绍.md "yue-library-web/webflux介绍")
+  * [请求参数解析与包装](web/请求参数解析与包装.md)
+  * [响应消息转换器](web/响应消息转换器.md)
 
 * yue-library-data-jdbc（推荐）
 
   * [介绍](data/jdbc/介绍.md "yue-library-data-jdbc介绍")
+  * [快速开始](data/jdbc/快速开始.md "yue-library-data-jdbc快速开始")
   * [增删改查](data/jdbc/增删改查.md)
   * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
+  * [工具方法](data/jdbc/工具方法.md "yue-library-data-jdbc工具方法")
+  * [DO基类](data/jdbc/DO基类.md "yue-library-data-jdbcDO基类")
+  * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")
+  * [JDBC审计](data/jdbc/JDBC.md)
+  * [数据脱敏](data/jdbc/数据脱敏.md)
   * [动态数据源](data/jdbc/动态数据源.md)
 
 * yue-library-data-redis
 
   * [介绍](data/redis/介绍.md "yue-library-data-redis介绍")
+  * [快速开始](data/redis/快速开始.md "yue-library-data-redis快速开始")
+  * [分布式锁](data/redis/分布式锁.md "yue-library-data-redis分布式锁")
+  * [分布式缓存](data/redis/分布式缓存.md "yue-library-data-redis分布式缓存")
+
+* yue-library-data-es
+
+  * [介绍](data/es/介绍.md "yue-library-data-es介绍")
+
+* yue-library-auth
+
+  * [介绍](auth/介绍.md "yue-library-auth介绍")
+  * [Actuator安全](auth/Actuator安全.md "yue-library-authActuator安全")
 
 * yue-library-pay
 
-  * [介绍](pay/介绍.md "yue-library-pay介绍")
+  * [快速开始](pay/快速开始.md "yue-library-pay快速开始")
 
 * yue-规约
 
@@ -41,6 +66,7 @@
   * [后端规约说明](规约/后端规约说明.md)
   * [接口质检标准](规约/接口质检标准.md)
   * [数据库设计与交付规约](规约/数据库设计与交付规约.md)
+  * [安全](规约/安全.md)
 
 * yue-library-samples
 

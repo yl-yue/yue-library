@@ -1,15 +1,21 @@
-package ai.yue.library.web.util.servlet;
+package ai.yue.library.web.util;
 
-import ai.yue.library.web.util.servlet.multipart.MultipartFormData;
+import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.multipart.MultipartFormData;
+import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.util.*;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpHeaders;
@@ -118,6 +124,60 @@ public class ServletUtils {
 	}
 
 	/**
+	 * 获得请求Json
+	 *
+	 * @return 解析的Json
+	 */
+	public static JSONObject getParamToJson() {
+		return getParamToJson(getRequest());
+	}
+
+	/**
+	 * 获得请求Json
+	 *
+	 * @param request 请求对象{@link ServletRequest}
+	 * @return 解析的Json
+	 */
+	public static JSONObject getParamToJson(HttpServletRequest request) {
+		// 获得所有请求参数
+		Map<String, String> paramMap = ServletUtils.getParamMap(request);
+		JSONObject paramJson = new JSONObject();
+		paramJson.putAll(paramMap);
+
+		// 获取请求体：遵守一种行业默认的行为规范，对GET请求默认不处理body，避免一些难以解释的复杂问题
+		boolean getMethod = ServletUtils.isGetMethod(request);
+		if (getMethod == false) {
+			String body = ServletUtils.getBody(request);
+			if (StrUtil.isNotEmpty(body)) {
+				JSONObject jsonBody = Convert.toJSONObject(body);
+				paramJson.putAll(jsonBody);
+			}
+		}
+
+		// 返回解析Json
+		return paramJson;
+	}
+
+	/**
+	 * 获得请求参数并转换为JavaBean
+	 *
+	 * @return 转换的JavaBean
+	 */
+	public static <T> T getParamToJavaBean(Class<T> clazz) {
+		return getParamToJavaBean(getRequest(), clazz);
+	}
+
+	/**
+	 * 获得请求参数并转换为JavaBean
+	 *
+	 * @param request 请求对象{@link ServletRequest}
+	 * @return 转换的JavaBean
+	 */
+	public static <T> T getParamToJavaBean(HttpServletRequest request, Class<T> clazz) {
+		return Convert.toJavaBean(getParamToJson(request), clazz);
+	}
+
+	/**
 	 * 获得当前请求的服务器的URL地址
 	 * <p>
 	 * 示例一：http://localhost:8080<br>
@@ -126,9 +186,12 @@ public class ServletUtils {
 	 */
 	public static String getServerURL() {
 		HttpServletRequest request = getRequest();
-		String serverName = request.getServerName();// 服务器地址
-		int serverPort = request.getServerPort();// 端口号
-		String contextPath = request.getContextPath();// 项目名称
+		// 服务器地址
+		String serverName = request.getServerName();
+		// 端口号
+		int serverPort = request.getServerPort();
+		// 项目名称
+		String contextPath = request.getContextPath();
 		return HTTP_TCP_NAME + serverName + ":" + serverPort + contextPath;
 	}
 
@@ -164,17 +227,13 @@ public class ServletUtils {
 		Console.log();
 		Console.log("打印请求头：");
 		Console.log("Headers：");
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String headerName = (String) headerNames.nextElement();
+		request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
 			StringBuilder headerValues = new StringBuilder();
-			Enumeration<String> headerNames2 = request.getHeaders(headerName);
-			while (headerNames2.hasMoreElements()) {
-				String headerValue = (String) headerNames2.nextElement();
+			request.getHeaders(headerName).asIterator().forEachRemaining(headerValue -> {
 				headerValues.append(headerValue);
-			}
+			});;
 			Console.log("　　{}：{}", headerName, headerValues);
-		}
+		});;
 
 		// 5. 打印Cookie
 		Console.log();
@@ -223,8 +282,8 @@ public class ServletUtils {
 	 * @since 4.0.2
 	 */
 	public static String getBody(ServletRequest request) {
-		try {
-			return IoUtil.read(request.getReader());
+		try (final BufferedReader reader = request.getReader()) {
+			return IoUtil.read(reader);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -248,12 +307,13 @@ public class ServletUtils {
 	// --------------------------------------------------------- getParam end
 
 	// --------------------------------------------------------- fillBean start
+
 	/**
 	 * ServletRequest 参数转Bean
 	 *
-	 * @param <T> Bean类型
-	 * @param request ServletRequest
-	 * @param bean Bean
+	 * @param <T>         Bean类型
+	 * @param request     ServletRequest
+	 * @param bean        Bean
 	 * @param copyOptions 注入时的设置
 	 * @return Bean
 	 * @since 3.0.4
@@ -264,17 +324,17 @@ public class ServletUtils {
 			@Override
 			public Object value(String key, Type valueType) {
 				String[] values = request.getParameterValues(key);
-				if(ArrayUtil.isEmpty(values)){
+				if (ArrayUtil.isEmpty(values)) {
 					values = request.getParameterValues(beanName + StrUtil.DOT + key);
-					if(ArrayUtil.isEmpty(values)){
+					if (ArrayUtil.isEmpty(values)) {
 						return null;
 					}
 				}
 
-				if(1 == values.length){
+				if (1 == values.length) {
 					// 单值表单直接返回这个值
 					return values[0];
-				}else{
+				} else {
 					// 多值表单返回数组
 					return values;
 				}
@@ -291,9 +351,9 @@ public class ServletUtils {
 	/**
 	 * ServletRequest 参数转Bean
 	 *
-	 * @param <T> Bean类型
-	 * @param request {@link ServletRequest}
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param request       {@link ServletRequest}
+	 * @param bean          Bean
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -304,9 +364,9 @@ public class ServletUtils {
 	/**
 	 * ServletRequest 参数转Bean
 	 *
-	 * @param <T> Bean类型
-	 * @param request ServletRequest
-	 * @param beanClass Bean Class
+	 * @param <T>           Bean类型
+	 * @param request       ServletRequest
+	 * @param beanClass     Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -337,12 +397,38 @@ public class ServletUtils {
 	 * @return IP地址
 	 */
 	public static String getClientIP(String... otherHeaderNames) {
-		String[] headers = { "X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
+		return getClientIP(ServletUtils.getRequest(), otherHeaderNames);
+	}
+
+	/**
+	 * 获取客户端IP
+	 *
+	 * <p>
+	 * 默认检测的Header:
+	 *
+	 * <pre>
+	 * 1、X-Forwarded-For
+	 * 2、X-Real-IP
+	 * 3、Proxy-Client-IP
+	 * 4、WL-Proxy-Client-IP
+	 * </pre>
+	 *
+	 * <p>
+	 * otherHeaderNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
+	 *
+	 * @param request          请求对象{@link HttpServletRequest}
+	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
+	 * @return IP地址
+	 */
+	public static String getClientIP(HttpServletRequest request, String... otherHeaderNames) {
+		String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
 		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
 			headers = ArrayUtil.addAll(headers, otherHeaderNames);
 		}
 
-		return getClientIPByHeader(headers);
+		return getClientIPByHeader(request, headers);
 	}
 
 	/**
@@ -353,22 +439,34 @@ public class ServletUtils {
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
 	 *
+	 * @param request     请求对象{@link HttpServletRequest}
 	 * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
 	 * @since 4.4.1
 	 */
-	public static String getClientIPByHeader(String... headerNames) {
+	public static String getClientIPByHeader(HttpServletRequest request, String... headerNames) {
 		String ip;
-		HttpServletRequest request = getRequest();
 		for (String header : headerNames) {
 			ip = request.getHeader(header);
-			if (false == isUnknow(ip)) {
-				return getMultistageReverseProxyIp(ip);
+			if (false == NetUtil.isUnknown(ip)) {
+				return NetUtil.getMultistageReverseProxyIp(ip);
 			}
 		}
 
 		ip = request.getRemoteAddr();
-		return getMultistageReverseProxyIp(ip);
+		return NetUtil.getMultistageReverseProxyIp(ip);
+	}
+
+	/**
+	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
+	 *
+	 * @param request {@link ServletRequest}
+	 * @return MultipartFormData
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.2
+	 */
+	public static MultipartFormData getMultipart(ServletRequest request) throws IORuntimeException {
+		return getMultipart(request, new UploadSetting());
 	}
 
 	/**
@@ -376,14 +474,16 @@ public class ServletUtils {
 	 * 包括文件和普通表单数据<br>
 	 * 在同一次请求中，此方法只能被执行一次！
 	 *
+	 * @param request       {@link ServletRequest}
+	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
 	 * @return MultiPart表单
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.2
 	 */
-	public static MultipartFormData getMultipart() throws IORuntimeException {
-		final MultipartFormData formData = new MultipartFormData();
+	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
+		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
-			formData.parseRequest(getRequest());
+			formData.parseRequestStream(request.getInputStream(), CharsetUtil.charset(request.getCharacterEncoding()));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -392,15 +492,17 @@ public class ServletUtils {
 	}
 
 	// --------------------------------------------------------- Header start
+
 	/**
 	 * 获取请求所有的头（header）信息
 	 *
+	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return header值
 	 * @since 4.6.2
 	 */
-	public static Map<String, String> getHeaderMap() {
-		HttpServletRequest request = getRequest();
+	public static Map<String, String> getHeaderMap(HttpServletRequest request) {
 		final Map<String, String> headerMap = new HashMap<>();
+
 		final Enumeration<String> names = request.getHeaderNames();
 		String name;
 		while (names.hasMoreElements()) {
@@ -415,11 +517,11 @@ public class ServletUtils {
 	/**
 	 * 忽略大小写获得请求header中的信息
 	 *
+	 * @param request        请求对象{@link HttpServletRequest}
 	 * @param nameIgnoreCase 忽略大小写头信息的KEY
 	 * @return header值
 	 */
-	public static String getHeaderIgnoreCase(String nameIgnoreCase) {
-		HttpServletRequest request = getRequest();
+	public static String getHeaderIgnoreCase(HttpServletRequest request, String nameIgnoreCase) {
 		final Enumeration<String> names = request.getHeaderNames();
 		String name;
 		while (names.hasMoreElements()) {
@@ -435,24 +537,26 @@ public class ServletUtils {
 	/**
 	 * 获得请求header中的信息
 	 *
-	 * @param name 头信息的KEY
+	 * @param request     请求对象{@link HttpServletRequest}
+	 * @param name        头信息的KEY
 	 * @param charsetName 字符集
 	 * @return header值
 	 */
-	public static String getHeader(String name, String charsetName) {
-		return getHeader(name, CharsetUtil.charset(charsetName));
+	public static String getHeader(HttpServletRequest request, String name, String charsetName) {
+		return getHeader(request, name, CharsetUtil.charset(charsetName));
 	}
 
 	/**
 	 * 获得请求header中的信息
 	 *
-	 * @param name 头信息的KEY
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @param name    头信息的KEY
 	 * @param charset 字符集
 	 * @return header值
 	 * @since 4.6.2
 	 */
-	public static String getHeader(String name, Charset charset) {
-		final String header = getRequest().getHeader(name);
+	public static String getHeader(HttpServletRequest request, String name, Charset charset) {
+		final String header = request.getHeader(name);
 		if (null != header) {
 			return CharsetUtil.convert(header, CharsetUtil.CHARSET_ISO_8859_1, charset);
 		}
@@ -462,10 +566,11 @@ public class ServletUtils {
 	/**
 	 * 客户浏览器是否为IE
 	 *
+	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 客户浏览器是否为IE
 	 */
-	public static boolean isIE() {
-		String userAgent = getHeaderIgnoreCase("User-Agent");
+	public static boolean isIE(HttpServletRequest request) {
+		String userAgent = getHeaderIgnoreCase(request, "User-Agent");
 		if (StrUtil.isNotBlank(userAgent)) {
 			//noinspection ConstantConditions
 			userAgent = userAgent.toUpperCase();
@@ -477,32 +582,35 @@ public class ServletUtils {
 	/**
 	 * 是否为GET请求
 	 *
+	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为GET请求
 	 */
-	public static boolean isGetMethod() {
-		return METHOD_GET.equalsIgnoreCase(getRequest().getMethod());
+	public static boolean isGetMethod(HttpServletRequest request) {
+		return METHOD_GET.equalsIgnoreCase(request.getMethod());
 	}
 
 	/**
 	 * 是否为POST请求
 	 *
+	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为POST请求
 	 */
-	public static boolean isPostMethod() {
-		return METHOD_POST.equalsIgnoreCase(getRequest().getMethod());
+	public static boolean isPostMethod(HttpServletRequest request) {
+		return METHOD_POST.equalsIgnoreCase(request.getMethod());
 	}
 
 	/**
 	 * 是否为Multipart类型表单，此类型表单用于文件上传
 	 *
+	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
-	public static boolean isMultipart() {
-		if (false == isPostMethod()) {
+	public static boolean isMultipart(HttpServletRequest request) {
+		if (false == isPostMethod(request)) {
 			return false;
 		}
 
-		String contentType = getRequest().getContentType();
+		String contentType = request.getContentType();
 		if (StrUtil.isBlank(contentType)) {
 			return false;
 		}
@@ -511,68 +619,75 @@ public class ServletUtils {
 	// --------------------------------------------------------- Header end
 
 	// --------------------------------------------------------- Cookie start
+
 	/**
 	 * 获得指定的Cookie
 	 *
-	 * @param name cookie名
+	 * @param httpServletRequest {@link HttpServletRequest}
+	 * @param name               cookie名
 	 * @return Cookie对象
 	 */
-	public static Cookie getCookie(String name) {
-		return readCookieMap().get(name);
+	public static Cookie getCookie(HttpServletRequest httpServletRequest, String name) {
+		return readCookieMap(httpServletRequest).get(name);
 	}
 
 	/**
 	 * 将cookie封装到Map里面
 	 *
+	 * @param httpServletRequest {@link HttpServletRequest}
 	 * @return Cookie map
 	 */
-	public static Map<String, Cookie> readCookieMap() {
-		final Map<String, Cookie> cookieMap = new CaseInsensitiveMap<>();
-		final Cookie[] cookies = getRequest().getCookies();
-		if (null != cookies) {
-			for (Cookie cookie : cookies) {
-				cookieMap.put(cookie.getName(), cookie);
-			}
+	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
+		final Cookie[] cookies = httpServletRequest.getCookies();
+		if (ArrayUtil.isEmpty(cookies)) {
+			return MapUtil.empty();
 		}
-		return cookieMap;
+
+		return IterUtil.toMap(
+				new ArrayIter<>(httpServletRequest.getCookies()),
+				new CaseInsensitiveMap<>(),
+				Cookie::getName);
 	}
 
 	/**
 	 * 设定返回给客户端的Cookie
 	 *
-	 * @param cookie Servlet Cookie对象
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param cookie   Servlet Cookie对象
 	 */
-	public static void addCookie(Cookie cookie) {
-		getResponse().addCookie(cookie);
+	public static void addCookie(HttpServletResponse response, Cookie cookie) {
+		response.addCookie(cookie);
 	}
 
 	/**
 	 * 设定返回给客户端的Cookie
 	 *
-	 * @param name Cookie名
-	 * @param value Cookie值
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param name     Cookie名
+	 * @param value    Cookie值
 	 */
-	public static void addCookie(String name, String value) {
-		getResponse().addCookie(new Cookie(name, value));
+	public static void addCookie(HttpServletResponse response, String name, String value) {
+		response.addCookie(new Cookie(name, value));
 	}
 
 	/**
 	 * 设定返回给客户端的Cookie
 	 *
-	 * @param name cookie名
-	 * @param value cookie值
+	 * @param response        响应对象{@link HttpServletResponse}
+	 * @param name            cookie名
+	 * @param value           cookie值
 	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
-	 * @param path Cookie的有效路径
-	 * @param domain the domain name within which this cookie is visible; form is according to RFC 2109
+	 * @param path            Cookie的有效路径
+	 * @param domain          the domain name within which this cookie is visible; form is according to RFC 2109
 	 */
-	public static void addCookie(String name, String value, int maxAgeInSeconds, String path, String domain) {
+	public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds, String path, String domain) {
 		Cookie cookie = new Cookie(name, value);
 		if (domain != null) {
 			cookie.setDomain(domain);
 		}
 		cookie.setMaxAge(maxAgeInSeconds);
 		cookie.setPath(path);
-		addCookie(cookie);
+		addCookie(response, cookie);
 	}
 
 	/**
@@ -580,25 +695,28 @@ public class ServletUtils {
 	 * Path: "/"<br>
 	 * No Domain
 	 *
-	 * @param name cookie名
-	 * @param value cookie值
+	 * @param response        响应对象{@link HttpServletResponse}
+	 * @param name            cookie名
+	 * @param value           cookie值
 	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
 	 */
-	public static void addCookie(String name, String value, int maxAgeInSeconds) {
-		addCookie(name, value, maxAgeInSeconds, "/", null);
+	public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds) {
+		addCookie(response, name, value, maxAgeInSeconds, "/", null);
 	}
 
 	// --------------------------------------------------------- Cookie end
 	// --------------------------------------------------------- Response start
+
 	/**
 	 * 获得PrintWriter
 	 *
+	 * @param response 响应对象{@link HttpServletResponse}
 	 * @return 获得PrintWriter
 	 * @throws IORuntimeException IO异常
 	 */
-	public static PrintWriter getWriter() throws IORuntimeException {
+	public static PrintWriter getWriter(HttpServletResponse response) throws IORuntimeException {
 		try {
-			return getResponse().getWriter();
+			return response.getWriter();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -607,11 +725,11 @@ public class ServletUtils {
 	/**
 	 * 返回数据给客户端
 	 *
-	 * @param text 返回的内容
+	 * @param response    响应对象{@link HttpServletResponse}
+	 * @param text        返回的内容
 	 * @param contentType 返回的类型
 	 */
-	public static void write(String text, String contentType) {
-		HttpServletResponse response = getResponse();
+	public static void write(HttpServletResponse response, String text, String contentType) {
 		response.setContentType(contentType);
 		Writer writer = null;
 		try {
@@ -628,16 +746,17 @@ public class ServletUtils {
 	/**
 	 * 返回文件给客户端
 	 *
-	 * @param file 写出的文件对象
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param file     写出的文件对象
 	 * @since 4.1.15
 	 */
-	public static void write(File file) {
+	public static void write(HttpServletResponse response, File file) {
 		final String fileName = file.getName();
 		final String contentType = ObjectUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
-			write(in, contentType, fileName);
+			write(response, in, contentType, fileName);
 		} finally {
 			IoUtil.close(in);
 		}
@@ -646,49 +765,63 @@ public class ServletUtils {
 	/**
 	 * 返回数据给客户端
 	 *
-	 * @param in 需要返回客户端的内容
+	 * @param response    响应对象{@link HttpServletResponse}
+	 * @param in          需要返回客户端的内容
 	 * @param contentType 返回的类型
-	 * @param fileName 文件名
+	 *                    如：
+	 *                    1、application/pdf、
+	 *                    2、application/vnd.ms-excel、
+	 *                    3、application/msword、
+	 *                    4、application/vnd.ms-powerpoint
+	 *                    docx、xlsx 这种 office 2007 格式 设置 MIME;网页里面docx 文件是没问题，但是下载下来了之后就变成doc格式了
+	 *                    https://blog.csdn.net/cyh2260629/article/details/73824760
+	 *                    5、MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	 *                    6、MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+	 *                    7、MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+	 *                    8、MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流
+	 * @param fileName    文件名
 	 * @since 4.1.15
 	 */
-	public static void write(InputStream in, String contentType, String fileName) {
-		HttpServletResponse response = getResponse();
+	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
 		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
 		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
 		response.setContentType(contentType);
-		write(in);
+		write(response, in);
 	}
 
 	/**
 	 * 返回数据给客户端
 	 *
-	 * @param in 需要返回客户端的内容
+	 * @param response    响应对象{@link HttpServletResponse}
+	 * @param in          需要返回客户端的内容
 	 * @param contentType 返回的类型
 	 */
-	public static void write(InputStream in, String contentType) {
-		getResponse().setContentType(contentType);
-		write(in);
+	public static void write(HttpServletResponse response, InputStream in, String contentType) {
+		response.setContentType(contentType);
+		write(response, in);
 	}
 
 	/**
 	 * 返回数据给客户端
 	 *
-	 * @param in 需要返回客户端的内容
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param in       需要返回客户端的内容
 	 */
-	public static void write(InputStream in) {
-		write(in, IoUtil.DEFAULT_BUFFER_SIZE);
+	public static void write(HttpServletResponse response, InputStream in) {
+		write(response, in, IoUtil.DEFAULT_BUFFER_SIZE);
 	}
 
 	/**
 	 * 返回数据给客户端
 	 *
-	 * @param in 需要返回客户端的内容
+	 * @param response   响应对象{@link HttpServletResponse}
+	 * @param in         需要返回客户端的内容
 	 * @param bufferSize 缓存大小
 	 */
-	public static void write(InputStream in, int bufferSize) {
+	public static void write(HttpServletResponse response, InputStream in, int bufferSize) {
 		ServletOutputStream out = null;
 		try {
-			out = getResponse().getOutputStream();
+			out = response.getOutputStream();
 			IoUtil.copy(in, out, bufferSize);
 		} catch (IOException e) {
 			throw new UtilException(e);
@@ -701,53 +834,21 @@ public class ServletUtils {
 	/**
 	 * 设置响应的Header
 	 *
-	 * @param name 名
-	 * @param value 值，可以是String，Date， int
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param name     名
+	 * @param value    值，可以是String，Date， int
 	 */
-	public static void setHeader(String name, Object value) {
-		HttpServletResponse response = getResponse();
+	public static void setHeader(HttpServletResponse response, String name, Object value) {
 		if (value instanceof String) {
 			response.setHeader(name, (String) value);
 		} else if (Date.class.isAssignableFrom(value.getClass())) {
 			response.setDateHeader(name, ((Date) value).getTime());
-		} else if (value instanceof Integer || "int".equals(value.getClass().getSimpleName().toLowerCase())) {
+		} else if (value instanceof Integer || "int".equalsIgnoreCase(value.getClass().getSimpleName())) {
 			response.setIntHeader(name, (int) value);
 		} else {
 			response.setHeader(name, value.toString());
 		}
 	}
 	// --------------------------------------------------------- Response end
-
-	// --------------------------------------------------------- Private methd start
-	/**
-	 * 从多级反向代理中获得第一个非unknown IP地址
-	 *
-	 * @param ip 获得的IP地址
-	 * @return 第一个非unknown IP地址
-	 */
-	private static String getMultistageReverseProxyIp(String ip) {
-		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
-		}
-		return ip;
-	}
-
-	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 *
-	 * @param checkString 被检测的字符串
-	 * @return 是否未知
-	 */
-	private static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
-	}
-	// --------------------------------------------------------- Private methd end
 
 }

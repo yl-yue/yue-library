@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>j8.2.3.2-SNAPSHOT</version>
+		<version>j11.2.3.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-test</artifactId>
 	<name>${project.artifactId}</name>
@@ -32,7 +32,12 @@
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-data-redis</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-es</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-pay</artifactId>

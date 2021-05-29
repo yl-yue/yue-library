@@ -64,6 +64,7 @@ class DbInsert extends DbDelete {
 		
 		// 2. 插入源初始化
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -85,6 +86,7 @@ class DbInsert extends DbDelete {
 		
 		// 2. 插入源初始化
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -114,6 +116,7 @@ class DbInsert extends DbDelete {
 		tableName = dialect.getWrapper().wrap(tableName);
 		String fieldDefinitionSortIdxWrapped = dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_SORT_IDX);
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 
 		// 2. 组装最大sort_idx值查询SQL
 		StringBuffer sql = new StringBuffer();
@@ -165,6 +168,7 @@ class DbInsert extends DbDelete {
 		paramValidate(tableName, paramJsons);
 
 		// 2. 插入源初始化
+		aopBefore(null, tableName, paramJsons);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJsons = dialect.getWrapper().wrap(paramJsons);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);

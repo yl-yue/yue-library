@@ -1,18 +1,5 @@
 package ai.yue.library.auth.service.client;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.auth.client.config.properties.AuthProperties;
 import ai.yue.library.auth.service.config.properties.AuthServiceProperties;
 import ai.yue.library.auth.service.config.properties.QqProperties;
@@ -27,9 +14,19 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.util.CaptchaUtils;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import ai.yue.library.web.vo.CaptchaVO;
+import com.alibaba.fastjson.JSONObject;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * <b>User客户端</b>
@@ -42,15 +39,15 @@ import lombok.NoArgsConstructor;
 public class User extends ai.yue.library.auth.client.client.User {
 	
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	@Autowired
-	HttpServletResponse response;
+	private HttpServletResponse response;
 	@Autowired
-	AuthServiceProperties authServiceProperties;
+	private AuthServiceProperties authServiceProperties;
 	@Autowired
-	WxOpenProperties wxOpenProperties;
+	private WxOpenProperties wxOpenProperties;
 	@Autowired
-	QqProperties qqProperties;
+	private QqProperties qqProperties;
 	
 	// 微信-URI
 	
@@ -198,7 +195,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		redis.set(redisTokenKey, JSONObject.toJSONString(userInfo), tokenTimeout);
 		
 		// 5. 登录成功-设置token至Cookie
-		ServletUtils.addCookie(authProperties.getCookieTokenKey(), token, tokenTimeout);
+		ServletUtils.addCookie(response, authProperties.getCookieTokenKey(), token, tokenTimeout);
 		
 		// 6. 登录成功-设置token至Header
 		response.setHeader(authProperties.getCookieTokenKey(), token);
@@ -227,7 +224,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		redis.del(authProperties.getRedisTokenPrefix() + token);
 		
 		// 4. 清除Cookie-token
-		ServletUtils.addCookie(authProperties.getCookieTokenKey(), null, 0);
+		ServletUtils.addCookie(response, authProperties.getCookieTokenKey(), null, 0);
 		
 		// 5. 返回结果
 		return R.success();

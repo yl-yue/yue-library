@@ -74,6 +74,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public boolean isExistData(String tableName, JSONObject paramJson) {
         paramValidate(tableName, paramJson);
+        aopBefore(null, tableName, paramJson);
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT count(*) FROM ");
         sql.append(dialect.getWrapper().wrap(tableName));
@@ -231,6 +232,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> T get(String tableName, JSONObject paramJson, Class<T> mappedClass) {
         paramFormat(paramJson);
+        aopBefore(null, tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, null);
         return queryForObject(sql, paramJson, mappedClass);
     }
@@ -259,6 +261,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass) {
         paramFormat(paramJson);
+        aopBefore(null, tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, null);
         return queryForList(sql, paramJson, mappedClass);
     }
@@ -287,6 +290,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> List<T> list(String tableName, JSONObject paramJson, SortEnum sortEnum, Class<T> mappedClass) {
         paramFormat(paramJson);
+        aopBefore(null, tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, sortEnum);
         return queryForList(sql, paramJson, mappedClass);
     }

@@ -1,15 +1,17 @@
 package ai.yue.library.data.jdbc.support;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-
+import ai.yue.library.base.util.MapUtils;
+import ai.yue.library.data.jdbc.client.DbBase;
+import cn.hutool.core.util.ArrayUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
-import com.alibaba.fastjson.JSONObject;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 /**
  * 参考 {@linkplain org.springframework.jdbc.core.ColumnMapRowMapper}，替换为 fastjson 的 {@linkplain JSONObject}
@@ -19,17 +21,30 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class ColumnMapRowMapper implements RowMapper<JSONObject> {
 
+	private DbBase dbBase;
+	@Nullable
+	private String[] tableNames;
+
+	public ColumnMapRowMapper(DbBase dbBase, String... tableNames) {
+		this.dbBase = dbBase;
+		this.tableNames = tableNames;
+	}
+
 	@Override
 	public JSONObject mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnCount = rsmd.getColumnCount();
-		JSONObject mapOfColumnValues = createColumnMap(columnCount);
+		JSONObject resultJson = createColumnMap(columnCount);
 		for (int i = 1; i <= columnCount; i++) {
 			String column = JdbcUtils.lookupColumnName(rsmd, i);
-			mapOfColumnValues.putIfAbsent(getColumnKey(column), getColumnValue(rs, i));
+			resultJson.putIfAbsent(getColumnKey(column), getColumnValue(rs, i));
 		}
-		
-		return mapOfColumnValues;
+
+		if (ArrayUtil.isNotEmpty(tableNames) && MapUtils.isNotEmpty(resultJson)) {
+			dbBase.aopAfter(tableNames, resultJson);
+		}
+
+		return resultJson;
 	}
 
 	/**

@@ -26,26 +26,34 @@ public class ContextDecorator implements TaskDecorator {
 
     @Override
     public Runnable decorate(Runnable runnable) {
-        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());    // 1
-        Map<String,String> previous = MDC.getCopyOfContextMap(); 					                                    // 2
+        // Servlet上下文
+        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+        // 日志上下文
+        Map<String, String> previous = MDC.getCopyOfContextMap();
+        // 异步上下文最长生命周期（最大阻塞父线程多久）
         enableServletAsyncContext(context, asyncProperties);
         return () -> {
             try {
-                RequestContextHolder.setRequestAttributes(context); // 1
-                MDC.setContextMap(previous);					    // 2
+                RequestContextHolder.setRequestAttributes(context);
+                if (previous != null) {
+                    MDC.setContextMap(previous);
+                }
                 runnable.run();
             } finally {
-                RequestContextHolder.resetRequestAttributes();      // 1
-                MDC.clear(); 								        // 2
+                RequestContextHolder.resetRequestAttributes();
+                MDC.clear();
+                if (asyncProperties.isEnableServletAsyncContext()) {
+                    context.getRequest().getAsyncContext().complete();
+                }
             }
         };
     }
 
     /**
-     * 启用 ServletAsyncContext
+     * 启用 ServletAsyncContext，异步上下文最长生命周期（最大阻塞父线程多久）
      * <p>用于阻塞父线程 Servlet 的关闭（调用 destroy() 方法），导致子线程获取的上下文为空</p>
      *
-     * @param context 父线程上下文
+     * @param context         父线程上下文
      * @param asyncProperties 异步属性配置
      */
     public static void enableServletAsyncContext(ServletRequestAttributes context, AsyncProperties asyncProperties) {

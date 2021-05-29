@@ -24,11 +24,3 @@ spring:
       log-condition-evaluation-delta: false
   main:
     allow-bean-definition-overriding: true
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always

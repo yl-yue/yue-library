@@ -1,11 +1,12 @@
 package ai.yue.library.test.controller.base.async;
 
+import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDAO;
 import ai.yue.library.test.controller.data.jdbc.query.map.PersonDO;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class AsyncService {
         HttpServletRequest request2 = ServletUtils.getRequest();
         log.info("request2: {}", request2);
         log.info("5. asyncContext: {}", request2.getHeader("asyncContext"));
+    }
+
+    @Async
+    public void asyncException(JSONObject paramJson) {
+        async(paramJson);
+        throw new ResultException("异步异常测试");
     }
 
     public Result<List<PersonDO>> sync() {

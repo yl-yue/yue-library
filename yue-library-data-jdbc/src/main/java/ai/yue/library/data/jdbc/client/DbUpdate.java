@@ -73,6 +73,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
 	public long update(String sql, JSONObject paramJson) {
 		paramFormat(paramJson);
+		aopBefore(sql, null,paramJson);
 		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 
@@ -92,6 +93,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
 	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedEnum dBExpectedEnum) {
 		paramFormat(paramJson);
+		aopBefore(sql, null, paramJson);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 		if (DbExpectedEnum.EQ == dBExpectedEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
@@ -127,6 +129,7 @@ class DbUpdate extends DbQuery {
 	 */
 	@Transactional
 	public int[] updateBatchNotParamFormat(String sql, JSONObject[] paramJsons) {
+		aopBefore(sql, null, paramJsons);
 		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
@@ -209,6 +212,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions) {
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
     }
@@ -225,6 +229,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
     public Long update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
@@ -243,6 +248,7 @@ class DbUpdate extends DbQuery {
     public void update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum
     		, int expectedValue, DbExpectedEnum dBExpectedEnum) {
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 		if (DbExpectedEnum.EQ == dBExpectedEnum) {
@@ -278,6 +284,7 @@ class DbUpdate extends DbQuery {
     public void updateById(String tableName, JSONObject paramJson, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { DbConstant.PRIMARY_KEY };
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -314,6 +321,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
 	public void updateByIdNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { DbConstant.PRIMARY_KEY };
+		aopBefore(null, tableName, paramJsons);
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 		int expectedValue = 1;
@@ -348,6 +356,7 @@ class DbUpdate extends DbQuery {
     public void updateByBusinessUk(String tableName, JSONObject paramJson, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { getJdbcProperties().getBusinessUk() };
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -386,6 +395,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
 	public void updateByBusinessUkNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { getJdbcProperties().getBusinessUk() };
+		aopBefore(null, tableName, paramJsons);
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 		int expectedValue = 1;
@@ -477,7 +487,6 @@ class DbUpdate extends DbQuery {
      * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
      * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
      */
-	@Transactional
     public void updateBatch(String tableName, JSONObject[] paramJsons, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		for (JSONObject paramJson : paramJsons) {
 			paramFormat(paramJson);
@@ -495,10 +504,11 @@ class DbUpdate extends DbQuery {
 	 * @param conditions	作为更新条件的参数名，对应paramJson内的key（注意：作为条件的参数，将不会用于字段值的更新）
 	 * @param dBUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void updateBatchNotParamFormat(String tableName, JSONObject[] paramJsons, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		// 1. 获得SQL
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
+		aopBefore(sql, tableName, paramJsons);
 
 		// 2. 执行
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);

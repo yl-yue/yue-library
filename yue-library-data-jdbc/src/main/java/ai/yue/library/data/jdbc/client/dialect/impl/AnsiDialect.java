@@ -97,6 +97,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 	public Long insertOrUpdate(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		paramValidate(tableName, paramJson, conditions);
 		paramFormat(paramJson);
+		aopBefore(null, tableName, paramJson);
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);

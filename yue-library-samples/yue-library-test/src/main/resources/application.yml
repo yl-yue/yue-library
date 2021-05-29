@@ -4,7 +4,13 @@ spring:
   application:
     name: yue-library-test
   profiles:
-    include:    - yue-library-data-jdbc
+    include:
+    - yue-library-data-jdbc
     - yue-library-data-redis
     active:
     - test-confidential
+#    - test-confidential-performance
+
+logging:
+  level:
+    ai.yue.library: debug

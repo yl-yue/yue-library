@@ -6,7 +6,7 @@ import ai.yue.library.base.crypto.util.EncryptParamUtils;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

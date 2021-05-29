@@ -145,7 +145,8 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	 * @param e 认证异常
 	 * @throws IOException 重定向失败
 	 */
-	@ExceptionHandler(AuthorizeException.class)
+	@Override
+    @ExceptionHandler(AuthorizeException.class)
 	public void authorizeExceptionHandler(AuthorizeException e) throws IOException {
     	ExceptionUtils.printException(e);
     	log.error("WebFlux 暂不支持异常拦截后重定向操作 ...");

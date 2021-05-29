@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +37,7 @@ public class HttpAspect {
         Signature signature = joinPoint.getSignature();
         
         // 2. 开发环境-打印日志
-        String ip = ServletUtils.getClientIP();
+        String ip = ServletUtils.getClientIP(request);
 		String uri = request.getRequestURI();
 //		UserDTO user_info = null;
 //		if (!uri.startsWith("/open")) {

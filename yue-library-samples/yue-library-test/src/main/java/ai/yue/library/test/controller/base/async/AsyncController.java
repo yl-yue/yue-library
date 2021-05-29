@@ -2,7 +2,7 @@ package ai.yue.library.test.controller.base.async;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.web.util.servlet.ServletUtils;
+import ai.yue.library.web.util.ServletUtils;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,15 @@ public class AsyncController {
         log.info("1. 异步测试-开始调用异步方法，asyncContext：{}", asyncContext);
 //        ServletUtils.getRequest().setAttribute(AsyncProperties.SERVLET_ASYNC_CONTEXT_TIMEOUT_MILLIS,1);
         asyncService.async(paramJson);
+        log.info("2. 异步测试-异步方法正在执行");
+        return R.success();
+    }
+
+    @GetMapping("/asyncException")
+    public Result<?> asyncException(JSONObject paramJson) {
+        String asyncContext = ServletUtils.getRequest().getHeader("asyncContext");
+        log.info("1. 异步测试-开始调用异步方法，asyncContext：{}", asyncContext);
+        asyncService.asyncException(paramJson);
         log.info("2. 异步测试-异步方法正在执行");
         return R.success();
     }

@@ -11,14 +11,16 @@
 	<name>yue-library-data-jdbc</name>
 	<description>yue-library-data-jdbc</description>
 
-	<properties>
-		<druid.version>1.1.20</druid.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-base</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-base-crypto</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -29,7 +31,6 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>${druid.version}</version>
 		</dependency>
 
 		<dependency>

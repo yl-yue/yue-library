@@ -187,7 +187,7 @@ abstract class AbstractBaseDAO<T> {
 
 [👉点击前往源码仓库查看](https://gitee.com/yl-yue/yue-library/blob/master/yue-library-data-jdbc/src/main/java/ai/yue/library/data/jdbc/dao/AbstractBaseDAO.java)
 
-### <font color=red>AbstractBaseDAO JSONObject 实现 AbstractDAO 类速览</font>
+## <font color=red>AbstractBaseDAO JSONObject 实现 AbstractDAO 类速览</font>
 ```java
 package ai.yue.library.data.jdbc.dao;
 
@@ -236,7 +236,7 @@ public abstract class AbstractDAO extends AbstractBaseDAO<JSONObject> {
 
 [👉点击前往源码仓库查看](https://gitee.com/yl-yue/yue-library/blob/master/yue-library-data-jdbc/src/main/java/ai/yue/library/data/jdbc/dao/AbstractDAO.java)
 
-### <font color=red>AbstractBaseDAO 泛型实现 AbstractRepository 类速览</font>
+## <font color=red>AbstractBaseDAO 泛型实现 AbstractRepository 类速览</font>
 ```java
 package ai.yue.library.data.jdbc.dao;
 

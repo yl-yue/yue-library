@@ -1,5 +1,8 @@
 - 📘博客
   - [👉博客](https://csdn.ylyue.cn)
+  - [👉yue-library实用教程](https://csdn.ylyue.cn/category_9455355.html)
+  - [👉yue-library综合资讯](https://csdn.ylyue.cn/category_9147715.html)
+  - [👉yue-library更新资讯](https://csdn.ylyue.cn/category_10732520.html)
 
 - 📖文档
   - [2.3<sup style="color:red">(new)<sup>](https://ylyue.cn)

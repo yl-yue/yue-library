@@ -9,6 +9,7 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -27,6 +28,7 @@ import javax.validation.constraints.NotNull;
 @Retention(RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Constraint(validatedBy = { IdCardValidator.class })
+@Repeatable(IdCard.List.class)
 public @interface IdCard {
 	
 	/**
@@ -40,5 +42,15 @@ public @interface IdCard {
 	Class<?>[] groups() default {};
 	
 	Class<? extends Payload>[] payload() default {};
-	
+
+	/**
+	 * Defines several {@code @IdCard} annotations on the same element.
+	 */
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+	@Retention(RUNTIME)
+	@Documented
+	public @interface List {
+		IdCard[] value();
+	}
+
 }

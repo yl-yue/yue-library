@@ -2,6 +2,7 @@ package ai.yue.library.base.validation;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
+import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.view.R;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
@@ -59,18 +60,32 @@ public class Validator {
 	private static final String IPV4_HINT_MSG = "参数 {} 不是一个合法的IPV4地址";
 	private static final String IPV6_HINT_MSG = "参数 {} 不是一个合法的IPV6地址";
 	private static final String MAC_ADDRESS_HINT_MSG = "参数 {} 不是一个合法的MAC地址";
+	private static final String CAR_DRIVING_LICENCE_HINT_MSG = "参数 {} 不是一个合法的驾驶证（仅限：中国驾驶证档案编号）";
+	private static final String CAR_VIN_HINT_MSG = "参数 {} 不是一个合法的车架号";
+	private static final String CREDIT_CODE_HINT_MSG = "参数 {} 不是一个合法的统一社会信用代码";
+	private static final String ZIP_CODE_HINT_MSG = "参数 {} 不是一个合法的邮政编码（中国）";
 	private static final String REGEX_HINT_MSG = "参数 {} 不满足正则表达式：{}";
-    
-    /**
-     * 切换校验对象
+
+	/**
+	 * 切换校验对象
+	 *
+	 * @param param 校验对象
+	 * @return Validator
+	 */
+	public Validator param(Object param) {
+		this.param = param;
+		return this;
+	}
+
+	/**
+     * 获得参数校验器并设置校验对象
      *
      * @param param 校验对象
      * @return Validator
      */
-    public Validator param(Object param) {
-        this.param = param;
-        return this;
-    }
+	public static Validator getValidatorAndSetParam(Object param) {
+		return SpringUtils.getBean(Validator.class).param(param);
+	}
     
     /**
      * 必须不为 {@code null}
@@ -322,7 +337,61 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateMac((CharSequence) param, StrUtil.format(MAC_ADDRESS_HINT_MSG, paramName));
         return this;
     }
-	
+
+	/**
+	 * 验证是否为驾驶证 别名：驾驶证档案编号、行驶证编号
+	 *
+	 * @param paramName 参数名
+	 * @return Validator
+	 */
+	public Validator carDrivingLicence(String paramName) {
+		cn.hutool.core.lang.Validator.validateCarDrivingLicence((CharSequence) param, StrUtil.format(CAR_DRIVING_LICENCE_HINT_MSG, paramName));
+		return this;
+	}
+
+	/**
+	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 *
+	 * @param paramName 参数名
+	 * @return Validator
+	 */
+	public Validator carVin(String paramName) {
+		cn.hutool.core.lang.Validator.validateCarVin((CharSequence) param, StrUtil.format(CAR_VIN_HINT_MSG, paramName));
+		return this;
+	}
+
+	/**
+	 * 是否是有效的统一社会信用代码
+	 * <pre>
+	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
+	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
+	 * 第三部分：登记管理机关行政区划码6位 (数字)
+	 * 第四部分：主体标识码（组织机构代码）9位 (数字或大写英文字母)
+	 * 第五部分：校验码1位 (数字或大写英文字母)
+	 * </pre>
+	 *
+	 * @param paramName 参数名
+	 * @return Validator
+	 */
+	public Validator creditCode(String paramName) {
+		if (cn.hutool.core.lang.Validator.isCreditCode((CharSequence) param) == false) {
+			throw new ValidateException(CREDIT_CODE_HINT_MSG, paramName);
+		}
+
+		return this;
+	}
+
+	/**
+	 * 验证是否为邮政编码（中国）
+	 *
+	 * @param paramName 参数名
+	 * @return Validator
+	 */
+	public Validator zipCode(String paramName) {
+		cn.hutool.core.lang.Validator.validateZipCode((CharSequence) param, StrUtil.format(ZIP_CODE_HINT_MSG, paramName));
+		return this;
+	}
+
     /**
      * 正则校验
      *
@@ -334,15 +403,16 @@ public class Validator {
 		cn.hutool.core.lang.Validator.validateMatchRegex(regex, (CharSequence) param, StrUtil.format(REGEX_HINT_MSG, paramName, regex));
 		return this;
 	}
-	
-    /**
-     * POJO对象校验（通过注解）
-     *
-     * @param param 校验对象
-     * @return Validator
-     */
-	public Validator valid(Object param) {
-    	Set<ConstraintViolation<Object>> violations = validator.validate(param);
+
+	/**
+	 * POJO对象校验（通过注解）
+	 *
+	 * @param param  校验对象
+	 * @param groups 用于验证的组或组列表(默认为Default)
+	 * @return Validator
+	 */
+	public Validator valid(Object param, Class<?>... groups) {
+		Set<ConstraintViolation<Object>> violations = validator.validate(param, groups);
 		if (violations.size() > 0) {
 			log.warn("{} violations.", violations.size());
 			Console.log("校验对象：{}", param);
