@@ -1,23 +1,22 @@
 ## 工程结构
 ```
 . yue-library
-├── yue-library  父pom
-│   ├── yue-library-dependencies  dependencies版本控制
-│   ├── yue-library-base          基础库提供了丰富的Java工具包，同时也自动装配了一系列基础Bean等
-│   ├── yue-library-base-crypto   基于Hutool实现的加解密模块，提供诸如数据脱敏此类的更多特性
-│   ├── yue-library-web           基础库WebMvc实现，用于servlet项目
-│   ├── yue-library-webflux       基础库WebFlux实现，用于响应式编程项目（如：SpringCloudGateway）
-│   ├── yue-library-data-jdbc     基于SpringJDBC进行二次封装，拥有着强大性能的同时又不失简单、灵活等
-│   ├── yue-library-data-redis    基于SpringRedis进行二次封装，更简单灵活，提供全局token与登录相关特性等
-│   ├── yue-library-auth-service  基于SpringSecurity进行二次封装，更简单灵活，提供全局token与登录等特性
-│   ├── yue-library-auth-client   auth-client为auth-service客户端模块，提供获取当前登录用户状态信息等特性
-│   └── yue-library-pay           基于pay-java-parent进行二次封装，让你真正做到一行代码实现支付聚合
-├── yue-library-samples  基础库示例
-│   ├── yue-library-test                yue-library-web代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-test-webflux        yue-library-webflux代码测试项目：单元测试、接口测试、代码示例
-│   ├── yue-library-template-simple     yue-library模版：SpringBoot项目模版
-│   └── yue-library-template-ssc        yue-library模版：SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
-└── yue
+├── yue-library                       
+│   ├── yue-library-dependencies      dependencies版本控制
+│   ├── yue-library-base              基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
+│   ├── yue-library-base-crypto       加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
+│   ├── yue-library-web               WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
+│   ├── yue-library-webflux           WebFlux实现，响应式编程（如：SpringCloudGateway）
+│   ├── yue-library-data-jdbc         ORM框架，基于SpringJdbc，拥有着强大性能的同时又不失简单灵活等
+│   ├── yue-library-data-redis        Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   ├── yue-library-auth-service      OAuth2认证模块，基于SpringSecurity，更简单灵活，提供全局token与登录等
+│   ├── yue-library-auth-client       OAuth2客户端模块，提供获取当前登录用户状态信息等
+│   └── yue-library-pay               支付模块，基于pay-java-parent，让你真正做到一行代码实现支付聚合
+└── yue-library-samples               
+    ├── yue-library-test              web测试项目，提供详细的特性使用示例、接口单元测试
+    ├── yue-library-test-webflux      webflux测试项目，提供详细的特性使用示例、接口单元测试
+    ├── yue-library-template-boot     SpringBoot项目模版，提供快速开发示例
+    └── yue-library-template-cloud    SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
 ```
 
 ## 快速开始
@@ -81,23 +80,21 @@ public class QuickstartController {
 }
 ```
 
-上面的代码完全保持了SpringBoot的风格，但又提供了更多特性增强，如：HTTP消息转换器对 **Alibaba Fastjson** 的支持，同时不再区分 **query from-data json** 等传参方式，默认也对 **跨域、时间格式、异常、参数校验** 等常见坑点进行了本土化处理与特性增强。
+上述代码完全保持了SpringBoot的风格，但又使用到了yue-library的增强特性，如：
+- HTTP消息转换器支持使用Alibaba Fastjson作为参数接收对象
+- 请求参数智能解析，无需再为URL query-string、Body from-data、Body application/json传参方式烦恼
+- 错误时会对异常进行统一处理，响应RESTful风格的错误提示
+- 支持前端跨域请求
 
-### 版本说明
-　　yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发行](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions) 对应的命名方式。<br>
-　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、webflux、data-jdbc、data-redis），可以不引入`yue-library-base`。
+当然除了这些已使用到的特性之外，你还可以尝试如：响应时间类型时自动格式化、请求参数校验、API接口版本控制、反复读取Servlet输入流等。
+并且在`yue-library-samples`目录下，存放着不同架构类型的示例模板，你可以根据自身需求选择，从而快速上手。
 
-|示例版本号								|版本号区别								|
-|--										|--										|
-|`j8.2.x`								|基于Java 8的2.x.x版本					|
-|`j11.2.x`								|基于Java 11的2.x.x版本					|
-|`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
+## 配置与文档
+yue-library提供的所有可配置项，皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域，你可以根据配置提示，开启与关闭所有的功能特性。
 
-[👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
+[官网文档](https://ylyue.cn)中提供了各模块的详细介绍与使用示例
 
-## 配置与文档说明
-　　`yue-library`自动装配了一系列的基础Bean与环境配置项，可在 <b>application.yml</b> 文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域，更多配置项与细节介绍，可查看 [官方文档](https://ylyue.cn) 中各模块的详细说明。<br>
-　　[官方文档](https://ylyue.cn) 提供各模块的详细介绍与使用示例，类与方法说明可参阅 [API文档](https://apidoc.gitee.com/yl-yue/yue-library/)，SpringBoot项目基础模版可使用 `yue-library-template-simple`，单元测试代码与标准示例可参考：`yue-library-test`
+[JavaDoc文档](https://apidoc.gitee.com/yl-yue/yue-library/)中提供了类与方法说明
 
 ## 结语
 引用此项目作基础依赖，后续也可很好的对于服务架构进行升级（单体架构、集群架构、微服务、SOA微服务）<br>

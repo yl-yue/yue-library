@@ -10,6 +10,8 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.R;
 
 /**
+ * 快速开始示例
+ *
  * @author	ylyue
  * @since	2020年8月16日
  */

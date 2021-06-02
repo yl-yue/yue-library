@@ -1,7 +1,8 @@
 # Changelog
 ---
-## 版本
-yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发行](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions) 对应的命名方式。
+## 版本说明
+　　yue-library的版本命名方式，继2.1.0开始采用与 [SpringBoot版本发行](https://github.com/spring-projects/spring-boot/wiki/Supported-Versions) 对应的命名方式。<br>
+　　`yue-library-base`为其他模块的基础依赖（简称基础库），所以若需要引入除基础库之外的模块（如：web、webflux、data-jdbc、data-redis），可以不引入`yue-library-base`。
 
 |示例版本号								|版本号区别								|
 |--										|--										|
