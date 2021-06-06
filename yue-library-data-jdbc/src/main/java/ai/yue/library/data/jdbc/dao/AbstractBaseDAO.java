@@ -60,6 +60,17 @@ abstract class AbstractBaseDAO<T> {
 	}
 
 	/**
+	 * 删除-逻辑的
+	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByBusinessUk(String)}</p>
+	 *
+	 * @param id 主键id
+	 */
+	public void deleteLogic(Long id) {
+		db.deleteLogic(tableName(), id);
+	}
+
+	/**
 	 * 删除-通过表业务键
 	 * <p>数据删除前会先进行条数确认
 	 * <p>默认业务键为key

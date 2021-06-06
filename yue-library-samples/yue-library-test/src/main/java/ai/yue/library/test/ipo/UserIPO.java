@@ -1,18 +1,16 @@
 package ai.yue.library.test.ipo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
-import org.hibernate.validator.constraints.Length;
-
 import ai.yue.library.base.validation.annotation.Birthday;
 import ai.yue.library.base.validation.annotation.Cellphone;
 import ai.yue.library.base.validation.annotation.Chinese;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * @author	ylyue

@@ -1,22 +1,20 @@
 package ai.yue.library.template.boot.service.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.validation.Validator;
+import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.template.boot.constant.user.RoleEnum;
 import ai.yue.library.template.boot.dao.user.UserDAO;
 import ai.yue.library.template.boot.dataobject.user.UserDO;
 import ai.yue.library.template.boot.ipo.user.UserIPO;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author	ylyue
@@ -46,7 +44,7 @@ public class UserService {
 		String cellphone = paramJson.getString("cellphone");
 		validator.param(cellphone).cellphone("cellphone");
 		if (userDAO.isUser(cellphone)) {
-			return ResultInfo.devCustomTypePrompt(ResultPrompt.USER_EXIST);
+			return R.errorPrompt(ResultPrompt.USER_EXIST);
 		}
 		
 		// 3. 加密密码
@@ -56,7 +54,7 @@ public class UserService {
 		
 		// 4. 插入数据
 		paramJson.put("role", RoleEnum.b2c_买家.name());
-		return ResultInfo.success(userDAO.insert(paramJson));
+		return R.success(userDAO.insert(paramJson));
 	}
 	
 	/**
@@ -68,11 +66,11 @@ public class UserService {
 	public Result<?> insert(UserIPO userIPO) {
 		// 1. 确认用户是否存在
 		if (userDAO.isUser(userIPO.getCellphone())) {
-			return ResultInfo.devCustomTypePrompt(ResultPrompt.USER_EXIST);
+			return R.errorPrompt(ResultPrompt.USER_EXIST);
 		}
 		
 		// 2. 插入数据并返回结果
-		return ResultInfo.success(userDAO.insert(Convert.toJSONObject(userIPO)));
+		return R.success(userDAO.insert(Convert.toJSONObject(userIPO)));
 	}
 	
 	/**
@@ -82,8 +80,8 @@ public class UserService {
 	 * @return
 	 */
 	public Result<?> delete(Long id) {
-		userDAO.deleteSafe(id);
-		return ResultInfo.success();
+		userDAO.delete(id);
+		return R.success();
 	}
 	
 	/**
@@ -93,7 +91,7 @@ public class UserService {
 	 * @return
 	 */
 	public Result<?> get(Long id) {
-		return ResultInfo.success(userDAO.get(id));
+		return R.success(userDAO.get(id));
 	}
 	
 	/**
@@ -108,12 +106,12 @@ public class UserService {
 		password = SecureSingleton.getAES().encryptBase64(password);
 		UserDO userDO = userDAO.get(cellphone, password);
 		if (userDO == null) {
-			return ResultInfo.devCustomTypePrompt(ResultPrompt.USERNAME_OR_PASSWORD_ERROR);
+			return R.errorPrompt(ResultPrompt.USERNAME_OR_PASSWORD_ERROR);
 		}
 		
 		// 2. 返回结果
 		userDO.setUserId(userDO.getId());
-		return ResultInfo.success(userDO);
+		return R.success(userDO);
 	}
 	
 	/**
@@ -135,7 +133,7 @@ public class UserService {
 	 * @return
 	 */
 	public Result<?> listAll() {
-		return ResultInfo.success(userDAO.listAll());
+		return R.success(userDAO.listAll());
 	}
 
 }

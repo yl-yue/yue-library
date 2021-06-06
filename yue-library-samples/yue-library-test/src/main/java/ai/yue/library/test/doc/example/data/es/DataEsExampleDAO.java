@@ -25,7 +25,7 @@ import java.util.List;
  * @author  ylyue
  * @version 创建时间：2019年3月12日
  */
-@Repository
+//@Repository
 public class DataEsExampleDAO extends AbstractDAO {
 
 	@Autowired

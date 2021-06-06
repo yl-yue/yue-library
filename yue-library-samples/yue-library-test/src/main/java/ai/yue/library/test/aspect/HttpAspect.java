@@ -1,4 +1,4 @@
-package ai.yue.library.template.simple.aspect;
+package ai.yue.library.test.aspect;
 
 import ai.yue.library.web.util.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
