@@ -44,7 +44,7 @@
 
   * [介绍](data/redis/介绍.md "yue-library-data-redis介绍")
   * [快速开始](data/redis/快速开始.md "yue-library-data-redis快速开始")
-  * [分布式锁](data/redis/分布式锁.md "yue-library-data-redis分布式锁")
+  * [分布式锁与接口幂等性](data/redis/分布式锁与接口幂等性.md "yue-library-data-redis分布式锁与接口幂等性")
   * [分布式缓存](data/redis/分布式缓存.md "yue-library-data-redis分布式缓存")
 
 * yue-library-data-es

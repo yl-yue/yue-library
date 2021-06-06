@@ -12,10 +12,34 @@
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.4.1【规划中】
-## 2.4.0【即将发布】
+## 2.4.2【规划中】
+## 2.4.1【即将发布】
+## 2.4.0【2021-06-06】
+- 主要变更：使用SpringBoot2.4新的配置文件机制，提供默认的优化配置实现。
+- 主要新特性：使用注解`@ApiIdempotent`可优雅的实现接口幂等性
+
 ### 新特性
+- 【base】新增`@CarDrivingLicence`、`@CarVin`、`@CreditCode`、`@ZipCode`四个校验注解
+- 【base】迁移actuator配置至auth模块，添加actuator配置安全
+- 【base】actuator端点默认使用32222端口进行访问，与API服务端口进行区分，保持良好的安全忧患意识
+- 【base】网络代理，额外不代理地址默认添加所有内网网段
+- 【jdbc】完善逻辑删除，delete_time条件追加时判断sql中是否存在delete_time否则不再追加
+- 【redis】新增API接口幂等性优雅实现，使用`@ApiIdempotent`注解标注接口需要进行幂等性校验
+- 【test】新增模块分离测试
+- 【docs】新增安全规约
+- 【docs】优化异步线程池示例与完善文档
+- 【docs】完善逻辑删除文档
+- 【docs】添加分布式缓存示例与文档
+- 【docs】完善分布式锁与接口幂等性文档
+- 【docs】完善POJO与Lombok的使用说明
+- 【docs】添加类型转换器Bean别名规范
+- 【docs】完善JavaBean参数解析器文档，提示IPO中有无参构造时，解析List<String>类型需传标准是数组字符串
+- 【other】删除部分早已标记为失效的方法
+
 ### Bug修复
+- 【web】解决SpringBoot2.4版本新出现的跨域问题 [#I3OV7B](https://gitee.com/yl-yue/yue-library/issues/I3OV7B)
+- 【web】修复异步线程装饰器在开启ServletAsyncContext时，接口响应被无故追加404异常 [#I3HTAW](https://gitee.com/yl-yue/yue-library/issues/I3HTAW)
+
 ### Maven仓库实际发布版本号
 `j8.2.4.0`、`j11.2.4.0`
 
