@@ -1,7 +1,6 @@
 package ai.yue.library.template.boot.service.user;
 
 import ai.yue.library.base.convert.Convert;
-import ai.yue.library.base.crypto.client.SecureSingleton;
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
@@ -49,7 +48,6 @@ public class UserService {
 		
 		// 3. 加密密码
 		String password = paramJson.getString("password");
-		password = SecureSingleton.getAES().encryptBase64(password);
 		paramJson.replace("password", password);
 		
 		// 4. 插入数据
@@ -103,7 +101,6 @@ public class UserService {
 	 */
 	public Result<?> login(String cellphone, String password) {
 		// 1. 查询用户
-		password = SecureSingleton.getAES().encryptBase64(password);
 		UserDO userDO = userDAO.get(cellphone, password);
 		if (userDO == null) {
 			return R.errorPrompt(ResultPrompt.USERNAME_OR_PASSWORD_ERROR);

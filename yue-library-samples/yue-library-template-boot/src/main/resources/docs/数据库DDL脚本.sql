@@ -1,45 +1,28 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : yue-mdp
+ Source Server         : yue-test
  Source Server Type    : MySQL
- Source Server Version : 80018
- Source Host           : 192.168.3.51:3310
- Source Schema         : yue_library_template_simple
+ Source Server Version : 80026
+ Source Host           : ylyue.cn:3306
+ Source Schema         : yue_library_template_boot
 
  Target Server Type    : MySQL
- Target Server Version : 80018
+ Target Server Version : 80026
  File Encoding         : 65001
 
- Date: 17/02/2020 22:13:57
+ Date: 20/07/2021 15:05:19
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for table_example
--- ----------------------------
-DROP TABLE IF EXISTS `table_example`;
-CREATE TABLE `table_example`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键，单表时自增',
-  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户ID',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '数据插入时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '数据更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_user_id`(`user_id`) USING BTREE COMMENT '用户ID索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '表-示例' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of table_example
--- ----------------------------
-
--- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键，单表时自增',
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键，单表时自增',
   `role` enum('b2b_买家','b2b_卖家','b2c_买家') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户所属角色',
   `cellphone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户手机号码',
   `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '密码',
@@ -49,11 +32,11 @@ CREATE TABLE `user`  (
   `sex` enum('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户性别',
   `birthday` date NULL DEFAULT NULL COMMENT '用户生日',
   `user_status` enum('正常','冻结','删除') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '正常' COMMENT '用户状态',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '数据插入时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '数据更新时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '数据插入时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_cellphone_role`(`cellphone`, `role`) USING BTREE COMMENT '唯一约束'
-) ENGINE = InnoDB AUTO_INCREMENT = 185 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户-基础信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 185 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户-基础信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user

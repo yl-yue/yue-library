@@ -1,23 +1,13 @@
 package ai.yue.library.template.boot.controller.user;
 
-import java.util.concurrent.TimeUnit;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.view.Result;
 import ai.yue.library.template.boot.ipo.user.UserIPO;
 import ai.yue.library.template.boot.service.user.UserService;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author	ylyue
@@ -29,9 +19,7 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-	@Autowired
-	RedisTemplate<Object, Object> redisTemplate;
-	
+
 	/**
 	 * 插入数据
 	 * 
@@ -40,8 +28,6 @@ public class UserController {
 	 */
 	@PostMapping("/insert")
 	public Result<?> insert(@Valid UserIPO userIPO) {
-		redisTemplate.opsForValue().set("1", userIPO, 10, TimeUnit.MINUTES);
-		System.out.println(redisTemplate.opsForValue().get("1"));
 		System.out.println(JSONObject.toJSONString(userIPO));
 		return userService.insert(userIPO);
 	}

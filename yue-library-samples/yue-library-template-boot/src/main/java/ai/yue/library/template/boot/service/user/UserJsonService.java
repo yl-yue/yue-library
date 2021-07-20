@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.ResultInfo;
+import ai.yue.library.base.view.R;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.template.boot.constant.user.RoleEnum;
 import ai.yue.library.template.boot.constant.user.UserStatusEnum;
@@ -36,7 +36,7 @@ public class UserJsonService {
 		
 		paramJson.put("role", RoleEnum.b2b_买家.name());
 		paramJson.put("user_status", UserStatusEnum.正常.name());
-		return ResultInfo.success(userJsonDAO.insert(paramJson));
+		return R.success(userJsonDAO.insert(paramJson));
 	}
 	
 	/**

@@ -69,7 +69,7 @@
 
 * yue-library-samples
 
-  * [template-simple](samples/template-simple.md)
+  * [template-boot](samples/template-boot.md)
 
 * 开源共建
 

@@ -5,26 +5,25 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>j11.2.4.0-SNAPSHOT</version>
+		<version>j11.2.4.0</version>
 	</parent>
 	<artifactId>yue-library-template-boot</artifactId>
 	<name>${project.artifactId}</name>
-	<description>yue library SpringBoot项目模版</description>
+	<description>
+		基于yue-library的简单SpringBoot示例项目模版，提供基本的CRUD与基础特性使用示例，让初学者更好更快的上手开发。
+
+		在属性模板项目之后，可查看官网文档或yue-library-test模块，尝试使用更多yue-library提供的增强特性。
+	</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-base-crypto</artifactId>
+			<artifactId>yue-library-web</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-data-jdbc</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-auth-service</artifactId>
 		</dependency>
 		
 		<dependency>

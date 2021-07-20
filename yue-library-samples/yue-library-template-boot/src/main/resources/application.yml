@@ -1,7 +1,8 @@
 spring:
   application:
-    name: yue-library-template-simple
+    name: yue-library-template-boot
   profiles:
-    include:
-    - yue-library-auth-service    active:
-    - test-confidential
+    group:
+      "yue": "yue-library-base,yue-library-data-jdbc"
+      "test": "test-confidential"
+    active: yue,test
