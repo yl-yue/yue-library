@@ -1,21 +1,24 @@
 package ai.yue.library.template.boot.controller.user;
 
+import ai.yue.library.base.annotation.api.version.ApiVersion;
+import ai.yue.library.template.boot.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.yue.library.template.boot.service.user.UserJsonService;
-
 /**
+ * 用户CRUD实体示例（公开接口）
+ *
  * @author	ylyue
- * @since	2020年2月13日
+ * @since	2019年9月25日
  */
+@ApiVersion(1.2)
 @RestController
-@RequestMapping("/open/userJson")
-public class UserJsonOpenController {
+@RequestMapping("/open/{version}/user")
+public class OpenUserController {
 
 	@Autowired
-	UserJsonService demoUserService;
+	UserService userService;
 	
 	// 公开访问接口
 	

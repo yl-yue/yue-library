@@ -34,19 +34,19 @@ public abstract class BaseSnakeCaseDO implements Serializable {
 	
 	private static final long serialVersionUID = 3601450189220851200L;
 
-	/** 表自增ID */
+	/** 有序主键：单表时数据库自增，分布式时雪花自增 */
 	protected Long id;
 	/** 排序索引 */
 	protected Integer sort_idx;
+	/** 数据插入时间 */
+	protected LocalDateTime create_time;
+	/** 数据更新时间 */
+	protected LocalDateTime update_time;
 	/**
 	 * 删除时间戳
 	 * <p>默认值为0 == 未删除
 	 * <p>一般不作查询展示
 	 */
 	protected Long delete_time;
-	/** 数据插入时间 */
-	protected LocalDateTime create_time;
-	/** 数据更新时间 */
-	protected LocalDateTime update_time;
 
 }

@@ -7,7 +7,6 @@ import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
-import ai.yue.library.template.boot.constant.user.RoleEnum;
 import ai.yue.library.template.boot.dao.user.UserDAO;
 import ai.yue.library.template.boot.dataobject.user.UserDO;
 import ai.yue.library.template.boot.ipo.user.UserIPO;
@@ -16,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ * 用户CRUD实体示例
+ *
  * @author	ylyue
  * @since	2019年9月25日
  */
@@ -26,34 +27,6 @@ public class UserService {
 	Validator validator;
 	@Autowired
 	UserDAO userDAO;
-	
-	/**
-	 * 注册
-	 * 
-	 * @param paramJson
-	 * @return
-	 */
-	public Result<?> register(JSONObject paramJson) {
-		// 1. 校验参数
-		String[] mustContainKeys = {"cellphone", "password"};
-		String[] canContainKeys = {"nickname", "email", "head_img", "sex", "birthday"};
-		ParamUtils.paramValidate(paramJson, mustContainKeys, canContainKeys);
-
-		// 2. 确认用户是否存在
-		String cellphone = paramJson.getString("cellphone");
-		validator.param(cellphone).cellphone("cellphone");
-		if (userDAO.isUser(cellphone)) {
-			return R.errorPrompt(ResultPrompt.USER_EXIST);
-		}
-		
-		// 3. 加密密码
-		String password = paramJson.getString("password");
-		paramJson.replace("password", password);
-		
-		// 4. 插入数据
-		paramJson.put("role", RoleEnum.b2c_买家.name());
-		return R.success(userDAO.insert(paramJson));
-	}
 	
 	/**
 	 * 插入数据

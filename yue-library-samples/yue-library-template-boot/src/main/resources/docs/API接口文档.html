@@ -725,7 +725,7 @@ pre code{
                                     </p>
                                     <p>请求方式：GET</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/user/get                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/user/get                                    </p>
 
                                     
                                     <table class="table table-hover">
@@ -766,20 +766,22 @@ pre code{
     "code": 200,
     "msg": "成功",
     "flag": true,
+    "count": null,
     "data": {
-        "id": 25,
-        "create_time": "2018-07-31T08:22:32",
-        "update_time": "2019-10-12T22:46:51",
-        "user_id": null,
-        "role": "b2b_卖家",
-        "cellphone": "18523146316",
-        "password": "2eZzUNIsix73h9MmhbmVow==",
-        "nickname": "0123",
+        "id": 18,
+        "sortIdx": null,
+        "deleteTime": 0,
+        "createTime": "2018-07-18 09:10:46",
+        "updateTime": "2021-07-21 11:59:00",
+        "userId": null,
+        "cellphone": "18523146311",
+        "password": "8uXhwp4c3mYwizx/FKfY6wQRltvBd6Oc0qZvYZa nfQ=",
+        "nickname": "测试",
         "email": null,
-        "head_img": null,
-        "sex": null,
+        "headImg": "http://www.baidu.com",
         "birthday": null,
-        "user_status": "正常"
+        "sex": "man",
+        "userStatus": "normal"
     }
 }</code>
                             </pre>
@@ -797,7 +799,7 @@ pre code{
                                     </p>
                                     <p>请求方式：GET</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/user/page                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/user/page                                    </p>
 
                                     
                                     <table class="table table-hover">
@@ -846,24 +848,169 @@ pre code{
     "code": 200,
     "msg": "成功",
     "flag": true,
+    "count": 35,
     "data": [
         {
             "id": 95,
-            "create_time": "2019-07-02T10:12:31",
-            "update_time": "2019-07-22T16:05:40",
-            "user_id": null,
-            "role": "b2c_买家",
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-02 10:12:31",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
             "cellphone": "15123555303",
             "password": null,
             "nickname": "某某",
             "email": null,
-            "head_img": null,
-            "sex": null,
+            "headImg": null,
             "birthday": null,
-            "user_status": "正常"
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 134,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-04 10:06:46",
+            "updateTime": "2021-07-21 13:48:05",
+            "userId": null,
+            "cellphone": "15723156255",
+            "password": "v0/S0Hi4OZFgycPaQ0JFPg==",
+            "nickname": "abcd",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 181,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-26 17:05:00",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18024649918",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": null,
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 10,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-07 02:30:48",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
+            "cellphone": "18523146310",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "张三丰",
+            "email": null,
+            "headImg": "ss.png",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 18,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-18 09:10:46",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
+            "cellphone": "18523146311",
+            "password": "8uXhwp4c3mYwizx/FKfY6wQRltvBd6Oc0qZvYZa nfQ=",
+            "nickname": "测试",
+            "email": null,
+            "headImg": "http://www.baidu.com",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 184,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-10-12 23:49:02",
+            "updateTime": "2021-07-21 11:59:02",
+            "userId": null,
+            "cellphone": "18523146312",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "ylyue",
+            "email": "yl-yue@qq.com",
+            "headImg": "https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png",
+            "birthday": "1996-05-15",
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 21,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-26 07:25:56",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18523146313",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "张双双",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 23,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-30 16:17:45",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18523146314",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "白俊毅",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 24,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-30 16:20:04",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
+            "cellphone": "18523146315",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "测试测试",
+            "email": null,
+            "headImg": "http://pcil57ri4.bkt.clouddn.com/FgP9TmgLFWztHHGfFyE9EQ1gaSiG",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 97,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-02 15:35:52",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146316",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "18523146316",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
         }
-    ],
-    "count": 43
+    ]
 }</code>
                             </pre>
                                         </div>
@@ -880,7 +1027,7 @@ pre code{
                                     </p>
                                     <p>请求方式：GET</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/user/listAll                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/user/listAll                                    </p>
 
                                     
                                     
@@ -894,24 +1041,567 @@ pre code{
     "code": 200,
     "msg": "成功",
     "flag": true,
+    "count": null,
     "data": [
         {
             "id": 10,
-            "create_time": "2018-08-07T02:30:48",
-            "update_time": "2019-07-16T16:50:22",
-            "user_id": null,
-            "role": "b2b_买家",
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-07 02:30:48",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
             "cellphone": "18523146310",
-            "wx_unionid": null,
-            "qq_openid": null,
-            "email": null,
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
             "nickname": "张三丰",
-            "head_img": "ss.png",
-            "sex": "男",
+            "email": null,
+            "headImg": "ss.png",
             "birthday": null,
-            "age": null,
-            "user_status": "正常",
-            "register_source": null
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 18,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-18 09:10:46",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
+            "cellphone": "18523146311",
+            "password": "8uXhwp4c3mYwizx/FKfY6wQRltvBd6Oc0qZvYZa nfQ=",
+            "nickname": "测试",
+            "email": null,
+            "headImg": "http://www.baidu.com",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 21,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-26 07:25:56",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18523146313",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "张双双",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 23,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-30 16:17:45",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18523146314",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "白俊毅",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 24,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-07-30 16:20:04",
+            "updateTime": "2021-07-21 11:59:00",
+            "userId": null,
+            "cellphone": "18523146315",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "测试测试",
+            "email": null,
+            "headImg": "http://pcil57ri4.bkt.clouddn.com/FgP9TmgLFWztHHGfFyE9EQ1gaSiG",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 26,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-01 06:48:42",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146317",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "胡令",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 28,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-07 02:02:42",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146318",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "18523146366",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 34,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-07 02:32:14",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146319",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "18723126410",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 35,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-07 02:38:57",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146320",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "123456",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 36,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-08-16 10:03:30",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146321",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "18223357996",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 37,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-09-04 07:57:53",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146322",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 38,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-09-04 07:58:18",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146323",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 39,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-09-04 07:58:21",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146324",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 40,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-09-04 08:01:23",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146325",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 61,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2018-09-20 02:57:21",
+            "updateTime": "2021-07-21 11:59:01",
+            "userId": null,
+            "cellphone": "18523146326",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "行走的CD",
+            "email": null,
+            "headImg": "http://pcil57ri4.bkt.clouddn.com/FgX8QWRoA6ySMNG3xE01aHg_szWY",
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 65,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-04-11 14:56:39",
+            "updateTime": "2021-07-21 13:48:02",
+            "userId": null,
+            "cellphone": "18523146327",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "测试",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 66,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-04-26 15:05:29",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18523146328",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 68,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-04-26 15:43:39",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146329",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "1",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 69,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-04-26 17:15:30",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146330",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "18523146361",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 70,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-04-29 11:06:31",
+            "updateTime": "2021-07-21 11:59:01",
+            "userId": null,
+            "cellphone": "18523146331",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "15215044536",
+            "email": "402848460@qq.com",
+            "headImg": null,
+            "birthday": null,
+            "sex": "man",
+            "userStatus": "normal"
+        },
+        {
+            "id": 76,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-05-06 17:25:52",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146332",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "15736535451",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 77,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-05-06 17:31:10",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146333",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "15736535441",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 78,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-05-06 18:21:15",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146334",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "15736565656",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 79,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-05-29 14:33:34",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146335",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "晨曦",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 80,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-06-05 17:45:06",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146336",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "水帘洞",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 81,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-06-06 10:02:20",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146337",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "水帘洞",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 95,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-02 10:12:31",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "15123555303",
+            "password": null,
+            "nickname": "某某",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 97,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-02 15:35:52",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18523146316",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "18523146316",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 134,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-04 10:06:46",
+            "updateTime": "2021-07-21 13:48:05",
+            "userId": null,
+            "cellphone": "15723156255",
+            "password": "v0/S0Hi4OZFgycPaQ0JFPg==",
+            "nickname": "abcd",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 165,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-10 18:32:49",
+            "updateTime": "2021-07-21 13:48:05",
+            "userId": null,
+            "cellphone": "18983749649",
+            "password": "dtMGSWev/NQ3dvVaFNnLzw==",
+            "nickname": "穆漪梅",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 170,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-18 16:39:41",
+            "updateTime": "2021-07-21 13:48:05",
+            "userId": null,
+            "cellphone": "19923293135",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "abcd",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 174,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-24 09:31:11",
+            "updateTime": "2021-07-21 13:48:06",
+            "userId": null,
+            "cellphone": "18883877079",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "abcd",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 175,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-24 15:59:31",
+            "updateTime": "2021-07-21 13:48:07",
+            "userId": null,
+            "cellphone": "18716280028",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "abcd",
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 181,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-07-26 17:05:00",
+            "updateTime": "2021-07-21 13:48:08",
+            "userId": null,
+            "cellphone": "18024649918",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": null,
+            "email": null,
+            "headImg": null,
+            "birthday": null,
+            "sex": null,
+            "userStatus": "normal"
+        },
+        {
+            "id": 184,
+            "sortIdx": null,
+            "deleteTime": 0,
+            "createTime": "2019-10-12 23:49:02",
+            "updateTime": "2021-07-21 11:59:02",
+            "userId": null,
+            "cellphone": "18523146312",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "ylyue",
+            "email": "yl-yue@qq.com",
+            "headImg": "https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png",
+            "birthday": "1996-05-15",
+            "sex": "man",
+            "userStatus": "normal"
         }
     ]
 }</code>
@@ -930,7 +1620,7 @@ pre code{
                                     </p>
                                     <p>请求方式：DELETE</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/user/delete                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/user/delete                                    </p>
 
                                     
                                     
@@ -978,7 +1668,7 @@ pre code{
                                     </p>
                                     <p>请求方式：POST</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-simple}}/user/insert                                    </p>
+                                        请求地址：http://{{yue-library-template-simple}}/auth/v1.2/user/insert                                    </p>
 
                                     
                                     
@@ -1070,7 +1760,7 @@ pre code{
                                     </p>
                                     <p>请求方式：GET</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/userJson/page                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/userJson/page                                    </p>
 
                                     
                                     <table class="table table-hover">
@@ -1119,149 +1809,149 @@ pre code{
     "code": 200,
     "msg": "成功",
     "flag": true,
+    "count": 35,
     "data": [
         {
             "id": 95,
-            "role": "b2c_买家",
+            "create_time": "2019-07-02 10:12:31",
+            "update_time": "2021-07-21 13:48:06",
+            "delete_time": 0,
             "cellphone": "15123555303",
             "password": null,
             "nickname": "某某",
             "email": null,
             "head_img": null,
-            "sex": null,
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2019-07-02T18:12:31.000 0800",
-            "update_time": "2019-07-23T00:05:40.000 0800"
+            "sex": "unknown",
+            "user_status": "normal"
         },
         {
             "id": 134,
-            "role": "b2b_买家",
+            "create_time": "2019-07-04 10:06:46",
+            "update_time": "2021-07-21 13:48:05",
+            "delete_time": 0,
             "cellphone": "15723156255",
             "password": "v0/S0Hi4OZFgycPaQ0JFPg==",
             "nickname": "abcd",
             "email": null,
             "head_img": null,
-            "sex": null,
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2019-07-04T18:06:46.000 0800",
-            "update_time": "2019-07-05T22:27:00.000 0800"
+            "sex": "unknown",
+            "user_status": "normal"
         },
         {
             "id": 181,
-            "role": "b2b_买家",
+            "create_time": "2019-07-26 17:05:00",
+            "update_time": "2021-07-21 13:48:08",
+            "delete_time": 0,
             "cellphone": "18024649918",
             "password": "uyJPQmQgEaVE99McVoV2zg==",
             "nickname": null,
             "email": null,
             "head_img": null,
-            "sex": null,
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2019-07-27T01:05:00.000 0800",
-            "update_time": "2019-07-27T01:05:00.000 0800"
+            "sex": "unknown",
+            "user_status": "normal"
         },
         {
             "id": 10,
-            "role": "b2b_买家",
+            "create_time": "2018-08-07 02:30:48",
+            "update_time": "2021-07-21 11:59:00",
+            "delete_time": 0,
             "cellphone": "18523146310",
             "password": "uyJPQmQgEaVE99McVoV2zg==",
             "nickname": "张三丰",
             "email": null,
             "head_img": "ss.png",
-            "sex": "男",
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2018-08-07T10:30:48.000 0800",
-            "update_time": "2019-07-17T00:50:22.000 0800"
+            "sex": "man",
+            "user_status": "normal"
         },
         {
             "id": 18,
-            "role": "b2b_卖家",
+            "create_time": "2018-07-18 09:10:46",
+            "update_time": "2021-07-21 11:59:00",
+            "delete_time": 0,
             "cellphone": "18523146311",
             "password": "8uXhwp4c3mYwizx/FKfY6wQRltvBd6Oc0qZvYZa nfQ=",
             "nickname": "测试",
             "email": null,
             "head_img": "http://www.baidu.com",
-            "sex": "男",
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2018-07-18T17:10:46.000 0800",
-            "update_time": "2019-07-01T18:11:25.000 0800"
-        },
-        {
-            "id": 182,
-            "role": "b2c_买家",
-            "cellphone": "18523146311",
-            "password": "2eZzUNIsix73h9MmhbmVow==",
-            "nickname": null,
-            "email": null,
-            "head_img": null,
-            "sex": null,
-            "birthday": null,
-            "user_status": "正常",
-            "create_time": "2019-10-13T07:45:31.000 0800",
-            "update_time": "2019-10-13T07:45:31.000 0800"
-        },
-        {
-            "id": 20,
-            "role": "b2b_买家",
-            "cellphone": "18523146312",
-            "password": "2eZzUNIsix73h9MmhbmVow==",
-            "nickname": "宋丹丹",
-            "email": null,
-            "head_img": null,
-            "sex": null,
-            "birthday": null,
-            "user_status": "正常",
-            "create_time": "2018-07-24T11:48:50.000 0800",
-            "update_time": "2019-10-13T06:46:51.000 0800"
+            "sex": "man",
+            "user_status": "normal"
         },
         {
             "id": 184,
-            "role": "b2c_买家",
+            "create_time": "2019-10-12 23:49:02",
+            "update_time": "2021-07-21 11:59:02",
+            "delete_time": 0,
             "cellphone": "18523146312",
             "password": "2eZzUNIsix73h9MmhbmVow==",
             "nickname": "ylyue",
             "email": "yl-yue@qq.com",
             "head_img": "https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png",
-            "sex": "男",
             "birthday": "1996-05-15",
-            "user_status": "正常",
-            "create_time": "2019-10-13T07:49:02.000 0800",
-            "update_time": "2019-10-13T07:49:02.000 0800"
+            "sex": "man",
+            "user_status": "normal"
         },
         {
             "id": 21,
-            "role": "b2b_买家",
+            "create_time": "2018-07-26 07:25:56",
+            "update_time": "2021-07-21 13:48:08",
+            "delete_time": 0,
             "cellphone": "18523146313",
             "password": "2eZzUNIsix73h9MmhbmVow==",
             "nickname": "张双双",
             "email": null,
             "head_img": null,
-            "sex": null,
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2018-07-26T15:25:56.000 0800",
-            "update_time": "2019-10-13T06:46:51.000 0800"
+            "sex": "unknown",
+            "user_status": "normal"
         },
         {
             "id": 23,
-            "role": "b2c_买家",
+            "create_time": "2018-07-30 16:17:45",
+            "update_time": "2021-07-21 13:48:08",
+            "delete_time": 0,
             "cellphone": "18523146314",
             "password": "2eZzUNIsix73h9MmhbmVow==",
             "nickname": "白俊毅",
             "email": null,
             "head_img": null,
-            "sex": null,
             "birthday": null,
-            "user_status": "正常",
-            "create_time": "2018-07-31T00:17:45.000 0800",
-            "update_time": "2019-10-13T06:46:51.000 0800"
+            "sex": "unknown",
+            "user_status": "normal"
+        },
+        {
+            "id": 24,
+            "create_time": "2018-07-30 16:20:04",
+            "update_time": "2021-07-21 11:59:00",
+            "delete_time": 0,
+            "cellphone": "18523146315",
+            "password": "2eZzUNIsix73h9MmhbmVow==",
+            "nickname": "测试测试",
+            "email": null,
+            "head_img": "http://pcil57ri4.bkt.clouddn.com/FgP9TmgLFWztHHGfFyE9EQ1gaSiG",
+            "birthday": null,
+            "sex": "man",
+            "user_status": "normal"
+        },
+        {
+            "id": 97,
+            "create_time": "2019-07-02 15:35:52",
+            "update_time": "2021-07-21 13:48:06",
+            "delete_time": 0,
+            "cellphone": "18523146316",
+            "password": "uyJPQmQgEaVE99McVoV2zg==",
+            "nickname": "18523146316",
+            "email": null,
+            "head_img": null,
+            "birthday": null,
+            "sex": "unknown",
+            "user_status": "normal"
         }
-    ],
-    "count": 42
+    ]
 }</code>
                             </pre>
                                         </div>
@@ -1278,7 +1968,7 @@ pre code{
                                     </p>
                                     <p>请求方式：POST</p>
                                     <p>
-                                        请求地址：http://{{yue-library-template-boot}}/userJson/insert                                    </p>
+                                        请求地址：http://{{yue-library-template-boot}}/auth/v1.2/userJson/insert                                    </p>
 
                                     
                                     

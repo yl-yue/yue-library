@@ -1,19 +1,19 @@
 package ai.yue.library.template.boot.ipo.user;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import ai.yue.library.base.validation.annotation.Birthday;
+import ai.yue.library.base.validation.annotation.Cellphone;
+import ai.yue.library.template.boot.constant.user.SexEnum;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
-import org.hibernate.validator.constraints.Length;
-
-import ai.yue.library.base.validation.annotation.Birthday;
-import ai.yue.library.base.validation.annotation.Cellphone;
-import ai.yue.library.base.validation.annotation.Chinese;
-import lombok.Data;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
+ * 用户CRUD实体入参校验示例
+ *
  * @author	ylyue
  * @since	2019年9月25日
  */
@@ -38,8 +38,7 @@ public class UserIPO implements Serializable {
 	
 	String head_img;// 用户头像
 	
-	@Chinese
-	Character sex;// 用户性别
+	SexEnum sex;// 用户性别
 	
 	@Birthday
 	LocalDate birthday;// 用户生日
