@@ -13,7 +13,7 @@ import java.util.List;
  * @since	2018年11月6日
  */
 @Data
-public class Audit implements Serializable, Cloneable {
+public class AuditProperties implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2792479012600072156L;
 
@@ -32,10 +32,10 @@ public class Audit implements Serializable, Cloneable {
 	private List<String> fieldNames;
 
 	@Override
-	public Audit clone() {
-		Audit audit = null;
+	public AuditProperties clone() {
+		AuditProperties audit = null;
 		try {
-			audit = (Audit) super.clone();
+			audit = (AuditProperties) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

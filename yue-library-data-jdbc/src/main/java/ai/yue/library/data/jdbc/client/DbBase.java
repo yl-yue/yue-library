@@ -7,8 +7,9 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
-import ai.yue.library.data.jdbc.config.properties.DataEncrypt;
+import ai.yue.library.data.jdbc.config.properties.DataEncryptProperties;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.EncryptAlgorithmEnum;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
@@ -16,6 +17,13 @@ import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidPooledConnection;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
+import com.alibaba.druid.stat.TableStat;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
@@ -23,19 +31,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -75,21 +80,21 @@ public class DbBase {
      *
      * @return Druid数据源
      */
-//    public DruidDataSource getDruidDataSource() {
-//        DataSource dataSource = getDataSource();
-//        DruidDataSource druidDataSource = null;
-//        try {
-//            if (dataSource instanceof DruidDataSource) {
-//                druidDataSource = (DruidDataSource) dataSource;
-//            } else {
-//                druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
-//            }
-//        } catch (Exception e) {
-//            // ignore
-//        }
-//
-//        return druidDataSource;
-//    }
+    public DruidDataSource getDruidDataSource() {
+        DataSource dataSource = getDataSource();
+        DruidDataSource druidDataSource = null;
+        try {
+            if (dataSource instanceof DruidDataSource) {
+                druidDataSource = (DruidDataSource) dataSource;
+            } else {
+                druidDataSource = (DruidDataSource) ((DruidPooledConnection) dataSource.getConnection()).getConnectionHolder().getDataSource();
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return druidDataSource;
+    }
 
     /**
      * 设置数据源
@@ -112,12 +117,12 @@ public class DbBase {
         return dialect.getJdbcProperties();
     }
 
-    public <T> RowMapper<T> getRowMapper(Class<T> mappedClass, DbBase dbBase, String... tableNames) {
+    public <T> RowMapper<T> getRowMapper(Class<T> mappedClass) {
         RowMapper<T> rowMapper;
         if (mappedClass == null || Map.class.isAssignableFrom(mappedClass)) {
-            rowMapper = (RowMapper<T>) new ColumnMapRowMapper(dbBase, tableNames);
+            rowMapper = (RowMapper<T>) new ColumnMapRowMapper();
         } else {
-            rowMapper = ClassUtils.isSimpleValueType(mappedClass) ? SingleColumnRowMapper.newInstance(mappedClass) : new BeanPropertyRowMapper(mappedClass, dbBase, tableNames);
+            rowMapper = ClassUtils.isSimpleValueType(mappedClass) ? SingleColumnRowMapper.newInstance(mappedClass) : new BeanPropertyRowMapper(mappedClass, this);
         }
 
         return rowMapper;
@@ -150,7 +155,7 @@ public class DbBase {
         return list.get(0);
     }
 
-    // queryFor
+    // queryFor：暂不支持数据自动加密查询，可手动调用 #dataDecrypt()方法加密需要处理的字段
 
     /**
      * <b>查询一行数据</b>
@@ -188,7 +193,6 @@ public class DbBase {
      * @return 可用于方便的获取各种数据类型的结果集
      */
     public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
-        aopBefore(sql, null, paramJson);
         return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
     }
 
@@ -214,22 +218,7 @@ public class DbBase {
      * @return 多行查询结果
      */
     public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
-        aopBefore(sql, null, paramJson);
-        String[] tables = extractTables(sql);
-        List<T> resultList = getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass, this, tables));
-//        if (mappedClass != null && CharSequence.class.isAssignableFrom(mappedClass) && resultList.size() == 1) {
-//            List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
-//            TableStat.Column column = ((ArrayList<TableStat.Column>) schemaStatVisitorList.get(0).getColumns()).get(0);
-//            String columnName = column.getName();
-//            JSONObject resultJson = new JSONObject();
-//            resultJson.put(columnName, resultList.get(0));
-//            aopAfter(tables, resultJson);
-//            String resultDataStr = resultJson.getString(columnName);
-//            resultList.clear();
-//            resultList.add((T) resultDataStr);
-//        }
-
-        return resultList;
+        return getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass));
     }
 
     // is
@@ -623,182 +612,224 @@ public class DbBase {
 
     // ========== 数据脱敏、JDBC审计 ==========
 
-//    protected List<SchemaStatVisitor> extractSchemaStatVisitor(String sql) {
-//        DruidDataSource druidDataSource = getDruidDataSource();
-//        DbType dbType = DbType.of(druidDataSource.getDbType());
-//        List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, dbType);
-//        List<SchemaStatVisitor> schemaStatVisitorList = new ArrayList<>();
-//        for (SQLStatement sqlStatement : sqlStatements) {
-//            SchemaStatVisitor visitor = new SchemaStatVisitor();
-//            sqlStatement.accept(visitor);
-//            schemaStatVisitorList.add(visitor);
-//        }
-//
-//        return schemaStatVisitorList;
-//    }
+    protected List<SchemaStatVisitor> extractSchemaStatVisitor(String sql) {
+        DruidDataSource druidDataSource = getDruidDataSource();
+        DbType dbType = DbType.of(druidDataSource.getDbType());
+        List<SQLStatement> sqlStatements = SQLUtils.parseStatements(sql, dbType);
+        List<SchemaStatVisitor> schemaStatVisitorList = new ArrayList<>();
+        for (SQLStatement sqlStatement : sqlStatements) {
+            SchemaStatVisitor visitor = new SchemaStatVisitor();
+            sqlStatement.accept(visitor);
+            schemaStatVisitorList.add(visitor);
+        }
+
+        return schemaStatVisitorList;
+    }
 
     protected String[] extractTables(String sql) {
-        return null;
-//        List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
-//        List<String> tableNameList = new ArrayList<>();
-//        for (SchemaStatVisitor schemaStatVisitor : schemaStatVisitorList) {
-//            Set<TableStat.Name> names = schemaStatVisitor.getTables().keySet();
-//            Iterator<TableStat.Name> iterator = names.iterator();
-//            List<String> currentTableNameList = new ArrayList<>();
-//            while (iterator.hasNext()) {
-//                currentTableNameList.add(iterator.next().getName());
-//            }
-//
-//            tableNameList.addAll(currentTableNameList);
-//        }
-//
-//        String[] tableNames = new String[tableNameList.size()];
-//        return tableNameList.toArray(tableNames);
+        List<SchemaStatVisitor> schemaStatVisitorList = extractSchemaStatVisitor(sql);
+        List<String> tableNameList = new ArrayList<>();
+        for (SchemaStatVisitor schemaStatVisitor : schemaStatVisitorList) {
+            Set<TableStat.Name> names = schemaStatVisitor.getTables().keySet();
+            Iterator<TableStat.Name> iterator = names.iterator();
+            List<String> currentTableNameList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                currentTableNameList.add(iterator.next().getName());
+            }
+
+            tableNameList.addAll(currentTableNameList);
+        }
+
+        String[] tableNames = new String[tableNameList.size()];
+        return tableNameList.toArray(tableNames);
     }
 
     /**
-     * 动作执行前
-     *
-     * @param tableName 表名
-     * @param paramJson 参数
+     * 数据加密
      */
-    protected void aopBefore(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject paramJson) {
-        JSONObject[] paramJsons = {paramJson};
-        aopBefore(sql, tableName, paramJsons);
+    private void dataEncrypt(Map<String, DataEncryptProperties> dataEncryptConfigs, String tableName, JSONObject... paramJsons) {
+        // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
+        DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(tableName);
+        if (dataEncryptProperties == null) {
+            return;
+        }
+        EncryptAlgorithmEnum dataEncryptAlgorithm = dataEncryptProperties.getDataEncryptAlgorithm();
+        String dataEncryptKey = dataEncryptProperties.getDataEncryptKey();
+        if (dataEncryptAlgorithm == null) {
+            dataEncryptAlgorithm = getJdbcProperties().getDataEncryptAlgorithm();
+        }
+        if (dataEncryptKey == null) {
+            dataEncryptKey = getJdbcProperties().getDataEncryptKey();
+        }
+
+        // 字段加密
+        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
+        for (String fieldName : fieldNameList) {
+            for (JSONObject paramJson : paramJsons) {
+                String data = paramJson.getString(fieldName);
+                if (data == null) {
+                    if (log.isDebugEnabled()) {
+                        log.warn("【字段加密】未能获得加密数据，当前加密表：{}，加密字段：{}", tableName, fieldName);
+                    }
+                    continue;
+                }
+
+                String encryptedBase64 = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).encryptBase64(data);
+                paramJson.replace(fieldName, encryptedBase64);
+                log.debug("【字段加密】当前加密表：{}，加密字段：{}，加密前数据：{}，加密后数据：{}", tableName, fieldName, data, encryptedBase64);
+            }
+        }
     }
 
     /**
-     * 动作执行前
-     *
-     * @param tableName  表名
-     * @param paramJsons 参数
-     */
-    protected void aopBefore(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] paramJsons) {
-        // 数据加密
-//        if (tableName == null) {
-//            String[] names = extractTables(sql);
-//            for (String name : names) {
-//                dataEncryptOrDecrypt(name, paramJsons, true);
-//            }
-//        } else {
-//            dataEncryptOrDecrypt(tableName, paramJsons, true);
-//        }
-
-        // 审计
-    }
-
-    /**
-     * 动作执行后（这是一个不适用于业务中调用的方法，请忽略）
-     *
-     * @param tableNames 表名
-     * @param resultJson 单行结果数据
-     */
-    public void aopAfter(String[] tableNames, JSONObject resultJson) {
-//        JSONObject[] resultJsons = {resultJson};
-//        for (String tableName : tableNames) {
-//            aopAfter(null, tableName, resultJsons);
-//        }
-    }
-
-    /**
-     * 动作执行后
-     *
-     * @param tableName  表名
-     * @param resultJson 单行结果数据
-     */
-    protected void aopAfter(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject resultJson) {
-        JSONObject[] resultJsons = {resultJson};
-        aopAfter(sql, tableName, resultJsons);
-    }
-
-    /**
-     * 动作执行后
-     *
-     * @param tableName   表名
-     * @param resultJsons 多行结果数据
-     */
-    protected void aopAfter(@Nullable String sql, @Nullable String tableName, @Nullable JSONObject[] resultJsons) {
-        // 数据解密
-//        if (tableName == null) {
-//            String[] names = extractTables(sql);
-//            for (String name : names) {
-//                dataEncryptOrDecrypt(name, resultJsons, false);
-//            }
-//        } else {
-//            dataEncryptOrDecrypt(tableName, resultJsons, false);
-//        }
-
-        // 审计
-    }
-
-    /**
-     * 数据加密或解密
+     * 数据加密
      *
      * @param tableName  表名
      * @param paramJsons 参数
-     * @param encrypt    true == 加密，false == 解密
      */
-    private void dataEncryptOrDecrypt(String tableName, JSONObject[] paramJsons, boolean encrypt) {
-        List<DataEncrypt> dataEncryptConfigList = getJdbcProperties().getDataEncryptConfigs();
-        if (ListUtils.isEmpty(dataEncryptConfigList)) {
+    public void dataEncrypt(String tableName, JSONObject... paramJsons) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
             return;
         }
 
-        for (DataEncrypt dataEncryptConfig : dataEncryptConfigList) {
-            String dataEncryptTableName = dataEncryptConfig.getTableName();
-            if (tableName.equalsIgnoreCase(dataEncryptTableName) == false) {
-                continue;
-            }
+        // 数据加密
+        dataEncrypt(dataEncryptConfigs, tableName, paramJsons);
+    }
 
-            // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
-            EncryptAlgorithmEnum dataEncryptAlgorithm = dataEncryptConfig.getDataEncryptAlgorithm();
-            String dataEncryptKey = dataEncryptConfig.getDataEncryptKey();
-            if (dataEncryptAlgorithm == null) {
-                dataEncryptAlgorithm = getJdbcProperties().getDataEncryptAlgorithm();
-            }
-            if (dataEncryptKey == null) {
-                dataEncryptKey = getJdbcProperties().getDataEncryptKey();
-            }
+    /**
+     * 数据加密-返回cloneJson
+     *
+     * @param sql       SQL语句
+     * @param paramJson 参数
+     */
+    protected JSONObject dataEncryptCloneJson(String sql, JSONObject paramJson) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
+            return paramJson;
+        }
 
-            // 字段加密
-            List<String> fieldNameList = dataEncryptConfig.getFieldNames();
-            for (String fieldName : fieldNameList) {
-                for (JSONObject paramJson : paramJsons) {
-                    String data = paramJson.getString(fieldName);
-                    if (encrypt == true) {
-                        if (data == null) {
-                            log.warn("【字段加密】未能获得加密数据，当前加密表：{}，加密字段：{}", tableName, fieldName);
-                            continue;
-                        }
+        // 提前表名
+        String[] tableNames = extractTables(sql);
 
-                        String encryptedBase64 = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).encryptBase64(data);
-                        paramJson.replace(fieldName, encryptedBase64);
-                        log.debug("【字段加密】当前加密表：{}，加密字段：{}，加密前数据：{}，加密后数据：{}", tableName, fieldName, data, encryptedBase64);
-                    } else {
-                        if (data == null) {
-                            log.warn("【字段解密】未能获得解密数据，当前解密表：{}，解密字段：{}", tableName, fieldName);
-                            continue;
-                        }
+        // 加密数据
+        JSONObject cloneJson = new JSONObject(paramJson);
+        for (String tableName : tableNames) {
+            dataEncrypt(dataEncryptConfigs, tableName, cloneJson);
+        }
 
-                        String decryptStr = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).decryptStr(data);
-                        paramJson.replace(fieldName, decryptStr);
-                        log.debug("【字段解密】当前解密表：{}，解密字段：{}，解密前数据：{}，解密后数据：{}", tableName, fieldName, data, decryptStr);
+        // 返回经过数据加密后的克隆json
+        return cloneJson;
+    }
+
+    /**
+     * 数据加密-返回cloneJson
+     *
+     * @param sql        SQL语句
+     * @param paramJsons 参数
+     */
+    protected JSONObject[] dataEncryptCloneJsons(String sql, JSONObject[] paramJsons) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
+            return paramJsons;
+        }
+
+        // 提前表名
+        String[] tableNames = extractTables(sql);
+
+        // 加密数据
+        JSONObject[] cloneJsons = ArrayUtil.clone(paramJsons);
+        for (String tableName : tableNames) {
+            dataEncrypt(dataEncryptConfigs, tableName, cloneJsons);
+        }
+
+        // 返回经过数据加密后的克隆jsons
+        return cloneJsons;
+    }
+
+    /**
+     * 数据解密
+     *
+     * @param mappedClass 查询结果映射类型，DO实体类
+     * @param resultJsons 查询结果数据
+     */
+    public void dataDecrypt(Class<?> mappedClass, JSONObject... resultJsons) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
+            return;
+        }
+
+        // 确认数据解密表
+        Table table = mappedClass.getAnnotation(Table.class);
+        if (table == null) {
+            return;
+        }
+        String tableName = table.value();
+        if (StrUtil.isBlank(tableName)) {
+            log.warn(StrUtil.format("{}存在空Table注解", mappedClass));
+            return;
+        }
+
+        // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
+        DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(tableName);
+        EncryptAlgorithmEnum dataEncryptAlgorithm = dataEncryptProperties.getDataEncryptAlgorithm();
+        String dataEncryptKey = dataEncryptProperties.getDataEncryptKey();
+        if (dataEncryptAlgorithm == null) {
+            dataEncryptAlgorithm = getJdbcProperties().getDataEncryptAlgorithm();
+        }
+        if (dataEncryptKey == null) {
+            dataEncryptKey = getJdbcProperties().getDataEncryptKey();
+        }
+
+        // 字段解密
+        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
+        for (String fieldName : fieldNameList) {
+            for (JSONObject resultJson : resultJsons) {
+                String data = resultJson.getString(fieldName);
+                if (data == null) {
+                    if (log.isDebugEnabled()) {
+                        log.warn("【字段解密】未能获得解密数据，当前解密表：{}，解密字段：{}", tableName, fieldName);
                     }
+                    continue;
                 }
-            }
 
-            break;
+                String decryptStr = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).decryptStr(data);
+                resultJson.replace(fieldName, decryptStr);
+                log.debug("【字段解密】当前解密表：{}，解密字段：{}，解密前数据：{}，解密后数据：{}", tableName, fieldName, data, decryptStr);
+            }
         }
     }
 
-    protected void audit(String tableName, JSONObject paramJson) {
+    protected void dataAudit(String tableName, JSONObject paramJson, CrudEnum crudEnum) {
         List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
-        if (ListUtils.isNotEmpty(auditTableNames)) {
-            for (String auditTableName : auditTableNames) {
-                if (tableName.equalsIgnoreCase(auditTableName)) {
-                    paramJson.put("","");
-                }
+        if (ListUtils.isEmpty(auditTableNames)) {
+            return;
+        }
+
+        for (String auditTableName : auditTableNames) {
+            if (tableName.equalsIgnoreCase(auditTableName) == false) {
+                continue;
             }
+
+            // 新增
+            if (crudEnum == CrudEnum.C) {
+                paramJson.put("","");
+            }
+
+            // 删除
+            if (crudEnum == CrudEnum.D) {
+                paramJson.put("","");
+            }
+
+            // 修改
+            if (crudEnum == CrudEnum.U) {
+                paramJson.put("","");
+            }
+            break;
         }
     }
 

@@ -12,12 +12,10 @@ import ai.yue.library.data.jdbc.vo.PageVO;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -39,7 +37,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public boolean isExistData(String tableName, JSONObject paramJson) {
         paramValidate(tableName, paramJson);
-        aopBefore(null, tableName, paramJson);
+        dataEncrypt(tableName, paramJson);
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT count(*) FROM ");
         sql.append(dialect.getWrapper().wrap(tableName));
@@ -192,7 +190,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> T get(String tableName, JSONObject paramJson, Class<T> mappedClass) {
         paramFormat(paramJson);
-        aopBefore(null, tableName, paramJson);
+        dataEncrypt(tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, null);
         return queryForObject(sql, paramJson, mappedClass);
     }
@@ -221,7 +219,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> List<T> list(String tableName, JSONObject paramJson, Class<T> mappedClass) {
         paramFormat(paramJson);
-        aopBefore(null, tableName, paramJson);
+        dataEncrypt(tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, null);
         return queryForList(sql, paramJson, mappedClass);
     }
@@ -250,7 +248,7 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> List<T> list(String tableName, JSONObject paramJson, SortEnum sortEnum, Class<T> mappedClass) {
         paramFormat(paramJson);
-        aopBefore(null, tableName, paramJson);
+        dataEncrypt(tableName, paramJson);
         String sql = querySqlBuild(tableName, paramJson, sortEnum);
         return queryForList(sql, paramJson, mappedClass);
     }

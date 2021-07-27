@@ -1,8 +1,5 @@
 package ai.yue.library.data.jdbc.support;
 
-import ai.yue.library.base.util.MapUtils;
-import ai.yue.library.data.jdbc.client.DbBase;
-import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -21,15 +18,6 @@ import java.sql.SQLException;
  */
 public class ColumnMapRowMapper implements RowMapper<JSONObject> {
 
-	private DbBase dbBase;
-	@Nullable
-	private String[] tableNames;
-
-	public ColumnMapRowMapper(DbBase dbBase, String... tableNames) {
-		this.dbBase = dbBase;
-		this.tableNames = tableNames;
-	}
-
 	@Override
 	public JSONObject mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ResultSetMetaData rsmd = rs.getMetaData();
@@ -38,10 +26,6 @@ public class ColumnMapRowMapper implements RowMapper<JSONObject> {
 		for (int i = 1; i <= columnCount; i++) {
 			String column = JdbcUtils.lookupColumnName(rsmd, i);
 			resultJson.putIfAbsent(getColumnKey(column), getColumnValue(rs, i));
-		}
-
-		if (ArrayUtil.isNotEmpty(tableNames) && MapUtils.isNotEmpty(resultJson)) {
-			dbBase.aopAfter(tableNames, resultJson);
 		}
 
 		return resultJson;

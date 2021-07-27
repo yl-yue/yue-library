@@ -14,7 +14,7 @@ import java.util.List;
  * @since	2018年11月6日
  */
 @Data
-public class DataEncrypt implements Serializable, Cloneable {
+public class DataEncryptProperties implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2792479012600072155L;
 
@@ -31,20 +31,15 @@ public class DataEncrypt implements Serializable, Cloneable {
 	private String dataEncryptKey;
 
 	/**
-	 * 需要进行数据加密的表
-	 */
-	private String tableName;
-
-	/**
 	 * 需要进行数据加密的字段
 	 */
 	private List<String> fieldNames;
 
 	@Override
-	public DataEncrypt clone() {
-		DataEncrypt dataEncrypt = null;
+	public DataEncryptProperties clone() {
+		DataEncryptProperties dataEncrypt = null;
 		try {
-			dataEncrypt = (DataEncrypt) super.clone();
+			dataEncrypt = (DataEncryptProperties) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

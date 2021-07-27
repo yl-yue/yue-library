@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * jdbc可配置属性
@@ -23,9 +24,9 @@ public class JdbcProperties implements Serializable, Cloneable {
 
 	/**
 	 * 业务唯一键
-	 * <p>默认：key</p>
+	 * <p>默认：bkey</p>
 	 */
-	private String businessUk = "key";
+	private String businessUk = "bkey";
 
 	/**
 	 * 启用删除查询过滤（只对自动生成的查询sql生效）
@@ -69,8 +70,12 @@ public class JdbcProperties implements Serializable, Cloneable {
 
 	/**
 	 * 数据加密配置
+	 * <p>
+	 *     key：表名<br>
+	 *     value：数据加密规则
+	 * </p>
 	 */
-	private List<DataEncrypt> dataEncryptConfigs;
+	private Map<String, DataEncryptProperties> dataEncryptConfigs;
 
 	/**
 	 * JDBC审计表名

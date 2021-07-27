@@ -111,7 +111,7 @@ class DbDelete extends DbUpdate {
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public long delete(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
-		aopBefore(null, tableName, paramJson);
+		dataEncrypt(tableName, paramJson);
 		String sql = deleteSqlBuild(tableName, paramJson);
 		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
@@ -146,7 +146,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteSqlBuild(tableName, paramJsons[0]);
 
 		// 2. 执行
-		aopBefore(null, tableName, paramJsons);
+		dataEncrypt(tableName, paramJsons);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
 		// 3. 确认影响行数
@@ -270,7 +270,7 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
-		aopBefore(null, tableName, paramJson);
+		dataEncrypt(tableName, paramJson);
 		String sql = deleteLogicSqlBuild(tableName, paramJson);
 		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
@@ -306,7 +306,7 @@ class DbDelete extends DbUpdate {
 		String sql = deleteLogicSqlBuild(tableName, paramJsons[0]);
 
 		// 2. 执行
-		aopBefore(null, tableName, paramJsons);
+		dataEncrypt(tableName, paramJsons);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
 		// 3. 确认影响行数

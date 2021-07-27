@@ -50,8 +50,7 @@ class DbJdbcTemplate extends DbBase {
 	 * @return 多行查询结果
 	 */
 	public <T> List<T> jdbcQueryForList(String sql, Class<T> mappedClass, @Nullable Object... args) {
-		String[] tables = extractTables(sql);
-		return getJdbcTemplate().query(sql, getRowMapper(mappedClass, this, tables), args);
+		return getJdbcTemplate().query(sql, getRowMapper(mappedClass), args);
 	}
 
 	/**

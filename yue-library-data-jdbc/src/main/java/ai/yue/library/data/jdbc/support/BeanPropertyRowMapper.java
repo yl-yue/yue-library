@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +25,6 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	/** The class we are mapping to. */
 	private Class<T> mappedClass;
 	private DbBase dbBase;
-	@Nullable
-	private String[] tableNames;
 
 	/**
 	 * Create a new {@code BeanPropertyRowMapper}, accepting unpopulated
@@ -35,16 +32,22 @@ public class BeanPropertyRowMapper<T> implements RowMapper<T> {
 	 *
 	 * @param mappedClass the class that each row should be mapped to
 	 */
-	public BeanPropertyRowMapper(Class<T> mappedClass, DbBase dbBase, String... tableNames) {
+	public BeanPropertyRowMapper(Class<T> mappedClass) {
+		this.mappedClass = mappedClass;
+	}
+
+	public BeanPropertyRowMapper(Class<T> mappedClass, DbBase dbBase) {
 		this.mappedClass = mappedClass;
 		this.dbBase = dbBase;
-		this.tableNames = tableNames;
 	}
-	
+
 	@Override
 	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-		ColumnMapRowMapper columnMapRowMapper = new ColumnMapRowMapper(dbBase, tableNames);
+		ColumnMapRowMapper columnMapRowMapper = new ColumnMapRowMapper();
 		JSONObject resultJson = columnMapRowMapper.mapRow(rs, rowNum);
+		if (dbBase != null) {
+			dbBase.dataDecrypt(mappedClass, resultJson);
+		}
 		return MapUtils.isEmpty(resultJson) ? null : Convert.toJavaBean(resultJson, this.mappedClass);
 	}
 	
