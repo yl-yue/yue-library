@@ -10,6 +10,7 @@ import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.client.dialect.DialectNameEnum;
 import ai.yue.library.data.jdbc.client.dialect.Wrapper;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.ipo.Page;
@@ -99,6 +100,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		paramValidate(tableName, paramJson, conditions);
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);

@@ -4,10 +4,12 @@ import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.ObjectUtils;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -24,14 +26,20 @@ class DbDelete extends DbUpdate {
 	private String deleteSqlBuild(String tableName, JSONObject paramJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
-		
+
 		// 2. 生成SQL
 		StringBuffer sql = new StringBuffer();
-        sql.append("DELETE FROM ");
+		sql.append("DELETE FROM ");
 		sql.append(dialect.getWrapper().wrap(tableName));
 		sql.append(paramToWhereSql(paramJson));
-		
-		// 3. 返回结果
+
+		// 3. 返回SQL
+		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
+			sql.append(" AND ")
+					.append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+					.append(" = ")
+					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+		}
 		return sql.toString();
 	}
 
@@ -113,7 +121,7 @@ class DbDelete extends DbUpdate {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		String sql = deleteSqlBuild(tableName, paramJson);
-		return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
+		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
 	/**
@@ -192,17 +200,30 @@ class DbDelete extends DbUpdate {
 
 	// Delete Logic
 	
-	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson) {
+	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson, @Nullable JSONObject auditParam) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		
 		// 2. 生成SQL
 		String[] conditions = new String[paramJson.size()];
 		conditions = MapUtils.keyList(paramJson).toArray(conditions);
-		paramJson.put(DbConstant.FIELD_DEFINITION_DELETE_TIME, System.currentTimeMillis());
-		
-		// 3. 返回结果
-		return updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+		if (MapUtils.isEmpty(auditParam)) {
+			paramJson.put(DbConstant.FIELD_DEFINITION_DELETE_TIME, System.currentTimeMillis());
+		} else {
+			paramJson.putAll(auditParam);
+		}
+
+		// 3. 返回SQL
+		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
+			StringBuffer addLogicDelWhereSql = new StringBuffer(sql);
+			addLogicDelWhereSql.append(" AND ")
+					.append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+					.append(" = ")
+					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
+			sql = addLogicDelWhereSql.toString();
+		}
+		return sql;
 	}
 
 	private void deleteLogicByUk(String tableName, Object uk) {
@@ -223,7 +244,9 @@ class DbDelete extends DbUpdate {
 		// 3. 获得SQL
 		JSONObject paramJson = new JSONObject();
 		paramJson.put(key, uk);
-		String sql = deleteLogicSqlBuild(tableName, paramJson);
+		JSONObject auditParam = new JSONObject();
+		dataAudit(tableName, CrudEnum.D, auditParam);
+		String sql = deleteLogicSqlBuild(tableName, paramJson, auditParam);
 
 		// 4. 执行删除
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
@@ -271,7 +294,9 @@ class DbDelete extends DbUpdate {
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
-		String sql = deleteLogicSqlBuild(tableName, paramJson);
+		JSONObject auditParam = new JSONObject();
+		dataAudit(tableName, CrudEnum.D, auditParam);
+		String sql = deleteLogicSqlBuild(tableName, paramJson, auditParam);
 		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 	
@@ -303,7 +328,19 @@ class DbDelete extends DbUpdate {
 	@Transactional
 	public void deleteBatchLogicNotParamFormat(String tableName, JSONObject[] paramJsons) {
 		// 1. 获得SQL
-		String sql = deleteLogicSqlBuild(tableName, paramJsons[0]);
+		JSONObject[] auditParams = new JSONObject[paramJsons.length];
+		for (int i = 0; i < auditParams.length; i++) {
+			auditParams[i] = new JSONObject();
+		}
+		dataAudit(tableName, CrudEnum.D, auditParams);
+		String sql = deleteLogicSqlBuild(tableName, paramJsons[0], auditParams[0]);
+		if (MapUtils.isNotEmpty(auditParams[0])) {
+			for (JSONObject paramJson : paramJsons) {
+				for (JSONObject auditParam : auditParams) {
+					paramJson.putAll(auditParam);
+				}
+			}
+		}
 
 		// 2. 执行
 		dataEncrypt(tableName, paramJsons);

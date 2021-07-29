@@ -4,6 +4,7 @@ import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import com.alibaba.fastjson.JSONObject;
@@ -65,6 +66,7 @@ class DbInsert extends DbDelete {
 		// 2. 插入源初始化
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.C, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -87,6 +89,7 @@ class DbInsert extends DbDelete {
 		// 2. 插入源初始化
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.C, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -132,9 +135,11 @@ class DbInsert extends DbDelete {
 
 		// 4. put sort_idx值
 		paramJson.put(fieldDefinitionSortIdxWrapped, sort_idx);
-		
+
 		// 5. 执行
-		return insert(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.C, paramJson);
+		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
+		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
 	
 	/**
@@ -169,6 +174,7 @@ class DbInsert extends DbDelete {
 
 		// 2. 插入源初始化
 		dataEncrypt(tableName, paramJsons);
+		dataAudit(tableName, CrudEnum.C, paramJsons);
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJsons = dialect.getWrapper().wrap(paramJsons);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);

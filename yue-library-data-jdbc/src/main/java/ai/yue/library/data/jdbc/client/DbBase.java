@@ -1,12 +1,11 @@
 package ai.yue.library.data.jdbc.client;
 
 import ai.yue.library.base.exception.DbException;
-import ai.yue.library.base.util.ClassUtils;
-import ai.yue.library.base.util.ListUtils;
-import ai.yue.library.base.util.MapUtils;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.*;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.audit.AuditUserProvider;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
+import ai.yue.library.data.jdbc.config.properties.DataAuditProperties;
 import ai.yue.library.data.jdbc.config.properties.DataEncryptProperties;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
@@ -359,8 +358,7 @@ public class DbBase {
      * @return whereSql
      */
     public String paramToWhereSql(JSONObject paramJson, String... conditions) {
-        StringBuffer whereSql = new StringBuffer();
-        whereSql.append(" WHERE 1 = 1 ");
+        StringBuffer whereSql = new StringBuffer(getDeleteWhereSql());
         if (ArrayUtil.isNotEmpty(conditions)) {
             for (String condition : conditions) {
                 paramToWhereSql(whereSql, paramJson, condition);
@@ -661,9 +659,9 @@ public class DbBase {
         if (dataEncryptKey == null) {
             dataEncryptKey = getJdbcProperties().getDataEncryptKey();
         }
+        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
 
         // 字段加密
-        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
         for (String fieldName : fieldNameList) {
             for (JSONObject paramJson : paramJsons) {
                 String data = paramJson.getString(fieldName);
@@ -776,6 +774,9 @@ public class DbBase {
 
         // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
         DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(tableName);
+        if (dataEncryptProperties == null) {
+            return;
+        }
         EncryptAlgorithmEnum dataEncryptAlgorithm = dataEncryptProperties.getDataEncryptAlgorithm();
         String dataEncryptKey = dataEncryptProperties.getDataEncryptKey();
         if (dataEncryptAlgorithm == null) {
@@ -784,9 +785,9 @@ public class DbBase {
         if (dataEncryptKey == null) {
             dataEncryptKey = getJdbcProperties().getDataEncryptKey();
         }
+        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
 
         // 字段解密
-        List<String> fieldNameList = dataEncryptProperties.getFieldNames();
         for (String fieldName : fieldNameList) {
             for (JSONObject resultJson : resultJsons) {
                 String data = resultJson.getString(fieldName);
@@ -804,33 +805,82 @@ public class DbBase {
         }
     }
 
-    protected void dataAudit(String tableName, JSONObject paramJson, CrudEnum crudEnum) {
-        List<String> auditTableNames = getJdbcProperties().getAuditTableNames();
-        if (ListUtils.isEmpty(auditTableNames)) {
-            return;
-        }
+    private void dataAudit(List<String> auditTableNames, String tableName, CrudEnum crudEnum, JSONObject... paramJsons) {
+        // 获得审计配置
+        DataAuditProperties dataAuditProperties = getJdbcProperties().getDataAuditProperties();
+        String fieldNameCreateUserId = dataAuditProperties.getFieldNameCreateUserId();
+        String fieldNameCreateTime = dataAuditProperties.getFieldNameCreateTime();
+        String fieldNameDeleteUserId = dataAuditProperties.getFieldNameDeleteUserId();
+        String fieldNameDeleteTime = dataAuditProperties.getFieldNameDeleteTime();
+        String fieldNameUpdateUserId = dataAuditProperties.getFieldNameUpdateUserId();
+        String fieldNameUpdateTime = dataAuditProperties.getFieldNameUpdateTime();
 
+        // 数据审计
         for (String auditTableName : auditTableNames) {
             if (tableName.equalsIgnoreCase(auditTableName) == false) {
                 continue;
             }
 
-            // 新增
-            if (crudEnum == CrudEnum.C) {
-                paramJson.put("","");
+            // 获得用户ID
+            Long userId = null;
+            try {
+                userId = SpringUtils.getBean(AuditUserProvider.class).getUserId();
+            } catch (Exception e) {
+                log.error("【数据审计】未找到合适的Bean：{}", AuditUserProvider.class);
+                throw e;
             }
 
-            // 删除
-            if (crudEnum == CrudEnum.D) {
-                paramJson.put("","");
-            }
+            for (JSONObject paramJson : paramJsons) {
+                // 新增
+                if (crudEnum == CrudEnum.C) {
+                    paramJson.put(fieldNameCreateUserId,userId);
+                    paramJson.put(fieldNameCreateTime, LocalDateTime.now());
+                }
 
-            // 修改
-            if (crudEnum == CrudEnum.U) {
-                paramJson.put("","");
+                // 删除
+                if (crudEnum == CrudEnum.D) {
+                    paramJson.put(fieldNameDeleteUserId,userId);
+                    paramJson.put(fieldNameDeleteTime, System.currentTimeMillis());
+                }
+
+                // 修改
+                if (crudEnum == CrudEnum.U) {
+                    paramJson.put(fieldNameUpdateUserId,userId);
+                    paramJson.put(fieldNameUpdateTime, LocalDateTime.now());
+                }
             }
             break;
         }
+    }
+
+    protected void dataAudit(String tableName, CrudEnum crudEnum, JSONObject... paramJsons) {
+        // 确认是否开启审计
+        List<String> auditTableNames = getJdbcProperties().getDataAuditTableNames();
+        if (ListUtils.isEmpty(auditTableNames)) {
+            return;
+        }
+
+        dataAudit(auditTableNames, tableName, crudEnum, paramJsons);
+    }
+
+    protected JSONObject[] dataAuditCloneJsons(String sql, CrudEnum crudEnum, JSONObject[] paramJsons) {
+        // 确认是否开启审计
+        List<String> auditTableNames = getJdbcProperties().getDataAuditTableNames();
+        if (ListUtils.isEmpty(auditTableNames)) {
+            return paramJsons;
+        }
+
+        // 提前表名
+        String[] tableNames = extractTables(sql);
+
+        // 数据审计
+        JSONObject[] cloneJsons = ArrayUtil.clone(paramJsons);
+        for (String tableName : tableNames) {
+            dataAudit(auditTableNames, tableName, crudEnum, cloneJsons);
+        }
+
+        // 返回经过数据审计后的克隆jsons
+        return cloneJsons;
     }
 
 }

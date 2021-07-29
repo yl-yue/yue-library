@@ -78,9 +78,14 @@ public class JdbcProperties implements Serializable, Cloneable {
 	private Map<String, DataEncryptProperties> dataEncryptConfigs;
 
 	/**
-	 * JDBC审计表名
+	 * 数据审计属性
 	 */
-	private List<String> auditTableNames;
+	private DataAuditProperties dataAuditProperties = new DataAuditProperties();
+
+	/**
+	 * 数据审计表名
+	 */
+	private List<String> dataAuditTableNames;
 
 	@Override
 	public JdbcProperties clone() {

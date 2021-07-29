@@ -4,6 +4,7 @@ import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbExpectedEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
@@ -127,6 +128,7 @@ class DbUpdate extends DbQuery {
 	@Transactional
 	public int[] updateBatchNotParamFormat(String sql, JSONObject[] paramJsons) {
 		JSONObject[] cloneJsons = dataEncryptCloneJsons(sql, paramJsons);
+		dataAuditCloneJsons(sql, CrudEnum.U, paramJsons);
 		return getNamedParameterJdbcTemplate().batchUpdate(sql, cloneJsons);
 	}
 
@@ -174,7 +176,8 @@ class DbUpdate extends DbQuery {
 		String whereSql = paramToWhereSql(paramJson, conditions);
 		sql.append(whereSql);
 
-		if (dBUpdateEnum == DbUpdateEnum.DECR_UNSIGNED) {// 递减-无符号更新
+		// 递减-无符号更新（避免被减成负数）
+		if (dBUpdateEnum == DbUpdateEnum.DECR_UNSIGNED) {
 			List<String> updateKeys = MapUtils.keyList(paramJson);
 			for (String key : updateKeys) {
 				// 排除更新条件
@@ -210,6 +213,7 @@ class DbUpdate extends DbQuery {
     public Long update(String tableName, JSONObject paramJson, String[] conditions) {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
     }
@@ -227,6 +231,7 @@ class DbUpdate extends DbQuery {
     public Long update(String tableName, JSONObject paramJson, String[] conditions, DbUpdateEnum dBUpdateEnum) {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
@@ -246,6 +251,7 @@ class DbUpdate extends DbQuery {
     		, int expectedValue, DbExpectedEnum dBExpectedEnum) {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 		if (DbExpectedEnum.EQ == dBExpectedEnum) {
@@ -282,6 +288,7 @@ class DbUpdate extends DbQuery {
 		String[] conditions = { DbConstant.PRIMARY_KEY };
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -319,6 +326,7 @@ class DbUpdate extends DbQuery {
 	public void updateByIdNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { DbConstant.PRIMARY_KEY };
 		dataEncrypt(tableName, paramJsons);
+		dataAudit(tableName, CrudEnum.U, paramJsons);
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 		int expectedValue = 1;
@@ -354,6 +362,7 @@ class DbUpdate extends DbQuery {
 		String[] conditions = { getJdbcProperties().getBusinessUk() };
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.U, paramJson);
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dBUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -393,6 +402,7 @@ class DbUpdate extends DbQuery {
 	public void updateByBusinessUkNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dBUpdateEnum) {
 		String[] conditions = { getJdbcProperties().getBusinessUk() };
 		dataEncrypt(tableName, paramJsons);
+		dataAudit(tableName, CrudEnum.U, paramJsons);
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 		int expectedValue = 1;
@@ -506,6 +516,7 @@ class DbUpdate extends DbQuery {
 		// 1. 获得SQL
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dBUpdateEnum);
 		dataEncrypt(tableName, paramJsons);
+		dataAudit(tableName, CrudEnum.U, paramJsons);
 
 		// 2. 执行
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
