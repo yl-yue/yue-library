@@ -647,7 +647,8 @@ public class DbBase {
      */
     private void dataEncrypt(Map<String, DataEncryptProperties> dataEncryptConfigs, String tableName, JSONObject... paramJsons) {
         // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
-        DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(tableName);
+        String unwrapTableName = dialect.getWrapper().unwrap(tableName);
+        DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(unwrapTableName);
         if (dataEncryptProperties == null) {
             return;
         }
@@ -667,14 +668,14 @@ public class DbBase {
                 String data = paramJson.getString(fieldName);
                 if (data == null) {
                     if (log.isDebugEnabled()) {
-                        log.warn("【字段加密】未能获得加密数据，当前加密表：{}，加密字段：{}", tableName, fieldName);
+                        log.warn("【字段加密】未能获得加密数据，当前加密表：{}，加密字段：{}", unwrapTableName, fieldName);
                     }
                     continue;
                 }
 
                 String encryptedBase64 = dataEncryptAlgorithm.getSymmetricCrypto(dataEncryptKey).encryptBase64(data);
                 paramJson.replace(fieldName, encryptedBase64);
-                log.debug("【字段加密】当前加密表：{}，加密字段：{}，加密前数据：{}，加密后数据：{}", tableName, fieldName, data, encryptedBase64);
+                log.debug("【字段加密】当前加密表：{}，加密字段：{}，加密前数据：{}，加密后数据：{}", unwrapTableName, fieldName, data, encryptedBase64);
             }
         }
     }
@@ -748,30 +749,7 @@ public class DbBase {
         return cloneJsons;
     }
 
-    /**
-     * 数据解密
-     *
-     * @param mappedClass 查询结果映射类型，DO实体类
-     * @param resultJsons 查询结果数据
-     */
-    public void dataDecrypt(Class<?> mappedClass, JSONObject... resultJsons) {
-        // 确认是否开启数据加密特性
-        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
-        if (MapUtils.isEmpty(dataEncryptConfigs)) {
-            return;
-        }
-
-        // 确认数据解密表
-        Table table = mappedClass.getAnnotation(Table.class);
-        if (table == null) {
-            return;
-        }
-        String tableName = table.value();
-        if (StrUtil.isBlank(tableName)) {
-            log.warn(StrUtil.format("{}存在空Table注解", mappedClass));
-            return;
-        }
-
+    private void dataDecrypt(Map<String, DataEncryptProperties> dataEncryptConfigs, String tableName, JSONObject[] resultJsons) {
         // 初始化加密算法与密钥，表级配置未配置时，默认使用Bean级配置
         DataEncryptProperties dataEncryptProperties = dataEncryptConfigs.get(tableName);
         if (dataEncryptProperties == null) {
@@ -805,6 +783,51 @@ public class DbBase {
         }
     }
 
+    /**
+     * 数据解密
+     *
+     * @param tableName   表名
+     * @param resultJsons 查询结果数据
+     */
+    public void dataDecrypt(String tableName, JSONObject... resultJsons) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
+            return;
+        }
+
+        // 数据解密
+        dataDecrypt(dataEncryptConfigs, tableName, resultJsons);
+    }
+
+    /**
+     * 数据解密
+     *
+     * @param mappedClass 查询结果映射类型，DO实体类
+     * @param resultJsons 查询结果数据
+     */
+    public void dataDecrypt(Class<?> mappedClass, JSONObject... resultJsons) {
+        // 确认是否开启数据加密特性
+        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
+        if (MapUtils.isEmpty(dataEncryptConfigs)) {
+            return;
+        }
+
+        // 确认数据解密表
+        Table table = mappedClass.getAnnotation(Table.class);
+        if (table == null) {
+            return;
+        }
+        String tableName = table.value();
+        if (StrUtil.isBlank(tableName)) {
+            log.warn(StrUtil.format("{}存在空Table注解", mappedClass));
+            return;
+        }
+
+        // 数据解密
+        dataDecrypt(dataEncryptConfigs, tableName, resultJsons);
+    }
+
     private void dataAudit(List<String> auditTableNames, String tableName, CrudEnum crudEnum, JSONObject... paramJsons) {
         // 获得审计配置
         DataAuditProperties dataAuditProperties = getJdbcProperties().getDataAuditProperties();
@@ -816,8 +839,9 @@ public class DbBase {
         String fieldNameUpdateTime = dataAuditProperties.getFieldNameUpdateTime();
 
         // 数据审计
+        String unwrapTableName = dialect.getWrapper().unwrap(tableName);
         for (String auditTableName : auditTableNames) {
-            if (tableName.equalsIgnoreCase(auditTableName) == false) {
+            if (unwrapTableName.equalsIgnoreCase(auditTableName) == false) {
                 continue;
             }
 

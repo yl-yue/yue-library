@@ -31,8 +31,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * ANSI SQL
- * 
+ * ANSI SQL<br>
+ * <p>方言实现需要处理如下特性：<br>
+ *   1. 参数美化：{@link DbBase#paramFormat(JSONObject)}<br>
+ *   2. 数据加密：{@link DbBase#dataEncrypt(String, JSONObject...)}<br>
+ *   3. 数据审计：{@link DbBase#dataAudit(String, CrudEnum, JSONObject...)}
+ * </p>
+ *
  * @author	ylyue
  * @since	2020年6月13日
  */
@@ -173,14 +178,19 @@ public class AnsiDialect extends DbBase implements Dialect {
 				.build();
 	}
 
+	/**
+	 * 分页查询参数自动加密匹配防重复处理标识（用于方法循环调用，防止重复处理）
+	 */
+	private static final String DATA_ENCRYPT_REPETITION_ID = "yue-dataEncryptRepetitionId";
+
 	@Override
 	public <T> PageVO<T> page(String tableName, PageIPO pageIPO, SortEnum sortEnum, Class<T> mappedClass) {
 		// 1. 参数验证
 		paramValidate(tableName);
 
 		// 2. 处理分页参数
-		JSONObject conditions = pageIPO.getConditions();
 		tableName = wrapper.wrap(tableName);
+		JSONObject conditions = pageIPO.getConditions();
 
 		// 3. 预编译SQL拼接
 		StringBuffer querySql = new StringBuffer();
@@ -211,7 +221,12 @@ public class AnsiDialect extends DbBase implements Dialect {
 		countSql.append(tableName);
 		countSql.append(whereSql);
 
-		// 5. 分页查询
+		// 5. 处理分页查询参数
+		paramFormat(conditions);
+		dataEncrypt(tableName, conditions);
+		conditions.put(DATA_ENCRYPT_REPETITION_ID, true);
+
+		// 6. 分页查询
 		return pageSql(countSql.toString(), querySql.toString(), pageIPO, mappedClass);
 	}
 
@@ -241,7 +256,13 @@ public class AnsiDialect extends DbBase implements Dialect {
 		countSql.append(" ");
 		countSql.append(whereSql);
 
-		// 4. 分页查询
+		// 4. 处理分页查询参数
+		JSONObject conditions = pageIPO.getConditions();
+		paramFormat(conditions);
+		dataEncrypt(tableName, conditions);
+		conditions.put(DATA_ENCRYPT_REPETITION_ID, true);
+
+		// 5. 分页查询
 		return pageSql(countSql.toString(), querySql.toString(), pageIPO, mappedClass);
 	}
 
@@ -268,7 +289,13 @@ public class AnsiDialect extends DbBase implements Dialect {
 		StringBuffer countSql = new StringBuffer(countStr);
 		countSql = countSql.delete(limitIndex, EndIndex);
 
-		// 3. 分页查询
+		// 3. 处理分页查询参数
+		JSONObject conditions = pageIPO.getConditions();
+		paramFormat(conditions);
+		conditions = dataEncryptCloneJson(countSql.toString(), conditions);
+		conditions.put(DATA_ENCRYPT_REPETITION_ID, true);
+
+		// 4. 分页查询
 		return pageSql(countSql.toString(), querySql, pageIPO, mappedClass);
 	}
 
@@ -280,8 +307,18 @@ public class AnsiDialect extends DbBase implements Dialect {
 		}
 
 		// 2. 处理分页参数
-		JSONObject paramJson = toPage(pageIPO).toParamJson();
 		JSONObject conditions = pageIPO.getConditions();
+		if (conditions.containsKey(DATA_ENCRYPT_REPETITION_ID)) {
+			conditions.remove(DATA_ENCRYPT_REPETITION_ID);
+		} else {
+			paramFormat(conditions);
+			if (StrUtil.isNotBlank(countSql)) {
+				conditions = dataEncryptCloneJson(countSql, conditions);
+			} else {
+				conditions = dataEncryptCloneJson(querySql, conditions);
+			}
+		}
+		JSONObject paramJson = toPage(pageIPO).toParamJson();
 
 		// 3. 统计
 		Long count = null;

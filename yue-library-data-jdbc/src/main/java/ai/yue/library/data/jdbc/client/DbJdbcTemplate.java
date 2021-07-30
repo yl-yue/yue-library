@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 使用JdbcTemplate进行SQL优化型数据库操作，以 '?' 作为SQL语句参数占位符
  * <p>示例：<code>SELECT * FROM tableName WHERE id = ?</code>
- * <p>jdbcQuery开头的查询方法暂时不支持参数加密，因为SQL中使用`?`作为占位符不好解析具体第几个参数是需要加密的</p>
+ * <p>jdbcQuery开头的查询方法暂时不支持参数自动加密匹配，因为SQL中使用`?`作为占位符，无法解析具体第几个参数是需要加密的</p>
  * 
  * @author	ylyue
  * @since	2020年8月19日

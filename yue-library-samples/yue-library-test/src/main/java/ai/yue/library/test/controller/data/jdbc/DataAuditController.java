@@ -30,6 +30,7 @@ public class DataAuditController {
         return new AuditUserProvider() {
             @Override
             public Long getUserId() {
+                // 在你的应用程序中，如何获得当前用户ID，一般从Token中获取
                 return 666666L;
             }
         };

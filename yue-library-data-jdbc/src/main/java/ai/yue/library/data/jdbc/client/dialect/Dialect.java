@@ -1,7 +1,9 @@
 package ai.yue.library.data.jdbc.client.dialect;
 
 import ai.yue.library.base.constant.SortEnum;
+import ai.yue.library.data.jdbc.client.DbBase;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
+import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
@@ -14,9 +16,14 @@ import java.io.Serializable;
 
 /**
  * SQL方言
- * <p>由于不同数据库间SQL语句的差异，导致无法统一拼接SQL，Dialect接口旨在根据不同的数据库，使用不同的方言实现类，来拼接对应的SQL。
- * <p>设计模式借鉴于hutool-db
- * 
+ * <p>由于不同数据库间SQL语句的差异，导致无法统一拼接SQL，Dialect接口旨在根据不同的数据库，使用不同的方言实现类，来拼接对应的SQL。</p>
+ * <p>设计模式借鉴于hutool-db</p><br>
+ * <p>方言实现需要处理如下特性：<br>
+ *   1. 参数美化：{@link DbBase#paramFormat(JSONObject)}<br>
+ *   2. 数据加密：{@link DbBase#dataEncrypt(String, JSONObject...)}<br>
+ *   3. 数据审计：{@link DbBase#dataAudit(String, CrudEnum, JSONObject...)}
+ * </p>
+ *
  * @author	ylyue
  * @since	2020年6月13日
  */

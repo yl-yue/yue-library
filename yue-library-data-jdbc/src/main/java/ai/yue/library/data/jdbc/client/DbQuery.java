@@ -307,7 +307,6 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
     public <T> PageVO<T> page(String tableName, PageIPO pageIPO, Class<T> mappedClass) {
-        paramFormat(pageIPO.getConditions());
         return dialect.page(tableName, pageIPO, null, mappedClass);
     }
 
@@ -338,7 +337,6 @@ class DbQuery extends DbJdbcTemplate {
      * @return count（总数），data（分页列表数据）
      */
     public <T> PageVO<T> page(String tableName, PageIPO pageIPO, SortEnum sortEnum, Class<T> mappedClass) {
-        paramFormat(pageIPO.getConditions());
         return dialect.page(tableName, pageIPO, sortEnum, mappedClass);
     }
 
@@ -452,7 +450,10 @@ class DbQuery extends DbJdbcTemplate {
 
         // 2. 查询数据
         JSONArray array = new JSONArray();
-        array.addAll(queryForList(querySql, dialect.toPage(pageIPO).toParamJson()));
+        JSONObject paramJson = dialect.toPage(pageIPO).toParamJson();
+        paramFormat(paramJson);
+        paramJson = dataEncryptCloneJson(querySql, paramJson);
+        array.addAll(queryForList(querySql, paramJson));
         int size = array.size();
 
         // 3. 获得前后值

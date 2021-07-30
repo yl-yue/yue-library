@@ -1,9 +1,13 @@
 package ai.yue.library.test.dao.data.jdbc;
 
 import ai.yue.library.data.jdbc.dao.AbstractRepository;
+import ai.yue.library.data.jdbc.ipo.PageIPO;
+import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.dataobject.jdbc.DataEncryptDO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 数据脱敏
@@ -51,6 +55,23 @@ public class DataEncryptDAO extends AbstractRepository<DataEncryptDO> {
         JSONObject paramJson = new JSONObject();
         paramJson.put("cellphone", cellphone);
         return db.get(tableName, paramJson, mappedClass);
+    }
+
+    public List<DataEncryptDO> list(String sex) {
+        JSONObject paramJson = new JSONObject();
+        paramJson.put("sex", sex);
+        return db.list(tableName, paramJson, mappedClass);
+    }
+
+    /**
+     * 分页
+     *
+     * @param pageIPO
+     * @return
+     */
+    public PageVO pageSql(PageIPO pageIPO) {
+        String querySql = "SELECT * FROM " + tableName + db.paramToWhereSql(pageIPO.getConditions()) + " LIMIT :page, :limit";
+        return db.pageSql(null, querySql, pageIPO, mappedClass);
     }
 
 }

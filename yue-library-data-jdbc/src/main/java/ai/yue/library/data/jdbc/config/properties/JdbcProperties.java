@@ -59,12 +59,12 @@ public class JdbcProperties implements Serializable, Cloneable {
 	private boolean enableBooleanMapRecognition = true;
 
 	/**
-	 * 数据加密算法
+	 * 缺省数据加密算法（仅当在表级未配置单独的加密算法时，以缺省值的方式生效）
 	 */
 	private EncryptAlgorithmEnum dataEncryptAlgorithm = EncryptAlgorithmEnum.AES;
 
 	/**
-	 * 数据加密密钥
+	 * 缺省数据加密密钥（仅当在表级未配置单独的加密密钥时，以缺省值的方式生效）
 	 */
 	private String dataEncryptKey;
 

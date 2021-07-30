@@ -2,6 +2,7 @@ package ai.yue.library.test.controller.data.jdbc;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
+import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.test.dao.data.jdbc.DataEncryptDAO;
 import ai.yue.library.test.dao.data.jdbc.DataEncryptDAO2;
 import ai.yue.library.test.dataobject.jdbc.DataEncryptDO;
@@ -45,6 +46,21 @@ public class DataEncryptController {
     @GetMapping("/get")
     public Result<?> get(String cellphone) {
         return R.success(encryptDAO.get(cellphone));
+    }
+
+    @GetMapping("/list")
+    public Result<?> list(String sex) {
+        return R.success(encryptDAO.list(sex));
+    }
+
+    @GetMapping("/page")
+    public Result<?> page(JSONObject paramJson) {
+        return encryptDAO.page(PageIPO.parsePageIPO(paramJson)).toResult();
+    }
+
+    @GetMapping("/pageSql")
+    public Result<?> pageSql(JSONObject paramJson) {
+        return encryptDAO.pageSql(PageIPO.parsePageIPO(paramJson)).toResult();
     }
 
     // 2
