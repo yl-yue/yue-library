@@ -44,7 +44,7 @@ public Result<?> valid(@Valid ValidationIPO validationIPO) {
 
 **响应结果如下图所示**：多了一层最外层响应对象
 
-![请求参数与响应结果](RESTful_files/1.jpg)
+![请求参数与响应结果](_RESTful_files/请求参数与响应结果.jpg)
 
 ## API接口版本控制
 　　在前后端分离、RESTful 接口盛行的当下，接口的版本控制是一个成熟的系统所应该拥有的。web模块提供的版本控制，可以方便我们快速构建一个基于版本的api接口。<br>
