@@ -38,6 +38,7 @@
   * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")
   * [数据脱敏](data/jdbc/数据脱敏.md)
   * [数据审计](data/jdbc/数据审计.md)
+  * [多租户](data/jdbc/多租户.md)
   * [动态数据源](data/jdbc/动态数据源.md)
 
 * yue-library-data-redis

@@ -7,7 +7,7 @@
 ```
 主键ID：bigint类型、无符号、自动递增、不能为NULL
 > 其实这样做也符合了《Java开发手册》MySQL数据库-建表规约第九条：<br>
-> ![建表规约第九条](介绍_files/建表规约第九条.png)
+> ![建表规约第九条](jdbc_files/建表规约第九条.png)
 
 **AbstractDAO：**
 ```java
