@@ -51,10 +51,15 @@ yue-library正计划提供 [grpc]() 支持
 
 ### 工程依赖规约
 ```
-. proto-common              中台proto工程-共享依赖
-├── common-csm              中台proto工程-共享依赖-通用服务模块
-├── common-mdp              中台proto工程-共享依赖-微服务开发平台
-└── common-ssc              中台proto工程-共享依赖-共享服务中心
+. proto
+├── proto-common         	中台proto工程-共享依赖
+│   ├── common-csm              中台proto工程-共享依赖-通用服务模块
+│   ├── common-message          中台proto工程-共享依赖-公共消息模块
+│   ├── common-mdp              中台proto工程-共享依赖-微服务开发平台
+│   └── common-ssc              中台proto工程-共享依赖-共享服务中心
+└── proto-lan            	中台proto工程-局域网依赖
+    ├── lan-mdp              	中台proto工程-局域网依赖-微服务开发平台
+    └── lan-ssc              	中台proto工程-局域网依赖-共享服务中心
 ```
 
 - 在`proto-common`工程组下定义公共message，并编译为独立模块（同谷歌`google/protobuf/wrappers.proto`编译为独立模块引用）
@@ -68,11 +73,11 @@ message CommonMessageRquest {
 }
 ```
 
-- 业务依赖方将`common-ssc`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`common-ssc/msg`
+- 业务依赖方将`common-ssc`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`proto-common/common-ssc/msg`
 
 ```protobuf
 import "google/protobuf/wrappers.proto";
-import "common-ssc/msg/CommonMessage.proto";
+import "proto-common/common-ssc/msg/CommonMessage.proto";
 
 service AuthCommonMessage {
   rpc ActRegister(sc.proto.common.ssc.msg.CommonMessageRquest) returns (google.protobuf.BoolValue);
