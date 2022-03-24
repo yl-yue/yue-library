@@ -73,11 +73,11 @@ message CommonMessageRquest {
 }
 ```
 
-- 业务依赖方将`common-ssc`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`proto-common/common-ssc/msg`
+- 业务依赖方将`common-ssc`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`common-ssc/msg`
 
 ```protobuf
 import "google/protobuf/wrappers.proto";
-import "proto-common/common-ssc/msg/CommonMessage.proto";
+import "common-ssc/msg/CommonMessage.proto";
 
 service AuthCommonMessage {
   rpc ActRegister(sc.proto.common.ssc.msg.CommonMessageRquest) returns (google.protobuf.BoolValue);
