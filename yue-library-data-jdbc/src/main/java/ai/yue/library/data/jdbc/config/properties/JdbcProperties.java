@@ -22,11 +22,30 @@ public class JdbcProperties implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2792479012600072153L;
 
+	// ====================== 关键字段定义 ======================
+
 	/**
-	 * 业务唯一键
-	 * <p>默认：bkey</p>
+	 * 关键字段定义-无序主键名（表中字段值推荐使用UUID5无符号位）
+	 *
+	 * <p>默认：uuid</p>
 	 */
-	private String businessUk = "bkey";
+	private String fieldDefinitionUuid = "uuid";
+
+	/**
+	 * 关键字段定义-数据删除标识
+	 *
+	 * <p>默认：delete_time</p>
+	 */
+	private String fieldDefinitionDeleteTime = "delete_time";
+
+	/**
+	 * 关键字段定义-排序
+	 *
+	 * <p>默认：sort_idx</p>
+	 */
+	private String fieldDefinitionSortIdx = "sort_idx";
+
+	// ====================== JDBC属性 ======================
 
 	/**
 	 * 启用删除查询过滤（只对自动生成的查询sql生效）

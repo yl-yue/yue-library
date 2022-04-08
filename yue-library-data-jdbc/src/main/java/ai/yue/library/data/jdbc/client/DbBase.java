@@ -3,7 +3,6 @@ package ai.yue.library.data.jdbc.client;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.*;
 import ai.yue.library.base.view.ResultPrompt;
-import ai.yue.library.data.jdbc.audit.AuditUserProvider;
 import ai.yue.library.data.jdbc.client.dialect.Dialect;
 import ai.yue.library.data.jdbc.config.properties.DataAuditProperties;
 import ai.yue.library.data.jdbc.config.properties.DataEncryptProperties;
@@ -11,6 +10,7 @@ import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.EncryptAlgorithmEnum;
+import ai.yue.library.data.jdbc.provider.AuditUserProvider;
 import ai.yue.library.data.jdbc.support.BeanPropertyRowMapper;
 import ai.yue.library.data.jdbc.support.ColumnMapRowMapper;
 import cn.hutool.core.util.ArrayUtil;
@@ -116,6 +116,7 @@ public class DbBase {
         return dialect.getJdbcProperties();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> RowMapper<T> getRowMapper(Class<T> mappedClass) {
         RowMapper<T> rowMapper;
         if (mappedClass == null || Map.class.isAssignableFrom(mappedClass)) {
@@ -406,7 +407,7 @@ public class DbBase {
         StringBuffer whereSql = new StringBuffer();
         if (getJdbcProperties().isEnableDeleteQueryFilter()) {
             whereSql.append(" WHERE ")
-            .append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+            .append(getJdbcProperties().getFieldDefinitionDeleteTime())
             .append(" = ")
             .append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
         } else {
@@ -831,12 +832,15 @@ public class DbBase {
     private void dataAudit(List<String> auditTableNames, String tableName, CrudEnum crudEnum, JSONObject... paramJsons) {
         // 获得审计配置
         DataAuditProperties dataAuditProperties = getJdbcProperties().getDataAuditProperties();
-        String fieldNameCreateUserId = dataAuditProperties.getFieldNameCreateUserId();
+        String fieldNameCreateUser = dataAuditProperties.getFieldNameCreateUser();
+        String fieldNameCreateUserUuid = dataAuditProperties.getFieldNameCreateUserUuid();
         String fieldNameCreateTime = dataAuditProperties.getFieldNameCreateTime();
-        String fieldNameDeleteUserId = dataAuditProperties.getFieldNameDeleteUserId();
-        String fieldNameDeleteTime = dataAuditProperties.getFieldNameDeleteTime();
-        String fieldNameUpdateUserId = dataAuditProperties.getFieldNameUpdateUserId();
+        String fieldNameUpdateUser = dataAuditProperties.getFieldNameUpdateUser();
+        String fieldNameUpdateUserUuid = dataAuditProperties.getFieldNameUpdateUserUuid();
         String fieldNameUpdateTime = dataAuditProperties.getFieldNameUpdateTime();
+        String fieldNameDeleteUser = dataAuditProperties.getFieldNameDeleteUser();
+        String fieldNameDeleteUserUuid = dataAuditProperties.getFieldNameDeleteUserUuid();
+        String fieldNameDeleteTime = dataAuditProperties.getFieldNameDeleteTime();
 
         // 数据审计
         String unwrapTableName = dialect.getWrapper().unwrap(tableName);
@@ -846,9 +850,11 @@ public class DbBase {
             }
 
             // 获得用户ID
-            Long userId = null;
+            String user = null;
+            String userUuid = null;
             try {
-                userId = SpringUtils.getBean(AuditUserProvider.class).getUserId();
+                user = SpringUtils.getBean(AuditUserProvider.class).getUser();
+                userUuid = SpringUtils.getBean(AuditUserProvider.class).getUserUuid();
             } catch (Exception e) {
                 log.error("【数据审计】未找到合适的Bean：{}", AuditUserProvider.class);
                 throw e;
@@ -857,20 +863,23 @@ public class DbBase {
             for (JSONObject paramJson : paramJsons) {
                 // 新增
                 if (crudEnum == CrudEnum.C) {
-                    paramJson.put(fieldNameCreateUserId,userId);
+                    paramJson.put(fieldNameCreateUser,user);
+                    paramJson.put(fieldNameCreateUserUuid,userUuid);
                     paramJson.put(fieldNameCreateTime, LocalDateTime.now());
-                }
-
-                // 删除
-                if (crudEnum == CrudEnum.D) {
-                    paramJson.put(fieldNameDeleteUserId,userId);
-                    paramJson.put(fieldNameDeleteTime, System.currentTimeMillis());
                 }
 
                 // 修改
                 if (crudEnum == CrudEnum.U) {
-                    paramJson.put(fieldNameUpdateUserId,userId);
+                    paramJson.put(fieldNameUpdateUser,user);
+                    paramJson.put(fieldNameUpdateUserUuid,userUuid);
                     paramJson.put(fieldNameUpdateTime, LocalDateTime.now());
+                }
+
+                // 删除
+                if (crudEnum == CrudEnum.D) {
+                    paramJson.put(fieldNameDeleteUser,user);
+                    paramJson.put(fieldNameDeleteUserUuid,userUuid);
+                    paramJson.put(fieldNameDeleteTime, System.currentTimeMillis());
                 }
             }
             break;

@@ -1,13 +1,6 @@
 package ai.yue.library.test.webflux.doc.example.data.jdbc;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.data.jdbc.constant.DbSortEnum;
+import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dao.AbstractDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
@@ -15,6 +8,11 @@ import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.webflux.dataobject.UserDO;
 import cn.hutool.core.lang.Console;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.stereotype.Repository;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author  ylyue
@@ -33,6 +31,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 * @param paramJson
 	 * @return
 	 */
+	@Override
 	public Long insert(JSONObject paramJson) {
 		String uniqueKeys = "name";// 可选参数
 		return db.insertWithSortIdxAutoIncrement(tableName(), paramJson, uniqueKeys);
@@ -133,7 +132,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	 * @return 列表数据
 	 */
 	public List<JSONObject> list(JSONObject paramJson) {
-		return db.list(tableName(), paramJson, DbSortEnum.DESC);
+		return db.list(tableName(), paramJson, SortEnum.DESC);
 	}
 	
 	public void query(JSONObject paramJson) {

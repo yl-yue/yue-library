@@ -4,6 +4,7 @@ import ai.yue.library.base.constant.SortEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
@@ -111,7 +112,7 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 单个-ById
      * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String)}</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUUID(String, String)}</p>
      *
      * @param tableName 表名
      * @param id        主键ID
@@ -124,7 +125,7 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 单个-ById
      * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByBusinessUk(String, String, Class)}</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUUID(String, String, Class)}</p>
      *
      * @param tableName   表名
      * @param id          主键ID
@@ -133,39 +134,39 @@ class DbQuery extends DbJdbcTemplate {
      */
     public <T> T getById(String tableName, Long id, Class<T> mappedClass) {
         paramValidate(tableName, id);
-        String sql = getByColumnNameSqlBuild(tableName, DbConstant.PRIMARY_KEY);
+        String sql = getByColumnNameSqlBuild(tableName, DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(DbConstant.PRIMARY_KEY), id);
+        paramJson.put(dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_PRIMARY_KEY), id);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
     /**
      * 单个-By业务键
-     * <p>默认业务键为key
-     * <p>业务键值推荐使用UUID5
+     * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
+     * <p>无序主键值请使用UUID5无符号位
      *
-     * @param tableName       表名
-     * @param businessUkValue 业务键的唯一值
+     * @param tableName 表名
+     * @param uuidValue 无序主键值
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public JSONObject getByBusinessUk(String tableName, String businessUkValue) {
-        return getByBusinessUk(tableName, businessUkValue, null);
+    public JSONObject getByUuid(String tableName, String uuidValue) {
+        return getByUuid(tableName, uuidValue, null);
     }
 
     /**
-     * 单个-By业务键
-     * <p>默认业务键为key
-     * <p>业务键值推荐使用UUID5
+     * 单个-By无序主键
+     * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
+     * <p>无序主键值请使用UUID5无符号位
      *
-     * @param tableName       表名
-     * @param businessUkValue 业务键的唯一值
-     * @param mappedClass     查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
+     * @param tableName   表名
+     * @param uuidValue   无序主键值
+     * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public <T> T getByBusinessUk(String tableName, String businessUkValue, Class<T> mappedClass) {
-        String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getBusinessUk());
+    public <T> T getByUuid(String tableName, String uuidValue, Class<T> mappedClass) {
+        String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getFieldDefinitionUuid());
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getBusinessUk()), businessUkValue);
+        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getFieldDefinitionUuid()), uuidValue);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
@@ -459,7 +460,7 @@ class DbQuery extends DbJdbcTemplate {
         // 3. 获得前后值
         Long beforeId = null;
         Long afterId = null;
-        String key = DbConstant.PRIMARY_KEY;
+        String key = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
         for (int i = 0; i < size; i++) {
             JSONObject json = array.getJSONObject(i);
             // 比较列表中相等的值，然后获取前一条与后一条数据

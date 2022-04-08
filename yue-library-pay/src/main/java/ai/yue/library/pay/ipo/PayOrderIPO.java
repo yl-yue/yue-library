@@ -1,13 +1,12 @@
 package ai.yue.library.pay.ipo;
 
-import java.math.BigDecimal;
-
+import ai.yue.library.base.util.IdUtils;
 import com.egzosn.pay.common.bean.TransactionType;
-
-import ai.yue.library.base.util.UUIDUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import java.math.BigDecimal;
 
 /**
  * 支付订单IPO
@@ -26,7 +25,7 @@ public class PayOrderIPO extends com.egzosn.pay.common.bean.PayOrder {
 	private Integer listId;
     
 	public PayOrderIPO(Integer listId, String subject, String body, BigDecimal price, TransactionType transactionType) {
-		super(subject, body, price, UUIDUtils.getOrderNo_19(), transactionType);
+		super(subject, body, price, IdUtils.getOrderNo19(), transactionType);
 		this.listId = listId;
 	}
     

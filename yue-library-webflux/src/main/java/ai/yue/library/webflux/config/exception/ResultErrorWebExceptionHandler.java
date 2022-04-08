@@ -1,10 +1,10 @@
 package ai.yue.library.webflux.config.exception;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.all;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
-
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import cn.hutool.core.lang.Console;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
@@ -12,11 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
-import ai.yue.library.base.view.R;
-import ai.yue.library.base.view.Result;
-import cn.hutool.core.lang.Console;
 import reactor.core.publisher.Mono;
+
+import static org.springframework.web.reactive.function.server.RequestPredicates.all;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
  * Web异常处理器
@@ -27,9 +26,9 @@ import reactor.core.publisher.Mono;
  */
 public class ResultErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
 
-	public ResultErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
+	public ResultErrorWebExceptionHandler(ErrorAttributes errorAttributes, WebProperties.Resources resources,
 			ErrorProperties errorProperties, ApplicationContext applicationContext) {
-		super(errorAttributes, resourceProperties, errorProperties, applicationContext);
+		super(errorAttributes, resources, errorProperties, applicationContext);
 	}
 	
 	@Override

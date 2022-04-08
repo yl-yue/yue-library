@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library-dependencies</artifactId>
-		<version>j11.2.4.0-SNAPSHOT</version>
+		<version>j11.2.6.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-test-remove-redis</artifactId>
 	<name>${project.artifactId}</name>

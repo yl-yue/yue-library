@@ -21,8 +21,8 @@ public abstract class AbstractDAO extends AbstractBaseDAO<JSONObject> {
 	}
 
 	@Override
-	public JSONObject getByBusinessUk(String businessUkValue) {
-		return db.getByBusinessUk(tableName(), businessUkValue);
+	public JSONObject getByUuid(String uuidValue) {
+		return db.getByUuid(tableName(), uuidValue);
 	}
 
 	@Override

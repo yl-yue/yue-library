@@ -35,7 +35,8 @@ public class ResponseEncryptHandler<T> implements ResponseBodyAdvice<T> {
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
 		return returnType.hasMethodAnnotation(ResponseEncrypt.class) && returnType.getMethod().getReturnType() == Result.class;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType,
 			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,

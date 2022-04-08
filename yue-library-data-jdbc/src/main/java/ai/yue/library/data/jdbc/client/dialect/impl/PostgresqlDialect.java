@@ -9,6 +9,7 @@ import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.ipo.Page;
+import ai.yue.library.data.jdbc.provider.FillDataProvider;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -74,6 +75,7 @@ public class PostgresqlDialect extends AnsiDialect {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
+		paramJson.putAll(FillDataProvider.getUpdateParamJson());
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);

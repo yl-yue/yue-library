@@ -16,11 +16,14 @@ public class DataAuditProperties implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2792479012600072156L;
 
-	private String fieldNameCreateUserId = "create_user_id";
+	private String fieldNameCreateUser = "create_user";
+	private String fieldNameCreateUserUuid = "create_user_uuid";
 	private String fieldNameCreateTime = "create_time";
-	private String fieldNameUpdateUserId = "update_user_id";
+	private String fieldNameUpdateUser = "update_user";
+	private String fieldNameUpdateUserUuid = "update_user_uuid";
 	private String fieldNameUpdateTime = "update_time";
-	private String fieldNameDeleteUserId = "delete_user_id";
+	private String fieldNameDeleteUser = "delete_user";
+	private String fieldNameDeleteUserUuid = "delete_user_uuid";
 	private String fieldNameDeleteTime = "delete_time";
 
 	@Override

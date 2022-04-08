@@ -4,6 +4,7 @@ import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.ObjectUtils;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
@@ -36,30 +37,30 @@ class DbDelete extends DbUpdate {
 		// 3. 返回SQL
 		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
 			sql.append(" AND ")
-					.append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+					.append(getJdbcProperties().getFieldDefinitionDeleteTime())
 					.append(" = ")
 					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
 		}
 		return sql.toString();
 	}
 
-	private void deleteByUk(String tableName, Object uk) {
+	private void deleteByPk(String tableName, Object pkValue) {
 		// 1. 参数验证
 		paramValidate(tableName);
-		if (ObjectUtils.isNull(uk)) {
+		if (ObjectUtils.isNull(pkValue)) {
 			throw new DbException("删除条件不能为null");
 		}
 
 		// 2. 确认数据
 		JSONObject data = null;
-		String key = null;
+		String pkName = null;
 		try {
-			if (uk instanceof Long) {
-				data = getById(tableName, (Long) uk);
-				key = DbConstant.PRIMARY_KEY;
-			} else if (uk instanceof String) {
-				data = getByBusinessUk(tableName, (String) uk);
-				key = getJdbcProperties().getBusinessUk();
+			if (pkValue instanceof Long) {
+				data = getById(tableName, (Long) pkValue);
+				pkName = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
+			} else if (pkValue instanceof String) {
+				data = getByUuid(tableName, (String) pkValue);
+				pkName = getJdbcProperties().getFieldDefinitionUuid();
 			}
 		} catch (Exception e) {
 			data = null;
@@ -70,7 +71,7 @@ class DbDelete extends DbUpdate {
 
 		// 3. 获得SQL
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(key, uk);
+		paramJson.put(pkName, pkValue);
 		String sql = deleteSqlBuild(tableName, paramJson);
 
 		// 4. 执行删除
@@ -85,28 +86,28 @@ class DbDelete extends DbUpdate {
 	/**
 	 * 删除
 	 * <p>数据删除前会先进行条数确认
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByBusinessUk(String, String)}</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String, String)}</p>
      * 
      * @param tableName	表名
      * @param id     	主键id
      */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void delete(String tableName, Long id) {
-		deleteByUk(tableName, id);
+		deleteByPk(tableName, id);
     }
-	
+
 	/**
-	 * 删除-通过表业务键
+	 * 删除-通过表无序主键
 	 * <p>数据删除前会先进行条数确认
-	 * <p>默认业务键为key
-	 * <p>业务键值推荐使用UUID5
+	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
+	 * <p>无序主键值请使用UUID5无符号位
 	 *
-	 * @param tableName    表名
-	 * @param businessUkValue 业务键的唯一值
+	 * @param tableName 表名
+	 * @param uuidValue 无序主键的唯一值
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public void deleteByBusinessUk(String tableName, String businessUkValue) {
-		deleteByUk(tableName, businessUkValue);
+	public void deleteByUuid(String tableName, String uuidValue) {
+		deleteByPk(tableName, uuidValue);
 	}
 
 	/**
@@ -208,7 +209,7 @@ class DbDelete extends DbUpdate {
 		String[] conditions = new String[paramJson.size()];
 		conditions = MapUtils.keyList(paramJson).toArray(conditions);
 		if (MapUtils.isEmpty(auditParam)) {
-			paramJson.put(DbConstant.FIELD_DEFINITION_DELETE_TIME, System.currentTimeMillis());
+			paramJson.put(getJdbcProperties().getFieldDefinitionDeleteTime(), System.currentTimeMillis());
 		} else {
 			paramJson.putAll(auditParam);
 		}
@@ -218,7 +219,7 @@ class DbDelete extends DbUpdate {
 		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
 			StringBuffer addLogicDelWhereSql = new StringBuffer(sql);
 			addLogicDelWhereSql.append(" AND ")
-					.append(DbConstant.FIELD_DEFINITION_DELETE_TIME)
+					.append(getJdbcProperties().getFieldDefinitionDeleteTime())
 					.append(" = ")
 					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
 			sql = addLogicDelWhereSql.toString();
@@ -226,24 +227,24 @@ class DbDelete extends DbUpdate {
 		return sql;
 	}
 
-	private void deleteLogicByUk(String tableName, Object uk) {
+	private void deleteLogicByUk(String tableName, Object pkValue) {
 		// 1. 参数验证
 		paramValidate(tableName);
-		if (ObjectUtils.isNull(uk)) {
+		if (ObjectUtils.isNull(pkValue)) {
 			throw new DbException("删除条件不能为null");
 		}
 
 		// 2. 确认数据
-		String key = null;
-		if (uk instanceof Long) {
-			key = DbConstant.PRIMARY_KEY;
-		} else if (uk instanceof String) {
-			key = getJdbcProperties().getBusinessUk();
+		String pkName = null;
+		if (pkValue instanceof Long) {
+			pkName = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
+		} else if (pkValue instanceof String) {
+			pkName = getJdbcProperties().getFieldDefinitionUuid();
 		}
 
 		// 3. 获得SQL
 		JSONObject paramJson = new JSONObject();
-		paramJson.put(key, uk);
+		paramJson.put(pkName, pkValue);
 		JSONObject auditParam = new JSONObject();
 		dataAudit(tableName, CrudEnum.D, auditParam);
 		String sql = deleteLogicSqlBuild(tableName, paramJson, auditParam);
@@ -259,8 +260,8 @@ class DbDelete extends DbUpdate {
 
 	/**
 	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByBusinessUk(String, String)}</p>
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByUuid(String, String)}</p>
      * 
      * @param tableName	表名
      * @param id     	主键id
@@ -272,24 +273,24 @@ class DbDelete extends DbUpdate {
 
 	/**
 	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 *
-	 * @param tableName    表名
-	 * @param businessUkValue 业务键的唯一值
+	 * @param tableName 表名
+	 * @param uuidValue 无序主键的唯一值
 	 */
 	@Transactional
-	public void deleteLogicByBusinessUk(String tableName, String businessUkValue) {
-		deleteLogicByUk(tableName, businessUkValue);
+	public void deleteLogicByUuid(String tableName, String uuidValue) {
+		deleteLogicByUk(tableName, uuidValue);
 	}
 
 	/**
 	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
-     * 
-     * @param tableName		表名
-     * @param paramJson		条件
-     * @return 删除所影响的行数
-     */
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 条件
+	 * @return 删除所影响的行数
+	 */
 	@Transactional
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
@@ -302,7 +303,7 @@ class DbDelete extends DbUpdate {
 	
 	/**
 	 * 删除-批量-逻辑的
-	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
      * 
      * @param tableName		表名
@@ -319,7 +320,7 @@ class DbDelete extends DbUpdate {
 
 	/**
 	 * 删除-批量-逻辑的（不调用 {@link #paramFormat(JSONObject)} 方法）
-	 * <p>数据非真实删除，而是更改 {@value DbConstant#FIELD_DEFINITION_DELETE_TIME} 字段值为时间戳，代表数据已删除
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
 	 *
 	 * @param tableName		表名

@@ -1,382 +1,416 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>ai.ylyue</groupId>
-	<artifactId>yue-library</artifactId>
-	<version>${revision}${sha1}${changelist}</version>
-	<packaging>pom</packaging>
-	<name>${project.artifactId}</name>
-	<description>
-		yue-library是一个基于SpringBoot封装的增强库，提供丰富的Java工具类库、优越的ORM框架、优雅的业务封装、优化的Spring环境配置、完善的规约限制、配套的代码生成平台、安稳贴切的开源架构方案等，只为打造更好的JavaWeb开发环境，提升大家的开发质量与效率，降低企业研发成本。
-		适用于企业快速构建属于自己的切合架构，不为技术负累，不盲目跟风，不原地踏步，从**单体与集群**到**分布式与微服务**，企业结合自身业务所处阶段，灵活选择逐步跟进升级。
-	</description>
-	<url>https://ylyue.cn</url>
-	
-	<modules>
-		<!-- 基础库-dependencies -->
-		<module>yue-library-dependencies</module>
-		<!-- 基础库 -->
-		<module>yue-library-base</module>
-		<!-- 基础库-加密模块 -->
-		<module>yue-library-base-crypto</module>
-		<!-- 基础库-web模块 -->
-		<module>yue-library-web</module>
-		<!-- 基础库-webflux模块 -->
-		<module>yue-library-webflux</module>
-		<!-- 基础库-jdbc模块 -->
-		<module>yue-library-data-jdbc</module>
-		<!-- 基础库-redis模块 -->
-		<module>yue-library-data-redis</module>
-		<!-- 基础库-es模块 -->
-		<module>yue-library-data-es</module>
-		<!-- 基础库-认证客户端模块 -->
-		<module>yue-library-auth-client</module>
-		<!-- 基础库-认证服务模块 -->
-		<module>yue-library-auth-service</module>
-		<!-- 基础库-pay模块 -->
-		<module>yue-library-pay</module>
-	</modules>
-	
-	<properties>
-		<revision>j${java.version}.2.4.0</revision>
-		<sha1 />
-		<changelist>-SNAPSHOT</changelist>
-		<spring-cloud.version>2020.0.2</spring-cloud.version>
-		<spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<hutool.version>5.6.3</hutool.version>
-		<bouncycastle.version>1.68</bouncycastle.version>
-		<fastjson.version>1.2.76</fastjson.version>
-		<druid.version>1.2.5</druid.version>
-		<dynamic-datasource.version>3.3.1</dynamic-datasource.version>
-		<pay.version>2.12.8</pay.version>
-		<easypoi.version>4.2.0</easypoi.version>
-		<easyexcel.version>2.2.6</easyexcel.version>
-		<jpush.version>3.4.7</jpush.version>
-	</properties>
-	
-	<dependencyManagement>
-		<dependencies>
-			<!-- spring-cloud-alibaba -->
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-parent</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-	        <dependency>
-	            <groupId>com.alibaba.cloud</groupId>
-	            <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-	            <version>${spring-cloud-alibaba.version}</version>
-	            <type>pom</type>
-	            <scope>import</scope>
-	        </dependency>
-			
-			<!-- yue-library -->
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-base</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-web</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-webflux</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-base-crypto</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-data-jdbc</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-data-redis</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-data-es</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-auth-client</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-auth-service</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-pay</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-			</dependency>
-			
-			<!-- hutool工具包 -->
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-aop</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-core</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-crypto</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15to18</artifactId><!-- sm2、sm3、sm4国密算法 -->
-				<version>${bouncycastle.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-extra</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-system</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-script</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-http</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-all</artifactId>
-				<version>${hutool.version}</version>
-			</dependency>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ai.ylyue</groupId>
+    <artifactId>yue-library</artifactId>
+    <version>${revision}${sha1}${changelist}</version>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>
+        yue-library是一个基于SpringBoot封装的增强库，提供丰富的Java工具类库、优越的ORM框架、优雅的业务封装、优化的Spring环境配置、完善的规约限制、配套的代码生成平台、安稳贴切的开源架构方案等，只为打造更好的JavaWeb开发环境，提升大家的开发质量与效率，降低企业研发成本。
+        适用于企业快速构建属于自己的切合架构，不为技术负累，不盲目跟风，不原地踏步，从**单体与集群**到**分布式与微服务**，企业结合自身业务所处阶段，灵活选择逐步跟进升级。
+    </description>
+    <url>https://ylyue.cn</url>
 
-			<!-- alibaba工具包 -->
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>fastjson</artifactId>
-				<version>${fastjson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>druid-spring-boot-starter</artifactId>
-				<version>${druid.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>com.alibaba</groupId>
-			    <artifactId>easyexcel</artifactId>
-			    <version>${easyexcel.version}</version>
-			</dependency>
-			
-			<!-- 支付 -->
-			<dependency>
-				<groupId>com.egzosn</groupId>
-				<artifactId>pay-java-ali</artifactId><!-- 支付宝 -->
-				<version>${pay.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egzosn</groupId>
-				<artifactId>pay-java-wx</artifactId><!-- 微信 -->
-				<version>${pay.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egzosn</groupId>
-				<artifactId>pay-java-union</artifactId><!-- 银联 -->
-				<version>${pay.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.egzosn</groupId>
-				<artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
-				<version>${pay.version}</version>
-			</dependency>
-			
-			<!-- 其他 -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-				<version>${dynamic-datasource.version}</version>
-			</dependency>
+    <modules>
+        <!-- 基础库-dependencies -->
+        <module>yue-library-dependencies</module>
+        <!-- 基础库 -->
+        <module>yue-library-base</module>
+        <!-- 基础库-加密模块 -->
+        <module>yue-library-base-crypto</module>
+        <!-- 基础库-web模块 -->
+        <module>yue-library-web</module>
+        <!-- 基础库-webflux模块 -->
+        <module>yue-library-webflux</module>
+        <!-- 基础库-jdbc模块 -->
+        <module>yue-library-data-jdbc</module>
+        <!-- 基础库-redis模块 -->
+        <module>yue-library-data-redis</module>
+        <!-- 基础库-es模块 -->
+        <module>yue-library-data-es</module>
+        <!-- 基础库-认证客户端模块 -->
+        <module>yue-library-auth-client</module>
+        <!-- 基础库-认证服务模块 -->
+        <module>yue-library-auth-service</module>
+        <!-- 基础库-pay模块 -->
+        <module>yue-library-pay</module>
+    </modules>
 
-			<dependency>
-				<groupId>cn.afterturn</groupId>
-				<artifactId>easypoi-spring-boot-starter</artifactId>
-				<version>${easypoi.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>cn.jpush.api</groupId>
-				<artifactId>jpush-client</artifactId>
-				<version>${jpush.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
-	<repositories>
-		<repository>
-			<id>aliyun</id>
-			<url>https://maven.aliyun.com/repository/central</url>
-		</repository>
-	</repositories>
-	
-	<distributionManagement>
-		<snapshotRepository>
-			<id>rdc-snapshots</id>
-			<url>https://repo.rdc.aliyun.com/repository/112516-snapshot-lGpQXU/</url>
-		</snapshotRepository>
-		<repository>
-			<id>oss-releases</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
-	</distributionManagement>
-	
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-	
-	<developers>
-		<developer>
-			<name>yl-yue</name>
-			<email>yl-yue@qq.com</email>
-			<url>https://ylyue.cn</url>
-			<organization>yue</organization>
-			<organizationUrl>https://gitee.com/yl-yue</organizationUrl>
-			<roles>
-				<role>CA</role>
-			</roles>
-		</developer>
-	</developers>
+    <properties>
+        <!-- yue.version -->
+        <revision>j${java.version}.2.6.0</revision>
+        <sha1/>
+        <changelist>-SNAPSHOT</changelist>
+        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
-	<scm>
-		<url>https://gitee.com/yl-yue/yue-library</url>
-		<connection>https://gitee.com/yl-yue/yue-library.git</connection>
-		<developerConnection>https://gitee.com/yl-yue</developerConnection>
-	</scm>
+        <!-- dependencies.version -->
+        <hutool.version>5.6.3</hutool.version>
+        <bouncycastle.version>1.68</bouncycastle.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <druid.version>1.2.5</druid.version>
+        <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
+        <pay.version>2.12.8</pay.version>
+        <easypoi.version>4.2.0</easypoi.version>
+        <easyexcel.version>2.2.6</easyexcel.version>
+        <jpush.version>3.4.7</jpush.version>
 
-	<profiles>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- Source -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- Javadoc -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<additionalOptions>
-								<additionalOption>-Xdoclint:none</additionalOption>
-								<additionalOption>-html5</additionalOption>
-							</additionalOptions>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- Gpg Signature -->
-					<plugin>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- 自动发布 -->
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>oss-releases</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+        <!-- plugins.version -->
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>flatten-maven-plugin</artifactId>
-				<configuration>
-					<updatePomFile>true</updatePomFile>
-					<pomElements>
-						<parent>expand</parent>
-						<name>interpolate</name>
-						<description>interpolate</description>
-						<url>interpolate</url>
-						<developers>interpolate</developers>
-						<scm>interpolate</scm>
-						<properties>interpolate</properties>
-						<dependencyManagement>interpolate</dependencyManagement>
-						<repositories>interpolate</repositories>
-					</pomElements>
-				</configuration>
-				<executions>
-					<execution>
-						<id>flatten</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>flatten</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring-cloud-alibaba -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-parent</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- yue-library -->
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-base</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-web</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-webflux</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-base-crypto</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-data-jdbc</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-data-redis</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-data-es</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-auth-client</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-auth-service</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-pay</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+
+            <!-- hutool工具包 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-aop</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId><!-- sm2、sm3、sm4国密算法 -->
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-extra</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-system</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-script</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-http</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- alibaba工具包 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!-- 支付 -->
+            <dependency>
+                <groupId>com.egzosn</groupId>
+                <artifactId>pay-java-ali</artifactId><!-- 支付宝 -->
+                <version>${pay.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egzosn</groupId>
+                <artifactId>pay-java-wx</artifactId><!-- 微信 -->
+                <version>${pay.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egzosn</groupId>
+                <artifactId>pay-java-union</artifactId><!-- 银联 -->
+                <version>${pay.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.egzosn</groupId>
+                <artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
+                <version>${pay.version}</version>
+            </dependency>
+
+            <!-- 其他 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic-datasource.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-spring-boot-starter</artifactId>
+                <version>${easypoi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.jpush.api</groupId>
+                <artifactId>jpush-client</artifactId>
+                <version>${jpush.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/central</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/2135979-snapshot-6OuNFB/</url>
+        </snapshotRepository>
+        <repository>
+            <id>oss-releases</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>yl-yue</name>
+            <email>yl-yue@qq.com</email>
+            <url>https://ylyue.cn</url>
+            <organization>yue</organization>
+            <organizationUrl>https://gitee.com/yl-yue</organizationUrl>
+            <roles>
+                <role>CA</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://gitee.com/yl-yue/yue-library</url>
+        <connection>https://gitee.com/yl-yue/yue-library.git</connection>
+        <developerConnection>https://gitee.com/yl-yue</developerConnection>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <pomElements>
+                        <parent>expand</parent>
+                        <name>interpolate</name>
+                        <description>interpolate</description>
+                        <url>interpolate</url>
+                        <developers>interpolate</developers>
+                        <scm>interpolate</scm>
+                        <properties>interpolate</properties>
+                        <dependencyManagement>interpolate</dependencyManagement>
+                        <pluginManagement>expand</pluginManagement>
+                        <repositories>interpolate</repositories>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <additionalOptions>
+                                <additionalOption>-Xdoclint:none</additionalOption>
+                                <additionalOption>-html5</additionalOption>
+                            </additionalOptions>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Gpg Signature -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- 自动发布 -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>oss-releases</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

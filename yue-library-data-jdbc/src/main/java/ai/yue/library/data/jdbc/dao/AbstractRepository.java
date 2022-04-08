@@ -60,8 +60,8 @@ public abstract class AbstractRepository<T> extends AbstractBaseDAO {
 	}
 
 	@Override
-	public T getByBusinessUk(String businessUkValue) {
-		return db.getByBusinessUk(tableName(), businessUkValue, mappedClass);
+	public T getByUuid(String uuidValue) {
+		return db.getByUuid(tableName(), uuidValue, mappedClass);
 	}
 
 	@Override

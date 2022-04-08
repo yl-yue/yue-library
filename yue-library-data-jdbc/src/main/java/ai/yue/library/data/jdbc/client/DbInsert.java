@@ -7,6 +7,7 @@ import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
+import ai.yue.library.data.jdbc.provider.FillDataProvider;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.lang.Nullable;
@@ -33,13 +34,13 @@ class DbInsert extends DbDelete {
 	private SimpleJdbcInsert insertInit(String tableName, JSONObject paramJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
-		
+
 		// 2. 创建JdbcInsert实例
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(getJdbcTemplate());
 		// 设置表名
 		simpleJdbcInsert.setTableName(tableName);
 		// 设置主键名，添加成功后返回主键的值
-		simpleJdbcInsert.setGeneratedKeyName(DbConstant.PRIMARY_KEY);
+		simpleJdbcInsert.setGeneratedKeyName(DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
 		
 		// 3. 设置ColumnNames
 		List<String> keys = MapUtils.keyList(paramJson);
@@ -52,7 +53,7 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 插入一条数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}
+	 * 插入一条数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
 	 *
 	 * @param tableName 表名
 	 * @param paramJson 参数
@@ -67,6 +68,7 @@ class DbInsert extends DbDelete {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.C, paramJson);
+		paramJson.putAll(FillDataProvider.getInsertParamJson());
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -90,6 +92,7 @@ class DbInsert extends DbDelete {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.C, paramJson);
+		paramJson.putAll(FillDataProvider.getInsertParamJson());
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJson = dialect.getWrapper().wrap(paramJson);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
@@ -117,7 +120,7 @@ class DbInsert extends DbDelete {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		tableName = dialect.getWrapper().wrap(tableName);
-		String fieldDefinitionSortIdxWrapped = dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_SORT_IDX);
+		String fieldDefinitionSortIdxWrapped = dialect.getWrapper().wrap(getJdbcProperties().getFieldDefinitionSortIdx());
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 
@@ -138,12 +141,13 @@ class DbInsert extends DbDelete {
 
 		// 5. 执行
 		dataAudit(tableName, CrudEnum.C, paramJson);
+		paramJson.putAll(FillDataProvider.getInsertParamJson());
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
 	
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
 	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数
@@ -162,12 +166,12 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#PRIMARY_KEY}（不调用 {@link #paramFormat(JSONObject)} 方法）。
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}（不调用 {@link #paramFormat(JSONObject)} 方法）。
 	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void insertBatchNotParamFormat(String tableName, JSONObject[] paramJsons) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJsons);
@@ -175,6 +179,9 @@ class DbInsert extends DbDelete {
 		// 2. 插入源初始化
 		dataEncrypt(tableName, paramJsons);
 		dataAudit(tableName, CrudEnum.C, paramJsons);
+		for (JSONObject paramJson : paramJsons) {
+			paramJson.putAll(FillDataProvider.getInsertParamJson());
+		}
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJsons = dialect.getWrapper().wrap(paramJsons);
 		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);

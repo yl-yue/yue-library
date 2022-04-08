@@ -15,6 +15,7 @@ import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.ipo.Page;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
+import ai.yue.library.data.jdbc.provider.FillDataProvider;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -106,6 +107,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
+		paramJson.putAll(FillDataProvider.getUpdateParamJson());
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);
@@ -209,9 +211,9 @@ public class AnsiDialect extends DbBase implements Dialect {
 			querySql.append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 		} else {
 			if (SortEnum.ASC == sortEnum) {// 升序
-				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
+				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_PRIMARY_KEY).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			} else {// 降序
-				querySql.append(" ORDER BY ").append(DbConstant.PRIMARY_KEY).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");
+				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_PRIMARY_KEY).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			}
 		}
 
@@ -235,7 +237,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		// 1. 参数验证
 		paramValidate(tableName, whereSql);
 		tableName = wrapper.wrap(tableName);
-		if (jdbcProperties.isEnableDeleteQueryFilter() && !StrUtil.containsIgnoreCase(whereSql, DbConstant.FIELD_DEFINITION_DELETE_TIME)) {
+		if (jdbcProperties.isEnableDeleteQueryFilter() && !StrUtil.containsIgnoreCase(whereSql, getJdbcProperties().getFieldDefinitionDeleteTime())) {
 			whereSql = getDeleteWhereSql() + StrUtil.replaceIgnoreCase(whereSql, "WHERE", "AND");
 		}
 
