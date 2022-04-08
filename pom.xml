@@ -53,10 +53,12 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- dependencies.version -->
-        <hutool.version>5.6.3</hutool.version>
+        <hutool.version>5.7.22</hutool.version>
         <bouncycastle.version>1.68</bouncycastle.version>
-        <fastjson.version>1.2.76</fastjson.version>
-        <druid.version>1.2.5</druid.version>
+        <fastjson.version>1.2.79</fastjson.version>
+        <plumelog.version>3.5.2</plumelog.version>
+        <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
+        <grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
         <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
         <pay.version>2.12.8</pay.version>
         <easypoi.version>4.2.0</easypoi.version>
@@ -195,12 +197,32 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
+                <version>${druid-spring-boot-starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!-- 微服务 -->
+            <!-- 微服务-log -->
+            <dependency>
+                <groupId>com.plumelog</groupId>
+                <artifactId>plumelog-logback</artifactId>
+                <version>${plumelog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.plumelog</groupId>
+                <artifactId>plumelog-trace</artifactId>
+                <version>${plumelog.version}</version>
+            </dependency>
+
+            <!-- grpc -->
+            <dependency>
+                <groupId>net.devh</groupId>
+                <artifactId>grpc-spring-boot-starter</artifactId>
+                <version>${grpc-spring-boot-starter.version}</version>
             </dependency>
 
             <!-- 支付 -->

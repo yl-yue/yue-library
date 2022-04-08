@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -162,12 +163,12 @@ public class Result<T> implements Serializable {
 
 	public java.sql.Date dataToSqlDate() {
 
-		return castToSqlDate(data);
+		return (java.sql.Date) castToSqlDate(data);
 	}
 
 	public java.sql.Timestamp dataToTimestamp() {
 
-		return castToTimestamp(data);
+		return (Timestamp) castToTimestamp(data);
 	}
 	
 	// -------- result convert --------

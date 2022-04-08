@@ -2,8 +2,8 @@ package ai.yue.library.data.jdbc.client.dialect;
 
 import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.util.StringUtils;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Editor;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
@@ -84,33 +84,34 @@ public class Wrapper {
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
+	 *
 	 * @param field 字段名
 	 * @return 包装后的字段名
 	 */
-	public String wrap(String field){
-		if(preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
+	public String wrap(String field) {
+		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
-		
+
 		//如果已经包含包装的引号，返回原字符
-		if(StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)){
+		if (StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)) {
 			return field;
 		}
-		
+
 		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
-		if(StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
+		if (StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
 			return field;
 		}
-		
+
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
-		if(field.contains(StrUtil.DOT)){
-			final Collection<String> target = CollectionUtil.filter(StrUtil.split(field, StrUtil.C_DOT), (Editor<String>) t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
+		if (field.contains(StrUtil.DOT)) {
+			final Collection<String> target = CollUtil.edit(StrUtil.split(field, CharUtil.DOT, 2), t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
 			return CollectionUtil.join(target, StrUtil.DOT);
 		}
-		
+
 		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
 	}
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突

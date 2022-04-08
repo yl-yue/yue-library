@@ -40,7 +40,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     	// 校验请求url中是否包含版本信息
 		ServerHttpRequest serverHttpRequest = exchange.getRequest();
     	String requestURI = serverHttpRequest.getURI().getPath();
-    	String[] versionPaths = StringUtils.split(requestURI, "/");
+    	String[] versionPaths = StringUtils.splitToArray(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
 
 		// pathVersion的值大于等于apiVersionValue皆可匹配，除非ApiVersion的deprecated值已被标注为true

@@ -56,7 +56,7 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 		}
 		
 		// 3. 解析版本占位符索引位置
-		String[] versionPlaceholderValues = StringUtils.split(requestMappingValues[0], "/");
+		String[] versionPlaceholderValues = StringUtils.splitToArray(requestMappingValues[0], "/");
 		Integer index = null;
 		for (int i = 0; i < versionPlaceholderValues.length; i++) {
 			if (StringUtils.equals(versionPlaceholderValues[i], apiVersionProperties.getVersionPlaceholder())) {
