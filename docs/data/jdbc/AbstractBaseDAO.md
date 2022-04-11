@@ -1,41 +1,9 @@
 # AbstractBaseDAO
-## 简单使用
-`data-jdbc`所有的CRUD方法都在`Db`类里面，所以使用时只需要直接注入即可，推荐采用继承`AbstractDAO 或 AbstractRepository`方式。<br>
-<font color=red>注意：sql数据表中主键的DDL最好同下面一样。</font>
-```ddl
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '表自增ID'
-```
-主键ID：bigint类型、无符号、自动递增、不能为NULL
-> 其实这样做也符合了《Java开发手册》MySQL数据库-建表规约第九条：<br>
-> ![建表规约第九条](jdbc_files/建表规约第九条.png)
+> `AbstractDAO` 为 `AbstractBaseDAO` 的 Json(map) 类型实现
+> 
+> `AbstractRepository` 为 `AbstractBaseDAO` 的 JavaBean(dataobject) 类型实现
 
-**AbstractDAO：**
-```java
-@Repository
-public class DataJdbcExampleDAO extends AbstractDAO {
-
-	@Override
-	protected String tableName() {
-		return "tableName";
-	}
-	
-}
-```
-
-**AbstractRepository：**
-```java
-@Repository
-public class DataJdbcExampleTDAO extends AbstractRepository<UserDO> {
-
-	@Override
-	protected String tableName() {
-		return "user";
-	}
-	
-}
-```
-
-## <font color=red>AbstractBaseDAO类速览</font>
+## 源码速览-AbstractBaseDAO(抽象的基础DAO)
 ```java
 package ai.yue.library.data.jdbc.dao;
 
@@ -199,7 +167,7 @@ abstract class AbstractBaseDAO<T> {
 
 [👉点击前往源码仓库查看](https://gitee.com/yl-yue/yue-library/blob/master/yue-library-data-jdbc/src/main/java/ai/yue/library/data/jdbc/dao/AbstractBaseDAO.java)
 
-## <font color=red>AbstractBaseDAO JSONObject 实现 AbstractDAO 类速览</font>
+## 源码速览-AbstractDAO(AbstractBaseDAO 的 JSONObject 类型实现)
 ```java
 package ai.yue.library.data.jdbc.dao;
 
@@ -248,7 +216,7 @@ public abstract class AbstractDAO extends AbstractBaseDAO<JSONObject> {
 
 [👉点击前往源码仓库查看](https://gitee.com/yl-yue/yue-library/blob/master/yue-library-data-jdbc/src/main/java/ai/yue/library/data/jdbc/dao/AbstractDAO.java)
 
-## <font color=red>AbstractBaseDAO 泛型实现 AbstractRepository 类速览</font>
+## 源码速览-AbstractRepository(AbstractBaseDAO 的 Object 类型（泛型）实现)
 ```java
 package ai.yue.library.data.jdbc.dao;
 

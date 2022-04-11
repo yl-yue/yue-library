@@ -29,10 +29,9 @@
 
 * yue-library-data-jdbc（推荐）
 
-  * [介绍](data/jdbc/介绍.md "yue-library-data-jdbc介绍")
   * [快速开始](data/jdbc/快速开始.md "yue-library-data-jdbc快速开始")
-  * [增删改查](data/jdbc/增删改查.md)
   * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
+  * [增删改查](data/jdbc/增删改查.md)
   * [工具方法](data/jdbc/工具方法.md "yue-library-data-jdbc工具方法")
   * [DO基类](data/jdbc/DO基类.md "yue-library-data-jdbcDO基类")
   * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")

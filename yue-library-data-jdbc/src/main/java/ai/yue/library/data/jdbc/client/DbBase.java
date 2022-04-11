@@ -36,6 +36,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -165,7 +166,7 @@ public class DbBase {
      * @param paramJson 要绑定到查询的参数映射
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public JSONObject queryForJson(String sql, JSONObject paramJson) {
+    public JSONObject queryForJson(String sql, @Nullable JSONObject paramJson) {
         return queryForObject(sql, paramJson, null);
     }
 
@@ -178,7 +179,7 @@ public class DbBase {
      * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public <T> T queryForObject(String sql, JSONObject paramJson, Class<T> mappedClass) {
+    public <T> T queryForObject(String sql, @Nullable JSONObject paramJson, Class<T> mappedClass) {
         List<T> list = queryForList(sql, paramJson, mappedClass);
         return listResultToGetResult(list);
     }
@@ -192,7 +193,7 @@ public class DbBase {
      * @param paramJson 要绑定到查询的参数映射
      * @return 可用于方便的获取各种数据类型的结果集
      */
-    public SqlRowSet queryForRowSet(String sql, JSONObject paramJson) {
+    public SqlRowSet queryForRowSet(String sql, @Nullable JSONObject paramJson) {
         return getNamedParameterJdbcTemplate().queryForRowSet(sql, paramJson);
     }
 
@@ -204,7 +205,7 @@ public class DbBase {
      * @param paramJson 要绑定到查询的参数映射
      * @return 多行查询结果
      */
-    public List<JSONObject> queryForList(String sql, JSONObject paramJson) {
+    public List<JSONObject> queryForList(String sql, @Nullable JSONObject paramJson) {
         return queryForList(sql, paramJson, null);
     }
 
@@ -217,7 +218,7 @@ public class DbBase {
      * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
      * @return 多行查询结果
      */
-    public <T> List<T> queryForList(String sql, JSONObject paramJson, Class<T> mappedClass) {
+    public <T> List<T> queryForList(String sql, @Nullable JSONObject paramJson, Class<T> mappedClass) {
         return getNamedParameterJdbcTemplate().query(sql, paramJson, getRowMapper(mappedClass));
     }
 

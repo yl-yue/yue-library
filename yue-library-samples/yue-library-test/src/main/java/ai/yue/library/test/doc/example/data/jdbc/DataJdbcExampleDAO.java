@@ -25,7 +25,15 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	protected String tableName() {
 		return "table_example";
 	}
-	
+
+	public void example(JSONObject paramJson) {
+		db.insert(tableName(), paramJson);
+		db.updateById(tableName(), paramJson);
+		db.deleteByUuid(tableName(), "uuid");
+		db.getByUuid(tableName(), "uuid");
+		db.queryForList("SELECT * FROM table_example", null);
+	}
+
 	/**
 	 * 插入数据-自动递增 sort_idx
 	 * @param paramJson
@@ -136,13 +144,14 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	
 	public void query(JSONObject paramJson) {
 		// 1. 查询SQL
-		String sql = "";
-		
+		String sqlGet = "SELECT * FROM table_example WHERE id = 1";
+		String sqlList = "SELECT * FROM table_example";
+
 		// 2. 查询
-		db.queryForJson(sql, paramJson);
-		db.queryForObject(sql, paramJson, UserDO.class);
-		db.queryForList(sql, paramJson);
-		db.queryForList(sql, paramJson, UserDO.class);
+		JSONObject jsonObject = db.queryForJson(sqlGet, paramJson);
+		UserDO userDO = db.queryForObject(sqlGet, paramJson, UserDO.class);
+		List<JSONObject> jsonObjectList = db.queryForList(sqlList, paramJson);
+		List<UserDO> userDOList = db.queryForList(sqlList, paramJson, UserDO.class);
 	}
 	
 	/**
@@ -157,11 +166,20 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	
 	/**
 	 * 分页
+	 *
 	 * @param pageIPO
 	 * @return
 	 */
 	public PageVO pageSql(PageIPO pageIPO) {
-		String querySql = "";
+		// 示例sql为sql优化型分页sql，解决mysql limit分页缺陷
+		String querySql =
+				"SELECT\n" +
+				"	a.* \n" +
+				"FROM\n" +
+				"	table_example a,\n" +
+				"	( SELECT id FROM table_example WHERE 1 > 5 LIMIT 0, 10 ) b \n" +
+				"WHERE\n" +
+				"	a.id = b.id";
 		return db.pageSql(querySql, pageIPO);
 	}
 	
