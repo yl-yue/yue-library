@@ -15,21 +15,67 @@ public abstract class BaseCamelCaseDO implements Serializable {
 	
 	private static final long serialVersionUID = 2241197545628586478L;
 
-	/** 主键ID，单表时自增 */
-	protected Long id;
-	/** 排序索引 */
-	protected Integer sortIdx;
 	/**
-	 * 删除时间戳
-	 * <p>默认值为0 == 未删除
+	 * 有序主键：单表时数据库自增、分布式时雪花自增
+	 */
+	protected Long id;
+
+	/**
+	 * 无序主键：uuid5无符号
+	 */
+	protected String uuid;
+
+	/**
+	 * 排序索引
+	 */
+	protected Integer sortIdx;
+
+	/**
+	 * 创建人：用户名、昵称、人名
+	 */
+	protected String createUser;
+
+	/**
+	 * 创建人：用户uuid
+	 */
+	protected String createUserUuid;
+
+	/**
+	 * 创建时间
+	 */
+	protected LocalDateTime createTime;
+
+	/**
+	 * 更新人：用户名、昵称、人名
+	 */
+	protected String updateUser;
+
+	/**
+	 * 更新人：用户uuid
+	 */
+	protected String updateUserUuid;
+
+	/**
+	 * 更新时间
+	 */
+	protected LocalDateTime updateTime;
+
+	/**
+	 * 删除人：用户名、昵称、人名
+	 */
+	protected String deleteUser;
+
+	/**
+	 * 删除人：用户uuid
+	 */
+	protected String deleteUserUuid;
+
+	/**
+	 * 删除时间戳：默认0（未删除）
 	 * <p>一般不作查询展示
 	 */
 	protected Long deleteTime;
-	/** 数据插入时间 */
-	protected LocalDateTime createTime;
-	/** 数据更新时间 */
-	protected LocalDateTime updateTime;
-	
+
 }
 ```
 

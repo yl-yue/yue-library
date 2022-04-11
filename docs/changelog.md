@@ -12,8 +12,8 @@
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.4.2【规划中】
-## 2.4.1【即将发布】
+## 2.6.1【规划中】
+## 2.6.0【即将发布】
 ## 2.4.0【2021-06-06】
 - 主要变更：使用SpringBoot2.4新的配置文件机制，提供默认的优化配置实现。
 - 主要新特性：使用注解`@ApiIdempotent`可优雅的实现接口幂等性

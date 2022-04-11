@@ -11,4 +11,53 @@
 	<packaging>pom</packaging>
 	<name>yue-library-dependencies</name>
 	<description>yue library dependencies</description>
+
+	<properties>
+		<!-- dependencies.version -->
+		<grpc.version>1.42.2</grpc.version>
+		<grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
+
+		<!-- plugins.version -->
+		<protoc.version>3.19.4</protoc.version>
+		<protobuf-plugin.version>0.6.1</protobuf-plugin.version>
+		<os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- grpc -->
+			<dependency>
+				<groupId>net.devh</groupId>
+				<artifactId>grpc-spring-boot-starter</artifactId>
+				<version>${grpc-spring-boot-starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-protobuf</artifactId>
+				<version>${grpc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-stub</artifactId>
+				<version>${grpc.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>kr.motd.maven</groupId>
+					<artifactId>os-maven-plugin</artifactId>
+					<version>${os-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.xolstice.maven.plugins</groupId>
+					<artifactId>protobuf-maven-plugin</artifactId>
+					<version>${protobuf-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

@@ -58,7 +58,6 @@
         <fastjson.version>1.2.79</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
         <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
-        <grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
         <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
         <pay.version>2.12.8</pay.version>
         <easypoi.version>4.2.0</easypoi.version>
@@ -218,13 +217,6 @@
                 <version>${plumelog.version}</version>
             </dependency>
 
-            <!-- grpc -->
-            <dependency>
-                <groupId>net.devh</groupId>
-                <artifactId>grpc-spring-boot-starter</artifactId>
-                <version>${grpc-spring-boot-starter.version}</version>
-            </dependency>
-
             <!-- 支付 -->
             <dependency>
                 <groupId>com.egzosn</groupId>
@@ -353,7 +345,7 @@
                         <scm>interpolate</scm>
                         <properties>interpolate</properties>
                         <dependencyManagement>interpolate</dependencyManagement>
-                        <pluginManagement>expand</pluginManagement>
+                        <pluginManagement>interpolate</pluginManagement>
                         <repositories>interpolate</repositories>
                     </pomElements>
                 </configuration>

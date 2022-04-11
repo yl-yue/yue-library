@@ -5,7 +5,8 @@
   - [👉yue-library更新资讯](https://csdn.ylyue.cn/category_10732520.html)
 
 - 📖文档
-  - [2.4<sup style="color:red">(new)<sup>](https://ylyue.cn)
+  - [2.6<sup style="color:red">(new)<sup>](https://ylyue.cn)
+  - [2.4](https://ylyue.cn/2.4)
   - [2.3](https://ylyue.cn/2.3)
   - [2.2](https://ylyue.cn/2.2)
   - [2.1](https://ylyue.cn/2.1)
