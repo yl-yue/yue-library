@@ -35,7 +35,7 @@ yue-library正计划提供 [grpc]() 支持
 |rpc动作类型|rpc方法名前缀	|rpc动作解释										|示例（<font color=red>后缀数字为版本号</font>）							|
 |--			|--				|--													|--																			|
 |增			|`Insert`		|新增、插入、添加									|`InsertUser1`																|
-|删			|`Del`			|物理删除、逻辑删除									|`DelUser`																	|
+|删			|`Delete`		|物理删除、逻辑删除									|`DeleteUser`																|
 |改			|`Update`		|修改、更新											|`UpdateUserPassword3`														|
 |查			|`Get`			|单条（一个结果）									|`GetUserById`																|
 |查			|`List`			|列表（多个结果）									|`ListUser33`																|
@@ -122,7 +122,7 @@ syntax = "proto3";
 package sc.proto.self.ssc.md.user;
 
 service AuthUser {
-  rpc DelUser (Request) returns (Response) {}
+  rpc DeleteUser (Request) returns (Response) {}
   rpc UpdateUserPassword2 (Request) returns (Response) {}
   rpc UpdateUserPassword3 (Request) returns (Response) {}
   rpc GetUserById (Request) returns (Response) {}

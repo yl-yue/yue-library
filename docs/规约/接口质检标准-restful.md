@@ -92,15 +92,15 @@ public Result<?> pathVariable(@PathVariable String opt) {
 
 **常见请求参数约定**
 
-|参数名称	|参数类型	|最大长度	|描述							|示例				|
-|--			|--			|--			|--								|--					|
-|page		|Int		|5			|当前页							|1					|
-|limit		|Int		|6			|每页显示条数					|20					|
-|sign_type	|String		|10			|生成签名字符串所使用的算法类型	|RSA				|
-|sign		|String		|344		|请求参数签名串					|djdu7dusufiusgfu	|
-|access_token	|String		|36			|访问令牌，UUID5						|65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
-|sortFields	|String		|50			|查询排序字段					|id,name,age		|
-|sortTypes	|String		|50			|查询排序类型					|ASC,DESC,ASC		|
+|参数名称		|参数类型	|最大长度	|描述							|示例									|
+|--				|--			|--			|--								|--										|
+|page			|Int		|5			|当前页							|1										|
+|limit			|Int		|6			|每页显示条数					|20										|
+|sign_type		|String		|10			|生成签名字符串所使用的算法类型	|RSA									|
+|sign			|String		|344		|请求参数签名串					|djdu7dusufiusgfu						|
+|access_token	|String		|36			|访问令牌，UUID5				|65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
+|sortFields		|String		|50			|查询排序字段					|id,name,age							|
+|sortTypes		|String		|50			|查询排序类型					|ASC,DESC,ASC							|
 
 ### 响应定义
 **响应体格式约定**
