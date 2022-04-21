@@ -1,4 +1,4 @@
-![logo](_images/logo.png)
+![logo](https://dcloud.ylyue.cn/yue-library/_images/logo.png)
 
 # yue-library
 
