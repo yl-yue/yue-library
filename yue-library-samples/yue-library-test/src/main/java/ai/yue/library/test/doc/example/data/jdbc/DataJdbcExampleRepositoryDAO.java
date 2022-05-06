@@ -1,26 +1,24 @@
 package ai.yue.library.test.doc.example.data.jdbc;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.data.jdbc.dao.AbstractRepository;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import ai.yue.library.data.jdbc.vo.PageVO;
-import ai.yue.library.test.dataobject.jdbc.UserDO;
+import ai.yue.library.test.dataobject.jdbc.TableExampleTestDO;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author  ylyue
  * @version 创建时间：2019年3月12日
  */
 @Repository
-public class DataJdbcExampleRepositoryDAO extends AbstractRepository<UserDO> {
+public class DataJdbcExampleRepositoryDAO extends AbstractRepository<TableExampleTestDO> {
 
 	@Override
 	protected String tableName() {
-		return "user";
+		return "table_example_test";
 	}
 	
 	/**

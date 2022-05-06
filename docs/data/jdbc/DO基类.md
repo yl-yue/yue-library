@@ -1,4 +1,4 @@
-# DO基类介绍
+# DO基类
 在 [POJO规范](https://ylyue.cn/#/规约/后端规约说明?id=pojo) 中，DO（Data Object）为数据对象，一般情况下与数据库表结构一一对应，通过 DAO 层向上传输数据源对象。
 
 ## DO基础数据对象

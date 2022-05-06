@@ -41,9 +41,9 @@ public class AuthUserController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/delete")
-	public Result<?> delete(@RequestParam("id") Long id) {
-		return userService.delete(id);
+	@DeleteMapping("/deleteById")
+	public Result<?> deleteById(@RequestParam("id") Long id) {
+		return userService.deleteById(id);
 	}
 	
 	/**
@@ -52,9 +52,9 @@ public class AuthUserController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping("/get")
-	public Result<?> get(@RequestParam("id") Long id) {
-		return userService.get(id);
+	@GetMapping("/getById")
+	public Result<?> getById(@RequestParam("id") Long id) {
+		return userService.getById(id);
 	}
 	
 	/**

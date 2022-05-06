@@ -50,29 +50,18 @@ abstract class AbstractBaseDAO<T> {
 	}
 
 	/**
-	 * 删除
+	 * 删除-ById
 	 * <p>数据删除前会先进行条数确认
 	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
 	 *
 	 * @param id 主键id
 	 */
-	public void delete(Long id) {
-		db.delete(tableName(), id);
+	public void deleteById(Long id) {
+		db.deleteById(tableName(), id);
 	}
 
 	/**
-	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
-	 *
-	 * @param id 主键id
-	 */
-	public void deleteLogic(Long id) {
-		db.deleteLogic(tableName(), id);
-	}
-
-	/**
-	 * 删除-通过表无序主键
+	 * 删除-By无序主键
 	 * <p>数据删除前会先进行条数确认
 	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
 	 * <p>无序主键值请使用UUID5无符号位
@@ -84,7 +73,18 @@ abstract class AbstractBaseDAO<T> {
 	}
 
 	/**
-	 * 删除-逻辑的
+	 * 逻辑删除-ById
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
+	 *
+	 * @param id 主键id
+	 */
+	public void deleteLogicById(Long id) {
+		db.deleteLogicById(tableName(), id);
+	}
+
+	/**
+	 * 逻辑删除-By无序主键
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 *
 	 * @param uuidValue 无序主键的唯一值
@@ -115,12 +115,14 @@ abstract class AbstractBaseDAO<T> {
 	}
 
 	/**
-	 * 单个
+	 * 单个-ById
+	 * <p>字段名=id，一般为表自增ID-主键</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String)}</p>
 	 *
-	 * @param id 主键id
+	 * @param id        主键ID
 	 * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
 	 */
-	public abstract T get(Long id);
+	public abstract T getById(Long id);
 
 	/**
 	 * 单个-By无序主键

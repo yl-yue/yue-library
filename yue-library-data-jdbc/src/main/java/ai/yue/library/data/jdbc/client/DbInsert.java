@@ -3,7 +3,10 @@ package ai.yue.library.data.jdbc.client;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
+import ai.yue.library.base.util.ObjectUtils;
+import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
@@ -13,6 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,13 +29,13 @@ class DbInsert extends DbDelete {
 	// Insert
 
 	/**
-	 * 插入源初始化
-	 * 
-	 * @param tableName
-	 * @param paramJson
-	 * @return
+	 * 初始化-插入源
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 参数
+	 * @return 插入源
 	 */
-	private SimpleJdbcInsert insertInit(String tableName, JSONObject paramJson) {
+	private SimpleJdbcInsert initSimpleJdbcInsert(String tableName, JSONObject paramJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 
@@ -48,7 +52,33 @@ class DbInsert extends DbDelete {
 		List<String> insertColumn = ListUtils.keepSameValue(keys, (List<String>) dialect.getWrapper().wrap(columnNames));
 		simpleJdbcInsert.setColumnNames(insertColumn);
 		
-		// 4. 返回结果
+		// 4. 返回插入源
+		return simpleJdbcInsert;
+	}
+
+	/**
+	 * 初始化-插入源和参数
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 参数
+	 * @return 插入源
+	 */
+	private SimpleJdbcInsert initSimpleJdbcInsertAndParam(String tableName, JSONObject paramJson) {
+		// 1. 移除空对象
+		MapUtils.removeEmpty(paramJson);
+
+		// 2. 插入源初始化
+		paramFormat(paramJson);
+		dataEncrypt(tableName, paramJson);
+		dataAudit(tableName, CrudEnum.C, paramJson);
+		paramJson.putAll(FillDataProvider.getInsertParamJson(getJdbcProperties(), tableName));
+		tableName = dialect.getWrapper().wrap(tableName);
+		JSONObject wrap = dialect.getWrapper().wrap(paramJson);
+		paramJson.clear();
+		paramJson.putAll(wrap);
+		SimpleJdbcInsert simpleJdbcInsert = initSimpleJdbcInsert(tableName, paramJson);
+
+		// 3. 返回插入源
 		return simpleJdbcInsert;
 	}
 
@@ -61,20 +91,62 @@ class DbInsert extends DbDelete {
 	 */
 	@Transactional
 	public Long insert(String tableName, JSONObject paramJson) {
-		// 1. 移除空对象
-		MapUtils.removeEmpty(paramJson);
-		
-		// 2. 插入源初始化
-		paramFormat(paramJson);
-		dataEncrypt(tableName, paramJson);
-		dataAudit(tableName, CrudEnum.C, paramJson);
-		paramJson.putAll(FillDataProvider.getInsertParamJson());
-		tableName = dialect.getWrapper().wrap(tableName);
-		paramJson = dialect.getWrapper().wrap(paramJson);
-		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
+		// 返回有序主键值
+		return initSimpleJdbcInsertAndParam(tableName, paramJson).executeAndReturnKey(paramJson).longValue();
+	}
 
-		// 3. 执行
-		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
+	/**
+	 * 插入一条数据，无序主键名必须为 {@linkplain JdbcProperties#getFieldDefinitionUuid()}
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 参数
+	 * @return 返回无序主键值
+	 */
+	@Transactional
+	public String insertAndReturnUuid(String tableName, JSONObject paramJson) {
+		Long id = insert(tableName, paramJson);
+		String uuid = paramJson.getString(getJdbcProperties().getFieldDefinitionUuid());
+		if (StringUtils.isBlank(uuid)) {
+			JSONObject result = getById(tableName, id);
+			return result.getString(getJdbcProperties().getFieldDefinitionUuid());
+		}
+
+		return uuid;
+	}
+
+	/**
+	 * 插入一条数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
+	 *
+	 * @param tableName        表名
+	 * @param paramJson        参数
+	 * @param returnFieldNames 需要返回的字段名称（如：{@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 或 {@linkplain JdbcProperties#getFieldDefinitionUuid()}）
+	 * @return 返回字段名对应的值（表中必须存在这些字段）
+	 */
+	@Transactional
+	public JSONObject insertAndReturnFields(String tableName, JSONObject paramJson, String... returnFieldNames) {
+		// 从请求参数中取
+		Long id = insert(tableName, paramJson);
+		JSONObject result = new JSONObject();
+		List<String> needQueryField = new ArrayList<>();
+		for (String returnFieldName : returnFieldNames) {
+			Object returnFieldValue = paramJson.get(returnFieldName);
+			if (ObjectUtils.isEmpty(returnFieldValue)) {
+				needQueryField.add(returnFieldName);
+			} else {
+				result.put(returnFieldName, returnFieldValue);
+			}
+		}
+
+		// 从结果中取
+		if (needQueryField.isEmpty() == false) {
+			JSONObject queryResult = getById(tableName, id);
+			for (String returnFieldName : needQueryField) {
+				result.put(returnFieldName, queryResult.get(returnFieldName));
+			}
+		}
+
+		// 返回结果
+		return result;
 	}
 
 	/**
@@ -85,20 +157,8 @@ class DbInsert extends DbDelete {
 	 */
 	@Transactional
 	public void insertNotReturn(String tableName, JSONObject paramJson) {
-		// 1. 移除空对象
-		MapUtils.removeEmpty(paramJson);
-		
-		// 2. 插入源初始化
-		paramFormat(paramJson);
-		dataEncrypt(tableName, paramJson);
-		dataAudit(tableName, CrudEnum.C, paramJson);
-		paramJson.putAll(FillDataProvider.getInsertParamJson());
-		tableName = dialect.getWrapper().wrap(tableName);
-		paramJson = dialect.getWrapper().wrap(paramJson);
-		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
-
-		// 3. 执行
-		simpleJdbcInsert.execute(paramJson);
+		// 执行插入数据，无需返回
+		initSimpleJdbcInsertAndParam(tableName, paramJson).execute(paramJson);
 	}
 	
 	/**
@@ -141,8 +201,8 @@ class DbInsert extends DbDelete {
 
 		// 5. 执行
 		dataAudit(tableName, CrudEnum.C, paramJson);
-		paramJson.putAll(FillDataProvider.getInsertParamJson());
-		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJson);
+		paramJson.putAll(FillDataProvider.getInsertParamJson(getJdbcProperties(), tableName));
+		SimpleJdbcInsert simpleJdbcInsert = initSimpleJdbcInsert(tableName, paramJson);
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
 	
@@ -180,11 +240,11 @@ class DbInsert extends DbDelete {
 		dataEncrypt(tableName, paramJsons);
 		dataAudit(tableName, CrudEnum.C, paramJsons);
 		for (JSONObject paramJson : paramJsons) {
-			paramJson.putAll(FillDataProvider.getInsertParamJson());
+			paramJson.putAll(FillDataProvider.getInsertParamJson(getJdbcProperties(), tableName));
 		}
 		tableName = dialect.getWrapper().wrap(tableName);
 		paramJsons = dialect.getWrapper().wrap(paramJsons);
-		SimpleJdbcInsert simpleJdbcInsert = insertInit(tableName, paramJsons[0]);
+		SimpleJdbcInsert simpleJdbcInsert = initSimpleJdbcInsert(tableName, paramJsons[0]);
 
 		// 3. 执行
 		int updateRowsNumber = simpleJdbcInsert.executeBatch(paramJsons).length;

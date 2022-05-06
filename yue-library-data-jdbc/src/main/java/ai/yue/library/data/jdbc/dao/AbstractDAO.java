@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class AbstractDAO extends AbstractBaseDAO<JSONObject> {
 
 	@Override
-	public JSONObject get(Long id) {
+	public JSONObject getById(Long id) {
 		return db.getById(tableName(), id);
 	}
 

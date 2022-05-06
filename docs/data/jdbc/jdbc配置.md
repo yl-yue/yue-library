@@ -8,7 +8,7 @@
 spring:
   profiles:
     group:
-      "yue": "yue-library-data-jdbc"
+      "yue": "yue-library-data-jdbc"                        # 导入yue-library提供的默认配置支持（如：开启可执行SQL打印）
     active: yue                                             # 导入yue-library提供的默认配置支持（如：开启可执行SQL打印）
 	
   datasource:                                               # data-jdbc就是SpringJDBC的封装
@@ -20,7 +20,7 @@ spring:
 yue:
   jdbc:
     enable-boolean-map-recognition: true                    # 启用布尔值映射识别
-    enable-delete-query-filter: true                        # 启用删除查询过滤（只对自动生成的查询sql生效）
+    enable-logic-delete-filter: true                        # 启用逻辑删除过滤（只对自动生成的sql生效）
     enable-field-naming-strategy-recognition: true          # 启用数据库字段命名策略识别
     database-field-naming-strategy: snake_case              # 数据库字段命名策略
     field-definition-uuid: uuid                             # 关键字段定义-无序主键名
@@ -39,6 +39,7 @@ yue:
         fieldNames:                                         # 加密字段
           - email
           - password
+    data-audit-table-name-match-enum: match                 # 数据审计表名匹配方式
     data-audit-table-names:                                 # 数据审计表名
       - data_audit
       - data_audit2
@@ -52,6 +53,10 @@ yue:
       field_name_delete_user: delete_user                   # 审计字段定义-删除人
       field_name_delete_user_uuid: delete_user_uuid         # 审计字段定义-删除人uuid
       field_name_delete_time: delete_time                   # 审计字段定义-删除时间戳
+    data-fill-table-name-match-enum: exclude                # 数据填充表名匹配方式
+    data-fill-table-names:                                  # 数据填充表名
+      - data_fill
+      - data_fill2
 ```
 
 ## 单个`DAO`、单个`Bean`、单个`Db`配置
@@ -77,4 +82,35 @@ public class OrgPersonRelationDAO extends AbstractRepository<BaseOrgPersonRelati
 	
 	...
 }
+```
+
+## 可配置特性介绍
+- 【别处单独介绍的特性】动态数据源
+- 【别处单独介绍的特性】逻辑删除
+- 【别处单独介绍的特性】数据填充
+- 【别处单独介绍的特性】数据审计
+- 【别处单独介绍的特性】数据脱敏
+- 【此处统一介绍的特性】数据库字段命名策略
+- 【此处统一介绍的特性】布尔值映射识别
+- 【此处统一介绍的特性】关键字段定义
+
+### 数据库字段命名策略
+- 默认为开启状态`yue.jdbc.enable-field-naming-strategy-recognition=true`启用数据库字段命名策略识别
+- 默认策略为`SNAKE_CASE`命名法（俗称：下划线分割单词）
+- 定义数据库字段命名策略，用于POJO与数据库字段自动映射转换，如：驼峰转下划线，下划线转驼峰
+
+### 布尔值映射识别
+- 用于识别`JSONObject paramJson`或请求参数中的布尔值
+- 数字`1=true`，数字`0=fasle`
+- 识别字符串值`"true", "false"`，进行美化转换
+- 识别POJO规范，跟随**数据库字段命名策略（需开启）**，识别`is`前缀，并自动映射
+
+### 关键字段定义
+`ai.yue.library.data.jdbc.client.Db`类提供了很多基础的增删改查方法，包括数据填充、审计、逻辑删除等特性，而这些特性都和下面可定义的关键字段息息相关，
+yue-library为了用户更好的扩展性，因此实现了这些关键字段可以自定义名称，但表达的含义与能力是一致的。
+
+```yml
+field-definition-uuid: uuid                             # 关键字段定义-无序主键名
+field-definition-sort-idx: sort_idx                     # 关键字段定义-排序
+field-definition-delete-time: delete_time               # 关键字段定义-数据删除标识
 ```

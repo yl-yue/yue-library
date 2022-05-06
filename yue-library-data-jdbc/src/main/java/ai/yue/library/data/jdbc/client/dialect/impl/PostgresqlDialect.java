@@ -75,7 +75,7 @@ public class PostgresqlDialect extends AnsiDialect {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);

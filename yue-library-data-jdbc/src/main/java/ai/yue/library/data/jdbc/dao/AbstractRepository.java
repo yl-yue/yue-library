@@ -55,7 +55,7 @@ public abstract class AbstractRepository<T> extends AbstractBaseDAO {
 	}
 
 	@Override
-	public T get(Long id) {
+	public T getById(Long id) {
 		return db.getById(tableName(), id, mappedClass);
 	}
 

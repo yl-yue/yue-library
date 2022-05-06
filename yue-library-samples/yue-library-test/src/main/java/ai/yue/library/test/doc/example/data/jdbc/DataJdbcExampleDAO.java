@@ -1,6 +1,7 @@
 package ai.yue.library.test.doc.example.data.jdbc;
 
 import ai.yue.library.base.constant.SortEnum;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dao.AbstractDAO;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
@@ -11,6 +12,7 @@ import cn.hutool.core.lang.Console;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +25,17 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 
 	@Override
 	protected String tableName() {
-		return "table_example";
+		return "table_example_test";
+	}
+
+//	@PostConstruct
+	private void init() {
+		db = db.clone();
+		JdbcProperties jdbcProperties = db.getJdbcProperties();
+		jdbcProperties.setEnableLogicDeleteFilter(true);
+		jdbcProperties.setEnableBooleanMapRecognition(false);
+		jdbcProperties.setEnableFieldNamingStrategyRecognition(false);
+		jdbcProperties.setDataEncryptKey("4f5de3ab9acf4d4f94b2470e17d1beb7");
 	}
 
 	public void example(JSONObject paramJson) {

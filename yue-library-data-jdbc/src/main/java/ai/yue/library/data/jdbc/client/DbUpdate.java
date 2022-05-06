@@ -18,7 +18,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,23 +33,8 @@ class DbUpdate extends DbQuery {
 	// Spring Update
 
 	/**
-	 * 更新或插入数据<br>
-	 * 同 {@linkplain NamedParameterJdbcTemplate#update(String, SqlParameterSource, KeyHolder)}<br>
-	 * <p>注意：直接调用此方法，不支持审计与填充等增强扩展能力</p>
-	 *
-	 * @param sql         要执行的更新SQL
-	 * @param paramSource 更新所用到的参数：{@linkplain MapSqlParameterSource}，{@linkplain BeanPropertySqlParameterSource}
-	 * @return 自动生成的键(可能由JDBC insert语句返回)或更新的主键id值。
-	 */
-	@Transactional
-	public KeyHolder update(String sql, SqlParameterSource paramSource, KeyHolder generatedKeyHolder) {
-		getNamedParameterJdbcTemplate().update(sql, paramSource, generatedKeyHolder);
-		return generatedKeyHolder;
-	}
-
-	/**
 	 * 更新或插入数据，主键默认为id时使用。
-	 * <p>注意：直接调用此方法，不支持审计与填充等增强扩展能力</p>
+	 * <p>注意：此方法不支持数据审计、数据填充、数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql         更新或插入SQL
 	 * @param paramSource 更新所用到的参数：{@linkplain MapSqlParameterSource}，{@linkplain BeanPropertySqlParameterSource}
@@ -68,7 +52,7 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 更新数据<br>
      * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
-	 * <p>注意：直接调用此方法，不支持审计与填充等增强扩展能力</p>
+	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
      *
      * @param sql			要执行的更新SQL
      * @param paramJson		更新所用到的参数
@@ -76,14 +60,19 @@ class DbUpdate extends DbQuery {
      */
 	@Transactional
 	public long update(String sql, JSONObject paramJson) {
+		// 参数美化
 		paramFormat(paramJson);
-		JSONObject cloneJson = dataEncryptCloneJson(sql, paramJson);
-		return getNamedParameterJdbcTemplate().update(sql, cloneJson);
+
+		// 数据脱敏
+		dataEncryptExtractTable(sql, paramJson);
+
+		// 执行
+		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
 
 	/**
 	 * 更新数据<br>
-	 * <p>注意：直接调用此方法，不支持审计与填充等增强扩展能力</p>
+	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
 	 *
 	 * <ul>
 	 *     <li>对 {@linkplain NamedParameterJdbcTemplate#update(String, Map)} 方法的增强实现</li>
@@ -108,6 +97,7 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 对多组参数进行批量更新处理<br>
 	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
 	 *
 	 * @param sql        要执行的更新SQL
 	 * @param paramJsons 更新所用到的参数数组
@@ -125,19 +115,19 @@ class DbUpdate extends DbQuery {
 	/**
 	 * 对多组参数进行批量更新处理<br>
 	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
 	 *
 	 * @param sql        要执行的更新SQL
 	 * @param paramJsons 更新所用到的参数数组（不调用 {@link #paramFormat(JSONObject)} 方法）
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public int[] updateBatchNotParamFormat(String sql, JSONObject[] paramJsons) {
-		JSONObject[] cloneJsons = dataEncryptCloneJsons(sql, paramJsons);
-		dataAuditCloneJsons(sql, CrudEnum.U, paramJsons);
-		for (JSONObject paramJson : paramJsons) {
-			paramJson.putAll(FillDataProvider.getUpdateParamJson());
-		}
-		return getNamedParameterJdbcTemplate().batchUpdate(sql, cloneJsons);
+		// 数据脱敏
+		dataEncryptExtractTable(sql, paramJsons);
+
+		// 执行更新
+		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
 	// Update
@@ -222,7 +212,7 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
     }
@@ -241,7 +231,7 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dbUpdateEnum);
         return (long) getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
@@ -262,7 +252,7 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dbUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
 		if (DbExpectedEnum.EQ == dbExpectedEnum) {
@@ -300,7 +290,7 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dbUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -340,7 +330,7 @@ class DbUpdate extends DbQuery {
 		dataEncrypt(tableName, paramJsons);
 		dataAudit(tableName, CrudEnum.U, paramJsons);
 		for (JSONObject paramJson : paramJsons) {
-			paramJson.putAll(FillDataProvider.getUpdateParamJson());
+			paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		}
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dbUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
@@ -378,7 +368,7 @@ class DbUpdate extends DbQuery {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		String sql = updateSqlBuild(tableName, paramJson, conditions, dbUpdateEnum);
 		int updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramJson);
         int expectedValue = 1;
@@ -420,7 +410,7 @@ class DbUpdate extends DbQuery {
 		dataEncrypt(tableName, paramJsons);
 		dataAudit(tableName, CrudEnum.U, paramJsons);
 		for (JSONObject paramJson : paramJsons) {
-			paramJson.putAll(FillDataProvider.getUpdateParamJson());
+			paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		}
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dbUpdateEnum);
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
@@ -532,18 +522,30 @@ class DbUpdate extends DbQuery {
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void updateBatchNotParamFormat(String tableName, JSONObject[] paramJsons, String[] conditions, DbUpdateEnum dbUpdateEnum) {
-		// 1. 获得SQL
+		// 1. 处理数据审计更新值
+		JSONObject[] auditUpdateJsons = new JSONObject[paramJsons.length];
+		for (int i = 0; i < auditUpdateJsons.length; i++) {
+			auditUpdateJsons[i] = new JSONObject();
+		}
+		dataAudit(tableName, CrudEnum.U, auditUpdateJsons);
+
+		// 2. 获得更新执行SQL
 		String sql = updateSqlBuild(tableName, paramJsons[0], conditions, dbUpdateEnum);
-		dataEncrypt(tableName, paramJsons);
-		dataAudit(tableName, CrudEnum.U, paramJsons);
-		for (JSONObject paramJson : paramJsons) {
-			paramJson.putAll(FillDataProvider.getUpdateParamJson());
+
+		// 3. 处理剩余的更新参数
+		if (MapUtils.isNotEmpty(auditUpdateJsons[0])) {
+			for (int i = 1; i < paramJsons.length; i++) {
+				paramJsons[i].putAll(auditUpdateJsons[i]);
+			}
 		}
 
-		// 2. 执行
+		// 4. 处理数据加密
+		dataEncrypt(tableName, paramJsons);
+
+		// 5. 执行更新
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
-		// 3. 确认影响行数
+		// 6. 确认影响行数
 		int expectedValue = 1;
 		updateBatchAndExpectedEqual(updateRowsNumberArray, expectedValue);
 	}

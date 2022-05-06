@@ -6,8 +6,6 @@ import ai.yue.library.data.jdbc.client.Db;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,8 +73,9 @@ public class ShardingJdbcController {
 		
 		sql = deleteLastEqualString(sql, ",");
 		sql.append(")");
-		KeyHolder update = db.update(sql.toString(), new MapSqlParameterSource(paramJson), new GeneratedKeyHolder());
-		return update.getKey().longValue();
+
+		Long id = db.update(sql.toString(), new MapSqlParameterSource(paramJson));
+		return id;
 //		db.update(sql, paramJson);
 //		return db.insert("base_person", paramJson);
 	}

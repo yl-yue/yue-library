@@ -12,7 +12,7 @@ public class DbConstant {
 	
 	// ====================== 关键字段定义 ======================
 
-	/** 关键字段定义-主键 */
+	/** 关键字段定义-有序主键 */
 	public static final String FIELD_DEFINITION_PRIMARY_KEY = "id";
 
 	// ====================== 关键字段定义-默认值定义 ======================
@@ -25,7 +25,7 @@ public class DbConstant {
 
 	// ====================== 关键字段定义-命名占位符（具名参数） ======================
 
-	/** 命名占位符-主键 **/
+	/** 命名占位符-有序主键 **/
 	public static final String NAMED_PARAMETER_PRIMARY_KEY = ":id";
 
 	// SQL

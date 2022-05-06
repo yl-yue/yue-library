@@ -1,5 +1,6 @@
 package ai.yue.library.data.jdbc.client;
 
+import ai.yue.library.base.constant.MatchEnum;
 import ai.yue.library.base.exception.DbException;
 import ai.yue.library.base.util.*;
 import ai.yue.library.base.view.ResultPrompt;
@@ -399,6 +400,12 @@ public class DbBase {
         return whereSql.toString();
     }
 
+    protected String paramToWhereSqlNotDeleteWhere(JSONObject paramJson) {
+        StringBuffer whereSql = new StringBuffer();
+        paramJson.keySet().forEach(condition -> paramToWhereSql(whereSql, paramJson, condition));
+        return whereSql.toString();
+    }
+
     /**
      * 获得逻辑删除条件SQL
      *
@@ -406,7 +413,7 @@ public class DbBase {
      */
     public String getDeleteWhereSql() {
         StringBuffer whereSql = new StringBuffer();
-        if (getJdbcProperties().isEnableDeleteQueryFilter()) {
+        if (getJdbcProperties().isEnableLogicDeleteFilter()) {
             whereSql.append(" WHERE ")
             .append(getJdbcProperties().getFieldDefinitionDeleteTime())
             .append(" = ")
@@ -548,6 +555,9 @@ public class DbBase {
 
     /**
      * 参数美化（对SpringJDBC不支持的类型进行转换与布尔值映射识别）
+     *
+     * <p>参数key根据数据库字段命名策略自动转换</p>
+     * <p>布尔值映射识别</p>
      * <p>Character 转 String</p>
      * <p>JSONObject 转 JsonString</p>
      * <p>LocalDataTime 转 Date</p>
@@ -555,10 +565,12 @@ public class DbBase {
      * @param paramJson 需要进行类型处理的paramJson
      */
     public void paramFormat(JSONObject paramJson) {
+        // 不处理空参数
         if (MapUtils.isEmpty(paramJson)) {
             return;
         }
 
+        // 遍历处理每个参数
         JSONObject paramFormatJson = new JSONObject();
         for (Map.Entry<String, Object> entry : paramJson.entrySet()) {
             // 1. 参数确认
@@ -569,8 +581,13 @@ public class DbBase {
                 continue;
             }
 
-            // 2. 参数美化
+            // 2. 美化key
             String formatKey = key;
+            if (getJdbcProperties().isEnableFieldNamingStrategyRecognition()) {
+                formatKey = getJdbcProperties().getDatabaseFieldNamingStrategy().getPropertyNamingStrategy().translate(key);
+            }
+
+            // 3. 美化value
             Object formatValue = value;
             Class<?> valueClass = value.getClass();
             if (valueClass == JSONObject.class) {
@@ -586,27 +603,28 @@ public class DbBase {
                 }
             }
 
-            // 3. 布尔值映射识别
+            // 4. 布尔值映射识别
             boolean enableBooleanMapRecognition = getJdbcProperties().isEnableBooleanMapRecognition();
             boolean isBoolean = BooleanUtil.isBoolean(valueClass);
             boolean isStrBoolean = false;
             if (!isBoolean && valueClass == String.class) {
                 isStrBoolean = StrUtil.equalsAnyIgnoreCase((String) value, "true", "false");
             }
-            if (enableBooleanMapRecognition && isBoolean || isStrBoolean) {
+            if (enableBooleanMapRecognition && (isBoolean || isStrBoolean)) {
                 if (!StrUtil.startWith(key, IS_PREFIX, true, true)) {
                     String aliasFormat = String.format(IS_PREFIX_FORMAT, PropertyNamingStrategy.SnakeCase.translate(key));
                     formatKey = getJdbcProperties().getDatabaseFieldNamingStrategy().getPropertyNamingStrategy().translate(aliasFormat);
-                    if (!BooleanUtil.isBoolean(valueClass)) {
-                        formatValue = Boolean.parseBoolean((String) value);
-                    }
+                }
+                if (!BooleanUtil.isBoolean(valueClass)) {
+                    formatValue = Boolean.parseBoolean((String) value);
                 }
             }
 
-            // 4. 设置处理后的值
+            // 5. 设置处理后的值
             paramFormatJson.put(formatKey, formatValue);
         }
 
+        // 设置美化后的结果
         paramJson.fluentClear().putAll(paramFormatJson);
     }
 
@@ -700,55 +718,25 @@ public class DbBase {
     }
 
     /**
-     * 数据加密-返回cloneJson
-     *
-     * @param sql       SQL语句
-     * @param paramJson 参数
-     */
-    protected JSONObject dataEncryptCloneJson(String sql, JSONObject paramJson) {
-        // 确认是否开启数据加密特性
-        Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
-        if (MapUtils.isEmpty(dataEncryptConfigs)) {
-            return paramJson;
-        }
-
-        // 提前表名
-        String[] tableNames = extractTables(sql);
-
-        // 加密数据
-        JSONObject cloneJson = new JSONObject(paramJson);
-        for (String tableName : tableNames) {
-            dataEncrypt(dataEncryptConfigs, tableName, cloneJson);
-        }
-
-        // 返回经过数据加密后的克隆json
-        return cloneJson;
-    }
-
-    /**
-     * 数据加密-返回cloneJson
+     * 数据加密-提取表名
      *
      * @param sql        SQL语句
      * @param paramJsons 参数
      */
-    protected JSONObject[] dataEncryptCloneJsons(String sql, JSONObject[] paramJsons) {
+    protected void dataEncryptExtractTable(String sql, JSONObject... paramJsons) {
         // 确认是否开启数据加密特性
         Map<String, DataEncryptProperties> dataEncryptConfigs = getJdbcProperties().getDataEncryptConfigs();
         if (MapUtils.isEmpty(dataEncryptConfigs)) {
-            return paramJsons;
+            return;
         }
 
-        // 提前表名
+        // 提取表名
         String[] tableNames = extractTables(sql);
 
         // 加密数据
-        JSONObject[] cloneJsons = ArrayUtil.clone(paramJsons);
         for (String tableName : tableNames) {
-            dataEncrypt(dataEncryptConfigs, tableName, cloneJsons);
+            dataEncrypt(dataEncryptConfigs, tableName, paramJsons);
         }
-
-        // 返回经过数据加密后的克隆jsons
-        return cloneJsons;
     }
 
     private void dataDecrypt(Map<String, DataEncryptProperties> dataEncryptConfigs, String tableName, JSONObject[] resultJsons) {
@@ -888,33 +876,67 @@ public class DbBase {
     }
 
     protected void dataAudit(String tableName, CrudEnum crudEnum, JSONObject... paramJsons) {
+        // 使用克隆变量，避免JdbcProperties Bean值被误变更
+        List<String> dataAuditTableNames = getJdbcProperties().getDataAuditTableNames();
+        List<String> cloneAuditTableNames = new ArrayList<>();
+        cloneAuditTableNames.addAll(dataAuditTableNames);
+
         // 确认是否开启审计
-        List<String> auditTableNames = getJdbcProperties().getDataAuditTableNames();
-        if (ListUtils.isEmpty(auditTableNames)) {
+        MatchEnum dataAuditTableNameMatchEnum = getJdbcProperties().getDataAuditTableNameMatchEnum();
+        if (dataAuditTableNameMatchEnum == MatchEnum.MATCH && ListUtils.isEmpty(cloneAuditTableNames)) {
             return;
+        } else if (dataAuditTableNameMatchEnum == MatchEnum.EXCLUDE) {
+            String unwrapTableName = dialect.getWrapper().unwrap(tableName);
+            for (String auditTableName : cloneAuditTableNames) {
+                if (unwrapTableName.equalsIgnoreCase(auditTableName) == true) {
+                    return;
+                }
+            }
+
+            // 使用克隆变量，避免JdbcProperties Bean值误变更
+            cloneAuditTableNames.clear();
+            cloneAuditTableNames.add(tableName);
         }
-
-        dataAudit(auditTableNames, tableName, crudEnum, paramJsons);
-    }
-
-    protected JSONObject[] dataAuditCloneJsons(String sql, CrudEnum crudEnum, JSONObject[] paramJsons) {
-        // 确认是否开启审计
-        List<String> auditTableNames = getJdbcProperties().getDataAuditTableNames();
-        if (ListUtils.isEmpty(auditTableNames)) {
-            return paramJsons;
-        }
-
-        // 提前表名
-        String[] tableNames = extractTables(sql);
 
         // 数据审计
-        JSONObject[] cloneJsons = ArrayUtil.clone(paramJsons);
-        for (String tableName : tableNames) {
-            dataAudit(auditTableNames, tableName, crudEnum, cloneJsons);
+        dataAudit(cloneAuditTableNames, tableName, crudEnum, paramJsons);
+    }
+
+    protected void dataAuditExtractTable(String sql, CrudEnum crudEnum, JSONObject... paramJsons) {
+        // 使用克隆变量，避免JdbcProperties Bean值被误变更
+        List<String> dataAuditTableNames = getJdbcProperties().getDataAuditTableNames();
+        List<String> cloneAuditTableNames = new ArrayList<>();
+        cloneAuditTableNames.addAll(dataAuditTableNames);
+
+        // 确认是否开启审计
+        MatchEnum dataAuditTableNameMatchEnum = getJdbcProperties().getDataAuditTableNameMatchEnum();
+        String[] tableNames = {dataAuditTableNameMatchEnum.name()};
+        if (dataAuditTableNameMatchEnum == MatchEnum.MATCH && ListUtils.isEmpty(cloneAuditTableNames)) {
+            return;
+        } else if (dataAuditTableNameMatchEnum == MatchEnum.EXCLUDE) {
+            // 提取表名
+            String[] extractTables = extractTables(sql);
+            for (String extractTable : extractTables) {
+                String unwrapTableName = dialect.getWrapper().unwrap(extractTable);
+                for (String auditTableName : cloneAuditTableNames) {
+                    if (unwrapTableName.equalsIgnoreCase(auditTableName) == true) {
+                        return;
+                    }
+                }
+            }
+
+            // 使用克隆变量，避免JdbcProperties Bean值误变更
+            cloneAuditTableNames.clear();
+            cloneAuditTableNames.add(dataAuditTableNameMatchEnum.name());
+        } else {
+            // 提取表名
+            tableNames = extractTables(sql);
         }
 
-        // 返回经过数据审计后的克隆jsons
-        return cloneJsons;
+        // 数据审计
+        for (String tableName : tableNames) {
+            dataAudit(cloneAuditTableNames, tableName, crudEnum, paramJsons);
+        }
     }
 
 }

@@ -36,13 +36,14 @@ public class DataFillController {
     public FillDataProvider fillDataProvider() {
         return new FillDataProvider() {
             @Override
-            public List<DataFillDTO> getInsertFillDTO() {
-                return super.getInsertFillDTO();
+            public List<DataFillDTO> getInsertFillDTO(JdbcProperties jdbcProperties) {
+                // 保留默认填充值：uuid、sort_idx
+                return super.getInsertFillDTO(jdbcProperties);
             }
 
             @Override
-            public List<DataFillDTO> getUpdateFillDTO() {
-                List<DataFillDTO> updateFillDTOList = super.getUpdateFillDTO();
+            public List<DataFillDTO> getUpdateFillDTO(JdbcProperties jdbcProperties) {
+                List<DataFillDTO> updateFillDTOList = super.getUpdateFillDTO(jdbcProperties);
                 updateFillDTOList.add(new DataFillDTO(jdbcProperties.getDataAuditProperties().getFieldNameUpdateUser(), "ylyue"));
                 return updateFillDTOList;
             }

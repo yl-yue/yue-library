@@ -32,15 +32,9 @@ class DbDelete extends DbUpdate {
 		StringBuffer sql = new StringBuffer();
 		sql.append("DELETE FROM ");
 		sql.append(dialect.getWrapper().wrap(tableName));
-		sql.append(paramToWhereSql(paramJson));
+		sql.append(paramToWhereSqlNotDeleteWhere(paramJson));
 
 		// 3. 返回SQL
-		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
-			sql.append(" AND ")
-					.append(getJdbcProperties().getFieldDefinitionDeleteTime())
-					.append(" = ")
-					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
-		}
 		return sql.toString();
 	}
 
@@ -85,6 +79,21 @@ class DbDelete extends DbUpdate {
 
 	/**
 	 * 删除
+	 *
+	 * @param tableName		表名
+	 * @param paramJson		条件
+	 * @return 删除所影响的行数
+	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+	public long delete(String tableName, JSONObject paramJson) {
+		paramFormat(paramJson);
+		dataEncrypt(tableName, paramJson);
+		String sql = deleteSqlBuild(tableName, paramJson);
+		return getNamedParameterJdbcTemplate().update(sql, paramJson);
+	}
+
+	/**
+	 * 删除-ById
 	 * <p>数据删除前会先进行条数确认
 	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String, String)}</p>
      * 
@@ -92,12 +101,12 @@ class DbDelete extends DbUpdate {
      * @param id     	主键id
      */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-    public void delete(String tableName, Long id) {
+    public void deleteById(String tableName, Long id) {
 		deleteByPk(tableName, id);
     }
 
 	/**
-	 * 删除-通过表无序主键
+	 * 删除-By无序主键
 	 * <p>数据删除前会先进行条数确认
 	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
 	 * <p>无序主键值请使用UUID5无符号位
@@ -111,28 +120,13 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除
-     * 
-     * @param tableName		表名
-     * @param paramJson		条件
-     * @return 删除所影响的行数
-     */
-	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public long delete(String tableName, JSONObject paramJson) {
-		paramFormat(paramJson);
-		dataEncrypt(tableName, paramJson);
-		String sql = deleteSqlBuild(tableName, paramJson);
-		return getNamedParameterJdbcTemplate().update(sql, paramJson);
-	}
-	
-	/**
 	 * 删除-批量
 	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
      * 
      * @param tableName		表名
      * @param paramJsons	条件数组
      */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteBatch(String tableName, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
 			paramFormat(paramJson);
@@ -149,16 +143,18 @@ class DbDelete extends DbUpdate {
 	 * @param tableName		表名
 	 * @param paramJsons	条件数组
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void deleteBatchNotParamFormat(String tableName, JSONObject[] paramJsons) {
 		// 1. 获得SQL
 		String sql = deleteSqlBuild(tableName, paramJsons[0]);
 
-		// 2. 执行
+		// 2. 数据加密
 		dataEncrypt(tableName, paramJsons);
+
+		// 3. 执行
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
-		// 3. 确认影响行数
+		// 4. 确认影响行数
 		for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber > 1) {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);
@@ -175,7 +171,7 @@ class DbDelete extends DbUpdate {
 	 * @param paramJsons 删除所用到的条件数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public int[] deleteBatch2(String sql, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
 			paramFormat(paramJson);
@@ -194,37 +190,36 @@ class DbDelete extends DbUpdate {
 	 * @param paramJsons 删除所用到的条件数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public int[] deleteBatchNotParamFormat2(String sql, JSONObject[] paramJsons) {
+		// 1. 数据加密
+		dataEncryptExtractTable(sql, paramJsons);
+
+		// 2. 执行
 		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
 	// Delete Logic
 	
-	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson, @Nullable JSONObject auditParam) {
+	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson, @Nullable JSONObject auditUpdateJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
 		
-		// 2. 生成SQL
+		// 2. 获得更新条件（逻辑删除条件）
 		String[] conditions = new String[paramJson.size()];
-		conditions = MapUtils.keyList(paramJson).toArray(conditions);
-		if (MapUtils.isEmpty(auditParam)) {
+		conditions = paramJson.keySet().toArray(conditions);
+
+		// 3. 处理更新所用到的参数（包括更新条件与被更新的值）
+		if (MapUtils.isEmpty(auditUpdateJson)) {
+			// 未开启审计
 			paramJson.put(getJdbcProperties().getFieldDefinitionDeleteTime(), System.currentTimeMillis());
 		} else {
-			paramJson.putAll(auditParam);
+			// 逻辑删除审计
+			paramJson.putAll(auditUpdateJson);
 		}
 
-		// 3. 返回SQL
-		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
-		if (getJdbcProperties().isEnableDeleteQueryFilter() == false) {
-			StringBuffer addLogicDelWhereSql = new StringBuffer(sql);
-			addLogicDelWhereSql.append(" AND ")
-					.append(getJdbcProperties().getFieldDefinitionDeleteTime())
-					.append(" = ")
-					.append(DbConstant.FIELD_DEFAULT_VALUE_DELETE_TIME);
-			sql = addLogicDelWhereSql.toString();
-		}
-		return sql;
+		// 4. 返回生成SQL
+		return updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
 	}
 
 	private void deleteLogicByUk(String tableName, Object pkValue) {
@@ -259,39 +254,14 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByUuid(String, String)}</p>
-     * 
-     * @param tableName	表名
-     * @param id     	主键id
-     */
-	@Transactional
-    public void deleteLogic(String tableName, Long id) {
-		deleteLogicByUk(tableName, id);
-    }
-
-	/**
-	 * 删除-逻辑的
-	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 *
-	 * @param tableName 表名
-	 * @param uuidValue 无序主键的唯一值
-	 */
-	@Transactional
-	public void deleteLogicByUuid(String tableName, String uuidValue) {
-		deleteLogicByUk(tableName, uuidValue);
-	}
-
-	/**
-	 * 删除-逻辑的
+	 * 逻辑删除
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 *
 	 * @param tableName 表名
 	 * @param paramJson 条件
 	 * @return 删除所影响的行数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public long deleteLogic(String tableName, JSONObject paramJson) {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
@@ -300,16 +270,41 @@ class DbDelete extends DbUpdate {
 		String sql = deleteLogicSqlBuild(tableName, paramJson, auditParam);
 		return getNamedParameterJdbcTemplate().update(sql, paramJson);
 	}
-	
+
 	/**
-	 * 删除-批量-逻辑的
+	 * 逻辑删除-ById
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByUuid(String, String)}</p>
+     * 
+     * @param tableName	表名
+     * @param id     	主键id
+     */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+    public void deleteLogicById(String tableName, Long id) {
+		deleteLogicByUk(tableName, id);
+    }
+
+	/**
+	 * 逻辑删除-By无序主键
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
+	 *
+	 * @param tableName 表名
+	 * @param uuidValue 无序主键的唯一值
+	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+	public void deleteLogicByUuid(String tableName, String uuidValue) {
+		deleteLogicByUk(tableName, uuidValue);
+	}
+
+	/**
+	 * 逻辑删除-批量
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
      * 
      * @param tableName		表名
      * @param paramJsons	条件数组
      */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteBatchLogic(String tableName, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
 			paramFormat(paramJson);
@@ -319,35 +314,39 @@ class DbDelete extends DbUpdate {
     }
 
 	/**
-	 * 删除-批量-逻辑的（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * 逻辑删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
 	 *
 	 * @param tableName		表名
 	 * @param paramJsons	条件数组
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void deleteBatchLogicNotParamFormat(String tableName, JSONObject[] paramJsons) {
-		// 1. 获得SQL
-		JSONObject[] auditParams = new JSONObject[paramJsons.length];
-		for (int i = 0; i < auditParams.length; i++) {
-			auditParams[i] = new JSONObject();
+		// 1. 处理数据审计更新值
+		JSONObject[] auditUpdateJsons = new JSONObject[paramJsons.length];
+		for (int i = 0; i < auditUpdateJsons.length; i++) {
+			auditUpdateJsons[i] = new JSONObject();
 		}
-		dataAudit(tableName, CrudEnum.D, auditParams);
-		String sql = deleteLogicSqlBuild(tableName, paramJsons[0], auditParams[0]);
-		if (MapUtils.isNotEmpty(auditParams[0])) {
-			for (JSONObject paramJson : paramJsons) {
-				for (JSONObject auditParam : auditParams) {
-					paramJson.putAll(auditParam);
-				}
+		dataAudit(tableName, CrudEnum.D, auditUpdateJsons);
+
+		// 2. 获得逻辑删除执行SQL
+		String sql = deleteLogicSqlBuild(tableName, paramJsons[0], auditUpdateJsons[0]);
+
+		// 3. 处理剩余的更新参数
+		if (MapUtils.isNotEmpty(auditUpdateJsons[0])) {
+			for (int i = 1; i < paramJsons.length; i++) {
+				paramJsons[i].putAll(auditUpdateJsons[i]);
 			}
 		}
 
-		// 2. 执行
+		// 4. 处理数据加密
 		dataEncrypt(tableName, paramJsons);
+
+		// 5. 执行
 		int[] updateRowsNumberArray = getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 
-		// 3. 确认影响行数
+		// 6. 确认影响行数
 		for (int updateRowsNumber : updateRowsNumberArray) {
 			if (updateRowsNumber > 1) {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);

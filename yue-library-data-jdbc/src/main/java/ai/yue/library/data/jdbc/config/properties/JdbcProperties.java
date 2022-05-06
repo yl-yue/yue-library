@@ -1,6 +1,7 @@
 package ai.yue.library.data.jdbc.config.properties;
 
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
+import ai.yue.library.base.constant.MatchEnum;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.data.jdbc.constant.EncryptAlgorithmEnum;
 import lombok.Data;
@@ -48,10 +49,10 @@ public class JdbcProperties implements Serializable, Cloneable {
 	// ====================== JDBC属性 ======================
 
 	/**
-	 * 启用删除查询过滤（只对自动生成的查询sql生效）
+	 * 启用逻辑删除过滤（只对自动生成的sql生效）
 	 * <p>默认：false</p>
 	 */
-	private boolean enableDeleteQueryFilter = false;
+	private boolean enableLogicDeleteFilter = false;
 
 	/**
 	 * 启用数据库字段命名策略识别
@@ -102,9 +103,30 @@ public class JdbcProperties implements Serializable, Cloneable {
 	private DataAuditProperties dataAuditProperties = new DataAuditProperties();
 
 	/**
+	 * 数据审计表名匹配方式
+	 *
+	 * <p>dataAuditTableNames用于匹配还是排除</p>
+	 * <p>默认：匹配</p>
+	 */
+	private MatchEnum dataAuditTableNameMatchEnum = MatchEnum.MATCH;
+
+	/**
 	 * 数据审计表名
 	 */
 	private List<String> dataAuditTableNames;
+
+	/**
+	 * 数据填充表名匹配方式
+	 *
+	 * <p>dataFillTableNames用于匹配还是排除</p>
+	 * <p>默认：排除</p>
+	 */
+	private MatchEnum dataFillTableNameMatchEnum = MatchEnum.EXCLUDE;
+
+	/**
+	 * 数据填充表名
+	 */
+	private List<String> dataFillTableNames;
 
 	@Override
 	public JdbcProperties clone() {

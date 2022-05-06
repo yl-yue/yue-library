@@ -25,7 +25,7 @@ public class DataAuditDAO extends AbstractRepository<DataAuditDO> {
     @PostConstruct
     private void init() {
         db = db.clone();
-        db.getJdbcProperties().setEnableDeleteQueryFilter(true);
+        db.getJdbcProperties().setEnableLogicDeleteFilter(true);
     }
 
     /**

@@ -75,8 +75,8 @@ public class ShardingJdbcController {
 		
 		sql = deleteLastEqualString(sql, ",");
 		sql.append(")");
-		KeyHolder update = db.update(sql.toString(), new MapSqlParameterSource(paramJson), new GeneratedKeyHolder());
-		return update.getKey().longValue();
+		Long id = db.update(sql.toString(), new MapSqlParameterSource(paramJson));
+		return id;
 //		db.update(sql, paramJson);
 //		return db.insert("base_person", paramJson);
 	}

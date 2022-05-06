@@ -5,9 +5,11 @@ import ai.yue.library.base.util.MapUtils;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.client.Db;
+import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.test.ipo.ParamFormatIPO;
+import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * JDBC参数美化测试
@@ -40,7 +42,16 @@ public class ParamFormatController {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     String tableName = "param_format";
-    
+
+    @PostConstruct
+    private void initDb() {
+        db = db.clone();
+        JdbcProperties jdbcProperties = db.getJdbcProperties();
+        List<String> excludeTableNames = new ArrayList<>();
+        excludeTableNames.add(tableName);
+        jdbcProperties.setDataFillTableNames(excludeTableNames);
+    }
+
     @PostMapping("/insertNotParamFormat")
     public Result<?> insertNotParamFormat(ParamFormatIPO paramFormatIPO) {
         // 1. 移除空对象
@@ -93,6 +104,8 @@ public class ParamFormatController {
     private JSONObject getParamJson(ParamFormatIPO paramFormatIPO) {
         Long id = paramFormatIPO.getId();
         Character character = paramFormatIPO.getCharacter();
+        Boolean boolean1 = paramFormatIPO.getBoolean1();
+        String isStrBoolean2 = paramFormatIPO.getIsStrBoolean2();
         LocalDateTime localDateTime = paramFormatIPO.getLocalDateTime();
         JSONObject jsonObject = paramFormatIPO.getJsonObject();
         List<JSONObject> jsonObjectList = paramFormatIPO.getJsonObjectList();
@@ -102,6 +115,8 @@ public class ParamFormatController {
             paramJson.put("id", id);
         }
         paramJson.put("character", character);
+        paramJson.put("boolean1", boolean1);
+        paramJson.put("isStrBoolean2", isStrBoolean2);
         paramJson.put("localDateTime", localDateTime);
         paramJson.put("jsonObject", jsonObject);
         paramJson.put("jsonObjectList", jsonObjectList);

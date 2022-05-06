@@ -78,9 +78,9 @@ public class JdbcController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/delete")
-	public Result<?> delete(@RequestParam("id") Long id) {
-		jdbcDAO.delete(id);
+	@DeleteMapping("/deleteById")
+	public Result<?> deleteById(@RequestParam("id") Long id) {
+		jdbcDAO.deleteById(id);
 		return R.success();
 	}
 	
@@ -131,7 +131,7 @@ public class JdbcController {
 		System.out.println(db.page(tableName, pageIPO, UserDO.class));
 
 		// 返回结果
-		return R.success(jdbcDAO.get(id));
+		return R.success(jdbcDAO.getById(id));
 	}
 
 	/**

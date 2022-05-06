@@ -97,6 +97,6 @@ INSERT INTO `user` VALUES (170, '2019-07-18 16:39:41', '2021-07-21 11:59:02', 0,
 INSERT INTO `user` VALUES (174, '2019-07-24 09:31:11', '2021-07-21 11:59:02', 0, '18883877079', 'uyJPQmQgEaVE99McVoV2zg==', 'abcd', NULL, NULL, NULL, NULL, 'normal');
 INSERT INTO `user` VALUES (175, '2019-07-24 15:59:31', '2021-07-21 11:59:02', 0, '18716280028', 'uyJPQmQgEaVE99McVoV2zg==', 'abcd', NULL, NULL, NULL, NULL, 'normal');
 INSERT INTO `user` VALUES (181, '2019-07-26 17:05:00', '2021-07-21 11:59:02', 0, '18024649918', 'uyJPQmQgEaVE99McVoV2zg==', NULL, NULL, NULL, NULL, NULL, 'normal');
-INSERT INTO `user` VALUES (184, '2019-10-12 23:49:02', '2021-07-21 11:59:02', 0, '18523146312', '2eZzUNIsix73h9MmhbmVow==', 'ylyue', 'yl-yue@qq.com', 'https://gitee.com/yl-yue/yue-library/raw/master/docs/_images/logo.png', '1996-05-15', 'man', 'normal');
+INSERT INTO `user` VALUES (184, '2019-10-12 23:49:02', '2021-07-21 11:59:02', 0, '18523146312', '2eZzUNIsix73h9MmhbmVow==', 'ylyue', 'yl-yue@qq.com', 'https://dcloud.ylyue.cn/yue-library/_images/logo.png', '1996-05-15', 'man', 'normal');
 
 SET FOREIGN_KEY_CHECKS = 1;

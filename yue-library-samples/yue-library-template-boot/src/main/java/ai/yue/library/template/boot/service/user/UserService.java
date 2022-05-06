@@ -50,8 +50,8 @@ public class UserService {
 	 * @param id
 	 * @return
 	 */
-	public Result<?> delete(Long id) {
-		userDAO.delete(id);
+	public Result<?> deleteById(Long id) {
+		userDAO.deleteById(id);
 		return R.success();
 	}
 	
@@ -61,8 +61,8 @@ public class UserService {
 	 * @param id
 	 * @return
 	 */
-	public Result<?> get(Long id) {
-		return R.success(userDAO.get(id));
+	public Result<?> getById(Long id) {
+		return R.success(userDAO.getById(id));
 	}
 	
 	/**

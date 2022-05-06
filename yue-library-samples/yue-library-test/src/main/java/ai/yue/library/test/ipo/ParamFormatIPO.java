@@ -24,6 +24,8 @@ public class ParamFormatIPO {
 
     Long id;
     Character character;
+    Boolean boolean1;
+    String isStrBoolean2;
     LocalDateTime localDateTime;
     JSONObject jsonObject;
     List<JSONObject> jsonObjectList;

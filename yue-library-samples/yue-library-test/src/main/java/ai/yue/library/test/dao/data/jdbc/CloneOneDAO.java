@@ -16,7 +16,7 @@ public class CloneOneDAO extends AbstractRepository<UserDO> {
 	@PostConstruct
 	private void init() {
 		db = db.clone();
-		db.getJdbcProperties().setEnableDeleteQueryFilter(true);
+		db.getJdbcProperties().setEnableLogicDeleteFilter(true);
 	}
 
 	@Override

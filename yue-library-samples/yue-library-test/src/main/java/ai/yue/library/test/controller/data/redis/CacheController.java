@@ -33,7 +33,7 @@ public class CacheController {
     @GetMapping("/get")
     public Result<?> get(Long id) {
         System.out.println("未命中Redis缓存，使用JDBC去数据库查询数据。");
-        return R.success(jdbcDAO.get(id));
+        return R.success(jdbcDAO.getById(id));
     }
 
     /**
@@ -43,7 +43,7 @@ public class CacheController {
     @PutMapping("/put")
     public Result<?> put(@Validated UserGroupIPO userGroupIPO) {
         jdbcDAO.updateById(Convert.toJSONObject(userGroupIPO));
-        return R.success(jdbcDAO.get(userGroupIPO.getId()));
+        return R.success(jdbcDAO.getById(userGroupIPO.getId()));
     }
 
     /**
@@ -52,7 +52,7 @@ public class CacheController {
     @CacheEvict(value = "cache_test", key = "#id")
     @DeleteMapping("/delete")
     public Result<?> delete(@RequestParam("id") Long id) {
-        jdbcDAO.deleteLogic(id);
+        jdbcDAO.deleteLogicById(id);
         return R.success();
     }
 
@@ -66,7 +66,7 @@ public class CacheController {
         }
     )
     public UserDO getUserDO(Long id) {
-        return jdbcDAO.get(id);
+        return jdbcDAO.getById(id);
     }
 
 }

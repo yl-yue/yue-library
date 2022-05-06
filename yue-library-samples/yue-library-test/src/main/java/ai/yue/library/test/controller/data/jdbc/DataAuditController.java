@@ -25,21 +25,21 @@ public class DataAuditController {
     @Autowired
     DataAuditDAO dataAuditDAO;
 
-//    @Bean
-//    public AuditUserProvider auditUserProvider() {
-//        return new AuditUserProvider() {
-//            // 在你的应用程序中，如何获得当前用户信息，一般从Token中获取
-//            @Override
-//            public String getUser() {
-//                return "ylyue";
-//            }
-//
-//            @Override
-//            public String getUserUuid() {
-//                return "8fb1e1556cc84ba880d5a794e7b5f9e7";
-//            }
-//        };
-//    }
+    @Bean
+    public AuditUserProvider auditUserProvider() {
+        return new AuditUserProvider() {
+            // 在你的应用程序中，如何获得当前用户信息，一般从Token中获取
+            @Override
+            public String getUser() {
+                return "ylyue";
+            }
+
+            @Override
+            public String getUserUuid() {
+                return "8fb1e1556cc84ba880d5a794e7b5f9e7";
+            }
+        };
+    }
 
     @PostMapping("/insert")
     public Result<?> insert(DataEncryptDO userEncryptDO) {

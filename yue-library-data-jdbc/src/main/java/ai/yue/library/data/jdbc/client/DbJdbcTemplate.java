@@ -13,10 +13,17 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 使用JdbcTemplate进行SQL优化型数据库操作，以 '?' 作为SQL语句参数占位符
- * <p>示例：<code>SELECT * FROM tableName WHERE id = ?</code>
- * <p>jdbcQuery开头的查询方法暂时不支持参数自动加密匹配，因为SQL中使用`?`作为占位符，无法解析具体第几个参数是需要加密的</p>
- * 
+ * <h3>使用JdbcTemplate进行SQL优化型数据库操作，以 '?' 作为SQL语句参数占位符</h3>
+ *
+ * <p>示例：<code>SELECT * FROM tableName WHERE id = ?</code></p>
+ *
+ * <b>jdbcQuery开头的查询方法暂不支持以下特性：</b>
+ *
+ * <ul>
+ *     <li>参数自动加密匹配：因为SQL中使用`?`作为占位符，无法解析具体第几个参数是需要加密的</li>
+ *     <li>逻辑删除：因为SQL是你自己写的，改写SQL成本过高，因此暂未实现</li>
+ * </ul>
+ *
  * @author	ylyue
  * @since	2020年8月19日
  */
@@ -29,7 +36,8 @@ class DbJdbcTemplate extends DbBase {
 	/**
 	 * <b>查询多行数据</b>
 	 * <p>同 {@link JdbcTemplate#queryForList(String, Object...)}</p>
-	 * <p>执行以 '?' 作为参数占位符的SQL语句进行列表查询
+	 * <p>执行以 '?' 作为参数占位符的SQL语句进行列表查询</p>
+	 * <p>注意：此方法不支持数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql  SQL语句中可以包含一个或多个 '?' 参数占位符
 	 * @param args 查询参数，有序的对应SQL语句中的 '?' 参数占位符
@@ -43,6 +51,7 @@ class DbJdbcTemplate extends DbBase {
 	 * <b>查询多行数据</b>
 	 * <p>对 {@link JdbcTemplate#queryForList(String, Class, Object...)} 方法的优化实现</p>
 	 * <p>执行以 '?' 作为参数占位符的SQL语句进行列表查询
+	 * <p>注意：此方法不支持数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql         SQL语句中可以包含一个或多个 '?' 参数占位符
 	 * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
@@ -57,6 +66,7 @@ class DbJdbcTemplate extends DbBase {
 	 * <b>查询一行数据</b>
 	 * <p>对 {@link JdbcTemplate#queryForMap(String, Object...)} 方法的优化实现</p>
 	 * <p>执行以 '?' 作为参数占位符的SQL语句进行单行查询
+	 * <p>注意：此方法不支持数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql SQL语句中可以包含一个或多个 '?' 参数占位符
 	 * @param args 查询参数，有序的对应SQL语句中的 '?' 参数占位符
@@ -70,6 +80,7 @@ class DbJdbcTemplate extends DbBase {
 	 * <b>查询一行数据</b>
 	 * <p>对 {@link JdbcTemplate#queryForObject(String, Class, Object...)} 方法的优化实现</p>
 	 * <p>执行以 '?' 作为参数占位符的SQL语句进行单行查询
+	 * <p>注意：此方法不支持数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql SQL语句中可以包含一个或多个 '?' 参数占位符
 	 * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）   

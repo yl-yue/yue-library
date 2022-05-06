@@ -107,7 +107,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
-		paramJson.putAll(FillDataProvider.getUpdateParamJson());
+		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
 		tableName = wrapper.wrap(tableName);
 		paramJson = wrapper.wrap(paramJson);
 		conditions = wrapper.wrap(conditions);
@@ -202,7 +202,10 @@ public class AnsiDialect extends DbBase implements Dialect {
 		querySql.append(tableName);
 		// 添加查询条件
 		String whereSql = "";
-		if (conditions != null) {
+		if (conditions == null) {
+			conditions = new JSONObject();
+			pageIPO.setConditions(conditions);
+		} else {
 			whereSql = paramToWhereSql(conditions);
 		}
 		querySql.append(whereSql);
@@ -237,7 +240,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		// 1. 参数验证
 		paramValidate(tableName, whereSql);
 		tableName = wrapper.wrap(tableName);
-		if (jdbcProperties.isEnableDeleteQueryFilter() && !StrUtil.containsIgnoreCase(whereSql, getJdbcProperties().getFieldDefinitionDeleteTime())) {
+		if (jdbcProperties.isEnableLogicDeleteFilter() && !StrUtil.containsIgnoreCase(whereSql, getJdbcProperties().getFieldDefinitionDeleteTime())) {
 			whereSql = getDeleteWhereSql() + StrUtil.replaceIgnoreCase(whereSql, "WHERE", "AND");
 		}
 
@@ -294,7 +297,7 @@ public class AnsiDialect extends DbBase implements Dialect {
 		// 3. 处理分页查询参数
 		JSONObject conditions = pageIPO.getConditions();
 		paramFormat(conditions);
-		conditions = dataEncryptCloneJson(countSql.toString(), conditions);
+		dataEncryptExtractTable(countSql.toString(), conditions);
 		conditions.put(DATA_ENCRYPT_REPETITION_ID, true);
 
 		// 4. 分页查询
@@ -315,9 +318,9 @@ public class AnsiDialect extends DbBase implements Dialect {
 		} else {
 			paramFormat(conditions);
 			if (StrUtil.isNotBlank(countSql)) {
-				conditions = dataEncryptCloneJson(countSql, conditions);
+				dataEncryptExtractTable(countSql, conditions);
 			} else {
-				conditions = dataEncryptCloneJson(querySql, conditions);
+				dataEncryptExtractTable(querySql, conditions);
 			}
 		}
 		JSONObject paramJson = toPage(pageIPO).toParamJson();

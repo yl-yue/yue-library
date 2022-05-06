@@ -21,8 +21,8 @@ public class DataConvertController {
 	PersonDAO personDAO;
 	
 	@GetMapping("/{id}")
-	public Result<?> get(@PathVariable Long id) {
-		PersonDO personDO = personDAO.get(id);
+	public Result<?> getById(@PathVariable Long id) {
+		PersonDO personDO = personDAO.getById(id);
 		System.out.println(personDO);
 		PersonVO personVO = Convert.toJavaBean(personDO, PersonVO.class);
 		System.out.println(personVO);

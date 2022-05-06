@@ -112,7 +112,7 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 单个-ById
      * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUUID(String, String)}</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String)}</p>
      *
      * @param tableName 表名
      * @param id        主键ID
@@ -125,7 +125,7 @@ class DbQuery extends DbJdbcTemplate {
     /**
      * 单个-ById
      * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUUID(String, String, Class)}</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String, Class)}</p>
      *
      * @param tableName   表名
      * @param id          主键ID
@@ -141,7 +141,7 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 单个-By业务键
+     * 单个-By无序主键
      * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
      * <p>无序主键值请使用UUID5无符号位
      *
@@ -453,7 +453,7 @@ class DbQuery extends DbJdbcTemplate {
         JSONArray array = new JSONArray();
         JSONObject paramJson = dialect.toPage(pageIPO).toParamJson();
         paramFormat(paramJson);
-        paramJson = dataEncryptCloneJson(querySql, paramJson);
+        dataEncryptExtractTable(querySql, paramJson);
         array.addAll(queryForList(querySql, paramJson));
         int size = array.size();
 
