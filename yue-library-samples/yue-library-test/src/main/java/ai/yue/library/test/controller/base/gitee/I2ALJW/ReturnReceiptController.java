@@ -19,9 +19,6 @@ public class ReturnReceiptController {
 
     /**
      * 入库回调确认
-     *
-     * @param xml
-     * @return
      */
     @ResponseBody
     @PostMapping(params = "method=entryorder.confirm",produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)

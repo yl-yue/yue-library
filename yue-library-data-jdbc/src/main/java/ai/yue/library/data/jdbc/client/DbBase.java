@@ -138,9 +138,9 @@ public class DbBase {
      * @param list 多行查询结果
      * @return 根据如下规则，返回正确的单行查询结果：
      * <ol>
-     *     <li>size < 1 return null</li>
+     *     <li>size &lt; 1 return null</li>
      *     <li>size = 1 return list.get(0)</li>
-     *     <li>size > 1 throw Exception</li>
+     *     <li>size &gt; 1 throw Exception</li>
      * </ol>
      */
     public <T> T listResultToGetResult(List<T> list) {

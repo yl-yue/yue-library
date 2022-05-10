@@ -13,7 +13,48 @@
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
 ## 2.6.1【规划中】
-## 2.6.0【即将发布】
+## 2.6.0【2022-05-09】
+- 主要变更：升级SpringBoot到2.6.x，实现依赖优化与版本控制，加入grpc与plumelog，优化逻辑删除与物理删除分离
+- 主要新特性：数据脱敏、数据审计、数据填充
+
+### 新特性
+- 【base】移除过期的UUIDUtils，用IdUtils代替
+- 【jdbc】新增数据脱敏特性，请求加密，响应解密
+- 【jdbc】数据脱敏：支持全局密钥配置于表级密钥配置，支持对表中某个字段配置
+- 【jdbc】数据脱敏：支持AES、SM4(国密)、自定义加密机等用于脱敏处理
+- 【jdbc】新增数据审计特性，增删改操作自动记录操作人
+- 【jdbc】数据审计：支持使用配置一键开关需要进行审计的表、支持反向配置不审计的表
+- 【jdbc】数据审计：支持自定义审计字段、审计用户
+- 【jdbc】数据审计：规范数据审计字段命名并增加创建人、更新人、删除人为默认审计字段
+- 【jdbc】新增数据填充特性，用于UUID，租户ID自动填充
+- 【jdbc】数据填充：支持使用配置一键开关需要进行填充的表、支持反向配置不填充的表
+- 【jdbc】数据填充：支持数据新增时填充，数据更新时填充
+- 【jdbc】逻辑删除：完善逻辑删除与物理删除彻底分离，规范逻辑删除方法
+- 【jdbc】新增insertAndReturnUuid()方法：插入时返回uuid
+- 【jdbc】新增insertAndReturnFields()方法：插入时自定义返回需要的字段
+- 【docs】完善jdbc文档，新增配置示例文档、db boolen示例、打印可执行SQL示例、基础的DDL表结构示例、添加Spring JDBC教程
+- 【docs】完善数据库设计与交付规约：数据库枚举规约、多租户介绍
+- 【docs】完善服务端规约：提供IDE配置模板
+- 【docs】完善grpc规约：proto规约、工程结构规范、工程依赖规约、rpc接口版本控制规约
+- 【docs】完善服务端工程结构规约：包名规约、Service/DAO层方法命名规约、POJO领域模型命名规约
+- 【template-boot】优化并完善示例项目，上手更简单直观
+
+### Bug修复
+- 【template-boot】修正因SpringBoot2.4版本新的配置文件机制，导致的启动失败 [#I40ONA](https://gitee.com/yl-yue/yue-library/issues/I40ONA)
+
+### Maven仓库实际发布版本号
+`j8.2.6.0`、`j11.2.6.0`
+
+[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.6.0/pom.xml)
+
+|依赖					|版本		|
+|--						|--			|
+|spring-boot			|2.6.3		|
+|spring-cloud			|2021.0.1	|
+|spring-cloud-alibaba	|2021.0.1.0	|
+|hutool					|5.7.22		|
+|fastjson				|1.2.79		|
+
 ## 2.4.0【2021-06-06】
 - 主要变更：使用SpringBoot2.4新的配置文件机制，提供默认的优化配置实现。
 - 主要新特性：使用注解`@ApiIdempotent`可优雅的实现接口幂等性
