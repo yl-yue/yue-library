@@ -6,14 +6,15 @@
 
 |示例版本号								|版本号区别								|
 |--										|--										|
+|`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
 |`j8.2.x`								|基于Java 8的2.x.x版本					|
 |`j11.2.x`								|基于Java 11的2.x.x版本					|
-|`Finchley.x`、`Greenwich.x`、`2.1.x`	|历史版本，具体区分请查看历史版本文档		|
+|`j17.3.x`								|基于Java 17的3.x.x版本					|
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## 2.6.1【规划中】
-## 2.6.0【2022-05-09】
+## j11.2.6.1【规划中】
+## j11.2.6.0【2022-05-09】
 - 主要变更：升级SpringBoot到2.6.x，实现依赖优化与版本控制，加入grpc与plumelog，优化逻辑删除与物理删除分离
 - 主要新特性：数据脱敏、数据审计、数据填充
 
@@ -42,12 +43,10 @@
 ### Bug修复
 - 【template-boot】修正因SpringBoot2.4版本新的配置文件机制，导致的启动失败 [#I40ONA](https://gitee.com/yl-yue/yue-library/issues/I40ONA)
 
-### Maven仓库实际发布版本号
-`j8.2.6.0`、`j11.2.6.0`
+### Maven关键依赖库
+[**👉Maven详细依赖定义见pom.xml文件**](https://gitee.com/yl-yue/yue-library/blob/j11.2.6.0/pom.xml)
 
-[**关键pom.xml依赖：**](https://gitee.com/yl-yue/yue-library/blob/j11.2.6.0/pom.xml)
-
-|依赖					|版本		|
+|依赖库					|依赖版本	|
 |--						|--			|
 |spring-boot			|2.6.3		|
 |spring-cloud			|2021.0.1	|
