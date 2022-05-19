@@ -261,32 +261,36 @@ class DbUpdate extends DbQuery {
 			updateAndExpectedGreaterThanEqual(updateRowsNumber, expectedValue);
 		}
 	}
-	
+
 	/**
-	 * 更新-ById
-	 * <p>根据表中主键ID进行更新
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject)}</p>
-	 * 
-     * @param tableName		表名
-     * @param paramJson		更新所用到的参数（包含主键ID字段）
-     */
+	 * 更新-By有序主键
+	 * <p>有序主键数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>有序主键数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+	 * <p>使用有序主键作为更新条件进行更新数据</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject)}</p>
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 更新所用到的参数（包含有序主键字段）
+	 */
 	@Transactional
     public void updateById(String tableName, JSONObject paramJson) {
 		updateById(tableName, paramJson, DbUpdateEnum.NORMAL);
     }
-	
+
 	/**
-	 * 更新-ById
-	 * <p>根据表中主键ID进行更新
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject, DbUpdateEnum)}</p>
-	 * 
-     * @param tableName		表名
-     * @param paramJson		更新所用到的参数（包含主键ID字段）
-     * @param dbUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
-     */
+	 * 更新-By有序主键
+	 * <p>有序主键数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>有序主键数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+	 * <p>使用有序主键作为更新条件进行更新数据</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject, DbUpdateEnum)}</p>
+	 *
+	 * @param tableName    表名
+	 * @param paramJson    更新所用到的参数（包含有序主键字段）
+	 * @param dbUpdateEnum 更新类型 {@linkplain DbUpdateEnum}
+	 */
 	@Transactional
     public void updateById(String tableName, JSONObject paramJson, DbUpdateEnum dbUpdateEnum) {
-		String[] conditions = { DbConstant.FIELD_DEFINITION_PRIMARY_KEY };
+		String[] conditions = { DbConstant.FIELD_DEFINITION_ID };
 		paramFormat(paramJson);
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
@@ -296,16 +300,18 @@ class DbUpdate extends DbQuery {
         int expectedValue = 1;
 		updateAndExpectedEqual(updateRowsNumber, expectedValue);
     }
-	
+
 	/**
-	 * 批量更新-ById
-	 * <p>根据表中主键ID进行批量更新
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject[], DbUpdateEnum)}</p>
-	 * 
-     * @param tableName    	表名
-     * @param paramJsons	更新所用到的参数数组（包含主键ID字段）
-     * @param dbUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
-     */
+	 * 批量更新-By有序主键
+	 * <p>有序主键数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>有序主键数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+	 * <p>使用有序主键作为更新条件进行批量更新数据</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuid(String, JSONObject[], DbUpdateEnum)}</p>
+	 *
+	 * @param tableName    表名
+	 * @param paramJsons   更新所用到的参数数组（包含有序主键字段）
+	 * @param dbUpdateEnum 更新类型 {@linkplain DbUpdateEnum}
+	 */
 	@Transactional
     public void updateById(String tableName, JSONObject[] paramJsons, DbUpdateEnum dbUpdateEnum) {
 		for (JSONObject paramJson : paramJsons) {
@@ -316,17 +322,19 @@ class DbUpdate extends DbQuery {
     }
 
 	/**
-	 * 批量更新-ById（不调用 {@link #paramFormat(JSONObject)} 方法）
-	 * <p>根据表中主键ID进行批量更新
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuidNotParamFormat(String, JSONObject[], DbUpdateEnum)}</p>
+	 * 批量更新-By有序主键（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * <p>有序主键数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>有序主键数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+	 * <p>使用有序主键作为更新条件进行批量更新数据</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #updateByUuidNotParamFormat(String, JSONObject[], DbUpdateEnum)}</p>
 	 * 
 	 * @param tableName    	表名
-	 * @param paramJsons	更新所用到的参数数组（包含主键ID字段）
+	 * @param paramJsons	更新所用到的参数数组（包含有序主键字段）
 	 * @param dbUpdateEnum	更新类型 {@linkplain DbUpdateEnum}
 	 */
 	@Transactional
 	public void updateByIdNotParamFormat(String tableName, JSONObject[] paramJsons, DbUpdateEnum dbUpdateEnum) {
-		String[] conditions = { DbConstant.FIELD_DEFINITION_PRIMARY_KEY };
+		String[] conditions = { DbConstant.FIELD_DEFINITION_ID };
 		dataEncrypt(tableName, paramJsons);
 		dataAudit(tableName, CrudEnum.U, paramJsons);
 		for (JSONObject paramJson : paramJsons) {
@@ -340,13 +348,13 @@ class DbUpdate extends DbQuery {
 
 	/**
 	 * 更新-By无序主键
-	 * <p>根据表中无序主键进行更新
-	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-	 * <p>无序主键值请使用UUID5无符号位
-	 * 
-     * @param tableName		表名
-     * @param paramJson		更新所用到的参数（包含无序主键字段）
-     */
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
+	 * <p>使用无序主键作为更新条件进行更新数据</p>
+	 *
+	 * @param tableName 表名
+	 * @param paramJson 更新所用到的参数（包含无序主键字段）
+	 */
 	@Transactional
     public void updateByUuid(String tableName, JSONObject paramJson) {
 		updateByUuid(tableName, paramJson, DbUpdateEnum.NORMAL);
@@ -354,9 +362,9 @@ class DbUpdate extends DbQuery {
 	
 	/**
 	 * 更新-By无序主键
-	 * <p>根据表中无序主键进行更新
-	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-	 * <p>无序主键值请使用UUID5无符号位
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
+	 * <p>使用无序主键作为更新条件进行更新数据</p>
 	 * 
      * @param tableName		表名
      * @param paramJson		更新所用到的参数（包含无序主键字段）
@@ -377,9 +385,9 @@ class DbUpdate extends DbQuery {
 	
 	/**
 	 * 批量更新-By无序主键
-	 * <p>根据表中无序主键进行批量更新
-	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-	 * <p>无序主键值请使用UUID5无符号位
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
+	 * <p>使用无序主键作为更新条件进行批量更新数据</p>
 	 * 
      * @param tableName    	表名
      * @param paramJsons	更新所用到的参数数组（包含无序主键字段）
@@ -396,9 +404,9 @@ class DbUpdate extends DbQuery {
 
 	/**
 	 * 批量更新-By无序主键（不调用 {@link #paramFormat(JSONObject)} 方法）
-	 * <p>根据表中无序主键进行批量更新
-	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-	 * <p>无序主键值请使用UUID5无符号位
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
+	 * <p>使用无序主键作为更新条件进行批量更新数据</p>
 	 *
 	 * @param tableName    	表名
 	 * @param paramJsons	更新所用到的参数数组（包含无序主键字段）
@@ -423,7 +431,7 @@ class DbUpdate extends DbQuery {
 	 * <i>使用限制：见</i> {@linkplain DbInsert#insertWithSortIdxAutoIncrement(String, JSONObject, String...)}
 	 *
 	 * @param tableName  表名
-	 * @param id         主键ID
+	 * @param id         有序主键
 	 * @param move       sort_idx移动位数（值不可等于零，正整数表示：向后移动几位，负整数表示：向前移动几位）
 	 * @param uniqueKeys 同sort_idx字段组合的唯一约束keys（表中不建议建立sort_idx字段的唯一约束，但可以建立普通索引，以便于提高查询性能），<b>可选参数</b>
 	 */
@@ -471,7 +479,7 @@ class DbUpdate extends DbQuery {
 		// 5. 组装跟随移动参数到参数列表
 		JSONArray paramJsonArray = new JSONArray();
 		for (JSONObject actionJSON : list) {
-			Long actionId = actionJSON.getLong(DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
+			Long actionId = actionJSON.getLong(DbConstant.FIELD_DEFINITION_ID);
 			Long actionSort = actionJSON.getLong(getJdbcProperties().getFieldDefinitionSortIdx());
 			if (isASC) {
 				actionSort -= 1;
@@ -479,14 +487,14 @@ class DbUpdate extends DbQuery {
 				actionSort += 1;
 			}
 			JSONObject actionParamJSON = new JSONObject();
-			actionParamJSON.put(DbConstant.FIELD_DEFINITION_PRIMARY_KEY, actionId);
+			actionParamJSON.put(DbConstant.FIELD_DEFINITION_ID, actionId);
 			actionParamJSON.put(getJdbcProperties().getFieldDefinitionSortIdx(), actionSort);
 			paramJsonArray.add(actionParamJSON);
 		}
 		
 		// 6. 添加排序更新参数到参数列表
 		JSONObject updateSortParam = new JSONObject();
-		updateSortParam.put(DbConstant.FIELD_DEFINITION_PRIMARY_KEY, id);
+		updateSortParam.put(DbConstant.FIELD_DEFINITION_ID, id);
 		updateSortParam.put(getJdbcProperties().getFieldDefinitionSortIdx(), updateSortIdx);
 		paramJsonArray.add(updateSortParam);
 		

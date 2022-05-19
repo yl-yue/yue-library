@@ -101,8 +101,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	}
 	
 	/**
-	 * 更新-ById
-	 * @param paramJson
+	 * 更新-By有序主键
 	 */
 	public void updateById2(JSONObject paramJson) {
 		db.updateById(tableName(), paramJson, DbUpdateEnum.DECR_UNSIGNED);
@@ -110,7 +109,6 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	
 	/**
 	 * 更新-ByName
-	 * @param paramJson
 	 */
 	public void updateByName(JSONObject paramJson) {
 		String[] conditions = {"name"};

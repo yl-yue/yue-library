@@ -51,7 +51,7 @@ class DbDelete extends DbUpdate {
 		try {
 			if (pkValue instanceof Long) {
 				data = getById(tableName, (Long) pkValue);
-				pkName = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
+				pkName = DbConstant.FIELD_DEFINITION_ID;
 			} else if (pkValue instanceof String) {
 				data = getByUuid(tableName, (String) pkValue);
 				pkName = getJdbcProperties().getFieldDefinitionUuid();
@@ -93,12 +93,14 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除-ById
-	 * <p>数据删除前会先进行条数确认
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String, String)}</p>
+	 * 删除-By有序主键
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+	 * <p>数据删除前会先进行条数确认</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String, String)}</p>
      * 
      * @param tableName	表名
-     * @param id     	主键id
+     * @param id     	有序主键
      */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteById(String tableName, Long id) {
@@ -107,16 +109,16 @@ class DbDelete extends DbUpdate {
 
 	/**
 	 * 删除-By无序主键
-	 * <p>数据删除前会先进行条数确认
-	 * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-	 * <p>无序主键值请使用UUID5无符号位
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
+	 * <p>数据删除前会先进行条数确认</p>
 	 *
 	 * @param tableName 表名
-	 * @param uuidValue 无序主键的唯一值
+	 * @param uuid      无序主键
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public void deleteByUuid(String tableName, String uuidValue) {
-		deleteByPk(tableName, uuidValue);
+	public void deleteByUuid(String tableName, String uuid) {
+		deleteByPk(tableName, uuid);
 	}
 
 	/**
@@ -232,7 +234,7 @@ class DbDelete extends DbUpdate {
 		// 2. 确认数据
 		String pkName = null;
 		if (pkValue instanceof Long) {
-			pkName = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
+			pkName = DbConstant.FIELD_DEFINITION_ID;
 		} else if (pkValue instanceof String) {
 			pkName = getJdbcProperties().getFieldDefinitionUuid();
 		}
@@ -272,9 +274,9 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 逻辑删除-ById
-	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByUuid(String, String)}</p>
+	 * 逻辑删除-By有序主键
+	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteLogicByUuid(String, String)}</p>
      * 
      * @param tableName	表名
      * @param id     	主键id
@@ -289,11 +291,11 @@ class DbDelete extends DbUpdate {
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
 	 *
 	 * @param tableName 表名
-	 * @param uuidValue 无序主键的唯一值
+	 * @param uuid      无序主键
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public void deleteLogicByUuid(String tableName, String uuidValue) {
-		deleteLogicByUk(tableName, uuidValue);
+	public void deleteLogicByUuid(String tableName, String uuid) {
+		deleteLogicByUk(tableName, uuid);
 	}
 
 	/**

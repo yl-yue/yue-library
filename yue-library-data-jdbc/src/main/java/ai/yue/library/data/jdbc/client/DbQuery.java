@@ -110,12 +110,13 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 单个-ById
-     * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String)}</p>
+     * 单个-By有序主键
+     * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+     * <p>数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String)}</p>
      *
      * @param tableName 表名
-     * @param id        主键ID
+     * @param id        有序主键
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public JSONObject getById(String tableName, long id) {
@@ -123,50 +124,51 @@ class DbQuery extends DbJdbcTemplate {
     }
 
     /**
-     * 单个-ById
-     * <p>字段名=id，一般为表自增ID-主键</p>
-     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String, Class)}</p>
+     * 单个-By有序主键
+     * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+     * <p>数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
+     * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String, String, Class)}</p>
      *
      * @param tableName   表名
-     * @param id          主键ID
+     * @param id          有序主键
      * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
     public <T> T getById(String tableName, Long id, Class<T> mappedClass) {
         paramValidate(tableName, id);
-        String sql = getByColumnNameSqlBuild(tableName, DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
+        String sql = getByColumnNameSqlBuild(tableName, DbConstant.FIELD_DEFINITION_ID);
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_PRIMARY_KEY), id);
+        paramJson.put(dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_ID), id);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
     /**
      * 单个-By无序主键
-     * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-     * <p>无序主键值请使用UUID5无符号位
+     * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+     * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
      *
      * @param tableName 表名
-     * @param uuidValue 无序主键值
+     * @param uuid      无序主键
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public JSONObject getByUuid(String tableName, String uuidValue) {
-        return getByUuid(tableName, uuidValue, null);
+    public JSONObject getByUuid(String tableName, String uuid) {
+        return getByUuid(tableName, uuid, null);
     }
 
     /**
      * 单个-By无序主键
-     * <p>无序主键名默认为 {@link JdbcProperties#getFieldDefinitionUuid()}
-     * <p>无序主键值请使用UUID5无符号位
+     * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+     * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
      *
      * @param tableName   表名
-     * @param uuidValue   无序主键值
+     * @param uuid        无序主键
      * @param mappedClass 查询结果映射类型，支持JavaBean与简单类型（如：Long, String, Boolean）
      * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
      */
-    public <T> T getByUuid(String tableName, String uuidValue, Class<T> mappedClass) {
+    public <T> T getByUuid(String tableName, String uuid, Class<T> mappedClass) {
         String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getFieldDefinitionUuid());
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getFieldDefinitionUuid()), uuidValue);
+        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getFieldDefinitionUuid()), uuid);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
@@ -460,7 +462,7 @@ class DbQuery extends DbJdbcTemplate {
         // 3. 获得前后值
         Long beforeId = null;
         Long afterId = null;
-        String key = DbConstant.FIELD_DEFINITION_PRIMARY_KEY;
+        String key = DbConstant.FIELD_DEFINITION_ID;
         for (int i = 0; i < size; i++) {
             JSONObject json = array.getJSONObject(i);
             // 比较列表中相等的值，然后获取前一条与后一条数据

@@ -26,8 +26,10 @@ public class JdbcProperties implements Serializable, Cloneable {
 	// ====================== 关键字段定义 ======================
 
 	/**
-	 * 关键字段定义-无序主键名（表中字段值推荐使用UUID5无符号位）
+	 * 关键字段定义-无序主键
 	 *
+	 * <p>数据库类型：字符串</p>
+	 * <p>字段值范围推荐：UUID5、无符号、32位</p>
 	 * <p>默认：uuid</p>
 	 */
 	private String fieldDefinitionUuid = "uuid";
@@ -35,6 +37,8 @@ public class JdbcProperties implements Serializable, Cloneable {
 	/**
 	 * 关键字段定义-数据删除标识
 	 *
+	 * <p>数据库类型：大整数</p>
+	 * <p>字段值范围推荐：时间戳</p>
 	 * <p>默认：delete_time</p>
 	 */
 	private String fieldDefinitionDeleteTime = "delete_time";
@@ -42,6 +46,8 @@ public class JdbcProperties implements Serializable, Cloneable {
 	/**
 	 * 关键字段定义-排序
 	 *
+	 * <p>数据库类型：整数</p>
+	 * <p>字段值范围推荐：正整数</p>
 	 * <p>默认：sort_idx</p>
 	 */
 	private String fieldDefinitionSortIdx = "sort_idx";

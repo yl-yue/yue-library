@@ -20,9 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h2>SQL优化型数据库操作</h2>
- * Created by sunJinChuan on 2016/6/6
- * @since 0.0.1
+ * <b>SQL优化型数据库操作-插入数据</b>
+ * <p>有序主键：用于性能优化、分表分库、查询路由、分页优化、排序、增量获取等</p>
+ * <p>无序主键：用于业务关联、多库多环境的数据唯一标识、追根溯源</p>
+ *
+ * @author ylyue
+ * @since  2016/6/6 on 0.0.1
  */
 class DbInsert extends DbDelete {
 	
@@ -44,7 +47,7 @@ class DbInsert extends DbDelete {
 		// 设置表名
 		simpleJdbcInsert.setTableName(tableName);
 		// 设置主键名，添加成功后返回主键的值
-		simpleJdbcInsert.setGeneratedKeyName(DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
+		simpleJdbcInsert.setGeneratedKeyName(DbConstant.FIELD_DEFINITION_ID);
 		
 		// 3. 设置ColumnNames
 		List<String> keys = MapUtils.keyList(paramJson);
@@ -83,11 +86,13 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 插入一条数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
+	 * <b>插入一条数据，返回有序主键值</b>
+	 * <p>有序主键数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
+	 * <p>有序主键数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
 	 *
 	 * @param tableName 表名
 	 * @param paramJson 参数
-	 * @return 返回主键值
+	 * @return 返回有序主键值
 	 */
 	@Transactional
 	public Long insert(String tableName, JSONObject paramJson) {
@@ -96,7 +101,9 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 插入一条数据，无序主键名必须为 {@linkplain JdbcProperties#getFieldDefinitionUuid()}
+	 * 插入一条数据，返回无序主键值
+	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
+	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
 	 *
 	 * @param tableName 表名
 	 * @param paramJson 参数
@@ -115,11 +122,12 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 插入一条数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
+	 * <b>插入一条数据，返回多个字段值</b>
+	 * <p>依赖有序主键规则</p>
 	 *
 	 * @param tableName        表名
 	 * @param paramJson        参数
-	 * @param returnFieldNames 需要返回的字段名称（如：{@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 或 {@linkplain JdbcProperties#getFieldDefinitionUuid()}）
+	 * @param returnFieldNames 需要返回的字段名称（如：{@value DbConstant#FIELD_DEFINITION_ID} 或 {@linkplain JdbcProperties#getFieldDefinitionUuid()}）
 	 * @return 返回字段名对应的值（表中必须存在这些字段）
 	 */
 	@Transactional
@@ -150,28 +158,28 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 插入一条数据
+	 * <b>插入一条数据，无需返回</b>
 	 * 
 	 * @param tableName 表名
 	 * @param paramJson 参数
 	 */
-	@Transactional
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void insertNotReturn(String tableName, JSONObject paramJson) {
 		// 执行插入数据，无需返回
 		initSimpleJdbcInsertAndParam(tableName, paramJson).execute(paramJson);
 	}
-	
+
 	/**
-	 * 插入一条数据，并自动递增 <i>sort_idx</i>
+	 * <b>插入一条数据，并自动递增 <i>sort_idx</i></b>
 	 *
 	 * <blockquote>
 	 * <b>使用条件：</b>
-	 * <pre>1. id 默认为主键</pre>
-	 * <pre>2. sort_idx 默认为排序字段，类型为 int unsigned 。DDL示例：<code>`sort_idx` tinyint(2) UNSIGNED NOT NULL COMMENT '排序-索引'</code></pre>
+	 * <pre>1. id 必须为有序主键</pre>
+	 * <pre>2. sort_idx 默认为排序字段（可配置），类型为 int unsigned 。DDL示例：<code>`sort_idx` int(8) UNSIGNED NOT NULL COMMENT '排序索引'</code></pre>
 	 * </blockquote>
-	 * 
-	 * @param tableName 表名
-	 * @param paramJson 插入数据
+	 *
+	 * @param tableName  表名
+	 * @param paramJson  插入数据
 	 * @param uniqueKeys 同sort_idx字段组合的唯一约束keys（表中不建议建立sort_idx字段的唯一约束，但可以建立普通索引，以便于提高查询性能），<b>可选参数</b>
 	 * @return 返回主键值
 	 */
@@ -207,7 +215,7 @@ class DbInsert extends DbDelete {
 	}
 	
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}
 	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数
@@ -226,7 +234,7 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY}（不调用 {@link #paramFormat(JSONObject)} 方法）。
+	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}（不调用 {@link #paramFormat(JSONObject)} 方法）。
 	 *
 	 * @param tableName 表名
 	 * @param paramJsons 参数

@@ -48,6 +48,10 @@ import java.util.Set;
 public class AnsiDialect extends DbBase implements Dialect {
 	
 	private static final long serialVersionUID = 1841162445914907750L;
+	/**
+	 * 分页查询参数自动加密匹配防重复处理标识（用于方法循环调用，防止重复处理）
+	 */
+	private static final String DATA_ENCRYPT_REPETITION_ID = "yue-dataEncryptRepetitionId";
 
 	protected Wrapper wrapper = new Wrapper();
 	protected JdbcProperties jdbcProperties;
@@ -141,13 +145,16 @@ public class AnsiDialect extends DbBase implements Dialect {
 		for (String condition : conditions) {
 			sql.append(condition);
 			sql.append(" = ");
-			if (dBUpdateEnum == DbUpdateEnum.NORMAL) {// 正常更新
+			if (dBUpdateEnum == DbUpdateEnum.NORMAL) {
+				// 正常更新
 				sql.append(":" + condition);
 			} else {
 				sql.append(condition);
-				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {// 递增更新
+				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {
+					// 递增更新
 					sql.append(" + :");
-				} else {// 递减更新
+				} else {
+					// 递减更新
 					sql.append(" - :");
 				}
 				sql.append(condition);
@@ -180,11 +187,6 @@ public class AnsiDialect extends DbBase implements Dialect {
 				.build();
 	}
 
-	/**
-	 * 分页查询参数自动加密匹配防重复处理标识（用于方法循环调用，防止重复处理）
-	 */
-	private static final String DATA_ENCRYPT_REPETITION_ID = "yue-dataEncryptRepetitionId";
-
 	@Override
 	public <T> PageVO<T> page(String tableName, PageIPO pageIPO, SortEnum sortEnum, Class<T> mappedClass) {
 		// 1. 参数验证
@@ -210,13 +212,16 @@ public class AnsiDialect extends DbBase implements Dialect {
 		}
 		querySql.append(whereSql);
 		// 排序
-		if (sortEnum == null) {// 默认（不排序）
+		if (sortEnum == null) {
+			// 默认（不排序）
 			querySql.append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 		} else {
-			if (SortEnum.ASC == sortEnum) {// 升序
-				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_PRIMARY_KEY).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
-			} else {// 降序
-				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_PRIMARY_KEY).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");
+			if (SortEnum.ASC == sortEnum) {
+				// 升序
+				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_ID).append(getPageJoinSql()).append(") b WHERE a.id = b.id");
+			} else {
+				// 降序
+				querySql.append(" ORDER BY ").append(DbConstant.FIELD_DEFINITION_ID).append(" DESC ").append(getPageJoinSql()).append(") b WHERE a.id = b.id");
 			}
 		}
 

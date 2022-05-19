@@ -14,7 +14,7 @@ yue-library正计划提供 [grpc]() 支持
 
 ## proto规约
 遵循 [谷歌 Protobuf Style Guide](https://developers.google.com/protocol-buffers/docs/style)，参考 [Google Cloud API 设计指南](https://cloud.google.com/apis/design)，并对以下几点规约进行强调与更改：
-- `proto`文件名与`service`类名保持一直，一个proto一个service
+- `proto`文件名与`service`类名保持一致，一个proto一个service
 - `package`包名全小写与工程目录结构保持一致
 - `service`类名遵循大驼峰命名法，命名时不用带无意义的`Service`后缀
 - `rpc`方法名遵循大驼峰命名法，前缀遵循rpc方法命名前缀规约，后缀可带数字表示版本号
@@ -50,16 +50,41 @@ yue-library正计划提供 [grpc]() 支持
 |自身`self`		|前端不可调用			|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
 
 ### 工程依赖规约
+中台proto工程（无中台可忽略）
 ```
-. proto
+. proto-sc
+├── proto-common         	中台proto工程-共享依赖
+│   ├── common-csm              中台proto工程-共享依赖-通用服务模块
+│   ├── common-mdp              中台proto工程-共享依赖-微服务开发平台
+│   └── common-ssc              中台proto工程-共享依赖-共享服务中心
+├── proto-internet            	中台proto工程-局域网依赖
+│   ├── internet-mdp                中台proto工程-局域网依赖-微服务开发平台
+│   └── internet-ssc                中台proto工程-局域网依赖-共享服务中心
+├── proto-lan            	中台proto工程-局域网依赖
+│   ├── lan-mdp              	中台proto工程-局域网依赖-微服务开发平台
+│   └── lan-ssc              	中台proto工程-局域网依赖-共享服务中心
+└── proto-self            	中台proto工程-局域网依赖
+    ├── self-mdp              	中台proto工程-局域网依赖-微服务开发平台
+    └── self-ssc              	中台proto工程-局域网依赖-共享服务中心
+```
+
+业务proto工程
+```
+. proto-bf
 ├── proto-common         	中台proto工程-共享依赖
 │   ├── common-csm              中台proto工程-共享依赖-通用服务模块
 │   ├── common-message          中台proto工程-共享依赖-公共消息模块
 │   ├── common-mdp              中台proto工程-共享依赖-微服务开发平台
 │   └── common-ssc              中台proto工程-共享依赖-共享服务中心
-└── proto-lan            	中台proto工程-局域网依赖
-    ├── lan-mdp              	中台proto工程-局域网依赖-微服务开发平台
-    └── lan-ssc              	中台proto工程-局域网依赖-共享服务中心
+├── proto-internet            	中台proto工程-局域网依赖
+│   ├── internet-mdp                中台proto工程-局域网依赖-微服务开发平台
+│   └── internet-ssc                中台proto工程-局域网依赖-共享服务中心
+├── proto-lan            	中台proto工程-局域网依赖
+│   ├── lan-mdp              	中台proto工程-局域网依赖-微服务开发平台
+│   └── lan-ssc              	中台proto工程-局域网依赖-共享服务中心
+└── proto-self            	中台proto工程-局域网依赖
+    ├── self-mdp              	中台proto工程-局域网依赖-微服务开发平台
+    └── self-ssc              	中台proto工程-局域网依赖-共享服务中心
 ```
 
 - 在`proto-common`工程组下定义公共message，并编译为独立模块（同谷歌`google/protobuf/wrappers.proto`编译为独立模块引用）
@@ -101,9 +126,9 @@ syntax = "proto3";
 package sc.proto.lan.ssc.md.user;
 
 service OpenUser {
-  rpc ActUserLogin (Request) returns (Response) {}
-  rpc ActUserRegister (Request) returns (Response) {}
-  rpc ActUserPasswordRest (Request) returns (Response) {}
+  rpc ActUserLogin (Request) returns (Response);
+  rpc ActUserRegister (Request) returns (Response);
+  rpc ActUserPasswordRest (Request) returns (Response);
 }
 
 message Request {
@@ -122,13 +147,13 @@ syntax = "proto3";
 package sc.proto.self.ssc.md.user;
 
 service AuthUser {
-  rpc DeleteUser (Request) returns (Response) {}
-  rpc UpdateUserPassword2 (Request) returns (Response) {}
-  rpc UpdateUserPassword3 (Request) returns (Response) {}
-  rpc GetUserById (Request) returns (Response) {}
-  rpc ListUser32 (Request) returns (Response) {}
-  rpc ListUser33 (Request) returns (Response) {}
-  rpc PageUserLikeUsername (Request) returns (Response) {}
+  rpc DeleteUser (Request) returns (Response);
+  rpc UpdateUserPassword2 (Request) returns (Response);
+  rpc UpdateUserPassword3 (Request) returns (Response);
+  rpc GetUserById (Request) returns (Response);
+  rpc ListUser32 (Request) returns (Response);
+  rpc ListUser33 (Request) returns (Response);
+  rpc PageUserLikeUsername (Request) returns (Response);
 }
 
 message Request {

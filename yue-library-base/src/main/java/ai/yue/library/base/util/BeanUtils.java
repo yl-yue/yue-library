@@ -15,20 +15,20 @@ public class BeanUtils extends BeanUtil {
 	public static final String SET_METHOD_NAME_FORMAT = "set%s";
 	
 	/**
-	 * 获得Java Bean Get方法名
+	 * 获得Java Bean get方法名
 	 * 
 	 * @param fieldName 字段名
-	 * @return Get方法名
+	 * @return get方法名
 	 */
-	public static String getGEtMethodName(String fieldName) {
+	public static String getGetMethodName(String fieldName) {
 		return String.format(GET_METHOD_NAME_FORMAT, StrUtil.upperFirst(fieldName));
 	}
 	
 	/**
-	 * 获得Java Bean Set方法名
+	 * 获得Java Bean set方法名
 	 * 
 	 * @param fieldName 字段名
-	 * @return Get方法名
+	 * @return set方法名
 	 */
 	public static String getSetMethodName(String fieldName) {
 		return String.format(SET_METHOD_NAME_FORMAT, StrUtil.upperFirst(fieldName));

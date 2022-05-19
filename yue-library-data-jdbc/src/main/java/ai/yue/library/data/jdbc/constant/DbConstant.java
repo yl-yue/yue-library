@@ -13,7 +13,9 @@ public class DbConstant {
 	// ====================== 关键字段定义 ======================
 
 	/** 关键字段定义-有序主键 */
-	public static final String FIELD_DEFINITION_PRIMARY_KEY = "id";
+	public static final String FIELD_DEFINITION_ID = "id";
+	/** 关键字段定义-无序主键 */
+	public static final String FIELD_DEFINITION_UUID = "uuid";
 
 	// ====================== 关键字段定义-默认值定义 ======================
 

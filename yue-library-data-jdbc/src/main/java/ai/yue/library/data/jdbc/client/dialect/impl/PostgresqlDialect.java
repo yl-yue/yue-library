@@ -109,13 +109,16 @@ public class PostgresqlDialect extends AnsiDialect {
 		for (String condition : conditions) {
 			sql.append(condition);
 			sql.append(" = ");
-			if (dBUpdateEnum == DbUpdateEnum.NORMAL) {// 正常更新
+			if (dBUpdateEnum == DbUpdateEnum.NORMAL) {
+				// 正常更新
 				sql.append(":" + condition);
 			} else {
 				sql.append(condition);
-				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {// 递增更新
+				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {
+					// 递增更新
 					sql.append(" + :");
-				} else {// 递减更新
+				} else {
+					// 递减更新
 					sql.append(" - :");
 				}
 				sql.append(condition);
