@@ -25,13 +25,13 @@ public abstract class AbstractRepository<T> extends AbstractBaseDAO {
 	protected Class<T> mappedClass = (Class<T>) ClassUtil.getTypeArgument(getClass());
 
 	/**
-	 * 插入数据-实体
+	 * 插入一条实体数据，返回有序主键值
 	 * <p>默认进行 {@link FieldNamingStrategyEnum#SNAKE_CASE} 数据库字段命名策略转换
 	 *
 	 * @param paramIPO 参数IPO（POJO-IPO对象）
-	 * @return 返回主键值
+	 * @return 返回有序主键值
 	 */
-	public Long insert(Object paramIPO) {
+	public Long insert(T paramIPO) {
 		if (db.getJdbcProperties().isEnableFieldNamingStrategyRecognition()) {
 			return insert(paramIPO, db.getJdbcProperties().getDatabaseFieldNamingStrategy());
 		}
@@ -40,11 +40,11 @@ public abstract class AbstractRepository<T> extends AbstractBaseDAO {
 	}
 
 	/**
-	 * 插入数据-实体
+	 * 插入一条实体数据，返回有序主键值
 	 *
 	 * @param paramIPO 参数IPO（POJO-IPO对象）
 	 * @param fieldNamingStrategyEnum 数据库字段命名策略
-	 * @return 返回主键值
+	 * @return 返回有序主键值
 	 */
 	public Long insert(Object paramIPO, FieldNamingStrategyEnum fieldNamingStrategyEnum) {
 		PropertyNamingStrategy propertyNamingStrategy = fieldNamingStrategyEnum.getPropertyNamingStrategy();
@@ -52,6 +52,36 @@ public abstract class AbstractRepository<T> extends AbstractBaseDAO {
 		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
 		JSONObject paramJson = (JSONObject) JSONObject.toJSON(paramIPO, serializeConfig);
 		return insert(paramJson);
+	}
+
+	/**
+	 * 插入一条实体数据，返回无序主键值
+	 * <p>默认进行 {@link FieldNamingStrategyEnum#SNAKE_CASE} 数据库字段命名策略转换
+	 *
+	 * @param paramIPO 参数IPO（POJO-IPO对象）
+	 * @return 返回无序主键值
+	 */
+	public String insertAndReturnUuid(T paramIPO) {
+		if (db.getJdbcProperties().isEnableFieldNamingStrategyRecognition()) {
+			return insertAndReturnUuid(paramIPO, db.getJdbcProperties().getDatabaseFieldNamingStrategy());
+		}
+
+		return insertAndReturnUuid(Convert.toJSONObject(paramIPO));
+	}
+
+	/**
+	 * 插入一条实体数据，返回无序主键值
+	 *
+	 * @param paramIPO 参数IPO（POJO-IPO对象）
+	 * @param fieldNamingStrategyEnum 数据库字段命名策略
+	 * @return 返回无序主键值
+	 */
+	public String insertAndReturnUuid(Object paramIPO, FieldNamingStrategyEnum fieldNamingStrategyEnum) {
+		PropertyNamingStrategy propertyNamingStrategy = fieldNamingStrategyEnum.getPropertyNamingStrategy();
+		SerializeConfig serializeConfig = new SerializeConfig();
+		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
+		JSONObject paramJson = (JSONObject) JSONObject.toJSON(paramIPO, serializeConfig);
+		return insertAndReturnUuid(paramJson);
 	}
 
 	@Override

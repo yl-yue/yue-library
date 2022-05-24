@@ -401,7 +401,7 @@ public class DbBase {
     }
 
     protected String paramToWhereSqlNotDeleteWhere(JSONObject paramJson) {
-        StringBuffer whereSql = new StringBuffer();
+        StringBuffer whereSql = new StringBuffer(" WHERE 1 = 1 ");
         paramJson.keySet().forEach(condition -> paramToWhereSql(whereSql, paramJson, condition));
         return whereSql.toString();
     }

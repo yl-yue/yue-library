@@ -8,22 +8,21 @@ import ai.yue.library.data.jdbc.client.Db;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
+import ai.yue.library.data.jdbc.ipo.PageIPO;
+import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.ipo.ParamFormatIPO;
-import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JDBC参数美化测试
@@ -99,6 +98,25 @@ public class ParamFormatController {
         JSONObject paramJson = getParamJson(paramFormatIPO);
         db.updateById(tableName, paramJson);
         return R.success();
+    }
+
+    @GetMapping("/page")
+    public Result<?> page(ParamFormatIPO paramFormatIPO) {
+        String querySql = "SELECT\n" +
+                "	a.* \n" +
+                "FROM\n" +
+                "	param_format a,\n" +
+                "	( SELECT id FROM param_format WHERE is_boolean1 = :is_boolean1 AND is_str_boolean2 = :is_str_boolean2 LIMIT :page, :limit ) b \n" +
+                "WHERE\n" +
+                "	a.id = b.id";
+
+        JSONObject paramJson = new JSONObject();
+        paramJson.put("page", 1);
+        paramJson.put("limit", 10);
+        paramJson.put("boolean1", paramFormatIPO.getBoolean1());
+        paramJson.put("isStrBoolean2", paramFormatIPO.getIsStrBoolean2());
+        PageVO<JSONObject> pageVO = db.pageSql(querySql, PageIPO.parsePageIPO(paramJson));
+        return pageVO.toResult();
     }
 
     private JSONObject getParamJson(ParamFormatIPO paramFormatIPO) {

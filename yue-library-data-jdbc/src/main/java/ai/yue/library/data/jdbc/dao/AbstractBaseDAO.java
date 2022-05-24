@@ -31,17 +31,27 @@ abstract class AbstractBaseDAO<T> {
 	protected abstract String tableName();
 
 	/**
-	 * 插入数据
+	 * 插入一条数据，返回有序主键值
 	 *
 	 * @param paramJson 参数
-	 * @return 返回主键值
+	 * @return 返回有序主键值
 	 */
 	public Long insert(JSONObject paramJson) {
 		return db.insert(tableName(), paramJson);
 	}
 
 	/**
-	 * 插入数据-批量
+	 * 插入一条数据，返回无序主键值
+	 *
+	 * @param paramJson 参数
+	 * @return 返回无序主键值
+	 */
+	public String insertAndReturnUuid(JSONObject paramJson) {
+		return db.insertAndReturnUuid(tableName(), paramJson);
+	}
+
+	/**
+	 * 批量插入数据
 	 *
 	 * @param paramJsons 参数
 	 */
@@ -52,7 +62,7 @@ abstract class AbstractBaseDAO<T> {
 	/**
 	 * 删除-ById
 	 * <p>数据删除前会先进行条数确认
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
 	 *
 	 * @param id 主键id
 	 */
@@ -75,7 +85,7 @@ abstract class AbstractBaseDAO<T> {
 	/**
 	 * 逻辑删除-ById
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String)}</p>
 	 *
 	 * @param id 主键id
 	 */
@@ -117,7 +127,7 @@ abstract class AbstractBaseDAO<T> {
 	/**
 	 * 单个-ById
 	 * <p>字段名=id，一般为表自增ID-主键</p>
-	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_PRIMARY_KEY} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String)}</p>
+	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #getByUuid(String)}</p>
 	 *
 	 * @param id        主键ID
 	 * @return 可以是一个正确的单行查询结果、或null、或查询结果是多条数据而引发的预期错误异常
