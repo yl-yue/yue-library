@@ -12,7 +12,7 @@
 	<description>yue-library 认证服务模块</description>
 	
 	<properties>
-        <weixin-java-miniapp.version>3.4.0</weixin-java-miniapp.version>
+        <weixin-java-miniapp.version>4.3.0</weixin-java-miniapp.version>
     </properties>
     
 	<dependencies>

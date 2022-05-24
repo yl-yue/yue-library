@@ -1,18 +1,5 @@
 package ai.yue.library.auth.service.client;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-import com.google.common.collect.Maps;
-
 import ai.yue.library.auth.service.config.properties.WxMaProperties;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ResultException;
@@ -23,8 +10,18 @@ import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
+import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
+import com.google.common.collect.Maps;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 微信小程序用户接口
@@ -50,7 +47,7 @@ public class WxMaUser {
         
         maServices = configs.stream()
             .map(a -> {
-                WxMaInMemoryConfig config = new WxMaInMemoryConfig();
+                WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();
                 config.setAppid(a.getAppid());
                 config.setSecret(a.getSecret());
                 WxMaService service = new WxMaServiceImpl();

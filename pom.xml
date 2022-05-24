@@ -43,7 +43,7 @@
         <revision>j${java.version}.2.6.1</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <spring-boot.version>2.6.6</spring-boot.version>
+        <spring-boot.version>2.6.8</spring-boot.version>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,7 +55,7 @@
         <!-- dependencies.version -->
         <hutool.version>5.7.22</hutool.version>
         <bouncycastle.version>1.68</bouncycastle.version>
-        <fastjson.version>1.2.79</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
         <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
         <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
