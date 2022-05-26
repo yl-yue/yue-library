@@ -10,8 +10,8 @@
 	<meta name="chinaz-site-verification" content="4D206602A6A813AB" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+	<link rel="stylesheet" href="https://cdn.staticfile.org/docsify/4.12.2/themes/vue.css">
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/gitalk/1.7.2/gitalk.css">
 	<link rel="shortcut icon" href="./_images/favicon.ico?v=2" type="image/x-icon" id="favicon">
 	<!-- 百度统计 -->
 	<script>
@@ -64,7 +64,7 @@
 			<a href="https://blog.csdn.net/u013600314/article/details/96614422">csdn</a>
 		</p>
 	</div>
-	<script src="https://cdn.jsdelivr.net/npm/docsify-edit-on-github/index.js"></script>
+	<script src="./_npm/docsify/docsify-edit-on-github.js"></script>
 	
 	<script>
 		window.$docsify = {
@@ -81,15 +81,15 @@
 			loadNavbar: true,
 			subMaxLevel: 2,
 			logo: 'https://dcloud.ylyue.cn/yue-library/_images/logo.png',
-			// disqus: 'shortname',
 			search: {
-				noData: {
-					'/': '没有结果!'
-				},
 				paths: 'auto',
 				placeholder: {
 					'/': '搜索'
-				}
+				},
+				noData: {
+					'/': '没有结果!'
+				},
+				depth: 4
 			},
 			// docsify-copy-code
 			copyCode: {
@@ -104,17 +104,17 @@
 			]
 		}
 	</script>
-	<script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/docsify-copy-code"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-bash.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-java.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-docker.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-sql.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-yaml.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-json.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-protobuf.min.js"></script>
+	<script src="https://cdn.staticfile.org/docsify/4.12.2/docsify.min.js"></script>
+	<script src="https://cdn.staticfile.org/docsify/4.12.2/plugins/emoji.min.js"></script>
+	<script src="https://cdn.staticfile.org/docsify/4.12.2/plugins/search.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/docsify-copy-code/2.1.1/docsify-copy-code.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-bash.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-java.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-docker.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-sql.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-yaml.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-json.min.js"></script>
+	<script src="https://cdn.staticfile.org/prism/1.26.0/components/prism-protobuf.min.js"></script>
 	
 	<!-- gitter -->
 	<script>
@@ -122,7 +122,7 @@
 			room: 'yl-yue/yue-library'
 		};
 	</script>
-	<script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/gitter-sidecar/1.3.3/sidecar.js" async defer></script>
 	<div class="copyright">
 		<a href="http://beian.miit.gov.cn">渝ICP备19002637号-1</a>
 	</div>
