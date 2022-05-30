@@ -66,7 +66,7 @@ public class ParamFormatController {
         // 设置表名
         simpleJdbcInsert.setTableName(tableName);
         // 设置主键名，添加成功后返回主键的值
-        simpleJdbcInsert.setGeneratedKeyName(DbConstant.FIELD_DEFINITION_PRIMARY_KEY);
+        simpleJdbcInsert.setGeneratedKeyName(DbConstant.FIELD_DEFINITION_ID);
 
         // 3. 设置ColumnNames
         List<String> keys = MapUtils.keyList(paramJson);

@@ -4,7 +4,7 @@ import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.provider.AuditUserProvider;
 import ai.yue.library.test.dao.data.jdbc.DataAuditDAO;
-import ai.yue.library.test.dataobject.jdbc.DataEncryptDO;
+import ai.yue.library.test.dataobject.jdbc.DataAuditDO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -42,8 +42,8 @@ public class DataAuditController {
     }
 
     @PostMapping("/insert")
-    public Result<?> insert(DataEncryptDO userEncryptDO) {
-        return R.success(dataAuditDAO.insert(userEncryptDO));
+    public Result<?> insert(DataAuditDO dataAuditDO) {
+        return R.success(dataAuditDAO.insert(dataAuditDO));
     }
 
     @DeleteMapping("/deleteByCellphone")

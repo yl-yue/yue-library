@@ -6,7 +6,7 @@ import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.dto.DataFillDTO;
 import ai.yue.library.data.jdbc.provider.FillDataProvider;
 import ai.yue.library.test.dao.data.jdbc.DataFillDAO;
-import ai.yue.library.test.dataobject.jdbc.DataEncryptDO;
+import ai.yue.library.test.dataobject.jdbc.DataAuditDO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -51,8 +51,8 @@ public class DataFillController {
     }
 
     @PostMapping("/insert")
-    public Result<?> insert(DataEncryptDO userEncryptDO) {
-        return R.success(dataFillDAO.insert(userEncryptDO));
+    public Result<?> insert(DataAuditDO dataAuditDO) {
+        return R.success(dataFillDAO.insert(dataAuditDO));
     }
 
     @PutMapping("/updateByCellphone")

@@ -213,11 +213,11 @@ class DbInsert extends DbDelete {
 		SimpleJdbcInsert simpleJdbcInsert = initSimpleJdbcInsert(tableName, paramJson);
 		return simpleJdbcInsert.executeAndReturnKey(paramJson).longValue();
 	}
-	
+
 	/**
 	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}
 	 *
-	 * @param tableName 表名
+	 * @param tableName  表名
 	 * @param paramJsons 参数
 	 */
 	public void insertBatch(String tableName, JSONObject[] paramJsons) {
@@ -236,7 +236,7 @@ class DbInsert extends DbDelete {
 	/**
 	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}（不调用 {@link #paramFormat(JSONObject)} 方法）。
 	 *
-	 * @param tableName 表名
+	 * @param tableName  表名
 	 * @param paramJsons 参数
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})

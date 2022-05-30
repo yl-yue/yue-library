@@ -22,6 +22,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,18 +104,18 @@ public class JdbcController {
 		paramJsons[0].put("cellphone", "18523116321");
 		paramJsons[0].put("role", RoleEnum.b2b_买家.name());
 		paramJsons[0].put("user_status", UserStatusEnum.正常.name());
-		
+
 		paramJsons[1] = new JSONObject();
 		paramJsons[1].put("cellphone", "18523116322");
 		paramJsons[1].put("role", RoleEnum.b2b_买家.name());
 		paramJsons[1].put("user_status", UserStatusEnum.正常.name());
-		
+
 		paramJsons[2] = new JSONObject();
 		paramJsons[2].put("cellphone", "18523116323");
 		paramJsons[2].put("role", RoleEnum.b2b_买家.name());
 		paramJsons[2].put("user_status", UserStatusEnum.正常.name());
 		jdbcDAO.insertBatch(paramJsons);
-		return R.success();
+		return R.success(paramJsons);
 	}
 	
 	/**

@@ -177,13 +177,13 @@ public class Wrapper {
 		if (MapUtils.isEmptys(paramJsons)) {
 			return paramJsons;
 		}
-		
+
+		JSONObject[] paramJsonWraps = new JSONObject[paramJsons.length];
 		for (int i = 0; i < paramJsons.length; i++) {
-			JSONObject paramJson = paramJsons[i];
-			paramJsons[i] = wrap(paramJson);
+			paramJsonWraps[i] = wrap(paramJsons[i]);
 		}
 		
-		return paramJsons;
+		return paramJsonWraps;
 	}
 	
 	/**
