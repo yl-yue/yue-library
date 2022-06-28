@@ -73,11 +73,11 @@ class DbQuery extends DbJdbcTemplate {
         }
 
         tableName = dialect.getWrapper().wrap(tableName);
-        columnName = dialect.getWrapper().wrap(columnName);
+        String wrapColumnName = dialect.getWrapper().wrap(columnName);
         StringBuffer sql = new StringBuffer("SELECT * FROM ");
         sql.append(tableName);
         sql.append(getDeleteWhereSql());
-        sql.append(" AND ").append(columnName).append(" = :").append(columnName);
+        sql.append(" AND ").append(wrapColumnName).append(" = :").append(columnName);
 
         return sql.toString();
     }
@@ -138,7 +138,7 @@ class DbQuery extends DbJdbcTemplate {
         paramValidate(tableName, id);
         String sql = getByColumnNameSqlBuild(tableName, DbConstant.FIELD_DEFINITION_ID);
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(DbConstant.FIELD_DEFINITION_ID), id);
+        paramJson.put(DbConstant.FIELD_DEFINITION_ID, id);
         return queryForObject(sql, paramJson, mappedClass);
     }
 
@@ -168,7 +168,7 @@ class DbQuery extends DbJdbcTemplate {
     public <T> T getByUuid(String tableName, String uuid, Class<T> mappedClass) {
         String sql = getByColumnNameSqlBuild(tableName, getJdbcProperties().getFieldDefinitionUuid());
         JSONObject paramJson = new JSONObject();
-        paramJson.put(dialect.getWrapper().wrap(getJdbcProperties().getFieldDefinitionUuid()), uuid);
+        paramJson.put(getJdbcProperties().getFieldDefinitionUuid(), uuid);
         return queryForObject(sql, paramJson, mappedClass);
     }
 

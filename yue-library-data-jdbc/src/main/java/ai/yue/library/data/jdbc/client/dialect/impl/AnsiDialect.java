@@ -112,44 +112,44 @@ public class AnsiDialect extends DbBase implements Dialect {
 		dataEncrypt(tableName, paramJson);
 		dataAudit(tableName, CrudEnum.U, paramJson);
 		paramJson.putAll(FillDataProvider.getUpdateParamJson(getJdbcProperties(), tableName));
-		tableName = wrapper.wrap(tableName);
-		paramJson = wrapper.wrap(paramJson);
-		conditions = wrapper.wrap(conditions);
+		String wrapTableName = wrapper.wrap(tableName);
+		JSONObject wrapParamJson = wrapper.wrap(paramJson);
 		StringBuffer sql = new StringBuffer();
 		sql.append("INSERT INTO ");
-		sql.append(tableName);
+		sql.append(wrapTableName);
 		sql.append(" (");
-		Set<String> keys = paramJson.keySet();
-		Iterator<String> it = keys.iterator();
-		Iterator<String> iterator = keys.iterator();
+		Set<String> wrapKeys = wrapParamJson.keySet();
+		Set<String> unwrapKeys = paramJson.keySet();
+		Iterator<String> wrapIterator = wrapKeys.iterator();
+		Iterator<String> unwrapIterator = unwrapKeys.iterator();
 
-		while (it.hasNext()) {
-			String key = it.next();
+		while (wrapIterator.hasNext()) {
+			String key = wrapIterator.next();
 			sql.append(key);
-			if(it.hasNext()) {
+			if(wrapIterator.hasNext()) {
 				sql.append(", ");
 			}
 		}
 		sql.append(") VALUES (");
 
-		while (iterator.hasNext()) {
-			String key = iterator.next();
+		while (unwrapIterator.hasNext()) {
+			String key = unwrapIterator.next();
 			sql.append(":");
 			sql.append(key);
-			if(iterator.hasNext()) {
+			if(unwrapIterator.hasNext()) {
 				sql.append(", ");
 			}
 		}
 		sql.append(") ON DUPLICATE KEY UPDATE ");
 
 		for (String condition : conditions) {
-			sql.append(condition);
+			sql.append(wrapper.wrap(condition));
 			sql.append(" = ");
 			if (dBUpdateEnum == DbUpdateEnum.NORMAL) {
 				// 正常更新
 				sql.append(":" + condition);
 			} else {
-				sql.append(condition);
+				sql.append(wrapper.wrap(condition));
 				if (dBUpdateEnum == DbUpdateEnum.INCREMENT) {
 					// 递增更新
 					sql.append(" + :");
