@@ -116,3 +116,12 @@ field-definition-uuid: uuid                             # 关键字段定义-无
 field-definition-sort-idx: sort_idx                     # 关键字段定义-排序
 field-definition-delete-time: delete_time               # 关键字段定义-数据删除标识
 ```
+
+## SQL方言
+yue-library提供的SQL方言能力，是根据jdbc驱动自动识别的，无需用户配置。如：
+- MySQL驱动会识别为MySQL方言
+- PostgreSQL驱动会识别为PostgreSQL方言
+- Elasticsearch、ClickHouse驱动会识别为ANSI（SQL92、SQL99）方言
+
+SQL方言用于yue-library在自动生成SQL时做兼容判断，如：数据库关键字包装，或者根据数据库特性，生成一些特别的优化SQL。
+当你自己写SQL时，你不需要用到任何SQL方言特性，因此yue-library理论上支持所有拥有jdbc驱动的数据库。
