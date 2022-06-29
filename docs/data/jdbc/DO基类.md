@@ -85,9 +85,10 @@ public abstract class BaseCamelCaseDO implements Serializable {
 `@Builder`注解不会构建父类属性，故**DO基类**默认已加上`@SuperBuilder`注解，子类需要使用建造者模式时，同样加上`@SuperBuilder(toBuilder = true)`注解即可，如下：
 ```java
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 public class Subclass extends BaseCamelCaseDO {
 ```

@@ -18,11 +18,12 @@ import java.time.LocalDateTime;
  *
  * <b><code style="color:red">注意子类使用Lombok生成builder()方法时，需使用@SuperBuilder注解，而非@Builder注解，如下：</code></b>
  * <blockquote>
+ * 	<p>&#064;NoArgsConstructor
  * 	<p>&#064;AllArgsConstructor
  * 	<p>&#064;SuperBuilder(toBuilder = true)
  * </blockquote><br>
  *
- * <a href="https://ylyue.cn/#/data/jdbc/介绍?id=do%e5%9f%ba%e7%b1%bb">👉点击查看关于DO基类的详细使用介绍</a>
+ * <a href="https://ylyue.cn/#/data/jdbc/DO基类">👉点击查看关于DO基类的详细使用介绍</a>
  *
  * @author	ylyue
  * @since	2018年7月26日
