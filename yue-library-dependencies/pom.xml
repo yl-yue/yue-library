@@ -16,6 +16,7 @@
 		<!-- dependencies.version -->
 		<grpc.version>1.42.2</grpc.version>
 		<grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
+		<protobuf-util.version>3.20.1</protobuf-util.version>
 
 		<!-- plugins.version -->
 		<protoc.version>3.19.4</protoc.version>
@@ -40,6 +41,11 @@
 				<groupId>io.grpc</groupId>
 				<artifactId>grpc-stub</artifactId>
 				<version>${grpc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java-util</artifactId>
+				<version>${protobuf-util.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

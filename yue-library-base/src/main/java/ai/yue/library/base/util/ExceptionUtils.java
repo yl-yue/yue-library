@@ -1,8 +1,7 @@
 package ai.yue.library.base.util;
 
-import org.springframework.lang.Nullable;
-
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.lang.Nullable;
 
 /**
  * 异常打印工具类
@@ -17,11 +16,22 @@ public class ExceptionUtils {
 		T msg = null;
 		if (exceptionConvertEnum == ExceptionConvertEnum.JSONObject) {
 			msg = (T) new JSONObject(true);
-			((JSONObject) msg).put("0", e.toString());
+			if (e == null) {
+				((JSONObject) msg).put("0", "The stack trace is null");
+				return msg;
+			} else {
+				((JSONObject) msg).put("0", e.toString());
+			}
 		} else if (exceptionConvertEnum == ExceptionConvertEnum.StringBuffer) {
-			msg = (T) new StringBuffer(e.toString() + "\n");
+			msg = (T) new StringBuffer();
+			if (e == null) {
+				((StringBuffer) msg).append("The stack trace is null");
+				return msg;
+			} else {
+				((StringBuffer) msg).append(e + "\n");
+			}
 		}
-		
+
 		StackTraceElement[] stackTraceElementArray = e.getStackTrace();
 		int maxLine = stackTraceElementArray.length;
 		if (line == null) {

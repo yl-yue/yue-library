@@ -176,7 +176,11 @@ public class Result<T> implements Serializable {
 	public ResponseEntity<Result<?>> castToResponseEntity() {
 		return ResponseEntity.status(getCode()).body(this);
 	}
-	
+
+	public String castToJSONString() {
+		return JSONObject.toJSONString(this);
+	}
+
 	/**
 	 * 将Result写入当前请求上下文的响应结果中，如：HttpServletResponse等。具体由当前 {@link WebEnv} 环境实现
 	 */

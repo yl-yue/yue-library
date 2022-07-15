@@ -1,22 +1,33 @@
 ## 工程结构
+yue-library工程区分顶级module与子级module：
+- 顶级module即父子模块，迭代维护频繁
+- 子级module属于当前版本已成熟或暂不需要频繁迭代维护的模块
+- 子级module位于：yue-library-extra目录下
+- 区分顶级module与子级module的目的在于，进行多模块打包时，可以加快构建速度并且增强模块独立维护性（子级module未迭代且兼容的情况下，不再随主版本一起发布）
+- 顶级module与子级module会在不同版本进行对调
+
 ```
 . yue-library
-├── yue-library                       
-│   ├── yue-library-dependencies      dependencies版本控制
-│   ├── yue-library-base              基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
-│   ├── yue-library-base-crypto       加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
-│   ├── yue-library-web               WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
-│   ├── yue-library-webflux           WebFlux实现，响应式编程（如：SpringCloudGateway）
-│   ├── yue-library-data-jdbc         ORM框架，基于SpringJdbc，拥有着强大性能的同时又不失简单灵活等
-│   ├── yue-library-data-redis        Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
-│   ├── yue-library-auth-service      OAuth2认证模块，基于SpringSecurity，更简单灵活，提供全局token与登录等
-│   ├── yue-library-auth-client       OAuth2客户端模块，提供获取当前登录用户状态信息等
-│   └── yue-library-pay               支付模块，基于pay-java-parent，让你真正做到一行代码实现支付聚合
-└── yue-library-samples               
-    ├── yue-library-test              web测试项目，提供详细的特性使用示例、接口单元测试
-    ├── yue-library-test-webflux      webflux测试项目，提供详细的特性使用示例、接口单元测试
-    ├── yue-library-template-boot     SpringBoot项目模版，提供快速开发示例
-    └── yue-library-template-cloud    SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
+├── yue-library                       yue-library顶级模块
+│   ├── yue-library-dependencies          dependencies版本控制
+│   ├── yue-library-base                  基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
+│   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
+│   ├── yue-library-webflux               WebFlux实现，响应式编程（如：SpringCloudGateway）
+│   ├── yue-library-web-grpc              WebFlux实现，响应式编程（如：SpringCloudGateway）
+│   └── yue-library-data-jdbc             ORM框架，基于SpringJdbc，拥有着强大性能的同时又不失简单灵活等
+├── yue-library-extra                 yue-library子级模块
+│   ├── yue-library-base-crypto           加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
+│   ├── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   ├── yue-library-data-es               Elasticsearch Rest与SQL客户端（兼容OpenSearch），提供安全认证等属性配置
+│   ├── yue-library-auth-service          OAuth2认证模块，基于SpringSecurity，更简单灵活，提供全局token与登录等
+│   ├── yue-library-auth-client           OAuth2客户端模块，提供获取当前登录用户状态信息等
+│   └── yue-library-pay                   支付模块，基于pay-java-parent，让你真正做到一行代码实现支付聚合
+└── yue-library-samples               yue-library示例项目
+    ├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
+    ├── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
+	├── yue-library-test-grpc             grpc测试项目，提供详细的特性使用示例、接口单元测试
+    ├── yue-library-template-boot         SpringBoot项目模版，提供快速开发示例
+    └── yue-library-template-cloud        SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
 ```
 
 ## 快速开始

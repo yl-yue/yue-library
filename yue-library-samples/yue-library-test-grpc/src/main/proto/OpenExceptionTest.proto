@@ -1,0 +1,19 @@
+syntax = "proto3";
+package ai.yue.library.test.proto;
+
+import "google/protobuf/empty.proto";
+import "OpenTableExampleTest.proto";
+
+option java_multiple_files = true;
+
+service OpenExceptionTest {
+  rpc Exception(google.protobuf.Empty) returns (MapResult);
+  rpc ResultException(google.protobuf.Empty) returns (MapResult);
+  rpc LoginException(google.protobuf.Empty) returns (MapResult);
+  rpc AttackException(google.protobuf.Empty) returns (MapResult);
+  rpc ForbiddenException(google.protobuf.Empty) returns (MapResult);
+  rpc ApiVersionDeprecatedException(google.protobuf.Empty) returns (MapResult);
+  rpc ParamVoidException(google.protobuf.Empty) returns (MapResult);
+  rpc ParamException(google.protobuf.Empty) returns (MapResult);
+  rpc ValidateException(google.protobuf.Empty) returns (MapResult);
+}

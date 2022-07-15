@@ -1,4 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.data.es.config.rest.EsRestConfig,\
-ai.yue.library.data.es.config.sql.EsSqlConfig

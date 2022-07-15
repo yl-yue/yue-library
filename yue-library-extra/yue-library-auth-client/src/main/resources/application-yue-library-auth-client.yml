@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: yue-library-auth-client
+  security:
+    user:
+      roles: ENDPOINT_ADMIN
+management:
+  server:
+    port: 32222 # 默认actuator端点使用32222端口进行访问，与API服务端口进行区分，保持良好的安全忧患意识。
+  endpoint:
+    env:
+      enabled: false
+    heapdump:
+      enabled: false
+    threaddump:
+      enabled: false
+    httptrace:
+      enabled: false
+    health:
+      show-details: when_authorized

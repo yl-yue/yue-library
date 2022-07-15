@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library</artifactId>
+		<version>${revision}${sha1}${changelist}</version>
+	</parent>
+	<artifactId>yue-library-auth-client</artifactId>
+	<name>yue-library-auth-client</name>
+	<description>yue-library 认证客户端模块</description>
+	
+	<dependencies>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-redis</artifactId>
+		</dependency>
+	</dependencies>
+</project>

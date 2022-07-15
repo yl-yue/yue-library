@@ -13,29 +13,27 @@
     </description>
     <url>https://ylyue.cn</url>
 
+    <!--
+        此处定义的module为当前版本的顶级module：
+            - 顶级module即父子模块，迭代维护频繁
+            - 子级module属于当前版本已成熟或暂不需要频繁迭代维护的模块
+            - 子级module位于：yue-library-extra目录下
+            - 区分顶级module与子级module的目的在于，进行多模块打包时，可以加快构建速度并且增强模块独立维护性（子级module未迭代且兼容的情况下，不再随主版本一起发布）
+            - 顶级module与子级module会在不同版本进行对调
+     -->
     <modules>
-        <!-- 基础库-dependencies -->
+        <!-- 增强库-dependencies -->
         <module>yue-library-dependencies</module>
-        <!-- 基础库 -->
+        <!-- 增强库 -->
         <module>yue-library-base</module>
-        <!-- 基础库-加密模块 -->
-        <module>yue-library-base-crypto</module>
-        <!-- 基础库-web模块 -->
+        <!-- 增强库-web模块 -->
         <module>yue-library-web</module>
-        <!-- 基础库-webflux模块 -->
+        <!-- 增强库-webflux模块 -->
         <module>yue-library-webflux</module>
-        <!-- 基础库-jdbc模块 -->
+        <!-- 增强库-web-grpc模块 -->
+        <module>yue-library-web-grpc</module>
+        <!-- 增强库-jdbc模块 -->
         <module>yue-library-data-jdbc</module>
-        <!-- 基础库-redis模块 -->
-        <module>yue-library-data-redis</module>
-        <!-- 基础库-es模块 -->
-        <module>yue-library-data-es</module>
-        <!-- 基础库-认证客户端模块 -->
-        <module>yue-library-auth-client</module>
-        <!-- 基础库-认证服务模块 -->
-        <module>yue-library-auth-service</module>
-        <!-- 基础库-pay模块 -->
-        <module>yue-library-pay</module>
     </modules>
 
     <properties>
@@ -102,6 +100,11 @@
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-webflux</artifactId>
+                <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-web-grpc</artifactId>
                 <version>${revision}${sha1}${changelist}</version>
             </dependency>
             <dependency>

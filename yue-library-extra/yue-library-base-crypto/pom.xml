@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ai.ylyue</groupId>
+		<artifactId>yue-library</artifactId>
+		<version>${revision}${sha1}${changelist}</version>
+	</parent>
+	<artifactId>yue-library-base-crypto</artifactId>
+	<name>${project.artifactId}</name>
+	<description>yue-library 加密解密</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-redis</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-web</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15to18</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+</project>

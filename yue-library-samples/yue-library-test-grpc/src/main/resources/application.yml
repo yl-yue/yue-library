@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: yue-library-test
+  profiles:
+    group:
+      "yue": "yue-library-base,yue-library-data-jdbc,yue-library-auth-client"
+      "test": "test-confidential"
+      "test-performance": "test-confidential-performance"
+    active: yue,test
+#    active: yue,test-performance
+
+logging:
+  level:
+    ai.yue.library: debug
