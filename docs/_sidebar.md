@@ -21,11 +21,16 @@
   * [常用业务加解密](base-crypto/常用业务加解密.md "yue-library-base-crypto常用业务加解密")
   * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
 
-* yue-library-web/webflux（必备）
+* yue-library-web/webflux（web必备）
 
   * [介绍](web/介绍.md "yue-library-web/webflux介绍")
   * [请求参数解析与包装](web/请求参数解析与包装.md)
   * [响应消息转换器](web/响应消息转换器.md)
+
+* yue-library-web-grpc（grpc必备）
+
+  * [介绍](web-grpc/介绍.md "yue-library-web/web-grpc介绍")
+  * [类型转换器](web-grpc/类型转换器.md)
 
 * yue-library-data-jdbc（推荐）
 

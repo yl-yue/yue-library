@@ -62,10 +62,25 @@
         <easyexcel.version>2.2.6</easyexcel.version>
         <jpush.version>3.4.7</jpush.version>
 
+        <!-- dependencies-grpc.version -->
+        <grpc.version>1.42.2</grpc.version>
+        <grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
+        <protobuf-util.version>3.20.1</protobuf-util.version>
+
         <!-- plugins.version -->
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+
+        <!-- plugins-grpc.version -->
+        <protoc.version>3.19.4</protoc.version>
+        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
+        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+
+        <!-- plugins-grpc.version -->
+        <protoc.version>3.19.4</protoc.version>
+        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
+        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     </properties>
 
     <dependencyManagement>

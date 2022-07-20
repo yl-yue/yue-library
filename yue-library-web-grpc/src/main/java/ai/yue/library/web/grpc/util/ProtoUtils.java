@@ -1,6 +1,7 @@
 package ai.yue.library.web.grpc.util;
 
 import ai.yue.library.base.convert.Convert;
+import ai.yue.library.base.view.Result;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -9,6 +10,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.protobuf.*;
 import com.google.protobuf.util.JsonFormat;
 import lombok.SneakyThrows;
+import yue.library.AnyResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,35 @@ public class ProtoUtils extends Convert {
 
     public static PageIPO toPageIPO(MessageOrBuilder message) {
         return PageIPO.parsePageIPO(toJSONObject(message));
+    }
+
+    /**
+     * Protobuf响应体约定-将Restful Result转换为Protobuf AnyResult
+     *
+     * @param result 将Restful Result
+     * @return Protobuf AnyResult
+     */
+    public static AnyResult toAnyResult(Result<Message> result) {
+        Integer code = result.getCode();
+        String msg = result.getMsg();
+        Message data = result.getData();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setData(Any.pack(data)).build();
+    }
+
+    /**
+     * Protobuf响应体约定-将Restful Result转换为Protobuf AnyResult
+     *
+     * @param result       将Restful Result
+     * @param builderClass Protobuf message builder class
+     * @return Protobuf AnyResult
+     */
+    public static <T extends Message.Builder> AnyResult toAnyResult(Result result, Class<T> builderClass) {
+        Integer code = result.getCode();
+        String msg = result.getMsg();
+        boolean flag = result.isFlag();
+        Object data = result.getData();
+        Message message = toBuilder(data, builderClass).build();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setFlag(flag).setData(Any.pack(message)).build();
     }
 
     // ============= 序列化 =============

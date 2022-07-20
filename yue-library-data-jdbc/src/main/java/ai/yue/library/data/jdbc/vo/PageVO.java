@@ -39,8 +39,8 @@ public class PageVO<T> {
 	 * 
 	 * @return HTTP请求，最外层响应对象
 	 */
-	public Result<List<T>> toResult() {
-		return R.success(count, data);
+	public Result<PageVO<T>> toResult() {
+		return R.success(this);
 	}
 	
 }

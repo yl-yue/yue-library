@@ -1,10 +1,14 @@
 package ai.yue.library.test.grpc.aspect;
 
+import ai.yue.library.base.util.IdUtils;
 import ai.yue.library.web.grpc.util.ProtoUtils;
 import com.google.protobuf.MessageOrBuilder;
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
+import yue.library.AnyResult;
+
+import java.net.SocketAddress;
 
 /**
  * Grpc服务端拦截器
@@ -20,8 +24,9 @@ public class GrpcServerInterceptor implements ServerInterceptor {
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-        ServerCall.Listener<ReqT> reqListener = next.startCall(call, headers);
-        return new ReqInterceptor(reqListener, call.getMethodDescriptor());
+        RespInterceptor respInterceptor = new RespInterceptor(call);
+        ServerCall.Listener<ReqT> reqListener = next.startCall(respInterceptor, headers);
+        return new ReqInterceptor(reqListener, call);
     }
 
     /**
@@ -29,17 +34,18 @@ public class GrpcServerInterceptor implements ServerInterceptor {
      */
     private class ReqInterceptor<ReqT> extends ForwardingServerCallListener.SimpleForwardingServerCallListener<ReqT> {
 
-        MethodDescriptor methodDescriptor;
+        ServerCall call;
 
-        protected ReqInterceptor(ServerCall.Listener delegate, MethodDescriptor methodDescriptor) {
-            super(delegate);
-            this.methodDescriptor = methodDescriptor;
+        protected ReqInterceptor(ServerCall.Listener reqListener, ServerCall call) {
+            super(reqListener);
+            this.call = call;
         }
 
         @Override
         public void onMessage(ReqT message) {
-//            log.info("requestIp={}", requestIp);
-            log.info("requestGrpcMethod={}", methodDescriptor.getFullMethodName());
+            SocketAddress requestIp = call.getAttributes().get(Grpc.TRANSPORT_ATTR_REMOTE_ADDR);
+            log.info("requestIp={}", requestIp);
+            log.info("requestGrpcMethod={}", call.getMethodDescriptor().getFullMethodName());
             if (message instanceof MessageOrBuilder) {
                 log.info("requestMessage={}", ProtoUtils.toJsonString((MessageOrBuilder) message));
             }
@@ -59,7 +65,12 @@ public class GrpcServerInterceptor implements ServerInterceptor {
 
         @Override
         public void sendMessage(RespT message) {
-            log.info("响应拦截，写入链路ID");
+            String traceId = IdUtils.getSimpleUUID();
+            log.info("响应拦截，写入链路ID：{}", traceId);
+            if (message instanceof AnyResult) {
+                message = (RespT) ((AnyResult) message).toBuilder().setTraceId(traceId).build();
+            }
+
             super.sendMessage(message);
         }
 

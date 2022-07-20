@@ -37,19 +37,19 @@ public class Result<T> implements Serializable {
 	
 	private static final long serialVersionUID = -3830508963654505583L;
 	
-	/** 状态码 */
+	/** 响应状态码 */
 	@JSONField(ordinal = 1)
 	private Integer code;
-	/** 提示信息 */
+	/** 响应提示 */
 	@JSONField(ordinal = 2)
 	private String msg;
-	/** 状态 */
+	/** 响应状态 */
 	@JSONField(ordinal = 3)
 	private boolean flag;
-	/** count */
+	/** 链路追踪码 */
 	@JSONField(ordinal = 4)
-	private Long count;
-	/** 数据 */
+	private String traceId;
+	/** 业务数据 */
 	@JSONField(ordinal = 5)
 	private T data;
 	

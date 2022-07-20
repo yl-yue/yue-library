@@ -11,6 +11,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
@@ -243,6 +244,21 @@ public class ResultExceptionHandler {
      */
     @GrpcExceptionHandler(ClientFallbackException.class)
     public Status clientFallbackExceptionHandler(ClientFallbackException e) {
+        ExceptionUtils.printException(e);
+        Status status = Status.INTERNAL;
+        return status.withDescription(R.clientFallback().castToJSONString());
+    }
+
+    /**
+     * 服务降级
+     * <p>Grpc状态码：13 INTERNAL</p>
+     * <p>Http状态码：507</p>
+     *
+     * @param e grpc请求异常
+     * @return 结果
+     */
+    @GrpcExceptionHandler(StatusRuntimeException.class)
+    public Status statusRuntimeExceptionHandler(StatusRuntimeException e) {
         ExceptionUtils.printException(e);
         Status status = Status.INTERNAL;
         return status.withDescription(R.clientFallback().castToJSONString());

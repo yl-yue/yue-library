@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 异步
@@ -47,7 +46,7 @@ public class AsyncService {
         throw new ResultException("异步异常测试");
     }
 
-    public Result<List<PersonDO>> sync() {
+    public Result<PageVO<PersonDO>> sync() {
         PageIPO pageIPO = PageIPO.builder().page(1).limit(10).build();
         PageVO<PersonDO> pageTVO = personDAO.page(pageIPO);
         log.info("2. 同步-同步方法执行完毕，分页数据大小：{}", pageTVO.getCount());

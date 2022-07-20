@@ -1,0 +1,41 @@
+syntax = "proto3";
+package yue.library;
+
+option java_multiple_files = true;
+
+/**
+ * 虽然不可以定义基础message，但我们可以约束常用字段的类型定义与命名规范，并且这些常用字段应该放在最前面
+ */
+message CommonFieldProtocol {
+
+  /**
+   * 数据库基础字段约定
+   */
+  int64 id = 1;                  // 有序主键：单表时数据库自增、分布式时雪花自增
+  string uuid = 2;               // 无序主键：UUID5无符号
+  int32 sort_idx = 3;            // 排序索引
+  string create_user = 4;        // 创建人：用户名、昵称、人名
+  string create_user_uuid = 5;   // 创建人：用户uuid
+  string create_time = 6;        // 创建时间
+  string update_user = 7;        // 更新人：用户名、昵称、人名
+  string update_user_uuid = 8;   // 更新人：用户uuid
+  string update_time = 9;        // 更新时间
+  string delete_user = 10;       // 删除人：用户名、昵称、人名
+  string delete_user_uuid = 11;  // 删除人：用户uuid
+  int64 delete_time = 12;        // 删除时间戳：默认0（未删除）
+
+  /**
+   * 接口常用字段约定-分页
+   */
+  int32 page = 13;     // 当前页
+  int32 limit = 14;    // 每页显示条数
+  int64 count = 15;    // 分页统计条数
+
+  /**
+   * 接口常用header约定
+   */
+  string tenant_sys = 16;    // 系统租户：一级租户（dict_tenant_sys）
+  string tenant_co = 17;     // 企业租户：二级租户
+  string client_id = 18;     // 客户端区分标识
+
+}

@@ -5,14 +5,16 @@ import "google/protobuf/wrappers.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "yue/library/Result.proto";
 
 option java_multiple_files = true;
 
 service OpenTableExampleTest {
   rpc GetTableExample(google.protobuf.StringValue) returns (GetTableExampleResponse);
   rpc PageTableExample(PageTableExampleRequest) returns (PageTableExampleResponse);
-  rpc MapResult2(google.protobuf.StringValue) returns (MapResult);
-  rpc ListResult2(PageTableExampleRequest) returns (ListResult);
+  rpc AnyResult2(google.protobuf.StringValue) returns (.yue.library.AnyResult);
+  rpc ActGrpcClientInterceptor(google.protobuf.Empty) returns (.yue.library.AnyResult);
 }
 
 message GetTableExampleResponse {
@@ -42,21 +44,6 @@ message PageTableExampleRequest {
 message PageTableExampleResponse {
   int64 count = 1;
   repeated GetTableExampleResponse table_example = 2;
-}
-
-message MapResult {
-  int32 code = 1;
-  string msg = 2;
-  bool flag = 3;
-  google.protobuf.Any data = 4;
-}
-
-message ListResult {
-  int32 code = 1;
-  string msg = 2;
-  bool flag = 3;
-  int64 count = 4;
-  repeated google.protobuf.Any data = 5;
 }
 
 // ============== 类型测试 ==============

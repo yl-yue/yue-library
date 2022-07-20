@@ -16,8 +16,8 @@ public class TableExampleTestDO extends BaseCamelCaseDO {
 
 	private static final long serialVersionUID = 6404495051119680239L;
 	
-	String field_one;
-	String field_two;
-	String field_three;
+	String fieldOne;
+	String fieldTwo;
+	String fieldThree;
 
 }

@@ -97,33 +97,6 @@ public class R {
     }
 
     /**
-     * 成功后调用，分页查询
-     *
-     * @param <T>   泛型
-     * @param count 总数
-     * @param data  数据
-     * @return HTTP请求，最外层响应对象
-     */
-    public static <T> Result<T> success(Long count, T data) {
-        Result<T> result = new Result<T>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), true, count, data);
-        return result;
-    }
-
-    /**
-     * 成功后调用，分页查询
-     *
-     * @param <T>   泛型
-     * @param code  自定义code（默认200）
-     * @param count 总数
-     * @param data  数据
-     * @return HTTP请求，最外层响应对象
-     */
-    public static <T> Result<T> success(Integer code, Long count, T data) {
-        Result<T> result = new Result<T>(code, ResultEnum.SUCCESS.getMsg(), true, count, data);
-        return result;
-    }
-
-    /**
      * 会话未注销，无需登录-210
      *
      * @return HTTP请求，最外层响应对象
