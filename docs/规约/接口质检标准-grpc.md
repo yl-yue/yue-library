@@ -165,6 +165,48 @@ message CommonFieldProtocol {
 }
 ```
 
+### 最外层响应对象
+Protobuf序列化最外层响应对象 `AnyResult`，用于返回技术架构约定的数据，方便业务定位与异常区分，统一成功请求与异常响应体。
+
+```protobuf
+syntax = "proto3";
+package yue.library;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option java_multiple_files = true;
+
+/**
+ * Protobuf序列化最外层响应对象，更适应RESTful风格API（此对象外层应和业务无关，用于返回技术架构约定的数据）
+ */
+message AnyResult {
+  // 响应状态码
+  int32 code = 1;
+  // 响应提示
+  string msg = 2;
+  // 响应状态
+  bool flag = 3;
+  // 链路追踪码
+  string trace_id = 4;
+  // 业务数据
+  google.protobuf.Any data = 5;
+}
+```
+
+#### 编译说明
+- java中此proto文件已内置在`web-grpc`模块内，可直接 `import "yue/library/Result.proto";` 引用，也可以将此文件拷贝至你期望的目录进行编译，但不要改变proto中的内容
+- 其他语言直接将此文件拷贝至你期望的目录进行编译，但不要改变proto文件中的内容（你可以为文件添加内容，但不要修改内容）
+
+#### 异常响应
+`AnyResult` 应只用于正确的结果响应，异常响应或业务提示应使用 `throw new ResultException`：
+- 将正确响应与异常响应的最外层消息体保持一致，有助于程序封装拦截与业务处理
+- http状态码为200时，永远是前端期望的响应体
+- http状态码为500时，才需要通过`AnyResult.code`区分是客户端异常、还是服务端异常、还是业务提示等
+- 而不符合业务需要的grpc状态码，应只用于区分是程序处理后抛出的异常提示（拥有与`AnyResult`类似的Json响应体），还是网络链路中抛出的异常提示（可能是你看不懂的未知错误异常提示）
+
 ### proto规范示例
 **OpenUser：**`sc/proto/proto-lan/lan-ssc/ssc-md/user/OpenUser.proto`
 ```protobuf
@@ -172,10 +214,15 @@ syntax = "proto3";
 
 package sc.proto.lan.ssc.md.user;
 
+import "yue/library/Result.proto";
+
 service OpenUser {
-  rpc ActUserLogin (Request) returns (Response);
-  rpc ActUserRegister (Request) returns (Response);
-  rpc ActUserPasswordRest (Request) returns (Response);
+  // Any to Response
+  rpc ActUserLogin (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc ActUserRegister (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc ActUserPasswordRest (Request) returns (.yue.library.AnyResult);
 }
 
 message Request {
@@ -193,14 +240,23 @@ syntax = "proto3";
 
 package sc.proto.self.ssc.md.user;
 
+import "yue/library/Result.proto";
+
 service AuthUser {
-  rpc DeleteUser (Request) returns (Response);
-  rpc UpdateUserPassword2 (Request) returns (Response);
-  rpc UpdateUserPassword3 (Request) returns (Response);
-  rpc GetUserById (Request) returns (Response);
-  rpc ListUser32 (Request) returns (Response);
-  rpc ListUser33 (Request) returns (Response);
-  rpc PageUserLikeUsername (Request) returns (Response);
+  // Any to Response
+  rpc DeleteUser (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc UpdateUserPassword2 (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc UpdateUserPassword3 (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc GetUserById (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc ListUser32 (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc ListUser33 (Request) returns (.yue.library.AnyResult);
+  // Any to Response
+  rpc PageUserLikeUsername (Request) returns (.yue.library.AnyResult);
 }
 
 message Request {

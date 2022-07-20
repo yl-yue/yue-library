@@ -9,7 +9,7 @@ import "google/protobuf/duration.proto";
 option java_multiple_files = true;
 
 /**
- * Protobuf响应序列化最外层对象，更适应RESTful风格API（此对象外层应和业务无关，用于返回技术架构约定的数据）
+ * Protobuf序列化最外层响应对象，更适应RESTful风格API（此对象外层应和业务无关，用于返回技术架构约定的数据）
  */
 message AnyResult {
   // 响应状态码
