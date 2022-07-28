@@ -116,35 +116,3 @@ field-definition-uuid: uuid                             # 关键字段定义-无
 field-definition-sort-idx: sort_idx                     # 关键字段定义-排序
 field-definition-delete-time: delete_time               # 关键字段定义-数据删除标识
 ```
-
-## SQL方言
-yue-library提供的SQL方言能力，是根据jdbc驱动自动识别的，无需用户配置。如：
-- MySQL驱动会识别为MySQL方言
-- PostgreSQL驱动会识别为PostgreSQL方言
-- Elasticsearch、ClickHouse驱动会识别为ANSI（SQL92、SQL99）方言
-
-SQL方言用于yue-library在自动生成SQL时做兼容判断，如：数据库关键字包装，或者根据数据库特性，生成一些特别的优化SQL。<br>
-当你自己写SQL时，你不需要用到任何SQL方言特性，因此yue-library理论上支持所有拥有jdbc驱动的数据库。
-
-### 在动态数据源下面使用SQL方言
-动态数据源可以在Spring上下文中动态切换数据源（理论支持动态切换不同数据库），yue-library可以根据驱动自动识别SQL方言，但在多数据源场景，默认只会创建一个Bean（Db），而这个Bean的SQL方言识别来自于主要数据源（配置动态数据源时需要标记一个primary源）。<br>
-因此当其他数据源与主要数据源使用不同的SQL方言时，你需要为其他数据源固定指派SQL方言类型，因为yue-library暂不支持动态切换SQL方言（暂未遇到此场景需求，同时动态切换SQL方言可能是个伪需求或业务设计缺陷）。
-
-**在不同数据源下使用匹配的SQL方言：**
-
-[👉更多配置参考：单个DAO、单个Bean、单个Db配置](#单个dao、单个bean、单个db配置)
-
-```java
-@DS("postgresql")
-@Repository
-public class PostgreSQLTestDAO extends AbstractRepository<TableExampleTestDO> {
-
-    @PostConstruct
-    private void initDb() {
-        db = db.clone();
-        db.setDialect(new PostgresqlDialect(db.getNamedParameterJdbcTemplate(), db.getJdbcProperties()));
-//        db.setDialect(new MysqlDialect(db.getNamedParameterJdbcTemplate(), db.getJdbcProperties()));
-    }
-
-}
-```

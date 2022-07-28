@@ -8,6 +8,7 @@ import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.CrudEnum;
 import ai.yue.library.data.jdbc.constant.DbConstant;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
+import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.Nullable;
@@ -38,6 +39,9 @@ class DbDelete extends DbUpdate {
 		return sql.toString();
 	}
 
+	/**
+	 * pk(primary key)主键，有序主键或无序主键
+	 */
 	private void deleteByPk(String tableName, Object pkValue) {
 		// 1. 参数验证
 		paramValidate(tableName);
@@ -202,11 +206,11 @@ class DbDelete extends DbUpdate {
 	}
 
 	// Delete Logic
-	
+
 	private String deleteLogicSqlBuild(String tableName, JSONObject paramJson, @Nullable JSONObject auditUpdateJson) {
 		// 1. 参数验证
 		paramValidate(tableName, paramJson);
-		
+
 		// 2. 获得更新条件（逻辑删除条件）
 		String[] conditions = new String[paramJson.size()];
 		conditions = paramJson.keySet().toArray(conditions);
@@ -220,11 +224,20 @@ class DbDelete extends DbUpdate {
 			paramJson.putAll(auditUpdateJson);
 		}
 
-		// 4. 返回生成SQL
-		return updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+		// 4. 生成updateSql
+		String sql = updateSqlBuild(tableName, paramJson, conditions, DbUpdateEnum.NORMAL);
+
+		// 5. 确认逻辑删除条件
+		String whereSql = sql.substring(sql.lastIndexOf("WHERE"));
+		if (!whereSql.contains(getJdbcProperties().getFieldDefinitionDeleteTime())) {
+			sql = SQLUtils.addCondition(sql, getJdbcProperties().getFieldDefinitionDeleteTime() + " = 0", getDialect().dialectName().getDbType());
+		}
+
+		// 6. 返回SQL
+		return sql;
 	}
 
-	private void deleteLogicByUk(String tableName, Object pkValue) {
+	private void deleteLogicByPk(String tableName, Object pkValue) {
 		// 1. 参数验证
 		paramValidate(tableName);
 		if (ObjectUtils.isNull(pkValue)) {
@@ -283,7 +296,7 @@ class DbDelete extends DbUpdate {
      */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteLogicById(String tableName, Long id) {
-		deleteLogicByUk(tableName, id);
+		deleteLogicByPk(tableName, id);
     }
 
 	/**
@@ -295,7 +308,7 @@ class DbDelete extends DbUpdate {
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
 	public void deleteLogicByUuid(String tableName, String uuid) {
-		deleteLogicByUk(tableName, uuid);
+		deleteLogicByPk(tableName, uuid);
 	}
 
 	/**

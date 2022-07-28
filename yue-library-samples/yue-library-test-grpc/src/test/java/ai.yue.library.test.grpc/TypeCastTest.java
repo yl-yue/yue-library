@@ -139,4 +139,19 @@ public class TypeCastTest {
         Assertions.assertEquals("ylyue2", mapResult2.getData().unpack(GetTableExampleResponse.class).getCreateUser());
     }
 
+    @Test
+    public void success() throws InvalidProtocolBufferException {
+        AnyResult success = ProtoUtils.success();
+        AnyResult success1 = ProtoUtils.success(getGetTableExampleResponse());
+        AnyResult success2 = ProtoUtils.success(getTableExampleTestDO(), GetTableExampleResponse.Builder.class);
+        Assertions.assertEquals(success.getCode(), 200);
+        Assertions.assertEquals(success1.getCode(), 200);
+        Assertions.assertEquals(success2.getCode(), 200);
+        Assertions.assertEquals(success.getFlag(), true);
+        Assertions.assertEquals(success1.getFlag(), true);
+        Assertions.assertEquals(success2.getFlag(), true);
+        Assertions.assertEquals(success1.getData().unpack(GetTableExampleResponse.class).getCreateUser(), "ylyue");
+        Assertions.assertEquals(success2.getData().unpack(GetTableExampleResponse.class).getCreateUser(), "ylyue");
+    }
+
 }

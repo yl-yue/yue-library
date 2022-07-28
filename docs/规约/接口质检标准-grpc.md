@@ -198,7 +198,8 @@ message AnyResult {
 
 #### 编译说明
 - java中此proto文件已内置在`web-grpc`模块内，可直接 `import "yue/library/Result.proto";` 引用，也可以将此文件拷贝至你期望的目录进行编译，但不要改变proto中的内容
-- 其他语言直接将此文件拷贝至你期望的目录进行编译，但不要改变proto文件中的内容（你可以为文件添加内容，但不要修改内容）
+- 其他语言（js、oc、go等）直接将此文件拷贝至你期望的目录进行编译，但不要改变proto文件中的内容（你可以为文件添加内容，但不要修改内容）
+- 在编辑器（IDE）中配置protobuf path，解决编辑器中的引用提示问题（如IDEA配置：搜索`Protocol Buffers` → 添加`Import Paths` → 指定在`yue/library/Result.proto`父级目录）
 
 #### 异常响应
 `AnyResult` 应只用于正确的结果响应，异常响应或业务提示应使用 `throw new ResultException`：

@@ -25,5 +25,6 @@ public class TableExampleTestDO extends BaseCamelCaseDO {
 	String fieldThree;
 	String tenantSys;
 	String tenantCo;
+	String timestampOne;
 
 }

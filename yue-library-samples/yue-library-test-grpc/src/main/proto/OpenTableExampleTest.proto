@@ -15,6 +15,7 @@ service OpenTableExampleTest {
   rpc PageTableExample(PageTableExampleRequest) returns (PageTableExampleResponse);
   rpc AnyResult2(google.protobuf.StringValue) returns (.yue.library.AnyResult);
   rpc ActGrpcClientInterceptor(google.protobuf.Empty) returns (.yue.library.AnyResult);
+  rpc GetSuccess(google.protobuf.Empty) returns (.yue.library.AnyResult);
 }
 
 message GetTableExampleResponse {

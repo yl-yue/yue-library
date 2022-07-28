@@ -1,5 +1,7 @@
 package ai.yue.library.data.jdbc.client.dialect;
 
+import com.alibaba.druid.DbType;
+
 /**
  * 方言名
  * <p>定义yue-library支持的所有数据库方言
@@ -12,21 +14,43 @@ public enum DialectNameEnum {
 	/**
 	 * SQL92、SQL99
 	 */
-	ANSI,
+	ANSI{
+		@Override
+		public DbType getDbType() {
+			return DbType.other;
+		}
+	},
 
 	/**
 	 * MySQL
 	 */
-	MYSQL,
+	MYSQL {
+		@Override
+		public DbType getDbType() {
+			return DbType.mysql;
+		}
+	},
 
 	/**
 	 * PostgreSQL
 	 */
-	POSTGRESQL,
+	POSTGRESQL {
+		@Override
+		public DbType getDbType() {
+			return DbType.postgresql;
+		}
+	},
 
 	/**
 	 * 达梦
 	 */
-	DM
+	DM {
+		@Override
+		public DbType getDbType() {
+			return DbType.dm;
+		}
+	};
+
+	public abstract DbType getDbType();
 
 }

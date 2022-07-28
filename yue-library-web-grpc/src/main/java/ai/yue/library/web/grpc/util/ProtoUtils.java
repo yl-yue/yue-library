@@ -2,6 +2,7 @@ package ai.yue.library.web.grpc.util;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.view.Result;
+import ai.yue.library.base.view.ResultEnum;
 import ai.yue.library.data.jdbc.ipo.PageIPO;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -66,6 +67,46 @@ public class ProtoUtils extends Convert {
         registerType(ArrayUtil.toArray(descriptors, Descriptors.Descriptor.class));
     }
 
+    // ============= AnyResult success builder =============
+
+    /**
+     * 成功后调用，返回的data为null
+     *
+     * @return Protobuf响应序列化最外层对象
+     */
+    public static AnyResult success() {
+        int code = ResultEnum.SUCCESS.getCode();
+        String msg = ResultEnum.SUCCESS.getMsg();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setFlag(true).build();
+    }
+
+    /**
+     * 成功后调用，返回的data为一个Protobuf Message对象
+     *
+     * @param data 数据
+     * @return Protobuf响应序列化最外层对象
+     */
+    public static AnyResult success(Message data) {
+        int code = ResultEnum.SUCCESS.getCode();
+        String msg = ResultEnum.SUCCESS.getMsg();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setFlag(true).setData(Any.pack(data)).build();
+    }
+
+    /**
+     * 成功后调用，返回的data为一个Protobuf Message对象
+     *
+     * @param data         要转化为Protobuf Message的数据对象
+     * @param builderClass Protobuf message builder class
+     * @param <T>          Message.Builder
+     * @return Protobuf响应序列化最外层对象
+     */
+    public static <T extends Message.Builder> AnyResult success(Object data, Class<T> builderClass) {
+        int code = ResultEnum.SUCCESS.getCode();
+        String msg = ResultEnum.SUCCESS.getMsg();
+        Message message = toBuilder(data, builderClass).build();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setFlag(true).setData(Any.pack(message)).build();
+    }
+
     // ============= 转换 =============
 
     public static JSONObject toJSONObject(MessageOrBuilder message) {
@@ -85,8 +126,9 @@ public class ProtoUtils extends Convert {
     public static AnyResult toAnyResult(Result<Message> result) {
         Integer code = result.getCode();
         String msg = result.getMsg();
+        boolean flag = result.isFlag();
         Message data = result.getData();
-        return AnyResult.newBuilder().setCode(code).setMsg(msg).setData(Any.pack(data)).build();
+        return AnyResult.newBuilder().setCode(code).setMsg(msg).setFlag(flag).setData(Any.pack(data)).build();
     }
 
     /**

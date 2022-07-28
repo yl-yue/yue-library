@@ -73,4 +73,10 @@ public class OpenTableExampleTestController extends OpenTableExampleTestGrpc.Ope
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void getSuccess(Empty request, StreamObserver<AnyResult> responseObserver) {
+        responseObserver.onNext(ProtoUtils.success());
+        responseObserver.onCompleted();
+    }
+
 }

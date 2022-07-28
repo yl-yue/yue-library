@@ -38,6 +38,7 @@
   * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
   * [增删改查](data/jdbc/增删改查.md)
   * [Jdbc配置](data/jdbc/Jdbc配置.md)
+  * [SQL方言](data/jdbc/SQL方言.md)
   * [工具方法](data/jdbc/工具方法.md "yue-library-data-jdbc工具方法")
   * [DO基类](data/jdbc/DO基类.md "yue-library-data-jdbcDO基类")
   * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")

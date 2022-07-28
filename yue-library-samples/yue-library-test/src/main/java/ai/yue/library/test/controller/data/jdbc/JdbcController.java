@@ -130,15 +130,14 @@ public class JdbcController {
 		return R.success();
 	}
 	
-	/**
-	 * 删除
-	 * 
-	 * @param paramJson
-	 * @return
-	 */
 	@DeleteMapping("/deleteParamJson")
 	public Result<?> delete(JSONObject paramJson) {
 		return R.success(db.delete(tableName, paramJson));
+	}
+
+	@DeleteMapping("/deleteLogic")
+	public Result<?> deleteLogic(JSONObject paramJson) {
+		return R.success(db.deleteLogic(tableName, paramJson));
 	}
 
 	@GetMapping("/getMetaData")
