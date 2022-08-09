@@ -1,6 +1,7 @@
 package ai.yue.library.test.doc.example.data.jdbc;
 
 import ai.yue.library.base.constant.SortEnum;
+import ai.yue.library.base.util.Sql;
 import ai.yue.library.data.jdbc.config.properties.JdbcProperties;
 import ai.yue.library.data.jdbc.constant.DbUpdateEnum;
 import ai.yue.library.data.jdbc.dao.AbstractDAO;
@@ -9,6 +10,7 @@ import ai.yue.library.data.jdbc.vo.PageBeforeAndAfterVO;
 import ai.yue.library.data.jdbc.vo.PageVO;
 import ai.yue.library.test.dataobject.jdbc.UserDO;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
 
@@ -204,5 +206,27 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 		Long equalsId = 30L;
 		return db.pageBeforeAndAfter(querySql, pageIPO, equalsId);
 	}
-	
+
+	/**
+	 * 更多示例
+	 */
+	public void moreExample() {
+		// 判空条件
+		String condition1 = "";
+		String condition2 = "condition2";
+
+		// Sql拼接
+		String sql = Sql.sql("SELECT * FROM tableName")
+				.append(" WHERE 1=1 ", true)
+				.append(" AND 2=2 ", condition1)
+				.append(" AND delete_time = 0 ", StrUtil.isEmptyIfStr(condition1))
+
+		// Sql拼接-MySQL模糊查询（使用Sql函数）
+				.append(" AND condition2 LIKE concat('%', :condition2, '%') ", condition2)
+
+		// Sql拼接-PostgreSQL模糊查询（使用Sql函数）
+				.append(" AND condition2 LIKE concat('%', :condition2::text, '%') ", condition2)
+				.getSqlString();
+	}
+
 }
