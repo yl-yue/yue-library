@@ -19,20 +19,30 @@ yue-library已提供 [RESTful](https://ylyue.cn/#/base/RESTful) 支持
 - PUT 更新接口（用于更新数据，具有破坏性）
 - DELETE 删除接口（用于删除数据，具有破坏性）
 
-### 接口命名前缀
-|前缀	|说明															|示例									|
-|--		|--																|--										|
-|open	|公开接口，无需登录												|/open/v1.2/user/resetPassword			|
-|auth	|认证接口，需要登录												|/auth/v1.2/user/updatePassword			|
-|private|私有接口，仅内部调用，服务间调用									|/private/v1.2/user/loadUserByUsername	|
-|sp		|三方接口，由服务提供商（三方系统）提供接口实现时应遵守的命名规范		|/sp/v1.2/user/loadUserByUsername		|
-
 ### API版本控制
-yue-library已提供 [RESTful](https://ylyue.cn/#/base/RESTful) 支持
-
 API的版本号统一放入URL，如：`https://api.example.com/v{n}/`，n代表版本号，分为整形和浮点型
 - **整形版本号**：大功能版本发布形式；具有当前版本状态下的所有API接口，例如：v1,v2
 - **浮点型**：为小版本号，只具备补充api的功能，其他api都默认调用大版本号的API，例如v1.1,v1.2
+
+### 接口命名前缀
+|前缀	|作用										|示例							|
+|--		|--											|--								|
+|`open`	|互联网公开接口，无需登录						|`/open/v1.2/user/接口方法名`	|
+|`auth`	|互联网认证接口，需要登录						|`/auth/v1.2/user/接口方法名`	|
+|`lan`	|局域网内部接口，仅局域网内调用					|`/lan/v1.2/user/接口方法名`		|
+|`self`	|局域网私有接口，仅局域网内私有领域服务调用		|`/self/v1.2/user/接口方法名`	|
+|`sp`	|三方接口，由服务提供商（三方系统）提供实现		|`/sp/v1.2/user/接口方法名`		|
+
+### 接口方法名规范
+|HTTP方法	|接口动作类型		|接口方法名前缀	|接口动作解释										|示例																			|
+|--			|--				|--				|--												|--																				|
+|POST		|增				|`insert`		|新增、插入、添加									|`POST   /open/v1.2/user/insert`												|
+|DELETE		|删				|`delete`		|物理删除、逻辑删除								|`DELETE /open/v1.2/user/delete`												|
+|PUT		|改				|`update`		|修改、更新										|`PUT    /open/v1.2/user/updatePassword`										|
+|GET		|查				|`get`			|单条（一个结果）									|`GET    /open/v1.2/user/getById`												|
+|GET		|查				|`list`			|列表（多个结果）									|`GET    /open/v1.2/user/list`													|
+|GET		|查				|`page`			|分页											|`GET    /open/v1.2/user/pageLikeUsername`										
+|POST		|动作			|`act`			|登录、注册、上传、下载<br>重置、提交、搜索、支付	|`POST   /open/v1.2/user/actLogin`<br>`POST   /open/v1.2/user/actRegister`<br>`POST   /open/v1.2/user/actPasswordRest`<br>`POST   /open/v1.2/user/actSearch`|
 
 ### RESTful URL路径参数
 **前端传参：**以apizza示例，apizza支持RESTful URL，如果在URL填写:key，然后在Query参数中填写对应 key，发送请求的时候插件将会替换URL中的 :key
@@ -46,28 +56,6 @@ public Result<?> pathVariable(@PathVariable String opt) {
 	return ResultInfo.success(opt);
 }
 ```
-
-### GET规范
-- /user/get 用户-单个（获得单条数据）
-- /user/list 用户-列表（获得列表数据）
-- /user/page 用户-分页（获得分页数据）
-- /user/isUser 用户-确认（获得Boolean值）
-
-### POST规范
-- /user/insert 用户-插入（插入数据）
-- /wxPay/app 微信支付-APP（业务操作或涉及加密等）
-- /aliPay/app 支付宝支付-APP（业务操作或涉及加密等）
-- /open/login 登录（业务操作或涉及加密等）
-- /open/logout 登出（业务操作或涉及加密等）
-
-### PUT规范
-- /user/updateById 用户-更新-ById（更新单条数据）
-- /user/updateNickname 用户-更新-昵称（更新具体值）
-- /user/resetPassword 用户-重置密码（更新业务）
-
-### DELETE规范
-- /user/delete 用户-删除（删除单条数据）
-- /user/deleteByNickname 用户-删除-ByNickname（删除符合条件数据）
 
 ## API接口规范
 ### 协议
@@ -86,40 +74,53 @@ public Result<?> pathVariable(@PathVariable String opt) {
 
 |参数名称	|参数类型	|最大长度	|描述									|示例				|
 |--			|--			|--			|--										|--					|
-|tenantId	|String		|20			|租户ID，用于系统多租户区分				|taobao、tmall		|
-|clientId	|String		|20			|客户端请求来源APP WAP PC				|APP				|
-|timestamp	|String		|17			|发送请求的时间,格式:yyyyMMddHHmmssSSS	|20180505121212222	|
+|`tenantId`	|String		|20			|租户ID，用于系统多租户区分				|taobao、tmall		|
+|`clientId`	|String		|20			|客户端请求来源APP WAP PC				|APP				|
+|`timestamp`|String		|17			|发送请求的时间,格式:yyyyMMddHHmmssSSS	|20180505121212222	|
 
 **常见请求参数约定**
 
 |参数名称		|参数类型	|最大长度	|描述							|示例									|
 |--				|--			|--			|--								|--										|
-|page			|Int		|5			|当前页							|1										|
-|limit			|Int		|6			|每页显示条数					|20										|
-|sign_type		|String		|10			|生成签名字符串所使用的算法类型	|RSA									|
-|sign			|String		|344		|请求参数签名串					|djdu7dusufiusgfu						|
-|access_token	|String		|36			|访问令牌，UUID5				|65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
-|sortFields		|String		|50			|查询排序字段					|id,name,age							|
-|sortTypes		|String		|50			|查询排序类型					|ASC,DESC,ASC							|
+|`page`			|Int		|5			|当前页							|1										|
+|`limit`		|Int		|6			|每页显示条数					|20										|
+|`signType`		|String		|10			|生成签名字符串所使用的算法类型	|RSA									|
+|`sign`			|String		|344		|请求参数签名串					|djdu7dusufiusgfu						|
+|`accessToken`	|String		|36			|访问令牌，UUID5				|65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
+|`sortFields`	|String		|50			|查询排序字段					|id,name,age							|
+|`sortTypes`	|String		|50			|查询排序类型					|ASC,DESC,ASC							|
+
+**常见参数约定**
+
+|参数名称	|参数类型	|最大长度	|描述									|示例								|
+|--			|--			|--			|--										|--									|
+|`count`	|Long		|20			|分页统计条数							|100								|
+|`tenantSys`|String		|36			|系统租户：一级租户（dict_tenant_sys）	|sc									|
+|`tenantCo`	|String		|36			|企业租户：二级租户						|27b106951b964851b73e5d2864e9257b	|
 
 ### 响应定义
-**响应体格式约定**
+**响应体约定**
 
-|参数名称	|参数类型	|最大长度	|描述			|示例																	|
-|--			|--			|--			|--				|--																		|
-|code		|Int		|3			|请求状态码		|200																	|
-|msg		|String		|30			|请求提示信息	|成功																	|
-|flag		|Boolean	|			|请求状态		|true																	|
-|count		|Int		|			|分页统计条数	|null																	|
-|data		|Object		|			|响应数据		|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}	|
+|参数名称	|参数类型	|最大长度	|描述													|示例																	|
+|--			|--			|--			|--														|--																		|
+|`code`		|Int		|3			|响应状态码（同步HTTP状态码）							|200																	|
+|`msg`		|String		|30			|响应提示（除状态码600外，此msg皆表示给开发者的提示）	|成功																	|
+|`flag`		|Boolean	|			|响应状态												|true																	|
+|`traceId`	|String		|			|链路追踪码												|1cc00a1d8be14acc98457b23b8f5ab9f										|
+|`data`		|Object		|			|业务数据												|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}	|
 
-示例：
+msg提示约定：
+- 除状态码600外，此msg皆表示服务端给客户端（即开发者）的请求提示
+- 一般情况其它错误提示，如：500，服务器内部错误等，需前端结合各自业务情况统一拦截处理，转换为优化的用户提示，如：`网络开小差了，请稍后重试...`
+- 优好的用户提示，甚至可到页面步骤级别，不同步骤错误基于不同的友好提示。
+
+响应示例：
 ```json
 {
     "code": 200,
     "msg": "成功",
     "flag": true,
-    "count": null,
+    "traceId": "1cc00a1d8be14acc98457b23b8f5ab9f",
     "data": "【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}"
 }
 ```

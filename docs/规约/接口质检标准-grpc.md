@@ -1,5 +1,5 @@
 # 接口质检标准
-yue-library正计划提供 [grpc]() 支持
+yue-library已提供 [grpc](https://ylyue.cn/#/web-grpc/介绍) 支持
 
 ## 为什么要有接口质检标准，接口质检标准是什么？
 　　接口质检标准是检验API是否规范的一种标准，可帮助我们统一接口管理。一个比较好的实践方案，应该做到语义简洁明了，看到 URL 就知道是做什么的。
@@ -29,29 +29,30 @@ yue-library正计划提供 [grpc]() 支持
 
 ### service类名规范
 |service类名前缀|作用										|示例		|
-|--				|--											|--			|
-|`Open`			|公开接口，无需登录							|`OpenUser`	|
-|`Auth`			|认证接口，需要登录							|`AuthUser`	|
-|`Self`			|自有接口，仅自身内部服务可调用				|`SelfUser`	|
+|--				|--										|--			|
+|`Open`			|互联网公开接口，无需登录					|`OpenUser`	|
+|`Auth`			|互联网认证接口，需要登录					|`AuthUser`	|
+|`Lan`			|局域网内部接口，仅局域网内调用				|`LanUser`	|
+|`Self`			|局域网私有接口，仅局域网内私有领域服务调用	|`SelfUser`	|
 |`Sp`			|三方接口，由服务提供商（三方系统）提供实现	|`SpUser`	|
 
 ### rpc方法名规范
-|rpc动作类型|rpc方法名前缀	|rpc动作解释										|示例（<font color=red>后缀数字为版本号</font>）							|
+|rpc动作类型|rpc方法名前缀	|rpc动作解释											|示例（<font color=red>后缀数字为版本号</font>）								|
 |--			|--				|--													|--																			|
-|增			|`Insert`		|新增、插入、添加									|`InsertUser1`																|
+|增			|`Insert`		|新增、插入、添加										|`InsertUser1`																|
 |删			|`Delete`		|物理删除、逻辑删除									|`DeleteUser`																|
 |改			|`Update`		|修改、更新											|`UpdateUserPassword3`														|
-|查			|`Get`			|单条（一个结果）									|`GetUserById`																|
-|查			|`List`			|列表（多个结果）									|`ListUser33`																|
+|查			|`Get`			|单条（一个结果）										|`GetUserById`																|
+|查			|`List`			|列表（多个结果）										|`ListUser33`																|
 |查			|`Page`			|分页												|`PageUserLikeUsername`														|
-|动作		|`Act`			|登录、注册、上传、下载<br>重置、提交、搜索、支付	|`ActUserLogin`、`ActUserRegister`<br>`ActUserPasswordRest`、`ActUserSearch`|
+|动作		|`Act`			|登录、注册、上传、下载<br>重置、提交、搜索、支付		|`ActUserLogin`、`ActUserRegister`<br>`ActUserPasswordRest`、`ActUserSearch`|
 
 ### 工程结构规范
-|工程模块		|前端（局域网外）调用	|后端（局域网内）调用									|工具模拟访问										|工程公开性				|
-|--				|--						|--														|--													|--						|
+|工程模块		|前端（局域网外）调用		|后端（局域网内）调用									|工具模拟访问										|工程公开性				|
+|--				|--						|--													|--												|--						|
 |前端`internet`	|自身前端业务可调用		|后端不可调用											|工具可模拟访问（不锁定访问者IP）					|只对前端可见			|
-|后端`lan`		|前端不可调用			|其他后端业务调用，自身不可调							|局域网内工具可模拟访问（确认访问者IP）				|只对后端可见			|
-|自身`self`		|前端不可调用			|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
+|后端`lan`		|前端不可调用				|其他后端业务调用，自身不可调							|局域网内工具可模拟访问（确认访问者IP）				|只对后端可见			|
+|自身`self`		|前端不可调用				|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
 
 ### 工程依赖规约
 中台proto工程（无中台可忽略）
@@ -120,7 +121,7 @@ service AuthCommonMessage {
 - 【强制】proto中不允许定义基础message，因为`protobuf message`不支持继承，定义后无论是消息转换还是理解起来，都是繁琐且不优雅的，和封不封装工具类无关。
   - 基础message一但定义便属于一种规范，所有需要的地方都需要引用，嵌套起来无疑是糟糕的，如数据库表中的基础字段。
   - 公共message用于定义`internet、lan、self`之间的公共message。
-- 【强制】程序开发中应提供`proto、json、POJO`之间的相互转换工具类，[👉参见：Convert]()实现随意拉平或嵌套映射。
+- 【强制】程序开发中应提供`proto、json、POJO`之间的相互转换工具类，[👉参见：ProtoUtils](web-grpc/类型转换器.md) 来实现数据对象之间的类型转换。
 - 【强制】`internet、lan、self`三大工程组通用的message应定义在`common-message`工程中，但需要注意的是中台的`common-message`对于业务前台来说是可见的，但业务前台的`common-message`对于中台来说是不可见的。
 - 【强制】虽然不可以定义基础message，但我们可以约束常用字段的类型定义与命名规范，并且这些常用字段应该放在最前面
 
@@ -167,6 +168,7 @@ message CommonFieldProtocol {
 
 ### 最外层响应对象
 Protobuf序列化最外层响应对象 `AnyResult`，用于返回技术架构约定的数据，方便业务定位与异常区分，统一成功请求与异常响应体。
+- 使用`ProtoUtils`来快速构造`AnyResult`
 
 ```protobuf
 syntax = "proto3";
@@ -202,11 +204,50 @@ message AnyResult {
 - 在编辑器（IDE）中配置protobuf path，解决编辑器中的引用提示问题（如IDEA配置：搜索`Protocol Buffers` → 添加`Import Paths` → 指定在`yue/library/Result.proto`父级目录）
 
 #### 异常响应
+> [👉grpc状态码](https://github.com/grpc/grpc/blob/v1.48.0/doc/statuscodes.md)：
+> [java](https://github.com/grpc/grpc-java/blob/v1.48.1/api/src/main/java/io/grpc/Status.java)、
+> [go](https://github.com/grpc/grpc-go/blob/v1.48.0/codes/codes.go)、
+> [web](https://github.com/grpc/grpc-web/blob/1.3.1/javascript/net/grpc/web/statuscode.js)、
+> [ios](https://github.com/grpc/grpc-ios/blob/1.44.3-grpc/native_src/include/grpc/impl/codegen/status.h)
+
 `AnyResult` 应只用于正确的结果响应，异常响应或业务提示应使用 `throw new ResultException`：
 - 将正确响应与异常响应的最外层消息体保持一致，有助于程序封装拦截与业务处理
 - http状态码为200时，永远是前端期望的响应体
-- http状态码为500时，才需要通过`AnyResult.code`区分是客户端异常、还是服务端异常、还是业务提示等
+- http状态码为500时，才需要通过`AnyResult.code`区分是客户端异常、还是服务端异常、还是业务提示等 [👉参见：RESTful-响应定义-code定义](规约/接口质检标准-restful.md?id=响应定义)
 - 而不符合业务需要的grpc状态码，应只用于区分是程序处理后抛出的异常提示（拥有与`AnyResult`类似的Json响应体），还是网络链路中抛出的异常提示（可能是你看不懂的未知错误异常提示）
+
+正确响应示例：
+- 正确响应即正确的protobuf序列化
+- data的数据类型为`google.protobuf.Any`，未拆包时为二进制数据，需手动拆包
+- [](https://github.com/protocolbuffers/protobuf/blob/v21.5/src/google/protobuf/any.proto)
+```json
+{
+    "code": 200,
+    "msg": "成功",
+    "flag": true,
+	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
+	"data": ... // 二进制数据，需手动拆包
+}
+```
+
+错误响应示例：
+
+
+```json
+{
+    "code": 401,
+    "msg": "未登录或登录已失效（Unauthorized）",
+    "flag": false,
+	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
+}
+
+{
+    "code": 401,
+    "msg": "未登录或登录已失效（Unauthorized）",
+    "flag": false,
+	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
+}
+```
 
 ### proto规范示例
 **OpenUser：**`sc/proto/proto-lan/lan-ssc/ssc-md/user/OpenUser.proto`
