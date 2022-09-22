@@ -66,14 +66,13 @@ yue-library工程区分顶级module与子级module：
 ```
 . yue-library
 ├── yue-library                       yue-library顶级模块
-│   ├── yue-library-dependencies          dependencies版本控制
 │   ├── yue-library-base                  基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
 │   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
-│   ├── yue-library-webflux               WebFlux实现，响应式编程（如：SpringCloudGateway）
-│   ├── yue-library-web-grpc              WebFlux实现，响应式编程（如：SpringCloudGateway）
 │   └── yue-library-data-jdbc             ORM框架，基于SpringJdbc，拥有着强大性能的同时又不失简单灵活等
 ├── yue-library-extra                 yue-library子级模块
 │   ├── yue-library-base-crypto           加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
+│   ├── yue-library-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
+│   ├── yue-library-web-grpc              gRPC模块，RPC编程，Protobuf协议定义接口与序列化数据
 │   ├── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
 │   ├── yue-library-data-es               Elasticsearch Rest与SQL客户端（兼容OpenSearch），提供安全认证等属性配置
 │   ├── yue-library-auth-service          OAuth2认证模块，基于SpringSecurity，更简单灵活，提供全局token与登录等
@@ -93,7 +92,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 ```xml
 <parent>
 	<groupId>ai.ylyue</groupId>
-	<artifactId>yue-library-dependencies</artifactId>
+	<artifactId>yue-library</artifactId>
 	<version>${version}</version>
 </parent>
 ```

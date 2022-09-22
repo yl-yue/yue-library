@@ -215,7 +215,8 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}
+	 * <b>批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
 	 *
 	 * @param tableName  表名
 	 * @param paramJsons 参数
@@ -234,7 +235,8 @@ class DbInsert extends DbDelete {
 	}
 
 	/**
-	 * 批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}（不调用 {@link #paramFormat(JSONObject)} 方法）。
+	 * <b>批量插入数据，主键必须为有序 {@value DbConstant#FIELD_DEFINITION_ID}（不调用 {@link #paramFormat(JSONObject)} 方法）</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
 	 *
 	 * @param tableName  表名
 	 * @param paramJsons 参数

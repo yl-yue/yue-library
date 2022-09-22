@@ -6,16 +6,14 @@ import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/empty.proto";
-import "yue/library/Result.proto";
 
 option java_multiple_files = true;
 
 service OpenTableExampleTest {
   rpc GetTableExample(google.protobuf.StringValue) returns (GetTableExampleResponse);
   rpc PageTableExample(PageTableExampleRequest) returns (PageTableExampleResponse);
-  rpc AnyResult2(google.protobuf.StringValue) returns (.yue.library.AnyResult);
-  rpc ActGrpcClientInterceptor(google.protobuf.Empty) returns (.yue.library.AnyResult);
-  rpc GetSuccess(google.protobuf.Empty) returns (.yue.library.AnyResult);
+  rpc AnyResult2(google.protobuf.StringValue) returns (GetTableExampleResponse);
+  rpc ActGrpcClientInterceptor(google.protobuf.Empty) returns (GetTableExampleResponse);
 }
 
 message GetTableExampleResponse {

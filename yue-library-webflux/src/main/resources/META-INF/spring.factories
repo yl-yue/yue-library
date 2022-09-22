@@ -1,4 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.webflux.config.WebFluxAutoConfig,\
-ai.yue.library.webflux.config.exception.ResultErrorAutoConfig

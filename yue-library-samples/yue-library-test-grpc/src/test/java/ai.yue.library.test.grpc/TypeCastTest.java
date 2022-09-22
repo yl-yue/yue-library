@@ -2,21 +2,14 @@ package ai.yue.library.test.grpc;
 
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.IdUtils;
-import ai.yue.library.base.view.R;
 import ai.yue.library.test.grpc.dataobject.TableExampleTestDO;
 import ai.yue.library.test.proto.GetTableExampleResponse;
 import ai.yue.library.test.proto.PhoneType;
 import ai.yue.library.test.proto.TypeTest;
-import ai.yue.library.web.grpc.util.ProtoUtils;
-import com.alibaba.fastjson.JSONValidator;
 import com.google.protobuf.Any;
 import com.google.protobuf.Duration;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import yue.library.AnyResult;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -103,55 +96,6 @@ public class TypeCastTest {
                 .setDeleteUser("ylyue2").setDeleteUserUuid(IdUtils.getSimpleUUID()).setDeleteTime(0)
                 .setFieldOne("field_one2").setFieldTwo("field_two2").setFieldThree("field_three2").build();
         return getTableExampleResponse2;
-    }
-
-    @Test
-    public void anyTypeCastTest() {
-        // AnyResult
-        AnyResult.Builder mapResultBuilder = AnyResult.newBuilder().setCode(200).setCode(200).setMsg("成功").setFlag(true);
-        GetTableExampleResponse getTableExampleResponse = getGetTableExampleResponse();
-        Any mapResultData = Any.pack(getTableExampleResponse);
-        AnyResult mapResult = mapResultBuilder.setData(mapResultData).build();
-        ProtoUtils.registerType(GetTableExampleResponse.getDescriptor());
-        String mapResultJsonStr = ProtoUtils.toJsonString(mapResult);
-        AnyResult.Builder mapResultBuilderTest = AnyResult.newBuilder();
-        ProtoUtils.merge(mapResultJsonStr, mapResultBuilderTest);
-        AnyResult.Builder mapResultBuilderTest2 = ProtoUtils.toBuilder(mapResultJsonStr, AnyResult.Builder.class);
-        Assertions.assertTrue(JSONValidator.from(mapResultJsonStr).validate());
-        Assertions.assertTrue(mapResultJsonStr.contains("type.googleapis.com/ai.yue.library.test.proto.GetTableExampleResponse"));
-        Assertions.assertTrue(mapResultJsonStr.contains("ylyue"));
-        Assertions.assertEquals(200, mapResultBuilderTest.getCode());
-        Assertions.assertEquals(200, mapResultBuilderTest2.getCode());
-    }
-
-    @Test
-    public void toAnyResultTest() throws InvalidProtocolBufferException {
-        // Message to AnyResult
-        GetTableExampleResponse getTableExampleResponse = getGetTableExampleResponse();
-        AnyResult mapResult = ProtoUtils.toAnyResult(R.success(getTableExampleResponse));
-        Assertions.assertEquals(200, mapResult.getCode());
-        Assertions.assertEquals("ylyue", mapResult.getData().unpack(GetTableExampleResponse.class).getCreateUser());
-
-        // DO to AnyResult
-        TableExampleTestDO tableExampleTestDO = getTableExampleTestDO2();
-        AnyResult mapResult2 = ProtoUtils.toAnyResult(R.success(tableExampleTestDO), GetTableExampleResponse.Builder.class);
-        Assertions.assertEquals(200, mapResult.getCode());
-        Assertions.assertEquals("ylyue2", mapResult2.getData().unpack(GetTableExampleResponse.class).getCreateUser());
-    }
-
-    @Test
-    public void success() throws InvalidProtocolBufferException {
-        AnyResult success = ProtoUtils.success();
-        AnyResult success1 = ProtoUtils.success(getGetTableExampleResponse());
-        AnyResult success2 = ProtoUtils.success(getTableExampleTestDO(), GetTableExampleResponse.Builder.class);
-        Assertions.assertEquals(success.getCode(), 200);
-        Assertions.assertEquals(success1.getCode(), 200);
-        Assertions.assertEquals(success2.getCode(), 200);
-        Assertions.assertEquals(success.getFlag(), true);
-        Assertions.assertEquals(success1.getFlag(), true);
-        Assertions.assertEquals(success2.getFlag(), true);
-        Assertions.assertEquals(success1.getData().unpack(GetTableExampleResponse.class).getCreateUser(), "ylyue");
-        Assertions.assertEquals(success2.getData().unpack(GetTableExampleResponse.class).getCreateUser(), "ylyue");
     }
 
 }

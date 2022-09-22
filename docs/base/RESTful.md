@@ -1,16 +1,16 @@
 # RESTful
 RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，yue-library在 [接口质检标准](规约/接口质检标准.md) 的介绍中，已对RESTful风格的API进行了详细的阐述与定义。
 
-## 统一响应体定义（详见：[👉接口质检标准](规约/接口质检标准.md)）
+## 统一响应体定义（详见：[👉接口质检标准](规约/接口质检标准-restful.md)）
 响应体参数介绍：
 
 |参数名称	|参数类型	|最大长度	|描述													|示例																	|
 |--			|--			|--			|--														|--																		|
-|code		|Int		|3			|请求状态码（同步HTTP状态码）							|200																	|
-|msg		|String		|30			|请求提示（除状态码600外，此msg皆表示给开发者的提示）	|成功																	|
-|flag		|Boolean	|			|请求状态												|true																	|
-|count		|Int		|			|分页统计条数											|null																	|
-|data		|Object		|			|响应数据												|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}	|
+|`code`		|Int		|3			|响应状态码（同步HTTP状态码）								|200																	|
+|`msg`		|String		|30			|响应提示（除状态码600外，此msg皆表示给开发者的提示）		|成功																	|
+|`flag`		|Boolean	|			|响应状态												|true																	|
+|`traceId`	|String		|			|链路追踪码												|1cc00a1d8be14acc98457b23b8f5ab9f										|
+|`data`		|Object		|			|业务数据												|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}		|
 
 msg提示约定：
 - 除状态码600外，此msg皆表示服务端给客户端（即开发者）的请求提示
@@ -23,7 +23,7 @@ msg提示约定：
     "code": 200,
     "msg": "成功",
     "flag": true,
-    "count": null,
+    "traceId": "1cc00a1d8be14acc98457b23b8f5ab9f",
     "data": "【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}"
 }
 ```

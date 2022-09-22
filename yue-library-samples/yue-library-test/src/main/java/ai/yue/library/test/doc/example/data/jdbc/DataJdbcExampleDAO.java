@@ -14,7 +14,6 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,7 +97,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 				"WHERE\n" +
 				"	1 = 1 \n" +
 				"	AND user_id > :user_id";
-		int[] updateRowsNumbers = db.deleteBatch2(sql, paramJsons);
+		int[] updateRowsNumbers = db.deleteBatchSql(sql, paramJsons);
 		Console.log(Arrays.toString(updateRowsNumbers));
 	}
 	
@@ -140,7 +139,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 				"WHERE\n" +
 				"	1 = 1 \n" +
 				"	AND user_id > :user_id";
-		int[] updateRowsNumbers = db.updateBatch(sql, paramJsons);
+		int[] updateRowsNumbers = db.updateBatchSql(sql, paramJsons);
 		Console.log(Arrays.toString(updateRowsNumbers));
 	}
 	
@@ -204,7 +203,7 @@ public class DataJdbcExampleDAO extends AbstractDAO {
 	public PageBeforeAndAfterVO pageBeforeAndAfter(PageIPO pageIPO) {
 		String querySql = "";
 		Long equalsId = 30L;
-		return db.pageBeforeAndAfter(querySql, pageIPO, equalsId);
+		return db.pageSqlBeforeAndAfter(querySql, pageIPO, equalsId);
 	}
 
 	/**

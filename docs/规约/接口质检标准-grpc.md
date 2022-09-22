@@ -48,16 +48,21 @@ yue-library已提供 [grpc](https://ylyue.cn/#/web-grpc/介绍) 支持
 |动作		|`Act`			|登录、注册、上传、下载<br>重置、提交、搜索、支付		|`ActUserLogin`、`ActUserRegister`<br>`ActUserPasswordRest`、`ActUserSearch`|
 
 ### 工程结构规范
-|工程模块		|前端（局域网外）调用		|后端（局域网内）调用									|工具模拟访问										|工程公开性				|
-|--				|--						|--													|--												|--						|
-|前端`internet`	|自身前端业务可调用		|后端不可调用											|工具可模拟访问（不锁定访问者IP）					|只对前端可见			|
-|后端`lan`		|前端不可调用				|其他后端业务调用，自身不可调							|局域网内工具可模拟访问（确认访问者IP）				|只对后端可见			|
-|自身`self`		|前端不可调用				|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
+|<div style="width:108px">工程模块</div>|前端（互联网）调用	|后端（局域网）调用										|测试工具模拟访问									|工程公开性				|
+|--										|--					|--														|--													|--						|
+|公共`common`							|公共message		|`internet、lan、self`公共message					|公共message										|公共message			|
+|前端`internet`							|自身前端业务可调用	|后端不可调用											|工具可模拟访问（不锁定访问者IP）					|只对前端可见			|
+|后端`lan`								|前端不可调用		|其他后端业务调用，自身不可调							|局域网内工具可模拟访问（确认访问者IP）				|只对后端可见			|
+|后端`self`								|前端不可调用		|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
+
+> **自身（私域）业务指：**<br>
+> 一般在大型项目中（如：行业解决方案），业务众多繁杂且串联性较强，按微服务划分之后，此时可能会出现上百个独立微服务模块，为了方便管理维护，一般会对这些微服务根据业务特性进行分层与分类，
+> 不同业务之间的微服务按照业务领域或产品特性等原则进行归类划分，甚至会划分出多个独立的产品，串联出一条业务线。<br>
+> 而自身（私域）业务便是指代，这些独立产品之间的解耦区分，因此`self`接口只可被自身产品内部的微服务相互调用。
 
 ### 工程依赖规约
 中台proto工程（<font color=red>无中台可忽略</font>）
 ```
-. proto-sc
 ├── proto-common              公共message
 │   ├── common-message            公共message（中台与业务共用）
 │   ├── common-mdp                微服务开发平台（仅自身internet、lan、self可用）
@@ -75,7 +80,6 @@ yue-library已提供 [grpc](https://ylyue.cn/#/web-grpc/介绍) 支持
 
 业务proto工程
 ```
-. proto-bf
 ├── proto-common         	  公共message
 │   ├── common-message            公共message（业务共用）
 │   ├── common-auth               认证服务（仅自身internet、lan、self可用）
@@ -91,25 +95,34 @@ yue-library已提供 [grpc](https://ylyue.cn/#/web-grpc/介绍) 支持
     └── self-user                 用户服务
 ```
 
+**工程仓库（git仓库）结构建议在不同阶段采用不同方式：**
+- 初始阶段：一个大仓库，保留分组路径，前后端都统一编译统一依赖
+- 分层阶段：四个大仓库，proto依赖同样保留分组路径，前端按需编译，后端统一编译
+- 解耦阶段：按分层划分四个代码组，按私域划分独立仓库
+  - 前端按需（`common、internet`）、按私域独立编译模块实现解耦引用
+  - 后端按私域独立编译模块实现解耦引用
+
+**工程路径引用示例说明：**
 - 在`proto-common`工程组下定义公共message，并编译为独立模块（同谷歌`google/protobuf/wrappers.proto`编译为独立模块引用）
-- 工程模块为`common-ssc`，工程路径为`sc/proto-common/common-ssc/msg`
+- 工程模块为`common-auth`，工程路径为`xxx/proto/proto-common/common-auth/msg`
+  - `xxx`为你的项目名（产品线名）
 
 ```protobuf
-package sc.proto.common.ssc.msg;
+package xxx.proto.common.auth.msg;
 
 message CommonMessageRquest {
   string name = 1;
 }
 ```
 
-- 业务依赖方将`common-ssc`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`common-ssc/msg`
+- 业务依赖方将`common-auth`独立模块，引入至依赖工程，proto文件采用相对路径引用，故引用路径为`proto-common/common-auth/msg`
 
 ```protobuf
 import "google/protobuf/wrappers.proto";
-import "common-ssc/msg/CommonMessage.proto";
+import "proto-common/common-auth/msg/CommonMessage.proto";
 
 service AuthCommonMessage {
-  rpc ActRegister(sc.proto.common.ssc.msg.CommonMessageRquest) returns (google.protobuf.BoolValue);
+  rpc ActRegister(xxx.proto.common.auth.msg.CommonMessageRquest) returns (google.protobuf.BoolValue);
 }
 ```
 
@@ -166,105 +179,18 @@ message CommonFieldProtocol {
 }
 ```
 
-### 最外层响应对象
-Protobuf序列化最外层响应对象 `AnyResult`，用于返回技术架构约定的数据，方便业务定位与异常区分，统一成功请求与异常响应体。
-- 使用`ProtoUtils`来快速构造`AnyResult`
-
-```protobuf
-syntax = "proto3";
-package yue.library;
-
-import "google/protobuf/wrappers.proto";
-import "google/protobuf/any.proto";
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/duration.proto";
-
-option java_multiple_files = true;
-
-/**
- * Protobuf序列化最外层响应对象，更适应RESTful风格API（此对象外层应和业务无关，用于返回技术架构约定的数据）
- */
-message AnyResult {
-  // 响应状态码
-  int32 code = 1;
-  // 响应提示
-  string msg = 2;
-  // 响应状态
-  bool flag = 3;
-  // 链路追踪码
-  string trace_id = 4;
-  // 业务数据
-  google.protobuf.Any data = 5;
-}
-```
-
-#### 编译说明
-- java中此proto文件已内置在`web-grpc`模块内，可直接 `import "yue/library/Result.proto";` 引用，也可以将此文件拷贝至你期望的目录进行编译，但不要改变proto中的内容
-- 其他语言（js、oc、go等）直接将此文件拷贝至你期望的目录进行编译，但不要改变proto文件中的内容（你可以为文件添加内容，但不要修改内容）
-- 在编辑器（IDE）中配置protobuf path，解决编辑器中的引用提示问题（如IDEA配置：搜索`Protocol Buffers` → 添加`Import Paths` → 指定在`yue/library/Result.proto`父级目录）
-
-#### 异常响应
-> [👉grpc状态码](https://github.com/grpc/grpc/blob/v1.48.0/doc/statuscodes.md)：
-> [java](https://github.com/grpc/grpc-java/blob/v1.48.1/api/src/main/java/io/grpc/Status.java)、
-> [go](https://github.com/grpc/grpc-go/blob/v1.48.0/codes/codes.go)、
-> [web](https://github.com/grpc/grpc-web/blob/1.3.1/javascript/net/grpc/web/statuscode.js)、
-> [ios](https://github.com/grpc/grpc-ios/blob/1.44.3-grpc/native_src/include/grpc/impl/codegen/status.h)
-
-`AnyResult` 应只用于正确的结果响应，异常响应或业务提示应使用 `throw new ResultException`：
-- 将正确响应与异常响应的最外层消息体保持一致，有助于程序封装拦截与业务处理
-- http状态码为200时，永远是前端期望的响应体
-- http状态码为500时，才需要通过`AnyResult.code`区分是客户端异常、还是服务端异常、还是业务提示等 [👉参见：RESTful-响应定义-code定义](规约/接口质检标准-restful.md?id=响应定义)
-- 而不符合业务需要的grpc状态码，应只用于区分是程序处理后抛出的异常提示（拥有与`AnyResult`类似的Json响应体），还是网络链路中抛出的异常提示（可能是你看不懂的未知错误异常提示）
-
-正确响应示例：
-- 正确响应即正确的protobuf序列化
-- data的数据类型为`google.protobuf.Any`，未拆包时为二进制数据，需手动拆包
-- [](https://github.com/protocolbuffers/protobuf/blob/v21.5/src/google/protobuf/any.proto)
-```json
-{
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
-	"data": ... // 二进制数据，需手动拆包
-}
-```
-
-错误响应示例：
-
-
-```json
-{
-    "code": 401,
-    "msg": "未登录或登录已失效（Unauthorized）",
-    "flag": false,
-	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
-}
-
-{
-    "code": 401,
-    "msg": "未登录或登录已失效（Unauthorized）",
-    "flag": false,
-	"trace_id": "6c887b56b3214c5f9f40b9c89cfa7a32"
-}
-```
-
 ### proto规范示例
 **OpenUser：**`sc/proto/proto-lan/lan-ssc/ssc-md/user/OpenUser.proto`
+
 ```protobuf
 syntax = "proto3";
 
 package sc.proto.lan.ssc.md.user;
 
-import "yue/library/Result.proto";
-
 service OpenUser {
-  // Any to Response
-  rpc ActUserLogin (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc ActUserRegister (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc ActUserPasswordRest (Request) returns (.yue.library.AnyResult);
+  rpc ActUserLogin (Request) returns (Response);
+  rpc ActUserRegister (Request) returns (Response);
+  rpc ActUserPasswordRest (Request) returns (Response);
 }
 
 message Request {
@@ -277,28 +203,20 @@ message Response {
 ```
 
 **AuthUser：**`sc/proto/proto-self/self-ssc/ssc-md/user/AuthUser.proto`
+
 ```protobuf
 syntax = "proto3";
 
 package sc.proto.self.ssc.md.user;
 
-import "yue/library/Result.proto";
-
 service AuthUser {
-  // Any to Response
-  rpc DeleteUser (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc UpdateUserPassword2 (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc UpdateUserPassword3 (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc GetUserById (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc ListUser32 (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc ListUser33 (Request) returns (.yue.library.AnyResult);
-  // Any to Response
-  rpc PageUserLikeUsername (Request) returns (.yue.library.AnyResult);
+  rpc DeleteUser (Request) returns (Response);
+  rpc UpdateUserPassword2 (Request) returns (Response);
+  rpc UpdateUserPassword3 (Request) returns (Response);
+  rpc GetUserById (Request) returns (Response);
+  rpc ListUser32 (Request) returns (Response);
+  rpc ListUser33 (Request) returns (Response);
+  rpc PageUserLikeUsername (Request) returns (Response);
 }
 
 message Request {
@@ -309,3 +227,38 @@ message Response {
   string result = 1;
 }
 ```
+
+## 异常响应
+> [👉grpc状态码](https://github.com/grpc/grpc/blob/v1.48.0/doc/statuscodes.md)：
+> [java](https://github.com/grpc/grpc-java/blob/v1.48.1/api/src/main/java/io/grpc/Status.java)、
+> [go](https://github.com/grpc/grpc-go/blob/v1.48.0/codes/codes.go)、
+> [web](https://github.com/grpc/grpc-web/blob/1.3.1/javascript/net/grpc/web/statuscode.js)、
+> [ios](https://github.com/grpc/grpc-ios/blob/1.44.3-grpc/native_src/include/grpc/impl/codegen/status.h)
+
+**统一异常响应体使用HTTP状态码与gRPC状态码职责对照：**
+
+|HTTP状态码	|gRPC状态码			|异常范围	|
+|--			|--					|--			|
+|4xx		|3 INVALID_ARGUMENT	|客户端错误	|
+|5xx		|13 INTERNAL		|服务端异常	|
+|600		|12 UNIMPLEMENTED	|业务提示	|
+
+**统一异常响应体示例：**
+```json
+{
+    "code": 401,
+    "msg": "未登录或登录已失效（Unauthorized）",
+    "data": ... // 更多详细的异常提示或异常堆栈等信息，在生产环境一般会在网关中进行屏蔽掉此类信息向外输出
+}
+```
+
+**统一异常响应体`code`码区分：**
+- `4xx`客户端异常、`5xx`服务端异常、`600`业务提示，详细定义参见：[👉RESTful-响应定义-code定义](规约/接口质检标准-restful.md?id=响应定义)
+
+**gRPC状态码区分：**
+- `3 INVALID_ARGUMENT`客户端异常、`13 INTERNAL`服务端异常、`12 UNIMPLEMENTED`业务提示
+- 当grpc状态码为`3、12、13`时，更多的出现是RESTful风格的异常响应体，因此这很容易区分出，客户端获得的是业务程序处理后抛出的异常提示（拥有统一异常响应体），还是网络链路中抛出的异常提示（未拥有统一异常响应体的未知错误提示）
+- 当grpc状态码不为`3、12、13`时，很明显这不是业务程序抛出的异常，应该准确定位网络链路中哪一环节出了问题
+
+**`traceId`的统一响应：**
+- 链路ID推荐在gRPC Metadata（Response Header）中进行统一添加

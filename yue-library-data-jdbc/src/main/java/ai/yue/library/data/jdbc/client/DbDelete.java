@@ -82,10 +82,10 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除
+	 * 物理删除
 	 *
-	 * @param tableName		表名
-	 * @param paramJson		条件
+	 * @param tableName 表名
+	 * @param paramJson 条件
 	 * @return 删除所影响的行数
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
@@ -97,22 +97,22 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除-By有序主键
+	 * 物理删除-By有序主键
 	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_ID}</p>
 	 * <p>数据库字段值：大整数；推荐单表时数据库自增、分布式时雪花自增</p>
 	 * <p>数据删除前会先进行条数确认</p>
 	 * <p><code style="color:red">依赖于接口传入 {@value DbConstant#FIELD_DEFINITION_ID} 参数时慎用此方法</code>，避免有序主键被遍历风险，造成数据越权行为。推荐使用 {@link #deleteByUuid(String, String)}</p>
-     * 
-     * @param tableName	表名
-     * @param id     	有序主键
-     */
+	 *
+	 * @param tableName 表名
+	 * @param id        有序主键
+	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteById(String tableName, Long id) {
 		deleteByPk(tableName, id);
     }
 
 	/**
-	 * 删除-By无序主键
+	 * 物理删除-By无序主键
 	 * <p>数据库字段名：{@value DbConstant#FIELD_DEFINITION_UUID}，可在 application.yml 或 {@linkplain JdbcProperties} Bean 中重新自定义配置字段名</p>
 	 * <p>数据库字段值：字符串；推荐UUID5、无符号、32位</p>
 	 * <p>数据删除前会先进行条数确认</p>
@@ -126,12 +126,13 @@ class DbDelete extends DbUpdate {
 	}
 
 	/**
-	 * 删除-批量
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
-     * 
-     * @param tableName		表名
-     * @param paramJsons	条件数组
-     */
+	 * <b>物理删除-批量</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
+	 *
+	 * @param tableName  表名
+	 * @param paramJsons 条件数组
+	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public void deleteBatch(String tableName, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
@@ -142,9 +143,9 @@ class DbDelete extends DbUpdate {
     }
 
 	/**
-	 * <b>删除-批量</b>
-	 * <p>不调用 {@link #paramFormat(JSONObject)} 方法</p>
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key</p>
+	 * <b>物理删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
 	 *
 	 * @param tableName		表名
 	 * @param paramJsons	条件数组
@@ -166,43 +167,6 @@ class DbDelete extends DbUpdate {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);
 			}
 		}
-	}
-
-	/**
-	 * <b>删除-批量</b>
-	 * <p>同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}</p>
-	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
-	 *
-	 * @param sql        要执行的删除SQL
-	 * @param paramJsons 删除所用到的条件数组
-	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
-	 */
-	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public int[] deleteBatch2(String sql, JSONObject[] paramJsons) {
-		for (JSONObject paramJson : paramJsons) {
-			paramFormat(paramJson);
-		}
-
-		return deleteBatchNotParamFormat2(sql, paramJsons);
-	}
-
-	/**
-	 * <b>删除-批量</b>
-	 * <p>不调用 {@link #paramFormat(JSONObject)} 方法</p>
-	 * <p>同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}</p>
-	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
-	 *
-	 * @param sql        要执行的删除SQL
-	 * @param paramJsons 删除所用到的条件数组
-	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
-	 */
-	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public int[] deleteBatchNotParamFormat2(String sql, JSONObject[] paramJsons) {
-		// 1. 数据加密
-		dataEncryptExtractTable(sql, paramJsons);
-
-		// 2. 执行
-		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
 	// Delete Logic
@@ -314,7 +278,8 @@ class DbDelete extends DbUpdate {
 	/**
 	 * 逻辑删除-批量
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
      * 
      * @param tableName		表名
      * @param paramJsons	条件数组
@@ -331,7 +296,8 @@ class DbDelete extends DbUpdate {
 	/**
 	 * 逻辑删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）
 	 * <p>数据非真实删除，而是更改 {@link JdbcProperties().getFieldDefinitionDeleteTime()} 字段值为时间戳，代表数据已删除
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
 	 *
 	 * @param tableName		表名
 	 * @param paramJsons	条件数组
@@ -367,6 +333,42 @@ class DbDelete extends DbUpdate {
 				throw new DbException(ResultPrompt.DELETE_BATCH_ERROR);
 			}
 		}
+	}
+
+	/**
+	 * <b>自定义删除-批量</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
+	 *
+	 * @param sql        要执行的删除SQL
+	 * @param paramJsons 删除所用到的条件数组
+	 * @return 一个数组，其中包含受批处理中每个删除影响的行数
+	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+	public int[] deleteBatchSql(String sql, JSONObject[] paramJsons) {
+		for (JSONObject paramJson : paramJsons) {
+			paramFormat(paramJson);
+		}
+
+		return deleteBatchSqlNotParamFormat(sql, paramJsons);
+	}
+
+	/**
+	 * <b>自定义删除-批量（不调用 {@link #paramFormat(JSONObject)} 方法）</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>示例：<code>DELETE FROM table WHERE id = :id</code></p>
+	 *
+	 * @param sql        要执行的删除SQL
+	 * @param paramJsons 删除所用到的条件数组
+	 * @return 一个数组，其中包含受批处理中每个删除影响的行数
+	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+	public int[] deleteBatchSqlNotParamFormat(String sql, JSONObject[] paramJsons) {
+		// 1. 数据加密
+		dataEncryptExtractTable(sql, paramJsons);
+
+		// 2. 执行
+		return getNamedParameterJdbcTemplate().batchUpdate(sql, paramJsons);
 	}
 
 }

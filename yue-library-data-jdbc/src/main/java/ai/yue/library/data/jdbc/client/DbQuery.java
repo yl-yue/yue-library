@@ -445,7 +445,7 @@ class DbQuery extends DbJdbcTemplate {
      * @param equalsId			做比较的条件ID（将与查询结果的主键ID做比较）
      * @return {@linkplain PageBeforeAndAfterVO}
      */
-    public PageBeforeAndAfterVO pageBeforeAndAfter(String querySql, PageIPO pageIPO, Long equalsId) {
+    public PageBeforeAndAfterVO pageSqlBeforeAndAfter(String querySql, PageIPO pageIPO, Long equalsId) {
         // 1. 参数校验
         if (StringUtils.isEmpty(querySql)) {
             throw new DbException("querySql不能为空");

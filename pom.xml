@@ -22,16 +22,10 @@
             - 顶级module与子级module会在不同版本进行对调
      -->
     <modules>
-        <!-- 增强库-dependencies -->
-        <module>yue-library-dependencies</module>
         <!-- 增强库 -->
         <module>yue-library-base</module>
         <!-- 增强库-web模块 -->
         <module>yue-library-web</module>
-        <!-- 增强库-webflux模块 -->
-        <module>yue-library-webflux</module>
-        <!-- 增强库-web-grpc模块 -->
-        <module>yue-library-web-grpc</module>
         <!-- 增强库-jdbc模块 -->
         <module>yue-library-data-jdbc</module>
     </modules>
@@ -236,6 +230,28 @@
                 <version>${plumelog.version}</version>
             </dependency>
 
+            <!-- grpc -->
+            <dependency>
+                <groupId>net.devh</groupId>
+                <artifactId>grpc-spring-boot-starter</artifactId>
+                <version>${grpc-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
+                <version>${protobuf-util.version}</version>
+            </dependency>
+
             <!-- 支付 -->
             <dependency>
                 <groupId>com.egzosn</groupId>
@@ -350,6 +366,18 @@
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${nexus-staging-maven-plugin.version}</version>
+                </plugin>
+
+                <!-- grpc -->
+                <plugin>
+                    <groupId>kr.motd.maven</groupId>
+                    <artifactId>os-maven-plugin</artifactId>
+                    <version>${os-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.xolstice.maven.plugins</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>${protobuf-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -198,7 +198,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="LoginException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="LoginException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>

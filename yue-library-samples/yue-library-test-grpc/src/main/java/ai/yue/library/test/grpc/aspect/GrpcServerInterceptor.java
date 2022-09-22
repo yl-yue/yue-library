@@ -6,7 +6,6 @@ import com.google.protobuf.MessageOrBuilder;
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
-import yue.library.AnyResult;
 
 import java.net.SocketAddress;
 
@@ -64,14 +63,12 @@ public class GrpcServerInterceptor implements ServerInterceptor {
         }
 
         @Override
-        public void sendMessage(RespT message) {
+        public void sendHeaders(Metadata headers) {
             String traceId = IdUtils.getSimpleUUID();
             log.info("响应拦截，写入链路ID：{}", traceId);
-            if (message instanceof AnyResult) {
-                message = (RespT) ((AnyResult) message).toBuilder().setTraceId(traceId).build();
-            }
-
-            super.sendMessage(message);
+            Metadata.Key<String> key = Metadata.Key.of("traceId", Metadata.ASCII_STRING_MARSHALLER);
+            headers.put(key, traceId);
+            super.sendHeaders(headers);
         }
 
     }

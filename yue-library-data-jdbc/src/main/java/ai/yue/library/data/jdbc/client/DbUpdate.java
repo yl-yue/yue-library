@@ -15,13 +15,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <h2>SQL优化型数据库操作</h2>
@@ -33,7 +35,7 @@ class DbUpdate extends DbQuery {
 	// Spring Update
 
 	/**
-	 * 更新或插入数据，主键默认为id时使用。
+	 * <b>更新或插入数据，主键默认为id时使用</b>
 	 * <p>注意：此方法不支持数据审计、数据填充、数据脱敏、逻辑删除</p>
 	 *
 	 * @param sql         更新或插入SQL
@@ -41,25 +43,24 @@ class DbUpdate extends DbQuery {
 	 * @return 自动生成的键(可能由JDBC insert语句返回)或更新的主键id值。
 	 */
 	@Transactional
-	public Long update(String sql, SqlParameterSource paramSource) {
+	public Long updateSql(String sql, SqlParameterSource paramSource) {
 		GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 		long updateRowsNumber = getNamedParameterJdbcTemplate().update(sql, paramSource, generatedKeyHolder);
 		int expectedValue = 1;
 		updateAndExpectedEqual(updateRowsNumber, expectedValue);
 		return generatedKeyHolder.getKey().longValue();
 	}
-	
+
 	/**
-	 * 更新数据<br>
-     * 同 {@linkplain NamedParameterJdbcTemplate#update(String, Map)}<br>
+	 * <b>更新数据</b>
 	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
-     *
-     * @param sql			要执行的更新SQL
-     * @param paramJson		更新所用到的参数
+	 *
+	 * @param sql       要执行的更新SQL
+	 * @param paramJson 更新所用到的参数
 	 * @return 受影响的行数
-     */
-	@Transactional
-	public long update(String sql, JSONObject paramJson) {
+	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
+	public long updateSql(String sql, JSONObject paramJson) {
 		// 参数美化
 		paramFormat(paramJson);
 
@@ -71,13 +72,9 @@ class DbUpdate extends DbQuery {
 	}
 
 	/**
-	 * 更新数据<br>
+	 * <b>更新数据</b>
 	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
-	 *
-	 * <ul>
-	 *     <li>对 {@linkplain NamedParameterJdbcTemplate#update(String, Map)} 方法的增强实现</li>
-	 *     <li>将会对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DbException}</li>
-	 * </ul>
+	 * <p>对更新所影响的行数进行预期判断，若结果不符合预期值：<b>expectedValue</b>，那么此处便会抛出一个 {@linkplain DbException}</p>
 	 *
 	 * @param sql            要执行的更新SQL
 	 * @param paramJson      更新所用到的参数
@@ -85,8 +82,8 @@ class DbUpdate extends DbQuery {
 	 * @param dbExpectedEnum 预期值确认方式
 	 */
 	@Transactional
-	public void update(String sql, JSONObject paramJson, int expectedValue, DbExpectedEnum dbExpectedEnum) {
-		long updateRowsNumber = update(sql, paramJson);
+	public void updateSql(String sql, JSONObject paramJson, int expectedValue, DbExpectedEnum dbExpectedEnum) {
+		long updateRowsNumber = updateSql(sql, paramJson);
 		if (DbExpectedEnum.EQ == dbExpectedEnum) {
 			updateAndExpectedEqual(updateRowsNumber, expectedValue);
 		} else if (DbExpectedEnum.GE == dbExpectedEnum) {
@@ -95,8 +92,8 @@ class DbUpdate extends DbQuery {
 	}
 
 	/**
-	 * 对多组参数进行批量更新处理<br>
-	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 * <b>自定义更新数据-批量</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
 	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
 	 *
 	 * @param sql        要执行的更新SQL
@@ -104,25 +101,25 @@ class DbUpdate extends DbQuery {
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
 	@Transactional
-	public int[] updateBatch(String sql, JSONObject[] paramJsons) {
+	public int[] updateBatchSql(String sql, JSONObject[] paramJsons) {
 		for (JSONObject paramJson : paramJsons) {
 			paramFormat(paramJson);
 		}
 
-		return updateBatchNotParamFormat(sql, paramJsons);
+		return updateBatchSqlNotParamFormat(sql, paramJsons);
 	}
 
 	/**
-	 * 对多组参数进行批量更新处理<br>
-	 * 同 {@linkplain NamedParameterJdbcTemplate#batchUpdate(String, Map[])}<br>
+	 * <b>自定义更新数据-批量（不调用 {@link #paramFormat(JSONObject)} 方法）</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
 	 * <p>注意：此方法暂不支持数据审计、数据填充、逻辑删除</p>
 	 *
 	 * @param sql        要执行的更新SQL
-	 * @param paramJsons 更新所用到的参数数组（不调用 {@link #paramFormat(JSONObject)} 方法）
+	 * @param paramJsons 更新所用到的参数数组
 	 * @return 一个数组，其中包含受批处理中每个更新影响的行数
 	 */
 	@Transactional(rollbackFor = {RuntimeException.class, Error.class})
-	public int[] updateBatchNotParamFormat(String sql, JSONObject[] paramJsons) {
+	public int[] updateBatchSqlNotParamFormat(String sql, JSONObject[] paramJsons) {
 		// 数据脱敏
 		dataEncryptExtractTable(sql, paramJsons);
 
@@ -503,8 +500,9 @@ class DbUpdate extends DbQuery {
 	}
 	
 	/**
-	 * 更新-批量
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * <b>更新数据-批量</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
 	 * 
      * @param tableName    	表名
      * @param paramJsons	更新所用到的参数数组
@@ -520,8 +518,9 @@ class DbUpdate extends DbQuery {
 	}
 
 	/**
-	 * 更新-批量（不调用 {@link #paramFormat(JSONObject)} 方法）
-	 * <p>一组条件对应一条数据，并且每组条件都采用相同的key
+	 * <b>更新数据-批量（不调用 {@link #paramFormat(JSONObject)} 方法）</b>
+	 * <p>一组参数对应一次执行，每次执行都使用第一组参数生成的SQL，此方法将循环执行变为批处理，性能极佳</p>
+	 * <p>此方法一组参数只可影响一行数据，否则抛出 {@linkplain DbException}</p>
 	 *
 	 * @param tableName    	表名
 	 * @param paramJsons	更新所用到的参数数组

@@ -22,8 +22,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +55,7 @@ public class JdbcController {
 	public Result<?> insertSql(UserDO userDO) {
 		String sql = "insert into user (cellphone, role, user_status) values (:cellphone, :role, :user_status)";
 		JSONObject paramJson = MapUtils.toSnakeCase(userDO);
-		return R.success(db.update(sql, new MapSqlParameterSource(paramJson)));
+		return R.success(db.updateSql(sql, new MapSqlParameterSource(paramJson)));
 	}
 
 	@PostMapping("/insertAndReturnUuid")
@@ -177,6 +175,11 @@ public class JdbcController {
 
 		// 返回结果
 		return R.success(jdbcDAO.getById(id));
+	}
+
+	@GetMapping("/list")
+	public Result<?> list(Long id) {
+		return R.success(db.listAll(tableName));
 	}
 
 	/**

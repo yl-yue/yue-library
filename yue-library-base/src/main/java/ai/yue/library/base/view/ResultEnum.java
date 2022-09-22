@@ -1,10 +1,9 @@
 package ai.yue.library.base.view;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 
 /**
  * Result HTTP 状态码枚举
@@ -97,12 +96,6 @@ public enum ResultEnum {
 	
 	REQUEST_ERROR(501, "请求错误"),
 	
-	/**
-	 * @deprecated 此错误响应容易引起纠纷争议，特此废弃。可使用 {@link #REQUEST_ERROR} 代替
-	 */
-	@Deprecated
-	ERROR(501, "请求错误"),
-	
 	BAD_GATEWAY(502, "Bad Gateway"),
 	
 	/**
@@ -129,15 +122,8 @@ public enum ResultEnum {
     /**
      * 错误提示，请使用具体的错误提示信息覆盖此 {@link #msg}
      */
-    ERROR_PROMPT(600, "错误提示，请使用具体的错误提示信息覆盖此msg"),
+    ERROR_PROMPT(600, "错误提示，请使用具体的错误提示信息覆盖此msg");
     
-    /**
-     * 开发者自定义类型提示，请覆盖： {@linkplain #msg}
-     * @deprecated 请使用 {@link #ERROR_PROMPT}
-     */
-    @Deprecated
-    DEV_CUSTOM_TYPE_PROMPT(600, "开发者自定义类型提示，请覆盖。");
-	
 	private Integer code;
 	private String msg;
 	

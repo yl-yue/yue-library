@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library-dependencies</artifactId>
+		<artifactId>yue-library</artifactId>
 		<version>j11.2.6.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-template-boot</artifactId>

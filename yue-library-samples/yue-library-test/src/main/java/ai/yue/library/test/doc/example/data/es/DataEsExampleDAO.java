@@ -76,7 +76,7 @@ public class DataEsExampleDAO extends AbstractDAO {
 				"WHERE\n" +
 				"	1 = 1 \n" +
 				"	AND user_id > :user_id";
-		int[] updateRowsNumbers = db.deleteBatch2(sql, paramJsons);
+		int[] updateRowsNumbers = db.deleteBatchSql(sql, paramJsons);
 		Console.log(Arrays.toString(updateRowsNumbers));
 	}
 	
@@ -130,7 +130,7 @@ public class DataEsExampleDAO extends AbstractDAO {
 	public PageBeforeAndAfterVO pageBeforeAndAfter(PageIPO pageIPO) {
 		String querySql = "";
 		Long equalsId = 30L;
-		return db.pageBeforeAndAfter(querySql, pageIPO, equalsId);
+		return db.pageSqlBeforeAndAfter(querySql, pageIPO, equalsId);
 	}
 	
 }
