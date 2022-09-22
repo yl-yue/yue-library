@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
+
 /**
  * 数据审计
  *
@@ -26,6 +28,10 @@ public class DataAuditDO extends BaseCamelCaseDO {
 	String password;
 	/** 邮箱 */
 	String email;
+	/** 用户性别 */
+	Character sex;
+	/** 用户生日 */
+	LocalDate birthday;
 
 	/**
 	 * 业务主键（如：uuid、身份证自然主键）

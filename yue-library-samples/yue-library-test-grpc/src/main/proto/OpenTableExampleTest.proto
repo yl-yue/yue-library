@@ -12,7 +12,6 @@ option java_multiple_files = true;
 service OpenTableExampleTest {
   rpc GetTableExample(google.protobuf.StringValue) returns (GetTableExampleResponse);
   rpc PageTableExample(PageTableExampleRequest) returns (PageTableExampleResponse);
-  rpc AnyResult2(google.protobuf.StringValue) returns (GetTableExampleResponse);
   rpc ActGrpcClientInterceptor(google.protobuf.Empty) returns (GetTableExampleResponse);
 }
 

@@ -92,7 +92,7 @@
           <stringProp name="CriticalSectionController.lockName">global_lock</stringProp>
         </CriticalSectionController>
         <hashTree>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="GetTableExample" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="GetTableExample" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -106,7 +106,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="PageTableExample" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="PageTableExample" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -123,21 +123,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="AnyResult2" enabled="true">
-            <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
-            <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
-            <stringProp name="GRPCSampler.metadata"></stringProp>
-            <stringProp name="GRPCSampler.host">${ip}</stringProp>
-            <stringProp name="GRPCSampler.port">${port}</stringProp>
-            <stringProp name="GRPCSampler.fullMethod">ai.yue.library.test.proto.OpenTableExampleTest/AnyResult2</stringProp>
-            <stringProp name="GRPCSampler.deadline">1000</stringProp>
-            <boolProp name="GRPCSampler.tls">false</boolProp>
-            <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
-            <stringProp name="GRPCSampler.requestJson">80ae25f4b1ab11ec98c400163e0f274d</stringProp>
-            <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
-          </vn.zalopay.benchmark.GRPCSampler>
-          <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ActGrpcClientInterceptor" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ActGrpcClientInterceptor" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -151,26 +137,12 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">0</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="GetSuccess" enabled="false">
-            <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
-            <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
-            <stringProp name="GRPCSampler.metadata"></stringProp>
-            <stringProp name="GRPCSampler.host">${ip}</stringProp>
-            <stringProp name="GRPCSampler.port">${port}</stringProp>
-            <stringProp name="GRPCSampler.fullMethod">ai.yue.library.test.proto.OpenTableExampleTest/GetSuccess</stringProp>
-            <stringProp name="GRPCSampler.deadline">0</stringProp>
-            <boolProp name="GRPCSampler.tls">false</boolProp>
-            <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
-            <stringProp name="GRPCSampler.requestJson"></stringProp>
-            <stringProp name="GRPCSampler.channelAwaitTermination">0</stringProp>
-          </vn.zalopay.benchmark.GRPCSampler>
-          <hashTree/>
         </hashTree>
-        <CriticalSectionController guiclass="CriticalSectionControllerGui" testclass="CriticalSectionController" testname="Exception" enabled="false">
+        <CriticalSectionController guiclass="CriticalSectionControllerGui" testclass="CriticalSectionController" testname="Exception" enabled="true">
           <stringProp name="CriticalSectionController.lockName">global_lock</stringProp>
         </CriticalSectionController>
         <hashTree>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="Exception" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="Exception" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -184,7 +156,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ResultException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ResultException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -212,7 +184,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="AttackException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="AttackException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -226,7 +198,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ForbiddenException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ForbiddenException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -240,7 +212,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ApiVersionDeprecatedException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ApiVersionDeprecatedException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -254,7 +226,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ParamVoidException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ParamVoidException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -268,7 +240,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ParamException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ParamException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -296,7 +268,7 @@
             <stringProp name="GRPCSampler.channelAwaitTermination">1000</stringProp>
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
-          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ActClientFallbackException" enabled="false">
+          <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="ActClientFallbackException" enabled="true">
             <stringProp name="GRPCSampler.protoFolder">${proto_root_directory}</stringProp>
             <stringProp name="GRPCSampler.libFolder">${proto_lib_directory1}</stringProp>
             <stringProp name="GRPCSampler.metadata"></stringProp>
@@ -311,7 +283,7 @@
           </vn.zalopay.benchmark.GRPCSampler>
           <hashTree/>
         </hashTree>
-        <CriticalSectionController guiclass="CriticalSectionControllerGui" testclass="CriticalSectionController" testname="JMeter测试用例" enabled="false">
+        <CriticalSectionController guiclass="CriticalSectionControllerGui" testclass="CriticalSectionController" testname="JMeter测试用例" enabled="true">
           <stringProp name="CriticalSectionController.lockName">global_lock</stringProp>
           <stringProp name="TestPlan.comments">用于JMeter插件测试</stringProp>
         </CriticalSectionController>

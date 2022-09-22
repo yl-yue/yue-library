@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public class JdbcProperties implements Serializable, Cloneable {
 	/**
 	 * 数据审计表名
 	 */
-	private List<String> dataAuditTableNames;
+	private List<String> dataAuditTableNames = new ArrayList<>();
 
 	/**
 	 * 数据填充表名匹配方式
@@ -132,7 +133,7 @@ public class JdbcProperties implements Serializable, Cloneable {
 	/**
 	 * 数据填充表名
 	 */
-	private List<String> dataFillTableNames;
+	private List<String> dataFillTableNames = new ArrayList<>();
 
 	@Override
 	public JdbcProperties clone() {

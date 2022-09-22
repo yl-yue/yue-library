@@ -1,5 +1,6 @@
 package ai.yue.library.base.constant;
 
+import ai.yue.library.base.util.ListUtils;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public enum MatchEnum {
     MATCH{
         @Override
         public boolean getExecResult(String value, List<String> matchList) {
-            if (matchList == null) {
+            if (ListUtils.isEmpty(matchList)) {
                 return false;
             }
 
@@ -38,7 +39,7 @@ public enum MatchEnum {
     EXCLUDE {
         @Override
         public boolean getExecResult(String value, List<String> matchList) {
-            if (matchList == null) {
+            if (ListUtils.isEmpty(matchList)) {
                 return true;
             }
 
