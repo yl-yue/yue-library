@@ -55,7 +55,7 @@ yue-library已提供 [grpc](https://ylyue.cn/#/web-grpc/介绍) 支持
 |自身`self`		|前端不可调用				|只可被自身内部服务调用（一个内部业务被拆分多个微服务）	|局域网内授权IP使用工具可模拟访问（锁定访问者IP）	|只对自身内部服务可见	|
 
 ### 工程依赖规约
-中台proto工程（无中台可忽略）
+中台proto工程（<font color=red>无中台可忽略</font>）
 ```
 . proto-sc
 ├── proto-common              公共message
