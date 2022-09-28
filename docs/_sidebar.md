@@ -1,9 +1,9 @@
-* 入门
+* 🚪入门
 
   * [介绍](README.md "SpringBoot增强库yue-library入门介绍")
   * [快速开始](quickstart.md "快速使用yue-library")
 
-* yue-library-base（必备）
+* 💡yue-library-base（必备）
 
   * [介绍](base/介绍.md "yue-library-base介绍")
   * [RESTful](base/RESTful.md)
@@ -14,25 +14,25 @@
   * [网络代理](base/网络代理.md)
   * [HTTP客户端](base/HTTP客户端.md)
 
-* yue-library-base-crypto
+* 🔐yue-library-base-crypto
 
   * [介绍](base-crypto/介绍.md "yue-library-base-crypto介绍")
   * [快速开始](base-crypto/快速开始.md "yue-library-base-crypto快速开始")
   * [常用业务加解密](base-crypto/常用业务加解密.md "yue-library-base-crypto常用业务加解密")
   * [密钥交换加密](base-crypto/密钥交换加密.md "密钥交换加密")
 
-* yue-library-web/webflux（web必备）
+* 🌐yue-library-web/webflux（web必备）
 
   * [介绍](web/介绍.md "yue-library-web/webflux介绍")
   * [请求参数解析与包装](web/请求参数解析与包装.md)
   * [响应消息转换器](web/响应消息转换器.md)
 
-* yue-library-web-grpc（grpc必备）
+* 🌐yue-library-web-grpc（grpc必备）
 
   * [介绍](web-grpc/介绍.md "yue-library-web/web-grpc介绍")
   * [类型转换器](web-grpc/类型转换器.md)
 
-* yue-library-data-jdbc（推荐）
+* 🥞yue-library-data-jdbc（推荐）
 
   * [快速开始](data/jdbc/快速开始.md "yue-library-data-jdbc快速开始")
   * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
@@ -48,26 +48,26 @@
   * [多租户](data/jdbc/多租户.md)
   * [动态数据源](data/jdbc/动态数据源.md)
 
-* yue-library-data-redis
+* 🥝yue-library-data-redis
 
   * [介绍](data/redis/介绍.md "yue-library-data-redis介绍")
   * [快速开始](data/redis/快速开始.md "yue-library-data-redis快速开始")
   * [分布式锁与接口幂等性](data/redis/分布式锁与接口幂等性.md "yue-library-data-redis分布式锁与接口幂等性")
   * [分布式缓存](data/redis/分布式缓存.md "yue-library-data-redis分布式缓存")
 
-* yue-library-data-es
+* 🔍yue-library-data-es
 
   * [介绍](data/es/介绍.md "yue-library-data-es介绍")
 
-* yue-library-auth
+* 🆔yue-library-auth
 
   * [介绍](auth/介绍.md "yue-library-auth介绍")
 
-* yue-library-pay
+* 💲yue-library-pay
 
   * [快速开始](pay/快速开始.md "yue-library-pay快速开始")
 
-* yue-规约
+* 📔yue-规约
 
   * [规约](规约/规约.md)
   * [接口质检标准-restful](规约/接口质检标准-restful.md)
@@ -76,11 +76,11 @@
   * [数据库设计与交付规约](规约/数据库设计与交付规约.md)
   * [安全](规约/安全.md)
 
-* yue-library-samples
+* 📁yue-library-samples
 
   * [template-boot](samples/template-boot.md)
 
-* 开源共建
+* 👨‍👦‍👦开源共建
 
   * [开源共建](开源共建/开源共建.md)
   * [开源共建-任务清单](开源共建/开源共建-任务清单.md)
