@@ -6,24 +6,10 @@
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
-		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>yue-library-web-grpc</artifactId>
 	<name>yue-library-web-grpc</name>
 	<description>yue library web grpc 增强实现</description>
-
-	<dependencyManagement>
-		<dependencies>
-			<!-- grpc -->
-			<dependency>
-				<groupId>ai.ylyue</groupId>
-				<artifactId>yue-library-dependencies</artifactId>
-				<version>${revision}${sha1}${changelist}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<!-- yue-library -->

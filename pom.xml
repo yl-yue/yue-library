@@ -13,21 +13,29 @@
     </description>
     <url>https://ylyue.cn</url>
 
-    <!--
-        此处定义的module为当前版本的顶级module：
-            - 顶级module即父子模块，迭代维护频繁
-            - 子级module属于当前版本已成熟或暂不需要频繁迭代维护的模块
-            - 子级module位于：yue-library-extra目录下
-            - 区分顶级module与子级module的目的在于，进行多模块打包时，可以加快构建速度并且增强模块独立维护性（子级module未迭代且兼容的情况下，不再随主版本一起发布）
-            - 顶级module与子级module会在不同版本进行对调
-     -->
     <modules>
         <!-- 增强库 -->
         <module>yue-library-base</module>
+        <!-- 增强库-加密模块 -->
+        <module>yue-library-base-crypto</module>
         <!-- 增强库-web模块 -->
         <module>yue-library-web</module>
+        <!-- 增强库-webflux模块 -->
+        <module>yue-library-webflux</module>
+        <!-- 增强库-web-grpc模块 -->
+        <module>yue-library-web-grpc</module>
         <!-- 增强库-jdbc模块 -->
         <module>yue-library-data-jdbc</module>
+        <!-- 增强库-redis模块 -->
+        <module>yue-library-data-redis</module>
+        <!-- 增强库-es模块 -->
+        <module>yue-library-data-es</module>
+        <!-- 增强库-认证客户端模块 -->
+        <module>yue-library-auth-client</module>
+        <!-- 增强库-认证服务模块 -->
+        <module>yue-library-auth-service</module>
+        <!-- 增强库-pay模块 -->
+        <module>yue-library-pay</module>
     </modules>
 
     <properties>
@@ -35,6 +43,14 @@
         <revision>j${java.version}.2.6.1</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
+        <yue-library-base-crypto.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-base-crypto.version>
+        <yue-library-webflux.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-webflux.version>
+        <yue-library-web-grpc.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-web-grpc.version>
+        <yue-library-data-redis.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-data-redis.version>
+        <yue-library-data-es.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-data-es.version>
+        <yue-library-auth-client.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-auth-client.version>
+        <yue-library-auth-service.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-auth-service.version>
+        <yue-library-pay.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-pay.version>
         <spring-boot.version>2.6.8</spring-boot.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
@@ -62,6 +78,7 @@
         <protobuf-util.version>3.20.1</protobuf-util.version>
 
         <!-- plugins.version -->
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
@@ -104,23 +121,23 @@
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-base-crypto</artifactId>
+                <version>${yue-library-base-crypto.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-web</artifactId>
                 <version>${revision}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-webflux</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-webflux.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-web-grpc</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
-            </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-base-crypto</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-web-grpc.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
@@ -130,27 +147,27 @@
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-data-redis</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-data-redis.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-data-es</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-data-es.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-auth-client</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-auth-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-auth-service</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-auth-service.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-pay</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-pay.version}</version>
             </dependency>
 
             <!-- hutool工具包 -->
@@ -305,7 +322,7 @@
     <distributionManagement>
         <snapshotRepository>
             <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/2135979-snapshot-6OuNFB/</url>
+            <url>https://repo.rdc.aliyun.com/repository/2316263-snapshot-sodoaV/</url>
         </snapshotRepository>
         <repository>
             <id>oss-releases</id>
@@ -387,6 +404,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
