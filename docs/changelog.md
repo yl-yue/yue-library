@@ -13,7 +13,41 @@
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## j11.2.6.1【规划中】
+## j11.2.6.2【规划中】
+## j11.2.6.1【2022-12-28】
+这是一个分水岭版本，从下本版本开始，yue-library将不再注重大而全，而是精简与引领技术栈，会封装常用特性，但不会引入偏门的技术栈，如：grpc。
+此类特性会作为脚手架demo提供。
+- 新增grpc模块，但下个版本会移除，变为脚手架demo方式
+- 完善了jdbc框架，提供了优雅SQL编写等诸多能力，但很遗憾下个版本此模块将被移除，以后会改为支持mybatis-plus
+- 删除yue-library-dependencies模块（长期无多大价值），改直接依赖父级yue-library模块
+
+### 新特性
+- 【base】优化Result类为技术架构请求响应最外层对象，只包含技术架构约定数据，不再包含业务数据
+- 【base】新增异常断言工具类`Assert`
+- 【jdbc】BaseDAO新增insertAndReturnUuid()方法
+- 【jdbc】修复物理删除时，生成的SQL语句没有WHERE关键字
+- 【jdbc】实现批量新增获取UUID
+- 【jdbc】修复PostgreSQL方言关键字包装`""`，在参数中滥用导致的兼容bug
+- 【jdbc】新增Sql拼接工具类`Sql`
+- 【jdbc】规范jdbc注释，更加规范直观，补充完善jdbc文档，更加规范完善，添加示例与规范
+- 【grpc】新增grpc restful全局异常处理
+- 【grpc】新增proto与json互转工具类ProtoUtils
+
+### Bug修复
+- 【jdbc】db修复deleteLogic()逻辑删除，缺失delete_time添加追加的bug
+- 【jdbc】修复数据审计表名未进行判空处理，导致的空指针异常
+
+### Maven关键依赖库
+[**👉Maven详细依赖定义见pom.xml文件**](https://gitee.com/yl-yue/yue-library/blob/j11.2.6.1/pom.xml)
+
+|依赖库					|依赖版本	|
+|--						|--			|
+|spring-boot			|2.6.8		|
+|spring-cloud			|2021.0.3	|
+|spring-cloud-alibaba	|2021.0.1.0	|
+|hutool					|5.7.22		|
+|fastjson				|1.2.83		|
+
 ## j11.2.6.0【2022-05-09】
 - 主要变更：升级SpringBoot到2.6.x，实现依赖优化与版本控制，加入grpc与plumelog，优化逻辑删除与物理删除分离
 - 主要新特性：数据脱敏、数据审计、数据填充
