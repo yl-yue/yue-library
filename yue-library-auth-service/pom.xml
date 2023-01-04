@@ -8,6 +8,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-auth-service</artifactId>
+	<version>${yue-library-auth-service.version}${sha1}${changelist}</version>
 	<name>yue-library-auth-service</name>
 	<description>yue-library 认证服务模块</description>
 	

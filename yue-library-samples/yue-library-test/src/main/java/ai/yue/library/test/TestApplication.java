@@ -1,5 +1,6 @@
 package ai.yue.library.test;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2018年6月8日
  */
 @SpringBootApplication
+@MapperScan("ai.yue.library.test.mapper")
 public class TestApplication {
 
     public static void main(String[] args) throws Exception {

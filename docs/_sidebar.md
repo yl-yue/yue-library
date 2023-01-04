@@ -27,26 +27,11 @@
   * [请求参数解析与包装](web/请求参数解析与包装.md)
   * [响应消息转换器](web/响应消息转换器.md)
 
-* 🌐yue-library-web-grpc（grpc必备）
+* 🥞yue-library-data-mybatis（推荐）
 
-  * [介绍](web-grpc/介绍.md "yue-library-web/web-grpc介绍")
-  * [类型转换器](web-grpc/类型转换器.md)
-
-* 🥞yue-library-data-jdbc（推荐）
-
-  * [快速开始](data/jdbc/快速开始.md "yue-library-data-jdbc快速开始")
-  * [AbstractBaseDAO](data/jdbc/AbstractBaseDAO.md)
-  * [增删改查](data/jdbc/增删改查.md)
-  * [Jdbc配置](data/jdbc/Jdbc配置.md)
-  * [SQL方言](data/jdbc/SQL方言.md)
-  * [工具方法](data/jdbc/工具方法.md "yue-library-data-jdbc工具方法")
-  * [DO基类](data/jdbc/DO基类.md "yue-library-data-jdbcDO基类")
-  * [逻辑删除](data/jdbc/逻辑删除.md "yue-library-data-jdbc逻辑删除")
-  * [数据脱敏](data/jdbc/数据脱敏.md)
-  * [数据审计](data/jdbc/数据审计.md)
-  * [数据填充](data/jdbc/数据填充.md)
-  * [多租户](data/jdbc/多租户.md)
-  * [动态数据源](data/jdbc/动态数据源.md)
+  * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")
+  * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
+  * [数据填充](data/mybatis/数据填充.md "yue-library-data-mybatis数据填充")
 
 * 🥝yue-library-data-redis
 
@@ -63,15 +48,10 @@
 
   * [介绍](auth/介绍.md "yue-library-auth介绍")
 
-* 💲yue-library-pay
-
-  * [快速开始](pay/快速开始.md "yue-library-pay快速开始")
-
 * 📔yue-规约
 
   * [规约](规约/规约.md)
-  * [接口质检标准-restful](规约/接口质检标准-restful.md)
-  * [接口质检标准-grpc](规约/接口质检标准-grpc.md)
+  * [接口质检标准-RESTful](规约/接口质检标准-RESTful.md)
   * [服务端规约](规约/服务端规约.md)
   * [数据库设计与交付规约](规约/数据库设计与交付规约.md)
   * [安全](规约/安全.md)

@@ -8,6 +8,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base-crypto</artifactId>
+	<version>${yue-library-base-crypto.version}${sha1}${changelist}</version>
 	<name>${project.artifactId}</name>
 	<description>yue-library 加密解密</description>
 

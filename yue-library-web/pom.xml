@@ -8,6 +8,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-web</artifactId>
+	<version>${yue-library-web.version}${sha1}${changelist}</version>
 	<name>yue-library-web</name>
 	<description>yue-基础库-web</description>
 	

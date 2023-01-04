@@ -8,6 +8,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base</artifactId>
+	<version>${yue-library-base.version}${sha1}${changelist}</version>
 	<name>yue-library-base</name>
 	<description>yue-基础库</description>
 	

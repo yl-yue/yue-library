@@ -1,3 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.web.grpc.config.WebGrpcAutoConfig

@@ -8,6 +8,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-data-es</artifactId>
+	<version>${yue-library-data-es.version}${sha1}${changelist}</version>
 	<name>yue-library-data-es</name>
 	<description>yue-library-data-es</description>
 	
@@ -18,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-jdbc</artifactId>
+			<artifactId>yue-library-data-mybatis</artifactId>
 		</dependency>
 		
 		<!-- es init - start -->

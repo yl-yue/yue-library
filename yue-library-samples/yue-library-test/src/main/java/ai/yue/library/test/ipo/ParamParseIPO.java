@@ -1,6 +1,6 @@
 package ai.yue.library.test.ipo;
 
-import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
+import ai.yue.library.data.mybatis.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParamParseIPO extends BaseCamelCaseDO {
+public class ParamParseIPO extends BaseEntity {
 
     List<String> stringList;
 

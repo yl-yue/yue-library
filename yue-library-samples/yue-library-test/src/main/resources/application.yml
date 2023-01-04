@@ -5,7 +5,7 @@ spring:
     name: yue-library-test
   profiles:
     group:
-      "yue": "yue-library-base,yue-library-data-jdbc,yue-library-auth-client"
+      "yue": "yue-library-base,yue-library-data-mybatis,yue-library-auth-client"
       "test": "test-confidential"
       "test-performance": "test-confidential-performance"
     active: yue,test

@@ -1,4 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile: yue-library-web-grpc

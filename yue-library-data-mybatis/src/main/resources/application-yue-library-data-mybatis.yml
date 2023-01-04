@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: yue-library-data-mybatis
+  datasource:
+    druid:
+      filter:
+        slf4j:
+          enabled: true
+          statement-executable-sql-log-enable: true
+          statement-execute-query-after-log-enabled: false
+          statement-execute-after-log-enabled: false
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          statement-parameter-set-log-enabled: false
+          statement-prepare-after-log-enabled: false
+    dynamic:
+      druid:
+        slf4j:
+          enable: true
+          statement-executable-sql-log-enable: true
+          statement-execute-query-after-log-enabled: false
+          statement-execute-after-log-enabled: false
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          statement-parameter-set-log-enabled: false
+          statement-prepare-after-log-enabled: false
+        filters: slf4j
+logging:
+  level:
+    # 默认执行SQL打印
+    druid.sql.Statement: DEBUG

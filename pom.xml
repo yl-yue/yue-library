@@ -22,10 +22,8 @@
         <module>yue-library-web</module>
         <!-- 增强库-webflux模块 -->
         <module>yue-library-webflux</module>
-        <!-- 增强库-web-grpc模块 -->
-        <module>yue-library-web-grpc</module>
-        <!-- 增强库-jdbc模块 -->
-        <module>yue-library-data-jdbc</module>
+        <!-- 增强库-mybatis模块 -->
+        <module>yue-library-data-mybatis</module>
         <!-- 增强库-redis模块 -->
         <module>yue-library-data-redis</module>
         <!-- 增强库-es模块 -->
@@ -34,48 +32,44 @@
         <module>yue-library-auth-client</module>
         <!-- 增强库-认证服务模块 -->
         <module>yue-library-auth-service</module>
-        <!-- 增强库-pay模块 -->
-        <module>yue-library-pay</module>
     </modules>
 
     <properties>
         <!-- yue.version -->
-        <revision>j${java.version}.2.6.1</revision>
+        <revision>j${java.version}.2.6.2</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <yue-library-base-crypto.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-base-crypto.version>
-        <yue-library-webflux.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-webflux.version>
-        <yue-library-web-grpc.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-web-grpc.version>
-        <yue-library-data-redis.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-data-redis.version>
-        <yue-library-data-es.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-data-es.version>
-        <yue-library-auth-client.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-auth-client.version>
-        <yue-library-auth-service.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-auth-service.version>
-        <yue-library-pay.version>j${java.version}.2.6.1${sha1}${changelist}</yue-library-pay.version>
-        <spring-boot.version>2.6.8</spring-boot.version>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
+        <spring-boot.version>2.6.11</spring-boot.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <!-- yue-library.version -->
+        <yue-library-base.version>j${java.version}.2.6.2</yue-library-base.version>
+        <yue-library-base-crypto.version>j${java.version}.2.6.1</yue-library-base-crypto.version>
+        <yue-library-web.version>j${java.version}.2.6.1</yue-library-web.version>
+        <yue-library-webflux.version>j${java.version}.2.6.1</yue-library-webflux.version>
+        <yue-library-data-mybatis.version>j${java.version}.2.6.2</yue-library-data-mybatis.version>
+        <yue-library-data-redis.version>j${java.version}.2.6.1</yue-library-data-redis.version>
+        <yue-library-data-es.version>j${java.version}.2.6.2</yue-library-data-es.version>
+        <yue-library-auth-client.version>j${java.version}.2.6.1</yue-library-auth-client.version>
+        <yue-library-auth-service.version>j${java.version}.2.6.1</yue-library-auth-service.version>
+
         <!-- dependencies.version -->
-        <hutool.version>5.7.22</hutool.version>
+        <hutool.version>5.8.11</hutool.version>
         <bouncycastle.version>1.68</bouncycastle.version>
         <fastjson.version>1.2.83</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
-        <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
-        <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
-        <pay.version>2.12.8</pay.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
+        <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
         <easypoi.version>4.2.0</easypoi.version>
         <easyexcel.version>2.2.6</easyexcel.version>
         <jpush.version>3.4.7</jpush.version>
-
-        <!-- dependencies-grpc.version -->
-        <grpc.version>1.42.2</grpc.version>
-        <grpc-spring-boot-starter.version>2.13.1.RELEASE</grpc-spring-boot-starter.version>
-        <protobuf-util.version>3.20.1</protobuf-util.version>
 
         <!-- plugins.version -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
@@ -83,16 +77,6 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-
-        <!-- plugins-grpc.version -->
-        <protoc.version>3.19.4</protoc.version>
-        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
-        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
-
-        <!-- plugins-grpc.version -->
-        <protoc.version>3.19.4</protoc.version>
-        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
-        <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -117,57 +101,47 @@
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-base</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-base.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-base-crypto</artifactId>
-                <version>${yue-library-base-crypto.version}</version>
+                <version>${yue-library-base-crypto.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-web</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <version>${yue-library-web.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-webflux</artifactId>
-                <version>${yue-library-webflux.version}</version>
+                <version>${yue-library-webflux.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-web-grpc</artifactId>
-                <version>${yue-library-web-grpc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-data-jdbc</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
+                <artifactId>yue-library-data-mybatis</artifactId>
+                <version>${yue-library-data-mybatis.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-data-redis</artifactId>
-                <version>${yue-library-data-redis.version}</version>
+                <version>${yue-library-data-redis.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-data-es</artifactId>
-                <version>${yue-library-data-es.version}</version>
+                <version>${yue-library-data-es.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-auth-client</artifactId>
-                <version>${yue-library-auth-client.version}</version>
+                <version>${yue-library-auth-client.version}${sha1}${changelist}</version>
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-auth-service</artifactId>
-                <version>${yue-library-auth-service.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-pay</artifactId>
-                <version>${yue-library-pay.version}</version>
+                <version>${yue-library-auth-service.version}${sha1}${changelist}</version>
             </dependency>
 
             <!-- hutool工具包 -->
@@ -247,63 +221,24 @@
                 <version>${plumelog.version}</version>
             </dependency>
 
-            <!-- grpc -->
+            <!-- mybatis-plus -->
             <dependency>
-                <groupId>net.devh</groupId>
-                <artifactId>grpc-spring-boot-starter</artifactId>
-                <version>${grpc-spring-boot-starter.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.grpc</groupId>
-                <artifactId>grpc-protobuf</artifactId>
-                <version>${grpc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.grpc</groupId>
-                <artifactId>grpc-stub</artifactId>
-                <version>${grpc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java-util</artifactId>
-                <version>${protobuf-util.version}</version>
-            </dependency>
-
-            <!-- 支付 -->
-            <dependency>
-                <groupId>com.egzosn</groupId>
-                <artifactId>pay-java-ali</artifactId><!-- 支付宝 -->
-                <version>${pay.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.egzosn</groupId>
-                <artifactId>pay-java-wx</artifactId><!-- 微信 -->
-                <version>${pay.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.egzosn</groupId>
-                <artifactId>pay-java-union</artifactId><!-- 银联 -->
-                <version>${pay.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.egzosn</groupId>
-                <artifactId>pay-java-paypal</artifactId><!-- 跨境支付paypal -->
-                <version>${pay.version}</version>
-            </dependency>
-
-            <!-- 其他 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
                 <version>${dynamic-datasource.version}</version>
             </dependency>
 
+            <!-- 其他 -->
             <dependency>
                 <groupId>cn.afterturn</groupId>
                 <artifactId>easypoi-spring-boot-starter</artifactId>
                 <version>${easypoi.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>cn.jpush.api</groupId>
                 <artifactId>jpush-client</artifactId>
@@ -383,18 +318,6 @@
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${nexus-staging-maven-plugin.version}</version>
-                </plugin>
-
-                <!-- grpc -->
-                <plugin>
-                    <groupId>kr.motd.maven</groupId>
-                    <artifactId>os-maven-plugin</artifactId>
-                    <version>${os-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.xolstice.maven.plugins</groupId>
-                    <artifactId>protobuf-maven-plugin</artifactId>
-                    <version>${protobuf-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
