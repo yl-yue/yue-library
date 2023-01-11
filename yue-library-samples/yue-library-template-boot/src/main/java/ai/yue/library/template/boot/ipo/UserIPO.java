@@ -1,4 +1,4 @@
-package ai.yue.library.template.boot.ipo.user;
+package ai.yue.library.template.boot.ipo;
 
 import ai.yue.library.base.validation.annotation.Birthday;
 import ai.yue.library.base.validation.annotation.Cellphone;

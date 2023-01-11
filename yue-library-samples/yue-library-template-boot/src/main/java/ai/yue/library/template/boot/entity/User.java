@@ -1,6 +1,6 @@
-package ai.yue.library.template.boot.dataobject.user;
+package ai.yue.library.template.boot.entity;
 
-import ai.yue.library.data.jdbc.dataobject.BaseCamelCaseDO;
+import ai.yue.library.data.mybatis.entity.BaseEntity;
 import ai.yue.library.template.boot.constant.user.SexEnum;
 import ai.yue.library.template.boot.constant.user.UserStatusEnum;
 import lombok.Data;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserDO extends BaseCamelCaseDO {
+public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 908912816212643805L;
 	

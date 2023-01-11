@@ -15,7 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * Spring(Spring boot)工具封装，包括：
+ * 应用上下文工具类，用于在普通类中获取Spring IOC容器中的bean对象，包括：
  *
  * <pre>
  *     1、Spring IOC容器中的bean对象获取

@@ -87,13 +87,12 @@ public Result<?> pathVariable(@PathVariable String opt) {
 
 |参数名称		|参数类型	|最大长度	|描述							|示例									|
 |--				|--			|--			|--								|--										|
-|`page`			|Int		|5			|当前页							|1										|
-|`limit`		|Int		|6			|每页显示条数					|20										|
-|`signType`		|String		|10			|生成签名字符串所使用的算法类型	|RSA									|
+|`pageNum`		|Int		|5			|分页查询-当前页					|1										|
+|`pageSize`		|Int		|6			|分页查询-每页显示条数			|20										|
+|`orderBy`	    |String		|50			|分页查询-排序字段				|id,name,age							|
 |`sign`			|String		|344		|请求参数签名串					|djdu7dusufiusgfu						|
-|`accessToken`	|String		|36			|访问令牌，UUID5				|65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
-|`sortFields`	|String		|50			|查询排序字段					|id,name,age							|
-|`sortTypes`	|String		|50			|查询排序类型					|ASC,DESC,ASC							|
+|`signType`		|String		|10			|生成签名字符串所使用的算法类型	    |RSA									|
+|`accessToken`	|String		|36			|访问令牌，UUID5				    |65dbec7a-1df5-5413-bf41-9d4e41ee4ba7	|
 
 **常见参数约定**
 

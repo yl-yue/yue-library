@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library</artifactId>
-		<version>j11.2.6.0-SNAPSHOT</version>
+		<version>j11.2.6.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-template-boot</artifactId>
 	<name>${project.artifactId}</name>
@@ -16,27 +16,54 @@
 	</description>
 	
 	<dependencies>
+		<!-- yue-library -->
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-jdbc</artifactId>
+			<artifactId>yue-library-data-mybatis</artifactId>
 		</dependency>
-		
+
+		<!-- spring-boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>*confidential*.properties</exclude>
+						<exclude>*confidential*.yml</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

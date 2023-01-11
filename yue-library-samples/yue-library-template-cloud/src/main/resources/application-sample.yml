@@ -1,9 +1,4 @@
 spring:
-  datasource: 
-    druid: 
-      url: jdbc:mysql://localhost:3306/yue_library_template_boot?characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true
-      username: root
-      password: 123456
   rabbitmq:
     addresses: localhost:5672 #服务器的地址和端口
     username: rabbitmq #用户名

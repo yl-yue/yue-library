@@ -48,7 +48,7 @@ public abstract class BaseEntity implements Serializable {
 	/**
 	 * 排序索引
 	 */
-	protected Integer sortIdx = 0;
+	protected Integer sortIdx;
 
 	/**
 	 * 创建人：用户名、昵称、人名

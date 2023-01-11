@@ -1,7 +1,7 @@
-package ai.yue.library.template.boot.controller.user;
+package ai.yue.library.template.boot.controller;
 
 import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.template.boot.service.user.UserService;
+import ai.yue.library.template.boot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

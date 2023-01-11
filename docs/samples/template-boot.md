@@ -77,7 +77,7 @@ yue-library增强特性：
 2021-07-21 14:40:02.940  INFO 40720 --- [nio-8080-exec-1] a.y.l.template.boot.aspect.HttpAspect    : requestIp=0:0:0:0:0:0:0:1
 2021-07-21 14:40:02.940  INFO 40720 --- [nio-8080-exec-1] a.y.l.template.boot.aspect.HttpAspect    : requestUri=/auth/v1.2/user/listAll
 2021-07-21 14:40:02.940  INFO 40720 --- [nio-8080-exec-1] a.y.l.template.boot.aspect.HttpAspect    : requestMethod=GET
-2021-07-21 14:40:02.941  INFO 40720 --- [nio-8080-exec-1] a.y.l.template.boot.aspect.HttpAspect    : requestHandlerMethod=ai.yue.library.template.boot.controller.user.AuthUserController.listAll()
+2021-07-21 14:40:02.941  INFO 40720 --- [nio-8080-exec-1] a.y.l.template.boot.aspect.HttpAspect    : requestHandlerMethod=ai.yue.library.template.cloud.controller.user.AuthUserController.listAll()
 2021-07-21 14:40:02.977 DEBUG 40720 --- [nio-8080-exec-1] druid.sql.Statement                      : {conn-10001, pstmt-20000} Parameters : []
 2021-07-21 14:40:02.977 DEBUG 40720 --- [nio-8080-exec-1] druid.sql.Statement                      : {conn-10001, pstmt-20000} Types : []
 2021-07-21 14:40:03.025 DEBUG 40720 --- [nio-8080-exec-1] druid.sql.Statement                      : {conn-10001, pstmt-20000} executed. SELECT * FROM `user` WHERE 1 = 1 

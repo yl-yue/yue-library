@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: yue-library-template-cloud
+  profiles:
+    group:
+      "yue": "yue-library-base,yue-library-data-mybatis"
+      "test": "test-confidential"
+    active: yue,test
+
+#logging:
+#  level:
+#    org.springframework: debug

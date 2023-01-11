@@ -1,9 +1,9 @@
-package ai.yue.library.template.boot.controller.user;
+package ai.yue.library.template.boot.controller;
 
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.template.boot.ipo.user.UserIPO;
-import ai.yue.library.template.boot.service.user.UserService;
+import ai.yue.library.template.boot.ipo.UserIPO;
+import ai.yue.library.template.boot.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

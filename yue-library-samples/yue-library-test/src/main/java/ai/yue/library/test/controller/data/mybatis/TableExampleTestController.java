@@ -2,7 +2,6 @@ package ai.yue.library.test.controller.data.mybatis;
 
 import ai.yue.library.base.ipo.ValidationGroups;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.data.mybatis.ipo.PageIPO;
 import ai.yue.library.test.ipo.TableExampleTestIPO;
 import ai.yue.library.test.service.TableExampleTestService;
 import org.springframework.beans.factory.annotation.Autowired;

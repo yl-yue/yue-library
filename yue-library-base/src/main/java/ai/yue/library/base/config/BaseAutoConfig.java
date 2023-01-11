@@ -1,12 +1,5 @@
 package ai.yue.library.base.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.web.client.RestTemplate;
-
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
@@ -15,10 +8,15 @@ import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory
 import ai.yue.library.base.config.net.proxy.NetProxy;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
-import ai.yue.library.base.util.ApplicationContextUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * base bean 自动配置
@@ -28,10 +26,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Import({ ApplicationContextUtils.class, SpringUtils.class, NetProxy.class, AsyncConfig.class,
-		DateTimeFormatConfig.class })
-@EnableConfigurationProperties({ ApiVersionProperties.class, ExceptionHandlerProperties.class, RestProperties.class,
-		CorsProperties.class, })
+@Import({SpringUtils.class, NetProxy.class, AsyncConfig.class, DateTimeFormatConfig.class})
+@EnableConfigurationProperties({ApiVersionProperties.class, ExceptionHandlerProperties.class, RestProperties.class, CorsProperties.class,})
 public class BaseAutoConfig {
 	
 	// RestTemplate-HTTPS客户端
