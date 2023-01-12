@@ -1,4 +1,4 @@
-package ai.yue.library.template.boot.dao;
+package ai.yue.library.template.boot.mapper;
 
 import ai.yue.library.template.boot.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

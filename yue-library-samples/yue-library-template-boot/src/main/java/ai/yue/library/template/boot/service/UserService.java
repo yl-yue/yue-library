@@ -5,7 +5,7 @@ import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultPrompt;
 import ai.yue.library.data.mybatis.service.BaseService;
-import ai.yue.library.template.boot.dao.UserMapper;
+import ai.yue.library.template.boot.mapper.UserMapper;
 import ai.yue.library.template.boot.entity.User;
 import ai.yue.library.template.boot.ipo.UserIPO;
 import org.springframework.beans.factory.annotation.Autowired;

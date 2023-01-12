@@ -2,7 +2,7 @@ package ai.yue.library.template.boot.ipo;
 
 import ai.yue.library.base.validation.annotation.Birthday;
 import ai.yue.library.base.validation.annotation.Cellphone;
-import ai.yue.library.template.boot.constant.user.SexEnum;
+import ai.yue.library.template.boot.constant.SexEnum;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

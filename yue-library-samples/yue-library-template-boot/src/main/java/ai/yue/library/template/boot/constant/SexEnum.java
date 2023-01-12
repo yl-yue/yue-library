@@ -1,4 +1,4 @@
-package ai.yue.library.template.boot.constant.user;
+package ai.yue.library.template.boot.constant;
 
 /**
  * 性别

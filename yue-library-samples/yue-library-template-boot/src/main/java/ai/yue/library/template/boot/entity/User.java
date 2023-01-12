@@ -1,8 +1,8 @@
 package ai.yue.library.template.boot.entity;
 
 import ai.yue.library.data.mybatis.entity.BaseEntity;
-import ai.yue.library.template.boot.constant.user.SexEnum;
-import ai.yue.library.template.boot.constant.user.UserStatusEnum;
+import ai.yue.library.template.boot.constant.SexEnum;
+import ai.yue.library.template.boot.constant.UserStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
