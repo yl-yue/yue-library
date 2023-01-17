@@ -36,6 +36,7 @@
   <!-- * [数据脱敏](data/mybatis/数据脱敏.md "yue-library-data-mybatis数据脱敏") -->
   <!-- * [逻辑删除](data/mybatis/逻辑删除.md "yue-library-data-mybatis逻辑删除") -->
   * [多租户](data/mybatis/多租户.md "yue-library-data-mybatis多租户")
+  * [分页](data/mybatis/分页.md "yue-library-data-mybatis分页")
 
 * 🥝yue-library-data-redis
 
