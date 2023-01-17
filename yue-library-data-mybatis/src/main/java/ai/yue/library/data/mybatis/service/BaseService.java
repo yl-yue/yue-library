@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import java.util.List;
  * @since 2022/12/29
  */
 @Slf4j
+@Getter
 public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity> {
 
     @Autowired
@@ -46,7 +48,7 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
     private void init() {
         ReflectUtil.setFieldValue(serviceImpl, "baseMapper", baseMapper);
         ReflectUtil.setFieldValue(serviceImpl, "entityClass", entityClass);
-        ReflectUtil.setFieldValue(serviceImpl, "mapperClass", baseMapper.getClass());
+        ReflectUtil.setFieldValue(serviceImpl, "mapperClass", (Class<T>) ClassUtil.getTypeArgument(getClass(), 0));
     }
 
     /**
@@ -67,7 +69,7 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
      * @param entityList 实体集合
      * @return 是否成功
      */
-    public Result<Boolean> insertBatch(Collection<Object> entityList) {
+    public Result<Boolean> insertBatch(Collection<?> entityList) {
         ArrayList<T> entityObjectList = new ArrayList<>(entityList.size());
         for (Object entity : entityList) {
             T entityObject = Convert.toJavaBean(entity, entityClass);
@@ -98,7 +100,7 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
      * @param entityList 实体集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> insertOrUpdateBatch(Collection<Object> entityList) {
+    public Result<Boolean> insertOrUpdateBatch(Collection<?> entityList) {
         ArrayList<T> entityObjectList = new ArrayList<>(entityList.size());
         for (Object entity : entityList) {
             T entityObject = Convert.toJavaBean(entity, entityClass);
@@ -148,7 +150,7 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
      * @param entityList 实体集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> updateBatchById(Collection<Object> entityList) {
+    public Result<Boolean> updateBatchById(Collection<?> entityList) {
         ArrayList<T> entityObjectList = new ArrayList<>(entityList.size());
         for (Object entity : entityList) {
             T entityObject = Convert.toJavaBean(entity, entityClass);

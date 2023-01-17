@@ -32,6 +32,7 @@
   * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")
   * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
   * [数据填充](data/mybatis/数据填充.md "yue-library-data-mybatis数据填充")
+  * [多租户](data/mybatis/多租户.md "yue-library-data-mybatis多租户")
 
 * 🥝yue-library-data-redis
 
