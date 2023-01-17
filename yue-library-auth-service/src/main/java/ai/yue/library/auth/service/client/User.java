@@ -17,9 +17,9 @@ import ai.yue.library.web.util.CaptchaUtils;
 import ai.yue.library.web.util.ServletUtils;
 import ai.yue.library.web.vo.CaptchaVO;
 import com.alibaba.fastjson.JSONObject;
+import com.dtflys.forest.Forest;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +38,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User extends ai.yue.library.auth.client.client.User {
 	
-	@Autowired
-	private RestTemplate restTemplate;
 	@Autowired
 	private HttpServletResponse response;
 	@Autowired
@@ -71,8 +69,7 @@ public class User extends ai.yue.library.auth.client.client.User {
 		paramJson.put("appid", wxOpenProperties.getAppid());
 		paramJson.put("secret", wxOpenProperties.getSecret());
 		paramJson.put("code", code);
-		String result = restTemplate.getForObject(WX_URI_ACCESS_TOKEN, String.class, paramJson);
-		AccessTokenVO accessTokenVO = JSONObject.parseObject(result, AccessTokenVO.class);
+		AccessTokenVO accessTokenVO = Forest.get(WX_URI_ACCESS_TOKEN).addQuery(paramJson).execute(AccessTokenVO.class);
 		return accessTokenVO;
 	}
 	
@@ -86,10 +83,9 @@ public class User extends ai.yue.library.auth.client.client.User {
 		JSONObject paramJson = new JSONObject();
 		paramJson.put("access_token", access_token);
 		paramJson.put("openid", openid);
-		String result = restTemplate.getForObject(WX_URI_USER_INFO, String.class, paramJson);
-		WxUserDTO wxUserDTO = JSONObject.parseObject(result, WxUserDTO.class);
+		WxUserDTO wxUserDTO = Forest.get(WX_URI_USER_INFO).addQuery(paramJson).execute(WxUserDTO.class);
 		if (null == wxUserDTO.getOpenid()) {
-			throw new ResultException(R.requestError(result));
+			throw new ResultException(R.requestError(wxUserDTO));
 		}
 
 		return wxUserDTO;
@@ -106,10 +102,9 @@ public class User extends ai.yue.library.auth.client.client.User {
 		paramJson.put("oauth_consumer_key", qqProperties.getQqAppid());
 		paramJson.put("access_token", access_token);
 		paramJson.put("openid", openid);
-		String result = restTemplate.getForObject(QQ_URI_USER_INFO, String.class, paramJson);
-		QqUserDTO qqUserDTO = JSONObject.parseObject(result, QqUserDTO.class);
+		QqUserDTO qqUserDTO = Forest.get(QQ_URI_USER_INFO).addQuery(paramJson).execute(QqUserDTO.class);
 		if (null == qqUserDTO.getGender()) {
-			throw new ResultException(R.requestError(result));
+			throw new ResultException(R.requestError(qqUserDTO));
 		}
 
 		return qqUserDTO;

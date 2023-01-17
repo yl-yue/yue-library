@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.doc.example.base;
+package ai.yue.library.test.docs.example.base;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;

@@ -67,6 +67,7 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
+        <forest.version>1.5.28</forest.version>
         <easypoi.version>4.2.0</easypoi.version>
         <easyexcel.version>2.2.6</easyexcel.version>
         <jpush.version>3.4.7</jpush.version>
@@ -234,6 +235,11 @@
             </dependency>
 
             <!-- 其他 -->
+            <dependency>
+                <groupId>com.dtflys.forest</groupId>
+                <artifactId>forest-spring-boot-starter</artifactId>
+                <version>${forest.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.afterturn</groupId>
                 <artifactId>easypoi-spring-boot-starter</artifactId>

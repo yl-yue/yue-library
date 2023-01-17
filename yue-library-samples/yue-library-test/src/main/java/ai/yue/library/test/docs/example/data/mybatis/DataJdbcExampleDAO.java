@@ -24,21 +24,6 @@
 //@Repository
 //public class DataJdbcExampleDAO extends AbstractDAO {
 //
-//	@Override
-//	protected String tableName() {
-//		return "table_example_test";
-//	}
-//
-////	@PostConstruct
-//	private void init() {
-//		db = db.clone();
-//		JdbcProperties jdbcProperties = db.getJdbcProperties();
-//		jdbcProperties.setEnableLogicDeleteFilter(true);
-//		jdbcProperties.setEnableBooleanMapRecognition(false);
-//		jdbcProperties.setEnableFieldNamingStrategyRecognition(false);
-//		jdbcProperties.setDataEncryptKey("4f5de3ab9acf4d4f94b2470e17d1beb7");
-//	}
-//
 //	public void example(JSONObject paramJson) {
 //		db.insert(tableName(), paramJson);
 //		db.updateById(tableName(), paramJson);

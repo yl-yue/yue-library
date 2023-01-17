@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.doc.example.data.redis;
+package ai.yue.library.test.docs.example.data.redis;
 
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.view.R;

@@ -1,4 +1,4 @@
-package ai.yue.library.test.controller.doc.example.base.crypto;
+package ai.yue.library.test.docs.example.base.crypto;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

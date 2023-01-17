@@ -27,8 +27,8 @@ API的版本号统一放入URL，如：`https://api.example.com/v{n}/`，n代表
 ### 接口命名前缀
 |前缀	|作用										|示例							|
 |--		|--											|--								|
-|`open`	|互联网公开接口，无需登录						|`/open/v1.2/user/接口方法名`	|
-|`auth`	|互联网认证接口，需要登录						|`/auth/v1.2/user/接口方法名`	|
+|`open`	|互联网公开接口，无需认证						|`/open/v1.2/user/接口方法名`	|
+|`auth`	|互联网认证接口，需要认证						|`/auth/v1.2/user/接口方法名`	|
 |`lan`	|局域网内部接口，仅局域网内调用					|`/lan/v1.2/user/接口方法名`		|
 |`self`	|局域网私有接口，仅局域网内私有领域服务调用		|`/self/v1.2/user/接口方法名`	|
 |`sp`	|三方接口，由服务提供商（三方系统）提供实现		|`/sp/v1.2/user/接口方法名`		|
@@ -52,7 +52,7 @@ API的版本号统一放入URL，如：`https://api.example.com/v{n}/`，n代表
 ### RESTful URL路径参数
 **前端传参：**以apizza示例，apizza支持RESTful URL，如果在URL填写:key，然后在Query参数中填写对应 key，发送请求的时候插件将会替换URL中的 :key
 
-![前端传参](接口质检标准_files/1.png)
+![前端传参](_接口质检标准_files/1.png)
 
 **后端取参：**
 ```java

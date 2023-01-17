@@ -3,8 +3,6 @@ package ai.yue.library.base.config;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
-import ai.yue.library.base.config.net.http.RestProperties;
-import ai.yue.library.base.config.net.http.SkipSslVerificationHttpRequestFactory;
 import ai.yue.library.base.config.net.proxy.NetProxy;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
@@ -16,7 +14,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * base bean 自动配置
@@ -27,31 +24,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Configuration
 @Import({SpringUtils.class, NetProxy.class, AsyncConfig.class, DateTimeFormatConfig.class})
-@EnableConfigurationProperties({ApiVersionProperties.class, ExceptionHandlerProperties.class, RestProperties.class, CorsProperties.class,})
+@EnableConfigurationProperties({ApiVersionProperties.class, ExceptionHandlerProperties.class, CorsProperties.class,})
 public class BaseAutoConfig {
-	
-	// RestTemplate-HTTPS客户端
-	
-	@Bean
-	@ConditionalOnMissingBean
-    public RestTemplate restTemplate(RestProperties restProperties){
-		SkipSslVerificationHttpRequestFactory factory = new SkipSslVerificationHttpRequestFactory();
-    	
-    	// 设置链接超时时间
-    	Integer connectTimeout = restProperties.getConnectTimeout();
-		if (connectTimeout != null) {
-			factory.setConnectTimeout(connectTimeout);
-		}
-		
-    	// 设置读取超时时间
-    	Integer readTimeout = restProperties.getReadTimeout();
-    	if (readTimeout != null) {
-    		factory.setReadTimeout(readTimeout);
-    	}
-    	
-		log.info("【初始化配置-HTTPS客户端】Bean：RestTemplate ... 已初始化完毕。");
-        return new RestTemplate(factory);
-    }
 	
 	// Validator-校验器
 	

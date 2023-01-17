@@ -12,7 +12,6 @@
   * [统一异常处理](base/统一异常处理.md)
   * [线程池](base/线程池.md)
   * [网络代理](base/网络代理.md)
-  * [HTTP客户端](base/HTTP客户端.md)
 
 * 🔐yue-library-base-crypto
 
@@ -30,8 +29,12 @@
 * 🥞yue-library-data-mybatis（推荐）
 
   * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")
-  * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
+  * [BaseEntity](data/mybatis/BaseEntity.md "yue-library-data-mybatis BaseEntity")
+  * [BaseService](data/mybatis/BaseService.md "yue-library-data-mybatis BaseService")
   * [数据填充](data/mybatis/数据填充.md "yue-library-data-mybatis数据填充")
+  * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
+  <!-- * [数据脱敏](data/mybatis/数据脱敏.md "yue-library-data-mybatis数据脱敏") -->
+  <!-- * [逻辑删除](data/mybatis/逻辑删除.md "yue-library-data-mybatis逻辑删除") -->
   * [多租户](data/mybatis/多租户.md "yue-library-data-mybatis多租户")
 
 * 🥝yue-library-data-redis
