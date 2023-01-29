@@ -77,11 +77,13 @@ public Result<?> pathVariable(@PathVariable String opt) {
 ### 请求定义
 **常见请求header约定**
 
-|参数名称	|参数类型	|最大长度	|描述									|示例				|
-|--			|--			|--			|--										|--					|
-|`tenantId`	|String		|20			|租户ID，用于系统多租户区分				|taobao、tmall		|
-|`clientId`	|String		|20			|客户端请求来源APP WAP PC				|APP				|
-|`timestamp`|String		|17			|发送请求的时间,格式:yyyyMMddHHmmssSSS	|20180505121212222	|
+|参数名称			|参数类型	|最大长度	|描述									|示例								|
+|--					|--			|--			|--										|--									|
+|`tenantSys`		|String		|36			|系统租户：一级租户（dict_tenant_sys）    	|sc									|
+|`tenantCo`			|String		|36			|企业租户：二级租户						|27b106951b964851b73e5d2864e9257b	|
+|`Accept-Language`	|String		|20			|i18n国际化-语言切换					    |zh-CN								|
+|`clientId`			|String		|20			|客户端请求来源APP WAP PC				    |APP								|
+|`timestamp`		|String		|17			|发送请求的时间,格式:yyyyMMddHHmmssSSS	|20180505121212222					|
 
 **常见请求参数约定**
 
@@ -96,11 +98,9 @@ public Result<?> pathVariable(@PathVariable String opt) {
 
 **常见参数约定**
 
-|参数名称	|参数类型	|最大长度	|描述									|示例								|
-|--			|--			|--			|--										|--									|
-|`count`	|Long		|20			|分页统计条数							|100								|
-|`tenantSys`|String		|36			|系统租户：一级租户（dict_tenant_sys）	|sc									|
-|`tenantCo`	|String		|36			|企业租户：二级租户						|27b106951b964851b73e5d2864e9257b	|
+|参数名称	|参数类型	|最大长度	|描述			|示例	|
+|--			|--			|--			|--				|--		|
+|`count`	|Long		|20			|分页统计条数 	|100	|
 
 ### 响应定义
 **响应体约定**

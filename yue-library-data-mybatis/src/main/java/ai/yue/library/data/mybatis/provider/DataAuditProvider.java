@@ -7,6 +7,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.LocalDateTime;
 
@@ -35,13 +36,13 @@ public class DataAuditProvider implements MetaObjectHandler {
             throw e;
         }
 
-        // 2. 新增填充
+        // 2. 新增填充（支持i18n）
         this.strictInsertFill(metaObject, "createUser", String.class, user);
         this.strictInsertFill(metaObject, "createUserId", String.class, userId);
-        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now(LocaleContextHolder.getTimeZone().toZoneId()));
         this.strictInsertFill(metaObject, "updateUser", String.class, user);
         this.strictInsertFill(metaObject, "updateUserId", String.class, userId);
-        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now(LocaleContextHolder.getTimeZone().toZoneId()));
     }
 
     @Override
@@ -57,10 +58,10 @@ public class DataAuditProvider implements MetaObjectHandler {
             throw e;
         }
 
-        // 2. 更新填充
+        // 2. 更新填充（支持i18n）
         this.strictUpdateFill(metaObject, "updateUser", String.class, user);
         this.strictUpdateFill(metaObject, "updateUserId", String.class, userId);
-        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now(LocaleContextHolder.getTimeZone().toZoneId()));
     }
 
 }

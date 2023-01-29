@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.data.mybatis.config.JdbcAutoConfig
+ai.yue.library.data.mybatis.config.MybatisAutoConfig

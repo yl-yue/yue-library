@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * data-jdbc配置，提供自动配置项支持与增强
+ * data-mybatis配置，提供自动配置项支持与增强
  * 
  * @author	ylyue
  * @since	2018年6月11日
@@ -15,6 +15,14 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import(DataAuditProvider.class)
 @EnableConfigurationProperties({JdbcProperties.class})
-public class JdbcAutoConfig {
+public class MybatisAutoConfig {
+
+//    @Bean
+//    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+//        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+//        AaaInnerInterceptor aaaInnerInterceptor = new AaaInnerInterceptor();
+//        interceptor.addInnerInterceptor(aaaInnerInterceptor);
+//        return interceptor;
+//    }
 
 }

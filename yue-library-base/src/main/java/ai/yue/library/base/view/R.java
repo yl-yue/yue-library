@@ -567,6 +567,14 @@ public class R {
             } catch (Exception ex) {
                 return clientFallback(contentUTF8);
             }
+        } else if (ClassLoaderUtil.isPresent("org.mybatis.spring.MyBatisSystemException")
+                && ClassLoaderUtil.loadClass("org.mybatis.spring.MyBatisSystemException").isAssignableFrom(e.getClass())) {
+            try {
+                if (e.getCause().getCause() instanceof ResultException) {
+                    return ((ResultException) e.getCause().getCause()).getResult();
+                }
+            } catch (Exception ignore) {
+            }
         }
 
         // 处理所有未处理异常-500

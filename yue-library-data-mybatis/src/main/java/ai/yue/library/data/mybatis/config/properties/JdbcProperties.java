@@ -40,35 +40,6 @@ public class JdbcProperties implements Serializable {
 
 	// ====================== JDBC属性 ======================
 
-	/**
-	 * 启用逻辑删除过滤（只对自动生成的sql生效）
-	 * <p>默认：false</p>
-	 */
-	private boolean enableLogicDeleteFilter = false;
-
-	/**
-	 * 启用数据库字段命名策略识别
-	 * <p>默认：true
-	 */
-	private boolean enableFieldNamingStrategyRecognition = true;
-
-	/**
-	 * 数据库字段命名策略
-	 * <p>默认：SNAKE_CASE
-	 */
-	private FieldNamingStrategyEnum databaseFieldNamingStrategy = FieldNamingStrategyEnum.SNAKE_CASE;
-	
-	/**
-	 * 启用布尔值映射识别
-	 *
-	 * <p>
-	 * 　实体属性名: tempUser<br>
-	 * 　数据库字段：is_temp_user
-	 * </p>
-	 *
-	 * <p>默认：true
-	 */
-	private boolean enableBooleanMapRecognition = true;
 
 	/**
 	 * 启用数据审计

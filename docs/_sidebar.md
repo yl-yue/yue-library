@@ -35,7 +35,7 @@
   * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
   <!-- * [数据脱敏](data/mybatis/数据脱敏.md "yue-library-data-mybatis数据脱敏") -->
   <!-- * [逻辑删除](data/mybatis/逻辑删除.md "yue-library-data-mybatis逻辑删除") -->
-  * [多租户](data/mybatis/多租户.md "yue-library-data-mybatis多租户")
+  * [多租户与i18n](data/mybatis/多租户与i18n.md "yue-library-data-mybatis多租户与i18n")
   * [分页](data/mybatis/分页.md "yue-library-data-mybatis分页")
 
 * 🥝yue-library-data-redis
