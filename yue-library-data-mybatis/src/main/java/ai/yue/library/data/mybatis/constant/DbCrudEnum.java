@@ -6,7 +6,7 @@ package ai.yue.library.data.mybatis.constant;
  * @author ylyue
  * @since 2021/7/27
  */
-public enum CrudEnum {
+public enum DbCrudEnum {
 
     /**
      * 原译：创建；
