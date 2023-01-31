@@ -1,20 +1,16 @@
 package ai.yue.library.test.ipo;
 
-import java.time.LocalDate;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.Length;
-
 import ai.yue.library.base.validation.annotation.Cellphone;
 import ai.yue.library.base.validation.annotation.IdCard;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 /**
+ * 校验
+ *
  * @author  ylyue
  * @version 创建时间：2018年9月25日
  */

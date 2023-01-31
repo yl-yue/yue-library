@@ -8,6 +8,7 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.test.ipo.ValidationAnnotationInIPO;
 import ai.yue.library.test.ipo.ValidationGroupIPO;
 import ai.yue.library.test.ipo.ValidationIPO;
+import ai.yue.library.test.ipo.ValidationMutualIPO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -29,22 +30,18 @@ public class ValidationController {
 	@Autowired
 	private Validator validator;
 	
-	/**
-	 * valid
-	 * @param validationIPO
-	 * @return
-	 */
 	@PostMapping("/valid")
 	public Result<?> valid(@Valid ValidationIPO validationIPO) {
 		System.out.println(validationIPO);
 		return R.success(validationIPO);
 	}
-	
-	/**
-	 * validatorValid
-	 * @param validationIPO
-	 * @return
-	 */
+
+	@PostMapping("/validMutual")
+	public Result<?> validMutual(@Valid ValidationMutualIPO validationMutualIPO) {
+		System.out.println(validationMutualIPO);
+		return R.success(validationMutualIPO);
+	}
+
 	@PostMapping("/validatorValid")
 	public Result<?> validatorValid(ValidationIPO validationIPO) {
 		validator.valid(validationIPO);
@@ -52,11 +49,6 @@ public class ValidationController {
 		return R.success(validationIPO);
 	}
 	
-	/**
-	 * validatorParam
-	 * @param validationIPO
-	 * @return
-	 */
 	@PostMapping("/validatorParam")
 	public Result<?> validatorParam(ValidationIPO validationIPO) {
 		// 参数

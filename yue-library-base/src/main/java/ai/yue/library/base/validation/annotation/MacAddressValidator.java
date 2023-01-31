@@ -7,6 +7,8 @@ import ai.yue.library.base.util.StringUtils;
 import cn.hutool.core.lang.Validator;
 
 /**
+ * MAC地址校验器
+ *
  * @author	ylyue
  * @since	2019年5月8日
  */
