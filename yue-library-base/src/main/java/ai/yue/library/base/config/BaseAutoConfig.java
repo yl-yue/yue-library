@@ -6,6 +6,7 @@ import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
 import ai.yue.library.base.config.net.proxy.NetProxy;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
+import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @Configuration
-@Import({SpringUtils.class, NetProxy.class, AsyncConfig.class, DateTimeFormatConfig.class})
+@Import({SpringUtils.class, I18nUtils.class, NetProxy.class, AsyncConfig.class, DateTimeFormatConfig.class})
 @EnableConfigurationProperties({ApiVersionProperties.class, ExceptionHandlerProperties.class, CorsProperties.class,})
 public class BaseAutoConfig {
 	

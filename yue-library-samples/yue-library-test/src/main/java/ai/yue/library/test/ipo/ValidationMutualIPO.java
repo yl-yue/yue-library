@@ -1,6 +1,8 @@
 package ai.yue.library.test.ipo;
 
 import ai.yue.library.base.validation.annotation.Cellphone;
+import ai.yue.library.base.validation.annotation.Chinese;
+import ai.yue.library.base.validation.annotation.Exclusion;
 import ai.yue.library.base.validation.annotation.Mutual;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -15,9 +17,11 @@ import java.time.LocalDate;
  * @version 创建时间：2018年9月25日
  */
 @Data
-@Mutual(mutuals = {"birthday", "idcard", "email"}, exclusions = {"age", "cellphone", "qq"})
+@Mutual({"birthday", "idcard", "email"})
+@Exclusion({"age", "cellphone", "qq"})
 public class ValidationMutualIPO {
 
+    @Chinese
     @NotEmpty(message = "姓名不能为空")
     @Length(max = 20, message = "姓名不能超过20个字")
     private String name;
@@ -32,7 +36,7 @@ public class ValidationMutualIPO {
 
     @Max(30)
     @Min(12)
-    private int age;
+    private Integer age;
 
     @Cellphone(notNull = false)
     private String cellphone;

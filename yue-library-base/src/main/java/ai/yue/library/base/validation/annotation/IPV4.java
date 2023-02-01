@@ -36,7 +36,7 @@ public @interface IPV4 {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的IPV4地址";
+	String message() default "{ai.yue.library.base.validation.annotation.IPV4.message}";
 	
 	Class<?>[] groups() default {};
 	

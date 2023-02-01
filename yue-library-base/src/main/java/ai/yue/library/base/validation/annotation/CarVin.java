@@ -31,7 +31,7 @@ public @interface CarVin {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的车架号";
+	String message() default "{ai.yue.library.base.validation.annotation.CarVin.message}";
 	
 	Class<?>[] groups() default {};
 	

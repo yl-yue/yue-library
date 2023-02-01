@@ -36,7 +36,7 @@ public @interface English {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "必须是英语";
+	String message() default "{ai.yue.library.base.validation.annotation.English.message}";
 	
 	Class<?>[] groups() default {};
 	

@@ -37,7 +37,7 @@ public @interface IdCard {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的身份证号码";
+	String message() default "{ai.yue.library.base.validation.annotation.IdCard.message}";
 	
 	Class<?>[] groups() default {};
 	

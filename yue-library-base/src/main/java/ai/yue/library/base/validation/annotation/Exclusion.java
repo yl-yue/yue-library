@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 验证相互关系，多个字段必须有一个有值
+ * 验证互斥关系，多个字段只能其中一个有值
  *
  * @author	ylyue
  * @since	2019年5月8日
@@ -19,29 +19,29 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Target({TYPE})
-@Constraint(validatedBy = { MutualValidator.class })
-@Repeatable(Mutual.List.class)
-public @interface Mutual {
+@Constraint(validatedBy = { ExclusionValidator.class })
+@Repeatable(Exclusion.List.class)
+public @interface Exclusion {
 
 	/**
-	 * 相互关系，多个字段必须有一个有值
+	 * 互斥关系，多个字段只能其中一个有值
 	 */
 	String[] value() default {};
 
-	String message() default "{ai.yue.library.base.validation.annotation.Mutual.message}";
+	String message() default "{ai.yue.library.base.validation.annotation.Exclusion.message}";
 
 	Class<?>[] groups() default {};
-	
+
 	Class<? extends Payload>[] payload() default {};
 
 	/**
-	 * Defines several {@code @Mutual} annotations on the same element.
+	 * Defines several {@code @Exclusion} annotations on the same element.
 	 */
 	@Target({TYPE})
 	@Retention(RUNTIME)
 	@Documented
 	public @interface List {
-		Mutual[] value();
+		Exclusion[] value();
 	}
 
 }

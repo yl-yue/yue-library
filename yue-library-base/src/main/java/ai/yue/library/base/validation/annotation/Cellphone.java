@@ -36,7 +36,7 @@ public @interface Cellphone {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的手机号码";
+	String message() default "{ai.yue.library.base.validation.annotation.Cellphone.message}";
 	
 	Class<?>[] groups() default {};
 	

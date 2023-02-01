@@ -36,7 +36,7 @@ public @interface PlateNumber {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的中国车牌号";
+	String message() default "{ai.yue.library.base.validation.annotation.PlateNumber.message}";
 	
 	Class<?>[] groups() default {};
 	

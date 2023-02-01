@@ -38,7 +38,7 @@ public @interface Birthday {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的生日日期格式";
+	String message() default "{ai.yue.library.base.validation.annotation.Birthday.message}";
 	
 	Class<?>[] groups() default {};
 	

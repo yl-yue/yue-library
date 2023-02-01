@@ -36,7 +36,7 @@ public @interface MacAddress {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的MAC地址";
+	String message() default "{ai.yue.library.base.validation.annotation.MacAddress.message}";
 	
 	Class<?>[] groups() default {};
 	

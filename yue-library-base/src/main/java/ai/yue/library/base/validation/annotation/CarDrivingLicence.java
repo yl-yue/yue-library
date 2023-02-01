@@ -36,7 +36,7 @@ public @interface CarDrivingLicence {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的驾驶证格式";
+	String message() default "{ai.yue.library.base.validation.annotation.CarDrivingLicence.message}";
 	
 	Class<?>[] groups() default {};
 	

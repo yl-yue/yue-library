@@ -23,21 +23,21 @@ public enum ResultEnum {
 	 * <p>{@code 200 OK}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">HTTP/1.1: Semantics and Content, section 6.3.1</a>
 	 */
-	SUCCESS(200, "成功"),
-	LOGGED_IN(210, "会话未注销，无需登录"),
+	SUCCESS(200, "ai.yue.library.base.view.ResultEnum.SUCCESS.msg"),
+	LOGGED_IN(210, "ai.yue.library.base.view.ResultEnum.LOGGED_IN.msg"),
 	
     // 300 - 资源、重定向、定位等提示
 	
-	RESOURCE_ALREADY_INVALID(300, "资源已失效"),
+	RESOURCE_ALREADY_INVALID(300, "ai.yue.library.base.view.ResultEnum.RESOURCE_ALREADY_INVALID.msg"),
 	
 	/**
 	 * {@link HttpStatus#MOVED_PERMANENTLY}
 	 * <p>{@code 301 Moved Permanently}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.2">HTTP/1.1: Semantics and Content, section 6.4.2</a>
 	 */
-	MOVED_PERMANENTLY(301, "Moved Permanently"),
+	MOVED_PERMANENTLY(301, "ai.yue.library.base.view.ResultEnum.MOVED_PERMANENTLY.msg"),
 	
-	FILE_EMPTY(310, "文件上传请求错误，获得文件信息为空，求先使用测试工具（如：postman）校验，同时文件必须有明确的匹配类型（如文本类型：.txt）"),
+	FILE_EMPTY(310, "ai.yue.library.base.view.ResultEnum.FILE_EMPTY.msg"),
     
     // 400 - 客户端错误
 	
@@ -46,24 +46,24 @@ public enum ResultEnum {
 	 * <p>{@code 400 Bad Request}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
 	 */
-	BAD_REQUEST(400, "错误的请求，参数校验未通过，请参照API核对后重试"),
-	UNAUTHORIZED(401, "未登录或登录已失效（Unauthorized）"),
-	ATTACK(402, "非法访问"),
-	FORBIDDEN(403, "无权限（Forbidden）"),
+	BAD_REQUEST(400, "ai.yue.library.base.view.ResultEnum.BAD_REQUEST.msg"),
+	UNAUTHORIZED(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED.msg"),
+	ATTACK(402, "ai.yue.library.base.view.ResultEnum.ATTACK.msg"),
+	FORBIDDEN(403, "ai.yue.library.base.view.ResultEnum.FORBIDDEN.msg"),
 	
 	/**
 	 * {@link HttpStatus#NOT_FOUND}
 	 * <p>{@code 404 Not Found}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
 	 */
-	NOT_FOUND(404, "Not Found"),
+	NOT_FOUND(404, "ai.yue.library.base.view.ResultEnum.NOT_FOUND.msg"),
 	
 	/**
 	 * {@link HttpStatus#METHOD_NOT_ALLOWED}
 	 * <p>{@code 405 Method Not Allowed}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
 	 */
-	METHOD_NOT_ALLOWED(405, "方法不允许（Method Not Allowed），客户端使用服务端不支持的 Http Request Method 进行接口调用。"),
+	METHOD_NOT_ALLOWED(405, "ai.yue.library.base.view.ResultEnum.METHOD_NOT_ALLOWED.msg"),
 	
 	/**
 	 * {@link HttpStatus#GONE}
@@ -71,19 +71,19 @@ public enum ResultEnum {
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.9">
 	 *     HTTP/1.1: Semantics and Content, section 6.5.9</a>
 	 */
-	GONE(410, "当前API接口版本已弃用，请客户端更新接口调用方式"),
-	UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
+	GONE(410, "ai.yue.library.base.view.ResultEnum.GONE.msg"),
+	UNSUPPORTED_MEDIA_TYPE(415, "ai.yue.library.base.view.ResultEnum.UNSUPPORTED_MEDIA_TYPE.msg"),
 	
 	/**
 	 * {@link HttpStatus#TOO_MANY_REQUESTS}
 	 * <p>{@code 429 Too Many Requests}.
 	 * @see <a href="https://tools.ietf.org/html/rfc6585#section-4">Additional HTTP Status Codes</a>
 	 */
-	TOO_MANY_REQUESTS(429, "频繁请求限流，请稍后重试（Too Many Requests）"),
-	PARAM_VOID(432, "参数为空"),
-	PARAM_CHECK_NOT_PASS(433, "参数校验未通过，请参照API核对后重试"),
-	PARAM_VALUE_INVALID(434, "参数校验未通过，无效的value"),
-	PARAM_DECRYPT_ERROR(435, "参数解密错误"),
+	TOO_MANY_REQUESTS(429, "ai.yue.library.base.view.ResultEnum.TOO_MANY_REQUESTS.msg"),
+	PARAM_VOID(432, "ai.yue.library.base.view.ResultEnum.PARAM_VOID.msg"),
+	PARAM_CHECK_NOT_PASS(433, "ai.yue.library.base.view.ResultEnum.PARAM_CHECK_NOT_PASS.msg"),
+	PARAM_VALUE_INVALID(434, "ai.yue.library.base.view.ResultEnum.PARAM_VALUE_INVALID.msg"),
+	PARAM_DECRYPT_ERROR(435, "ai.yue.library.base.view.ResultEnum.PARAM_DECRYPT_ERROR.msg"),
 	
     // 500 - 服务器错误
 	
@@ -92,30 +92,30 @@ public enum ResultEnum {
 	 * <p>{@code 500 Internal Server Error}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">HTTP/1.1: Semantics and Content, section 6.6.1</a>
 	 */
-	INTERNAL_SERVER_ERROR(500, "服务器内部错误（Internal Server Error）"),
+	INTERNAL_SERVER_ERROR(500, "ai.yue.library.base.view.ResultEnum.INTERNAL_SERVER_ERROR.msg"),
 	
-	REQUEST_ERROR(501, "请求错误"),
+	REQUEST_ERROR(501, "ai.yue.library.base.view.ResultEnum.REQUEST_ERROR.msg"),
 	
-	BAD_GATEWAY(502, "Bad Gateway"),
+	BAD_GATEWAY(502, "ai.yue.library.base.view.ResultEnum.BAD_GATEWAY.msg"),
 	
 	/**
 	 * {@link HttpStatus#SERVICE_UNAVAILABLE}
 	 * <p>{@code 503 Service Unavailable}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
 	 */
-	SERVICE_UNAVAILABLE(503, "服务不可用（Service Unavailable）"),
+	SERVICE_UNAVAILABLE(503, "ai.yue.library.base.view.ResultEnum.SERVICE_UNAVAILABLE.msg"),
 	
 	/**
 	 * {@link HttpStatus#GATEWAY_TIMEOUT}
 	 * <p>{@code 504 Gateway Timeout}.
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
 	 */
-	GATEWAY_TIMEOUT(504, "Gateway Timeout"),
-	DATA_STRUCTURE(505, "数据结构异常"),
-	DB_ERROR(506, "数据结构异常，请检查相应数据结构一致性"),
-    CLIENT_FALLBACK(507, "网络开小差了，请稍后重试..."),
-    CLIENT_FALLBACK_ERROR(508, "当前阶段服务压力过大，请稍后重试..."),
-    TYPE_CONVERT_ERROR(509, "类型转换错误"),
+	GATEWAY_TIMEOUT(504, "ai.yue.library.base.view.ResultEnum.GATEWAY_TIMEOUT.msg"),
+	DATA_STRUCTURE(505, "ai.yue.library.base.view.ResultEnum.DATA_STRUCTURE.msg"),
+	DB_ERROR(506, "ai.yue.library.base.view.ResultEnum.DB_ERROR.msg"),
+    CLIENT_FALLBACK(507, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK.msg"),
+    CLIENT_FALLBACK_ERROR(508, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK_ERROR.msg"),
+    TYPE_CONVERT_ERROR(509, "ai.yue.library.base.view.ResultEnum.TYPE_CONVERT_ERROR.msg"),
     
 	// 600 - 自定义错误提示
     
@@ -126,7 +126,7 @@ public enum ResultEnum {
     
 	private Integer code;
 	private String msg;
-	
+
 	/**
 	 * 如果可能，将给定的状态代码解析为 {@code ResultEnum}
 	 * 

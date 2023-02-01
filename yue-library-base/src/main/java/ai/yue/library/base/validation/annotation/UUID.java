@@ -37,7 +37,7 @@ public @interface UUID {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的UUID";
+	String message() default "{ai.yue.library.base.validation.annotation.UUID.message}";
 	
 	Class<?>[] groups() default {};
 	

@@ -37,7 +37,7 @@ public @interface CreditCode {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的统一社会信用代码";
+	String message() default "{ai.yue.library.base.validation.annotation.CreditCode.message}";
 	
 	Class<?>[] groups() default {};
 	

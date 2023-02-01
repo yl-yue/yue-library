@@ -36,7 +36,7 @@ public @interface Chinese {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "必须是中文汉字";
+	String message() default "{ai.yue.library.base.validation.annotation.Chinese.message}";
 	
 	Class<?>[] groups() default {};
 	

@@ -36,7 +36,7 @@ public @interface IPV6 {
 	 */
 	boolean notNull() default true;
 	
-	String message() default "不是一个合法的IPV6地址";
+	String message() default "{ai.yue.library.base.validation.annotation.IPV6.message}";
 	
 	Class<?>[] groups() default {};
 	
