@@ -3,6 +3,7 @@ package ai.yue.library.base.view;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
+import ai.yue.library.base.util.I18nUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
@@ -457,6 +458,20 @@ public class R {
      */
     public static Result<?> errorPromptFormat(String msg, Object... values) {
         return errorPrompt(StrUtil.format(msg, values));
+    }
+
+    /**
+     * <b>错误提示-600</b>
+     * <p>适用于i18n资源包定义（messages.properties），遵循SpringBoot默认值规范</p>
+     * <p>msg支持文本模板格式化，{} 表示占位符
+     * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
+     *
+     * @param msgKey messages.properties中定义的key，被替换的部分用 {} 表示
+     * @param values messages.properties中占位符被替换的值
+     * @return HTTP请求，最外层响应对象
+     */
+    public static Result<?> errorPromptI18n(String msgKey, Object... values) {
+        return errorPrompt(I18nUtils.get(msgKey, values));
     }
 
     /**
