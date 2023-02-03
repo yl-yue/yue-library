@@ -32,7 +32,7 @@ public class ResultResponseBodyHandler<T> implements ResponseBodyAdvice<T> {
 
 	{
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("YueMessages");
+		messageSource.setBasenames("messages", "YueMessages");
 		messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
 		this.messageSource = messageSource;
 	}
