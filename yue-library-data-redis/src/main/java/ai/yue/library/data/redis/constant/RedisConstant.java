@@ -9,17 +9,22 @@ package ai.yue.library.data.redis.constant;
 public class RedisConstant {
 
 	/**
-	 * Redis Key 分隔符
+	 * Redis Key分隔符
 	 */
 	public static final String KEY_SEPARATOR = ":";
 
 	/**
-	 * Redis Key 前缀
+	 * Redis Key前缀
 	 */
-	public static final String KEY_PREFIX = "yue" + KEY_SEPARATOR;
+	public static final String KEY_PREFIX = "yue" + KEY_SEPARATOR + "redis" + KEY_SEPARATOR;
 
 	/**
-	 * Redis 幂等性 Key 前缀
+	 * Redis锁的Key前缀
+	 */
+	public static final String LOCK_KEY_PREFIX = RedisConstant.standardKey("lock:");
+
+	/**
+	 * Redis幂等性的Key前缀
 	 */
 	public static final String API_IDEMPOTENT_KEY_PREFIX = RedisConstant.standardKey("api_idempotent:");
 
@@ -29,7 +34,7 @@ public class RedisConstant {
 	public static final String API_IDEMPOTENT_VERSION_REQUEST_KEY = "apiIdempotentVersion";
 
 	/**
-	 * 规范 Redis Key
+	 * 规范Redis Key
 	 *
 	 * @param key Redis Key
 	 * @return 加上yue前缀的key

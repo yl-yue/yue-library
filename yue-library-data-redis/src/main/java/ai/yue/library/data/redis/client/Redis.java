@@ -4,6 +4,7 @@ import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.data.redis.constant.RedisConstant;
+import ai.yue.library.data.redis.dto.LockInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -36,43 +37,53 @@ public class Redis {
 	 * <p>可用于实现接口幂等性、秒杀、库存加锁等业务场景需求
 	 * <p>注意：服务器集群间需进行时间同步，保障分布式锁的时序性</p>
 	 *
-	 * @param lockKey          分布式锁的key（唯一性）
-	 * @param lockTimeoutStamp 分布式锁的超时时间戳（<code style="color:red">当前时间戳 + 超时毫秒</code>，推荐使用：{@link DateUtils#getTimestamp(int)} 生成此变量）
+	 * @param lockKey       分布式锁的key（全局唯一性）
+	 * @param lockTimeoutMs 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时
 	 * @return 是否成功拿到锁
 	 */
-	public boolean lock(String lockKey, Long lockTimeoutStamp) {
+	public LockInfo lock(String lockKey, Integer lockTimeoutMs) {
 		// 1. 设置锁
-		String value = lockTimeoutStamp.toString();
-		if (stringRedisTemplate.opsForValue().setIfAbsent(lockKey, value)) {
-			return true;
+		String redisLockKey = RedisConstant.LOCK_KEY_PREFIX + lockKey;
+		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
+		LockInfo lockInfo = new LockInfo();
+		lockInfo.setLockKey(redisLockKey);
+		lockInfo.setLockTimeoutMs(lockTimeoutMs);
+		lockInfo.setLockTimeoutStamp(lockTimeoutStamp);
+		if (stringRedisTemplate.opsForValue().setIfAbsent(redisLockKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS)) {
+			lockInfo.setLock(true);
+			return lockInfo;
 		}
+
 		// 2. 锁设置失败，拿到当前锁
-		String currentValue = stringRedisTemplate.opsForValue().get(lockKey);
+		String currentValue = stringRedisTemplate.opsForValue().get(redisLockKey);
 		// 3. 判断当前锁是否过期
 		if (!StringUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
 			// 4. 锁已过期 ，设置新锁同时得到上一个锁
-			String oldValue = stringRedisTemplate.opsForValue().getAndSet(lockKey, value);
+			String oldValue = stringRedisTemplate.opsForValue().getAndSet(redisLockKey, lockTimeoutStamp);
 			// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
 			if (!StringUtils.isEmpty(oldValue) && oldValue.equals(currentValue)) {
 				// 此处只会有一个线程拿到锁
-				return true;
+				lockInfo.setLock(true);
+				return lockInfo;
 			}
 		}
 
-		return false;
+		lockInfo.setLock(false);
+		return lockInfo;
 	}
 
 	/**
 	 * Redis分布式锁-解锁
 	 *
-	 * @param lockKey          分布式锁的key（唯一性）
-	 * @param lockTimeoutStamp 加锁时使用的超时时间戳
+	 * @param lockInfo 加锁时返回的锁对象
 	 */
-	public void unlock(String lockKey, Long lockTimeoutStamp) {
-		String value = lockTimeoutStamp.toString();
+	public void unlock(LockInfo lockInfo) {
+		String lockKey = lockInfo.getLockKey();
+		String lockTimeoutStamp = lockInfo.getLockTimeoutStamp();
+
 		try {
 			String currentValue = stringRedisTemplate.opsForValue().get(lockKey);
-			if (StringUtils.isNotEmpty(currentValue) && currentValue.equals(value)) {
+			if (StringUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
 				stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
 			}
 		} catch (Exception e) {

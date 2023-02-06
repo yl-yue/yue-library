@@ -1,9 +1,9 @@
 package ai.yue.library.test.docs.example.data.redis;
 
-import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.redis.client.Redis;
+import ai.yue.library.data.redis.dto.LockInfo;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -34,12 +34,11 @@ public class DataRedisExampleDAO {
 
 		// 分布式锁
 		String lockKey = "lockKey";
-		long lockTimeout = 3600L;
-		long lockTimeoutStamp = DateUtils.getTimestamp() + lockTimeout;
+		int lockTimeoutMs = 3600;
 		// 分布式锁-加锁
-		redis.lock(lockKey, lockTimeoutStamp);
+		LockInfo lock = redis.lock(lockKey, lockTimeoutMs);
 		// 分布式锁-解锁
-		redis.unlock(lockKey, lockTimeoutStamp);
+		redis.unlock(lock);
 	}
 
 	/**
@@ -49,15 +48,14 @@ public class DataRedisExampleDAO {
 	 * @return 结果
 	 */
 	public Result<?> userLock(String userId) {
-		String lockKey = Redis.separatorJoin("lock:userId", userId);
-		long lockTimeout = 3600L;
-		long lockTimeoutStamp = DateUtils.getTimestamp() + lockTimeout;
-		boolean lock = redis.lock(lockKey, lockTimeoutStamp);
-		if (!lock) {
+		String lockKey = Redis.separatorJoin("userId", userId);
+		int lockTimeout = 3600;
+		LockInfo lock = redis.lock(lockKey, lockTimeout);
+		if (lock.isLock() == false) {
 			return R.errorPrompt(StrUtil.format("用户{}未拿到锁", userId));
 		}
 		// 业务逻辑 ...
-		redis.unlock(lockKey, lockTimeoutStamp);
+		redis.unlock(lock);
 		return R.success();
 	}
 
