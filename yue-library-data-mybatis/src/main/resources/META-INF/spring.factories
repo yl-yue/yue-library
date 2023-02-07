@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.data.mybatis.config.MybatisAutoConfig
+ai.yue.library.data.mybatis.provider.DataAuditProvider
