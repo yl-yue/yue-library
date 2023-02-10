@@ -32,7 +32,7 @@ public class AsyncProperties {
 	 * <p>
 	 * 默认：false
 	 * <p>
-	 * <b style="color:red">注意，@Async异步执行方法，不要和同步调用方法，写在同一个类中，否则异步执行将失效。</b>
+	 * <b style="color:red">注意，@Async异步执行方法，不要和同步调用方法写在同一个类中，否则异步执行将失效。</b>
 	 */
 	private boolean enabled = false;
 	

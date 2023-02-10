@@ -55,15 +55,6 @@ public class ServletUtils {
 	public static final String BEARER_TYPE = "Bearer ";
 	public static final String ACCESS_TOKEN = "access_token";
 
-	/**
-	 * HttpAspect请求切入点
-	 */
-	public static final String POINTCUT = "@annotation(org.springframework.web.bind.annotation.RequestMapping)"
-			+ " || @annotation(org.springframework.web.bind.annotation.GetMapping)"
-			+ " || @annotation(org.springframework.web.bind.annotation.PostMapping)"
-			+ " || @annotation(org.springframework.web.bind.annotation.PutMapping)"
-			+ " || @annotation(org.springframework.web.bind.annotation.PatchMapping)"
-			+ " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)";
 
 	/**
 	 * 获得当前请求上下文中的{@linkplain ServletRequestAttributes}
