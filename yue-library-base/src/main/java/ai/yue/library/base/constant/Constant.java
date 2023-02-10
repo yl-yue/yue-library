@@ -8,7 +8,14 @@ package ai.yue.library.base.constant;
  */
 public interface Constant {
 
-	/** yue-library前缀 */
+	/**
+	 * yue-library前缀
+	 */
 	String PREFIX = "yue-library-";
+
+	/**
+	 * 链路ID
+	 */
+	String TRACE_ID = "traceId";
 
 }

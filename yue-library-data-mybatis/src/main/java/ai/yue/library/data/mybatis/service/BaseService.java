@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -187,7 +188,7 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
      * @param entity 实体参数，支持实体对象、map、json
      * @return 分页实体集合
      */
-    public Result<PageInfo<T>> page(Object entity) {
+    public Result<PageInfo<T>> page(@Nullable Object entity) {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes instanceof ServletRequestAttributes) {
             Object request = ReflectUtil.invoke(requestAttributes, "getRequest");
