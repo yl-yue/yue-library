@@ -65,6 +65,7 @@
         <fastjson.version>1.2.83</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-pagehelper.version>1.4.6</mybatis-pagehelper.version>
         <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
         <forest.version>1.5.28</forest.version>
@@ -227,6 +228,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${mybatis-pagehelper.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
