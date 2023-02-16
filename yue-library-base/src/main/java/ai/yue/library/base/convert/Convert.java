@@ -244,6 +244,9 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	@SuppressWarnings("unchecked")
 	public static <T> T toJavaBean(Object value, Class<T> clazz) {
 		// 不用转换
+		if (value == null) {
+			return null;
+		}
 		if (value != null && clazz != null && (clazz == value.getClass() || clazz.isInstance(value))) {
 			return (T) value;
 		}
