@@ -2,6 +2,7 @@ package ai.yue.library.base.validation;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
+import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.view.R;
 import cn.hutool.core.date.DateUtil;
@@ -420,7 +421,7 @@ public class Validator {
 			violations.forEach(violation -> {
 				String errorkey = violation.getPropertyPath().toString();
 				Object errorValue = violation.getInvalidValue();
-				String errorHintMsg = violation.getMessage();
+				String errorHintMsg = I18nUtils.getYue(violation.getMessage());
 				JSONObject errorHint = new JSONObject(true);
 				errorHint.put("errorkey", errorkey);
 				errorHint.put("errorValue", errorValue);
