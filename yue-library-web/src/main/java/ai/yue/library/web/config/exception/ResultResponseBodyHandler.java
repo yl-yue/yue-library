@@ -1,12 +1,10 @@
 package ai.yue.library.web.config.exception;
 
 import ai.yue.library.base.constant.Constant;
+import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.view.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
 
 /**
  * 响应结果处理器
@@ -30,15 +27,6 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @ControllerAdvice
 public class ResultResponseBodyHandler implements ResponseBodyAdvice<Result> {
-
-	MessageSource messageSource;
-
-	{
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasenames("messages", "YueMessages");
-		messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-		this.messageSource = messageSource;
-	}
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -57,11 +45,9 @@ public class ResultResponseBodyHandler implements ResponseBodyAdvice<Result> {
 		if (body == null) {
 			return null;
 		}
-		Integer code = body.getCode();
-		String msg = get(body.getMsg());
-		String traceId = MDC.get(Constant.TRACE_ID);
 
 		// 2. 设置HTTP状态码
+		Integer code = body.getCode();
 		if (code != null) {
 			HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
 			int status = servletResponse.getStatus();
@@ -71,27 +57,13 @@ public class ResultResponseBodyHandler implements ResponseBodyAdvice<Result> {
 		}
 
 		// 3. 设置i18n msg
-		body.setMsg(msg);
+		body.setMsg(I18nUtils.getYue(body.getMsg()));
 
 		// 4. 设置链路ID
-		body.setTraceId(traceId);
+		body.setTraceId(MDC.get(Constant.TRACE_ID));
 
 		// 5. 响应结果
 		return body;
-	}
-
-	/**
-	 * 获取单个国际化翻译值
-	 */
-	private String get(String msgKey) {
-		try {
-			return messageSource.getMessage(msgKey, null, LocaleContextHolder.getLocale());
-		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				e.printStackTrace();
-			}
-			return msgKey;
-		}
 	}
 
 }

@@ -2,6 +2,7 @@ package ai.yue.library.base.view;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.webenv.WebEnv;
@@ -178,6 +179,7 @@ public class Result<T> implements Serializable {
 	}
 
 	public String castToJSONString() {
+		this.setMsg(I18nUtils.getYue(this.getMsg()));
 		return JSONObject.toJSONString(this);
 	}
 

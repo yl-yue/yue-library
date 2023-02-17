@@ -3,8 +3,11 @@ package ai.yue.library.base.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * <b>I18n（国际化）</b>
@@ -23,9 +26,13 @@ import org.springframework.stereotype.Component;
 public class I18nUtils {
 
 	private static MessageSource messageSource;
+	private static ResourceBundleMessageSource messageSourceYue;
 
 	public I18nUtils(MessageSource messageSource) {
 		I18nUtils.messageSource = messageSource;
+		I18nUtils.messageSourceYue = new ResourceBundleMessageSource();
+		I18nUtils.messageSourceYue.setBasenames("YueMessages", "messages");
+		I18nUtils.messageSourceYue.setDefaultEncoding(StandardCharsets.UTF_8.name());
 	}
 
 	/**
@@ -43,6 +50,20 @@ public class I18nUtils {
 				e.printStackTrace();
 			}
 			return code;
+		}
+	}
+
+	/**
+	 * 获取yue-library内置的单个国际化翻译值
+	 */
+	public static String getYue(String msgKey) {
+		try {
+			return messageSourceYue.getMessage(msgKey, null, LocaleContextHolder.getLocale());
+		} catch (Exception e) {
+			if (log.isDebugEnabled()) {
+				e.printStackTrace();
+			}
+			return msgKey;
 		}
 	}
 
