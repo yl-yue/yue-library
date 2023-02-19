@@ -183,6 +183,11 @@ public class Result<T> implements Serializable {
 		return JSONObject.toJSONString(this);
 	}
 
+	public JSONObject castToJSONObject() {
+		this.setMsg(I18nUtils.getYue(this.getMsg()));
+		return Convert.toJSONObject(this);
+	}
+
 	/**
 	 * 将Result写入当前请求上下文的响应结果中，如：HttpServletResponse等。具体由当前 {@link WebEnv} 环境实现
 	 */
