@@ -1,6 +1,7 @@
 package ai.yue.library.data.mybatis.interceptor;
 
 import ai.yue.library.data.mybatis.constant.DbConstant;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import net.sf.jsqlparser.expression.Expression;
@@ -50,7 +51,7 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor {
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
-        if (boundSql.getSql().contains("delete_time=0")) {
+        if (StrUtil.containsAny(boundSql.getSql(), "delete_time=0", "delete_time = 0")) {
             return;
         }
         super.beforeQuery(executor, ms, parameter, rowBounds, resultHandler, boundSql);
