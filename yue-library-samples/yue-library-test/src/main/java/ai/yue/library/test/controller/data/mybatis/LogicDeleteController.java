@@ -3,7 +3,7 @@ package ai.yue.library.test.controller.data.mybatis;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.test.service.LogicDeleteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,7 @@ public class LogicDeleteController {
 	@Autowired
     LogicDeleteService logicDeleteService;
 
-    @PostMapping("/test")
+    @DeleteMapping("/test")
     public Result<?> test() {
         return logicDeleteService.test();
     }
