@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.yue.library.test.mapper.LogicDeleteMapper">
+    <select id="getLogicDelete" resultType="ai.yue.library.test.entity.TableExampleTest">
+        SELECT a.*
+        FROM table_example_test a,
+             (SELECT id FROM table_example_test ORDER BY id DESC LIMIT 1) b
+        WHERE a.id = b.id
+    </select>
+
+    <select id="listLogicDelete" resultType="ai.yue.library.test.entity.TableExampleTest">
+        SELECT a.*
+        FROM table_example_test a,
+             (SELECT id FROM table_example_test WHERE field_one = 1 LIMIT 10) b
+        WHERE a.id = b.id
+    </select>
+
+    <update id="updateLogicDelete">
+        UPDATE table_example_test
+        SET field_one = 2
+        WHERE field_one = 22;
+    </update>
+
+    <delete id="delLogicDelete">
+        DELETE FROM table_example_test
+        WHERE field_one=23;
+    </delete>
+</mapper>

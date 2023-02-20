@@ -26,7 +26,8 @@ public class TableExampleTest extends BaseEntity {
 	String fieldTwo;
 	String fieldThree;
 	@TableField(fill = FieldFill.INSERT)
-	String tenantSys;
 	String tenantCo;
+	@TableField(fill = FieldFill.INSERT)
+	String tenantSys;
 
 }

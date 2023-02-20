@@ -14,6 +14,8 @@ public class DbConstant {
 	public static final String CLASS_FIELD_DEFINITION_TENANT_SYS = "tenantSys";
     /** 企业租户：二级租户 */
     public static final String CLASS_FIELD_DEFINITION_TENANT_CO = "tenantCo";
+    /** 删除时间：逻辑删除 */
+    public static final String CLASS_FIELD_DEFINITION_DELETE_TIME = "deleteTime";
 
     // ====================== 数据库字段名定义 ======================
 
@@ -21,5 +23,7 @@ public class DbConstant {
     public static final String DB_FIELD_DEFINITION_TENANT_SYS = "tenant_sys";
     /** 企业租户：二级租户 */
     public static final String DB_FIELD_DEFINITION_TENANT_CO = "tenant_co";
+    /** 删除时间：逻辑删除 */
+    public static final String DB_FIELD_DEFINITION_DELETE_TIME = "delete_time";
 
 }

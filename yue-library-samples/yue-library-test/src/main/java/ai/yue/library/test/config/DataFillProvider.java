@@ -19,6 +19,7 @@ public class DataFillProvider extends DataAuditProvider {
         super.insertFill(metaObject);
 
         // 自定义填充
+        this.strictInsertFill(metaObject, "tenantCo", String.class, "co");
         this.strictInsertFill(metaObject, "tenantSys", String.class, "sys");
     }
 

@@ -11,6 +11,6 @@ spring:
     active: yue,test
 #    active: yue,test-performance
 
-logging:
-  level:
-    ai.yue.library: debug
+#logging:
+#  level:
+#    ai.yue.library: debug

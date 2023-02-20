@@ -1,6 +1,8 @@
 package ai.yue.library.test.config;
 
+import ai.yue.library.data.mybatis.interceptor.LogicDeleteInnerInterceptor;
 import ai.yue.library.data.mybatis.provider.AuditUserProvider;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,6 +31,13 @@ public class MybatisConfig {
                 return "e07f659764054ed6a222139fb83f4171";
             }
         };
+    }
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new LogicDeleteInnerInterceptor());
+        return interceptor;
     }
 
 }
