@@ -268,12 +268,22 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		// 采用 hutool 默认转换能力 + yue-library 扩展能力进行转换
 		return BeanUtil.toBean(value, clazz);
 	}
-	
+
+	/**
+	 * 转换为 JSONString
+	 *
+	 * @param value 被转换的值
+	 * @return JSON字符串
+	 */
+	public static String toJSONString(Object value) {
+		return JSONObject.toJSONString(value);
+	}
+
 	/**
 	 * 转换为 {@linkplain JSONObject}
 	 * 
 	 * @param value 被转换的值
-	 * @return JSON
+	 * @return JSON对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static JSONObject toJSONObject(Object value) {
@@ -291,7 +301,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
         
         return JSONObject.parseObject(JSONObject.toJSONString(value));
 	}
-	
+
 	/**
 	 * 转换为 {@linkplain JSONArray}
 	 * 
