@@ -22,6 +22,7 @@ public class LogicDeleteService extends BaseService<LogicDeleteMapper, TableExam
         tableExampleTest.setFieldTwo("2");
         tableExampleTest.setFieldThree("3");
         baseMapper.insert(tableExampleTest);
+        baseMapper.updateById(tableExampleTest);
         baseMapper.selectById(1608662675848990722L);
         baseMapper.selectList(null);
         baseMapper.getLogicDelete();

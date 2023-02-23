@@ -50,11 +50,21 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor {
     }
 
     @Override
-    public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+    public boolean willDoQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
         if (StrUtil.containsAny(boundSql.getSql(), "delete_time=0", "delete_time = 0")) {
-            return;
+            return false;
         }
-        super.beforeQuery(executor, ms, parameter, rowBounds, resultHandler, boundSql);
+
+        return true;
+    }
+
+    @Override
+    public boolean willDoUpdate(Executor executor, MappedStatement ms, Object parameter) throws SQLException {
+        if (StrUtil.containsAny(ms.getBoundSql(parameter).getSql(), "delete_time=0", "delete_time = 0")) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
