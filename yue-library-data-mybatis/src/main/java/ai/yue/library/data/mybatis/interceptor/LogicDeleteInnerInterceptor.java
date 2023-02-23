@@ -8,11 +8,13 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.statement.insert.Insert;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -50,21 +52,21 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor {
     }
 
     @Override
-    public boolean willDoQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+    public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
         if (StrUtil.containsAny(boundSql.getSql(), "delete_time=0", "delete_time = 0")) {
-            return false;
+            return;
         }
 
-        return true;
+        super.beforeQuery(executor, ms, parameter, rowBounds, resultHandler, boundSql);
     }
 
     @Override
-    public boolean willDoUpdate(Executor executor, MappedStatement ms, Object parameter) throws SQLException {
-        if (StrUtil.containsAny(ms.getBoundSql(parameter).getSql(), "delete_time=0", "delete_time = 0")) {
-            return false;
+    public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
+        if (StrUtil.containsAny(sh.getBoundSql().getSql(), "delete_time=0", "delete_time = 0")) {
+            return;
         }
 
-        return true;
+        super.beforePrepare(sh, connection, transactionTimeout);
     }
 
     @Override
