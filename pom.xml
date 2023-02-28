@@ -66,7 +66,7 @@
         <plumelog.version>3.5.2</plumelog.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mybatis-pagehelper.version>1.4.6</mybatis-pagehelper.version>
-        <druid-spring-boot-starter.version>1.2.15</druid-spring-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
         <forest.version>1.5.28</forest.version>
         <easypoi.version>4.2.0</easypoi.version>
