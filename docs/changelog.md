@@ -13,7 +13,47 @@
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-## j11.2.6.2【规划中】
+## j11.2.6.3【规划中】
+## j11.2.6.2【2023-03-28】
+1. 移除yue-library-pay模块，放至里程碑实现
+2. 移除yue-library-data-jdbc模块，放至里程碑实现
+3. 移除yue-library-web-grpc模块，放至里程碑实现
+4. 新增yue-library-data-mybatis模版
+  - 底层jdbc模块更换为mybatis-plus，实现数据审计、数据填充、优雅分页、RESTful CRUD
+
+实现多租户与i18n、mybatis-plus默认规范（技术与业务分离）等重量级特性。
+
+### 新特性
+- 【base】新增多租户与i18n实现，并提供规范文档
+- 【base】`RESTful`、`validation`、`exception`全面支持i18n国际化
+- 【base】优化默认国际化查找优先级，解决`Result toJsonString()` 国际化
+- 【base】validation新增相互关系校验`@Mutual`，互斥关系校验`Exclusion`
+- 【base】新增相互关系与互斥关系校验器
+- 【base】新增`Convert.toJSONString()`方法
+- 【base】`RESTful`响应自动添加链路id
+- 【mybatis】底层jdbc模块更换为mybatis-plus，实现数据审计、数据填充、优雅分页、RESTful CRUD
+- 【mybatis】mybatis新增BaseService，继承后即可获得符合RESTful风格的内置CRUD实现
+- 【mybatis】增强mybatis-plus，实现全局的逻辑删除，不区分xml sql还是内置方法实现
+- 【mybatis】完善相关Mybatis示例、分页示例等
+- 【redis】分布式锁规范与精简
+- 【规约】完善与优化POJO、层级、包名等规约
+- 【规约】阿里云中央仓库启用优化
+- 【template-boot】适配最新版本模版项目
+
+### Bug修复
+- 【base】优化SpringUtils工具类，解决由于ApplicationContext还未加载，可能导致的空指针
+
+### Maven关键依赖库
+[**👉Maven详细依赖定义见pom.xml文件**](https://gitee.com/yl-yue/yue-library/blob/j11.2.6.2/pom.xml)
+
+|依赖库					|依赖版本	|
+|--						|--			|
+|spring-boot			|2.6.11		|
+|spring-cloud			|2021.0.4	|
+|spring-cloud-alibaba	|2021.0.4.0	|
+|hutool					|5.8.11		|
+|fastjson				|1.2.83		|
+
 ## j11.2.6.1【2022-12-28】
 这是一个分水岭版本，从下本版本开始，yue-library将不再注重大而全，而是精简与引领技术栈，会封装常用特性，但不会引入偏门的技术栈，如：grpc。
 此类特性会作为脚手架demo提供。
