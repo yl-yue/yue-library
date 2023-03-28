@@ -602,6 +602,9 @@ public class R {
                 }
             } catch (Exception ignore) {
             }
+        } else if (ClassLoaderUtil.isPresent("cn.dev33.satoken.exception.NotLoginException")
+                && ClassLoaderUtil.loadClass("cn.dev33.satoken.exception.NotLoginException").isAssignableFrom(e.getClass())) {
+            return R.unauthorized();
         }
 
         // 处理所有未处理异常-500

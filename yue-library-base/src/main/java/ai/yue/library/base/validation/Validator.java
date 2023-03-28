@@ -4,6 +4,7 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.base.util.StringUtils;
 import ai.yue.library.base.view.R;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
@@ -66,6 +67,7 @@ public class Validator {
 	private static final String CREDIT_CODE_HINT_MSG = "参数 {} 不是一个合法的统一社会信用代码";
 	private static final String ZIP_CODE_HINT_MSG = "参数 {} 不是一个合法的邮政编码（中国）";
 	private static final String REGEX_HINT_MSG = "参数 {} 不满足正则表达式：{}";
+	private static final String USERNAME_HINT_MSG = "参数 {} 不是一个合法的用户名";
 
 	/**
 	 * 切换校验对象
@@ -87,7 +89,7 @@ public class Validator {
 	public static Validator getValidatorAndSetParam(Object param) {
 		return SpringUtils.getBean(Validator.class).param(param);
 	}
-    
+
     /**
      * 必须不为 {@code null}
      * 
@@ -217,7 +219,14 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateWord((CharSequence) param, StrUtil.format(ENGLISH_HINT_MSG, paramName));
         return this;
     }
-    
+
+	/**
+	 * 生日校验
+	 */
+	public Validator birthday() {
+		return birthday("birthday");
+	}
+
     /**
      * 生日校验
      *
@@ -239,7 +248,14 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateBirthday(date, StrUtil.format(BIRTHDAY_HINT_MSG, paramName));
         return this;
     }
-	
+
+	/**
+	 * 手机号校验
+	 */
+	public Validator cellphone() {
+		return cellphone("cellphone");
+	}
+
     /**
      * 手机号校验
      *
@@ -250,7 +266,14 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateMobile((CharSequence) param, StrUtil.format(CELLPHONE_HINT_MSG, paramName));
         return this;
     }
-    
+
+	/**
+	 * 邮箱校验
+	 */
+	public Validator email() {
+		return email("email");
+	}
+
     /**
      * 邮箱校验
      *
@@ -261,8 +284,16 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateEmail((CharSequence) param, StrUtil.format(EMAIL_HINT_MSG, paramName));
         return this;
     }
-    
-    /**
+
+
+	/**
+	 * 身份证校验
+	 */
+	public Validator idCard() {
+		return idCard("idCard");
+	}
+
+	/**
      * 身份证校验
      *
      * @param paramName 参数名
@@ -272,7 +303,14 @@ public class Validator {
     	cn.hutool.core.lang.Validator.validateCitizenIdNumber((CharSequence) param, StrUtil.format(ID_CARD_HINT_MSG, paramName));
         return this;
     }
-    
+
+	/**
+	 * 中国车牌号校验
+	 */
+	public Validator plateNumber() {
+		return plateNumber("plateNumber");
+	}
+
     /**
      * 中国车牌号校验
      *
@@ -390,6 +428,49 @@ public class Validator {
 	 */
 	public Validator zipCode(String paramName) {
 		cn.hutool.core.lang.Validator.validateZipCode((CharSequence) param, StrUtil.format(ZIP_CODE_HINT_MSG, paramName));
+		return this;
+	}
+
+	/**
+	 * 用户名校验
+	 */
+	public Validator username() {
+		return username("username");
+	}
+
+	/**
+	 * 用户名校验
+	 *
+	 * <ul>
+	 *     <li>长度必须大于等于5</li>
+	 *     <li>不能包含@符号，避免是邮箱</li>
+	 *     <li>不能是手机号</li>
+	 * </ul>
+	 *
+	 * @param paramName 参数名
+	 * @return Validator
+	 */
+	public Validator username(String paramName) {
+		String value = (String) param;
+		boolean isValid = true;
+		if (StringUtils.isNotBlank(value)) {
+			if (value.length() < 5) {
+				isValid = false;
+			}
+			if (value.contains("@")) {
+				isValid = false;
+			}
+			if (cn.hutool.core.lang.Validator.isMobile(value) == true) {
+				isValid = false;
+			}
+		} else {
+			isValid = false;
+		}
+
+		if (isValid == false) {
+			throw new ValidateException(USERNAME_HINT_MSG, paramName);
+		}
+
 		return this;
 	}
 
