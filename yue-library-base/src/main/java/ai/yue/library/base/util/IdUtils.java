@@ -1,8 +1,11 @@
 package ai.yue.library.base.util;
 
 import cn.hutool.core.util.IdUtil;
+import org.springframework.lang.Nullable;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -34,30 +37,30 @@ public class IdUtils extends IdUtil {
 	}
 
 	/**
-	 * 获得16纯数字随机单号
+	 * 获得20位有序时间单号（可读的时间有序、纯数字、20位）
 	 *
-	 * @return 16纯数字随机单号
+	 * @return 20位有序时间单号
 	 */
-	public static String getOrderNo16() {
-		Random random = new Random();
-		StringBuilder sb = new StringBuilder();
-		sb.append(System.currentTimeMillis());
-		sb.append(random.nextInt(10));
-		sb.append(random.nextInt(10));
-		sb.append(random.nextInt(10));
-		return sb.toString();
+	public static String getDateOrderNo() {
+		return getDateOrderNo(null);
 	}
 
 	/**
-	 * 获得19纯数字随机单号
+	 * 获得有序时间单号（可读的时间有序、纯数字、默认20位）
 	 *
-	 * @return 19纯数字随机单号
+	 * @param length 时间单号长度（可以为null，最小20位，最长36位）
+	 * @return 有序时间单号
 	 */
-	public static String getOrderNo19() {
-		String orderNo = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		String trandNo = String.valueOf((Math.random() * 9 + 1));
-		orderNo += trandNo.substring(5, 10);
-		return orderNo;
+	public static String getDateOrderNo(@Nullable Integer length) {
+		StringBuilder orderNo = new StringBuilder();
+		orderNo.append(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS").format(LocalDateTime.now()));
+		String snowflakeNextIdStr = IdUtil.getSnowflakeNextIdStr();
+		int subLength = snowflakeNextIdStr.length() - 3;
+		if (length != null && length > 20) {
+			subLength = subLength - (length - 20);
+		}
+
+		return orderNo.append(snowflakeNextIdStr.substring(subLength)).toString();
 	}
 
 	/**
@@ -97,10 +100,10 @@ public class IdUtils extends IdUtil {
     }
 
 	/**
-	 * 获得随机生成n位大写字母编码（数字+大写字母）
+	 * 获得随机生成n位大写字符编码（数字+大写字母）
 	 *
 	 * @param length 长度
-	 * @return 对应长度的大写字母编码（数字+大写字母）
+	 * @return 对应长度的大写字符编码（数字+大写字母）
 	 */
 	public static String getRandomCodeToUpperCase(int length) {
 		//字符源，可以根据需要删减
