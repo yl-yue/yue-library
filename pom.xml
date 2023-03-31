@@ -54,7 +54,7 @@
         <yue-library-web.version>j${java.version}.2.6.3</yue-library-web.version>
         <yue-library-webflux.version>j${java.version}.2.6.1</yue-library-webflux.version>
         <yue-library-data-mybatis.version>j${java.version}.2.6.3</yue-library-data-mybatis.version>
-        <yue-library-data-redis.version>j${java.version}.2.6.2</yue-library-data-redis.version>
+        <yue-library-data-redis.version>j${java.version}.2.6.3</yue-library-data-redis.version>
         <yue-library-data-es.version>j${java.version}.2.6.2</yue-library-data-es.version>
         <yue-library-auth-client.version>j${java.version}.2.6.1</yue-library-auth-client.version>
         <yue-library-auth-service.version>j${java.version}.2.6.1</yue-library-auth-service.version>

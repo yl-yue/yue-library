@@ -21,6 +21,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * redis自动配置
@@ -30,6 +32,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Slf4j
 @Configuration
+@EnableScheduling
 @Import(ApiIdempotentController.class)
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @EnableConfigurationProperties({RedisProperties.class})
@@ -67,5 +70,11 @@ public class RedisAutoConfig {
 				ClassUtils.getClassName(RedisSerializerEnum.class, false).concat(".JDK"));
 		return new Redis(redisTemplate, stringRedisTemplate);
 	}
-	
+
+	@Scheduled(cron = "* 1 * * * *")
+	public void heartbeat(Redis redis) {
+		redis.get("heartbeat");
+		log.debug("Redis heartbeat");
+	}
+
 }
