@@ -61,7 +61,7 @@
 
         <!-- dependencies.version -->
         <hutool.version>5.8.11</hutool.version>
-        <bouncycastle.version>1.68</bouncycastle.version>
+        <bouncycastle.version>1.74</bouncycastle.version>
         <fastjson.version>1.2.83</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
