@@ -6,9 +6,12 @@ import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -18,7 +21,7 @@ import java.util.*;
  * @since	2017年10月27日
  */
 public class ListUtils extends ListUtil {
-	
+
 	/**
 	 * List数组是否为空
 	 * @param list list
@@ -55,7 +58,7 @@ public class ListUtils extends ListUtil {
 		
 		return null;
 	}
-	
+
 	/**
 	 * 数据分组
 	 * <p>将拥有相同的 key 值的JSON数据归为一组</p>
@@ -77,7 +80,30 @@ public class ListUtils extends ListUtil {
 		
 		return result;
 	}
-	
+
+	/**
+	 * 数据分组
+	 * <p>将拥有相同的 key 值的数据归为一组</p>
+	 *
+	 * @param list	要处理的集合
+	 * @param key	分组依据
+	 * @return 分组后的list
+	 */
+	public static <T> List<List<T>> groupingT(List<T> list, String key) {
+		List<List<T>> result = new ArrayList<>();
+		toListAndDistinctT(list, key, String.class).forEach(str -> {
+			List<T> jsonList = new ArrayList<>();
+			list.forEach(json -> {
+				if (str.equals(Convert.toObject(ReflectUtil.getFieldValue(json, key), String.class))) {
+					jsonList.add(json);
+				}
+			});
+			result.add(jsonList);
+		});
+
+		return result;
+	}
+
 	/**
 	 * 保留相同值
 	 * @param list	循环第一层
@@ -366,7 +392,24 @@ public class ListUtils extends ListUtil {
 		
 		return toList;
 	}
-	
+
+	/**
+	 * {@linkplain List}-{@linkplain D} 转 {@linkplain List}-{@linkplain T}
+	 *
+	 * @param list 		需要转换的List
+	 * @param keepKey	保留值的key
+	 * @return			转换后的List
+	 */
+	public static <T, D> List<T> toListT(List<D> list, String keepKey) {
+		List<T> toList = new ArrayList<>();
+		for(D json : list) {
+			T value = (T) ReflectUtil.getFieldValue(json, keepKey);
+			toList.add(value);
+		}
+
+		return toList;
+	}
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain String}
 	 * 
@@ -431,7 +474,24 @@ public class ListUtils extends ListUtil {
 	public static <T> List<T> toListAndDistinct(List<JSONObject> list, String keepKey, Class<T> clazz) {
 		return distinct(toList(list, keepKey, clazz));
 	}
-	
+
+	/**
+	 * {@linkplain List} - {@linkplain T} 转 {@linkplain List} - {@linkplain D} 并去除重复元素
+	 *
+	 * @param list 		需要转换的List
+	 * @param keepKey	保留值的key
+	 * @return			处理后的List
+	 */
+	public static <T, D> List<D> toListAndDistinctT(List<T> list, String keepKey, Class<D> clazz) {
+		List<D> toList = new ArrayList<> ();
+		for(T json : list) {
+			D value = Convert.toObject(ReflectUtil.getFieldValue(json, keepKey), clazz);
+			toList.add(value);
+		}
+
+		return distinct(toList);
+	}
+
 	/**
 	 * {@linkplain List} - {@linkplain Map} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>

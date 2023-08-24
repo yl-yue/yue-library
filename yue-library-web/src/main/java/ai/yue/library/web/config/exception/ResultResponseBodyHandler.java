@@ -3,6 +3,7 @@ package ai.yue.library.web.config.exception;
 import ai.yue.library.base.constant.Constant;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.view.Result;
+import ai.yue.library.base.view.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
@@ -56,8 +57,14 @@ public class ResultResponseBodyHandler implements ResponseBodyAdvice<Result> {
 			}
 		}
 
-		// 3. 设置i18n msg
-		body.setMsg(I18nUtils.getYue(body.getMsg()));
+		/*
+		 * 3. 设置i18n msg
+		 *   - code == 600 需调用 R.errorPromptI18n() 方法
+		 *   - 此处统一翻译 code != 600 的 msg
+		 */
+		if (!ResultEnum.ERROR_PROMPT.getCode().equals(code)) {
+			body.setMsg(I18nUtils.getYue(body.getMsg()));
+		}
 
 		// 4. 设置链路ID
 		body.setTraceId(MDC.get(Constant.TRACE_ID));

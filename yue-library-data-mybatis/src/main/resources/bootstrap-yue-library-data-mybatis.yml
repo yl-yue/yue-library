@@ -4,6 +4,7 @@ spring:
       on-profile: yue-library-data-mybatis
   datasource:
     druid:
+      keep-alive: true
       filter:
         slf4j:
           enabled: true
@@ -16,6 +17,7 @@ spring:
           statement-prepare-after-log-enabled: false
     dynamic:
       druid:
+        keep-alive: true
         slf4j:
           enable: true
           statement-executable-sql-log-enable: true

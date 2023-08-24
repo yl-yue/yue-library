@@ -1,6 +1,7 @@
 package ai.yue.library.data.redis.config;
 
 import ai.yue.library.base.util.ClassUtils;
+import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
 import ai.yue.library.data.redis.constant.RedisSerializerEnum;
@@ -37,7 +38,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @EnableConfigurationProperties({RedisProperties.class})
 public class RedisAutoConfig {
-	
+
 	@Autowired
 	RedisProperties redisProperties;
 	
@@ -71,9 +72,9 @@ public class RedisAutoConfig {
 		return new Redis(redisTemplate, stringRedisTemplate);
 	}
 
-	@Scheduled(cron = "* 1 * * * *")
-	public void heartbeat(Redis redis) {
-		redis.get("heartbeat");
+	@Scheduled(cron = "0 * * * * *")
+	public void heartbeat() {
+		SpringUtils.getBean(Redis.class).get("heartbeat");
 		log.debug("Redis heartbeat");
 	}
 

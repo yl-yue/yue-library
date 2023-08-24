@@ -449,6 +449,19 @@ public class R {
      * <b>错误提示-600</b>
      * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
      * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
+     *
+     * @param msg  提示消息（如：{@value ResultPrompt#USERNAME_OR_PASSWORD_ERROR}）
+     * @param data 业务处理数据
+     * @return HTTP请求，最外层响应对象
+     */
+    public static <T> Result<T> errorPrompt(String msg, T data) {
+        return error(ResultEnum.ERROR_PROMPT.getCode(), msg, data);
+    }
+
+    /**
+     * <b>错误提示-600</b>
+     * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
+     * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
      * <p>msg支持文本模板格式化，{} 表示占位符
      * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
      *
@@ -458,19 +471,6 @@ public class R {
      */
     public static Result<?> errorPromptFormat(String msg, Object... values) {
         return errorPrompt(StrUtil.format(msg, values));
-    }
-
-    /**
-     * <b>错误提示-600</b>
-     * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
-     * <p>可优先使用 {@linkplain ResultPrompt} 预定义的提示信息，如：{@linkplain ResultPrompt#USERNAME_OR_PASSWORD_ERROR}
-     *
-     * @param msg  提示消息（如：{@value ResultPrompt#USERNAME_OR_PASSWORD_ERROR}）
-     * @param data 业务处理数据
-     * @return HTTP请求，最外层响应对象
-     */
-    public static <T> Result<T> errorPrompt(String msg, T data) {
-        return error(ResultEnum.ERROR_PROMPT.getCode(), msg, data);
     }
 
     /**
@@ -491,11 +491,11 @@ public class R {
      * <b>错误提示-600</b>
      * <p>适用于i18n资源包定义（messages.properties），遵循SpringBoot默认值规范</p>
      *
-     * @param msgKey messages.properties中定义的key，被替换的部分用 {} 表示
+     * @param msgKey messages.properties中定义的key
      * @param data   业务处理数据
      * @return HTTP请求，最外层响应对象
      */
-    public static <T> Result<T> errorPromptI18n(String msgKey, T data) {
+    public static <T> Result<T> errorPromptI18nT(String msgKey, T data) {
         return errorPrompt(I18nUtils.get(msgKey), data);
     }
 
@@ -608,7 +608,7 @@ public class R {
         }
 
         // 处理所有未处理异常-500
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return internalServerError(ExceptionUtils.getPrintExceptionToJson(e));
     }
 
