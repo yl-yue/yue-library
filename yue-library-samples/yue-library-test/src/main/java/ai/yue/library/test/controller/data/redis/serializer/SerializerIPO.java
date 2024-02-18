@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
@@ -43,8 +44,8 @@ public class SerializerIPO implements Serializable {
 	String sex;// 用户性别
 	
 	@Birthday
-	LocalDate birthday;// 用户生日
-	LocalTime birthday2;// 用户生日
-//	LocalDateTime birthday3;// 用户生日
+	LocalDate date;// 用户生日
+	LocalTime time;
+	LocalDateTime dateTime;
 	
 }

@@ -590,7 +590,11 @@ public class R {
             log.error("【服务降级】接口调用失败，FeignException 错误内容如下：", e);
             String contentUTF8 = ReflectUtil.invoke(e, "contentUTF8");
             try {
-                return Convert.toJavaBean(contentUTF8, Result.class);
+                Result<?> result = Convert.toJavaBean(contentUTF8, Result.class);
+                if (result == null) {
+                    return clientFallback();
+                }
+                return result;
             } catch (Exception ex) {
                 return clientFallback(contentUTF8);
             }
