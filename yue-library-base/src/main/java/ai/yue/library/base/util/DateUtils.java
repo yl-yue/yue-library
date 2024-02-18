@@ -264,7 +264,8 @@ public class DateUtils extends DateUtil {
 	 * @return 年-月-日
 	 */
 	public static String toDateFormatter(long timestamp) {
-		return DATE_FORMATTER.format(LocalDate.ofEpochDay(timestamp));
+		Instant instant = Instant.ofEpochMilli(timestamp);
+		return DATE_FORMATTER.format(LocalDate.ofInstant(instant, ZoneId.systemDefault()));
 	}
 	
 	/**

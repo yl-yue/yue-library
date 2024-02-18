@@ -17,7 +17,7 @@ public class ApiIdempotentProperties {
 	/**
 	 * Prefix of {@link ApiIdempotentProperties}.
 	 */
-	public static final String PREFIX = RedisProperties.PREFIX + "api-idempotent";
+	public static final String PREFIX = RedisProperties.PREFIX + ".api-idempotent";
 
 	/**
 	 * 启用接口幂等性
