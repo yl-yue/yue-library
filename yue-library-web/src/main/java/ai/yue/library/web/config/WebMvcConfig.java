@@ -135,71 +135,86 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	private void mappingJackson2HttpMessageConverterConfig(MappingJackson2HttpMessageConverter converter) {
 		ObjectMapper objectMapper = converter.getObjectMapper();
-		JsonSerializer<Object> jsonSerializer = new JsonSerializer<Object>() {
+		JsonSerializer<Object> nullKeySerializer = new JsonSerializer<Object>() {
 			@Override
 			public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-				// 1. 确认currentValue是否有值
-				JsonStreamContext outputContext = gen.getOutputContext();
-				Object currentValue = outputContext.getCurrentValue();
-				if (currentValue == null) {
-					writeNullOrEmpty(gen);
-					return;
-				}
-				
-				// 2. 确认当前字段
-				String currentName = outputContext.getCurrentName();
-				Field field = null;
-				try {
-					field = ReflectUtil.getField(currentValue.getClass(), currentName);
-				} catch (Exception e) {
-					// 不做处理
-				}
-				if (field == null) {
-					writeNullOrEmpty(gen);
-					return;
-				}
-				
-				// 3. 处理初始化类型
-				Class<?> fieldClass = field.getType();
-				if (jacksonProperties.isWriteNullStringAsEmpty() && CharSequence.class.isAssignableFrom(fieldClass)) {
-					gen.writeString(StrUtil.EMPTY);
-					return;
-				} else if (jacksonProperties.isWriteNullNumberAsZero() && Number.class.isAssignableFrom(fieldClass)) {
-					gen.writeNumber(0);
-					return;
-				} else if (jacksonProperties.isWriteNullBooleanAsFalse() && Boolean.class.isAssignableFrom(fieldClass)) {
-					gen.writeBoolean(false);
-					return;
-				} else if (jacksonProperties.isWriteNullMapAsEmpty() && Map.class.isAssignableFrom(fieldClass)) {
-					gen.writeStartObject();
-					gen.writeEndObject();
-					return;
-				} else if (jacksonProperties.isWriteNullArrayAsEmpty() && (fieldClass.isArray() || Collection.class.isAssignableFrom(fieldClass))) {
-					gen.writeStartArray();
-					gen.writeEndArray();
-					return;
-				} else if (ClassUtils.isBasicType(fieldClass)) {
-					gen.writeNull();
-					return;
-				}
-				
-				// 4. 其它类型处理
-				writeNullOrEmpty(gen);
-			}
-			
-			private void writeNullOrEmpty(JsonGenerator gen) throws IOException {
-				if (jacksonProperties.isWriteNullAsStringEmpty()) {
-					gen.writeString(StrUtil.EMPTY);
-					return;
-				}
-				
-				gen.writeNull();
+				nullSerializer(gen, StrUtil.NULL);
 			}
 		};
-		
-		objectMapper.getSerializerProvider().setNullValueSerializer(jsonSerializer);
+		JsonSerializer<Object> nullValueSerializer = new JsonSerializer<Object>() {
+			@Override
+			public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+				nullSerializer(gen, StrUtil.EMPTY);
+			}
+		};
+		SerializerProvider serializerProvider = objectMapper.getSerializerProvider();
+		serializerProvider.setNullKeySerializer(nullKeySerializer);
+		serializerProvider.setNullValueSerializer(nullValueSerializer);
 	}
-	
+
+	private void nullSerializer(JsonGenerator gen, String emptyValue) throws IOException {
+		// 1. 确认currentValue是否有值
+		JsonStreamContext outputContext = gen.getOutputContext();
+		Object currentValue = outputContext.getCurrentValue();
+		if (currentValue == null) {
+			writeNullOrEmpty(gen, emptyValue);
+			return;
+		}
+
+		// 2. 确认当前字段
+		String currentName = outputContext.getCurrentName();
+		Field field = null;
+		try {
+			field = ReflectUtil.getField(currentValue.getClass(), currentName);
+		} catch (Exception e) {
+			// 不做处理
+		}
+		if (field == null) {
+			writeNullOrEmpty(gen, emptyValue);
+			return;
+		}
+
+		// 3. 处理初始化类型
+		Class<?> fieldClass = field.getType();
+		if (jacksonProperties.isWriteNullStringAsEmpty() && CharSequence.class.isAssignableFrom(fieldClass)) {
+			gen.writeString(StrUtil.EMPTY);
+			return;
+		} else if (jacksonProperties.isWriteNullNumberAsZero() && Number.class.isAssignableFrom(fieldClass)) {
+			gen.writeNumber(0);
+			return;
+		} else if (jacksonProperties.isWriteNullBooleanAsFalse() && Boolean.class.isAssignableFrom(fieldClass)) {
+			gen.writeBoolean(false);
+			return;
+		} else if (jacksonProperties.isWriteNullMapAsEmpty() && Map.class.isAssignableFrom(fieldClass)) {
+			gen.writeStartObject();
+			gen.writeEndObject();
+			return;
+		} else if (jacksonProperties.isWriteNullArrayAsEmpty() && (fieldClass.isArray() || Collection.class.isAssignableFrom(fieldClass))) {
+			gen.writeStartArray();
+			gen.writeEndArray();
+			return;
+		} else if (ClassUtils.isBasicType(fieldClass)) {
+			gen.writeNull();
+			return;
+		}
+
+		// 4. 其它类型处理
+		writeNullOrEmpty(gen, emptyValue);
+	}
+
+	private void writeNullOrEmpty(JsonGenerator gen, String emptyValue) throws IOException {
+		if (jacksonProperties.isWriteNullAsStringEmpty()) {
+			if (emptyValue.equals(StrUtil.NULL)) {
+				gen.writeFieldName(emptyValue);
+			} else {
+				gen.writeString(emptyValue);
+			}
+			return;
+		}
+
+		gen.writeNull();
+	}
+
 	/**
 	 * 添加自定义方法参数解析器
 	 */

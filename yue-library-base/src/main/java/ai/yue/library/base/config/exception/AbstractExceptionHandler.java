@@ -141,17 +141,6 @@ public abstract class AbstractExceptionHandler {
     @ExceptionHandler(ParamDecryptException.class)
 	public abstract Result<?> paramDecryptExceptionHandler(ParamDecryptException e);
     
-	/**
-	 * 拦截所有未处理异常-500
-	 * @param e 异常
-	 * @return 结果
-	 */
-	@ResponseBody
-	@ExceptionHandler(Exception.class)
-	public Result<?> exceptionHandler(Exception e) {
-		return R.getResult(e);
-	}
-    
     /**
      * DB异常统一处理-506
      * @param e DB异常
