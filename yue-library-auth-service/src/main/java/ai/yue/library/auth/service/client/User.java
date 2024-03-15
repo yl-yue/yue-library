@@ -8,7 +8,7 @@ import ai.yue.library.auth.service.dto.QqUserDTO;
 import ai.yue.library.auth.service.dto.WxUserDTO;
 import ai.yue.library.auth.service.vo.wx.open.AccessTokenVO;
 import ai.yue.library.base.exception.ResultException;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.view.ResultPrompt;
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -123,7 +124,7 @@ public class User extends ai.yue.library.auth.client.client.User {
     	
     	// 2. 设置验证码到Redis
 		String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
-		redis.set(captcha_redis_key, captcha, authServiceProperties.getCaptchaTimeout());
+		redis.set(captcha_redis_key, captcha, Duration.ofSeconds(authServiceProperties.getCaptchaTimeout()) );
 		
 		// 3. 设置验证码到响应输出流
 		HttpServletResponse response = ServletUtils.getResponse();
@@ -148,11 +149,11 @@ public class User extends ai.yue.library.auth.client.client.User {
     public void captchaValidate(String captcha) {
     	String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
 		String randCaptcha = redis.get(captcha_redis_key);
-		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
+		if (StrUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
 			throw new ResultException(R.errorPrompt(ResultPrompt.CAPTCHA_ERROR));
 		}
 		
-		redis.del(captcha_redis_key);
+		redis.delete(captcha_redis_key);
     }
     
 	/**
@@ -173,11 +174,11 @@ public class User extends ai.yue.library.auth.client.client.User {
 		
         // 2. 注销会话
 		String redisTokenKey = null;
-        if (StringUtils.isNotEmpty(token)) {
+        if (StrUtils.isNotEmpty(token)) {
         	redisTokenKey = authProperties.getRedisTokenPrefix() + token;
         	String tokenValue = redis.get(redisTokenKey);
-        	if (StringUtils.isNotEmpty(tokenValue)) {
-        		redis.del(redisTokenKey);
+        	if (StrUtils.isNotEmpty(tokenValue)) {
+        		redis.delete(redisTokenKey);
         	}
         }
         
@@ -187,7 +188,7 @@ public class User extends ai.yue.library.auth.client.client.User {
         
 		// 4. 登录成功-设置token至Redis
 		Integer tokenTimeout = authServiceProperties.getTokenTimeout();
-		redis.set(redisTokenKey, JSONObject.toJSONString(userInfo), tokenTimeout);
+		redis.set(redisTokenKey, JSONObject.toJSONString(userInfo), Duration.ofSeconds(tokenTimeout));
 		
 		// 5. 登录成功-设置token至Cookie
 		ServletUtils.addCookie(response, authProperties.getCookieTokenKey(), token, tokenTimeout);
@@ -211,12 +212,12 @@ public class User extends ai.yue.library.auth.client.client.User {
 		String token = getRequestToken();
 		
 		// 2. 确认token
-		if (StringUtils.isEmpty(token)) {
+		if (StrUtils.isEmpty(token)) {
 			return R.unauthorized();
 		}
 		
 		// 3. 清除Redis-token
-		redis.del(authProperties.getRedisTokenPrefix() + token);
+		redis.delete(authProperties.getRedisTokenPrefix() + token);
 		
 		// 4. 清除Cookie-token
 		ServletUtils.addCookie(response, authProperties.getCookieTokenKey(), null, 0);

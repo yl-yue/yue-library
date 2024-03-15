@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import ai.yue.library.base.util.DateUtils;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Validator;
 
@@ -37,7 +37,7 @@ public class BirthdayValidator implements ConstraintValidator<Birthday, Object> 
 			validValue = DateUtils.toDateFormatter((TemporalAccessor) value);
 		}
 		
-		if (StringUtils.isNotBlank(validValue)) {
+		if (StrUtils.isNotBlank(validValue)) {
 			return Validator.isBirthday(validValue);
 		}
 		

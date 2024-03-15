@@ -1,5 +1,6 @@
-package ai.yue.library.test.base.convert;
+package ai.yue.library.test.dto;
 
+import ai.yue.library.test.constant.ConvertEnum;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConvertDO implements Serializable {
+public class ConvertDTO implements Serializable {
 
     private static final long serialVersionUID = 3987648902475498726L;
 
@@ -33,6 +34,8 @@ public class ConvertDO implements Serializable {
     private Boolean booleanb;
     private Character character;
     private String str;
+    private String strChinese;
+    private String strUrl;
 
     private String[] arrayStr;
     private long[] arrayLong;
@@ -55,5 +58,6 @@ public class ConvertDO implements Serializable {
     private List<JSONObject> strToJsonObjectList;
 
     private ConvertEnum convertEnum;
+    private FastJsonHttpMessageConverterDTO fastJsonHttpMessageConverterDTO;
 
 }

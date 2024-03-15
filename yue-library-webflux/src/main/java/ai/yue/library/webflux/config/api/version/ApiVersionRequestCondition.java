@@ -8,7 +8,7 @@ import org.springframework.web.server.ServerWebExchange;
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.exception.ApiVersionDeprecatedException;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     	// 校验请求url中是否包含版本信息
 		ServerHttpRequest serverHttpRequest = exchange.getRequest();
     	String requestURI = serverHttpRequest.getURI().getPath();
-    	String[] versionPaths = StringUtils.splitToArray(requestURI, "/");
+    	String[] versionPaths = StrUtils.splitToArray(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
 
 		// pathVersion的值大于等于apiVersionValue皆可匹配，除非ApiVersion的deprecated值已被标注为true

@@ -10,7 +10,7 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
 
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
@@ -56,10 +56,10 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 		}
 		
 		// 3. 解析版本占位符索引位置
-		String[] versionPlaceholderValues = StringUtils.splitToArray(requestMappingValues[0], "/");
+		String[] versionPlaceholderValues = StrUtils.splitToArray(requestMappingValues[0], "/");
 		Integer index = null;
 		for (int i = 0; i < versionPlaceholderValues.length; i++) {
-			if (StringUtils.equals(versionPlaceholderValues[i], apiVersionProperties.getVersionPlaceholder())) {
+			if (StrUtils.equals(versionPlaceholderValues[i], apiVersionProperties.getVersionPlaceholder())) {
 				index = i;
 				break;
 			}

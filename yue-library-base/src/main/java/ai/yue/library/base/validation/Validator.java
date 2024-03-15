@@ -4,7 +4,7 @@ import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.base.view.R;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
@@ -453,7 +453,7 @@ public class Validator {
 	public Validator username(String paramName) {
 		String value = (String) param;
 		boolean isValid = true;
-		if (StringUtils.isNotBlank(value)) {
+		if (StrUtils.isNotBlank(value)) {
 			if (value.length() < 5) {
 				isValid = false;
 			}

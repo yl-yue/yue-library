@@ -60,7 +60,7 @@
         <yue-library-auth-service.version>j${java.version}.2.6.1</yue-library-auth-service.version>
 
         <!-- dependencies.version -->
-        <hutool.version>5.8.11</hutool.version>
+        <hutool.version>5.8.24</hutool.version>
         <bouncycastle.version>1.68</bouncycastle.version>
         <fastjson.version>1.2.83</fastjson.version>
         <plumelog.version>3.5.2</plumelog.version>
@@ -68,10 +68,10 @@
         <mybatis-pagehelper.version>1.4.6</mybatis-pagehelper.version>
         <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
-        <forest.version>1.5.28</forest.version>
-        <easypoi.version>4.2.0</easypoi.version>
-        <easyexcel.version>2.2.6</easyexcel.version>
-        <jpush.version>3.4.7</jpush.version>
+        <forest.version>1.5.35</forest.version>
+        <easyexcel.version>3.3.3</easyexcel.version>
+        <poi.version>5.2.5</poi.version>
+        <jpush.version>3.7.6</jpush.version>
 
         <!-- plugins.version -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
@@ -149,6 +149,11 @@
             <!-- hutool工具包 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
                 <artifactId>hutool-aop</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
@@ -189,7 +194,7 @@
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
+                <artifactId>hutool-poi</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
@@ -240,16 +245,28 @@
                 <version>${dynamic-datasource.version}</version>
             </dependency>
 
+            <!-- poi -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
             <!-- 其他 -->
             <dependency>
                 <groupId>com.dtflys.forest</groupId>
                 <artifactId>forest-spring-boot-starter</artifactId>
                 <version>${forest.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.afterturn</groupId>
-                <artifactId>easypoi-spring-boot-starter</artifactId>
-                <version>${easypoi.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.jpush.api</groupId>

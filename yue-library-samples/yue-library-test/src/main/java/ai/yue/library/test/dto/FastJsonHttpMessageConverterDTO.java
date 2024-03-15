@@ -1,19 +1,19 @@
 package ai.yue.library.test.dto;
 
+import ai.yue.library.test.constant.TestEnum;
+import cn.hutool.core.date.DateTime;
+import com.alibaba.fastjson.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.test.constant.TestEnum;
-import cn.hutool.core.date.DateTime;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author	ylyue
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FastJsonHttpMessageConverterDTO {
+public class FastJsonHttpMessageConverterDTO implements Serializable {
 
 	int inta;
 	Integer intb;

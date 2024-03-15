@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Document(indexName = "user")
-public class UserPerformanceDO implements Serializable {
+public class UserPerformance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

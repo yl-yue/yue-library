@@ -134,19 +134,19 @@ public class ParamUtils {
 	 */
 	public static void paramFormat(JSONObject paramJson, String[] booleanKeys, String[] decimalKeys
 			, String[] jsonObjectKeys, String[] jsonArrayKeys) {
-		if (!StringUtils.isEmptys(booleanKeys)) {
+		if (!StrUtils.isEmptys(booleanKeys)) {
 			paramFormatBoolean(paramJson, booleanKeys);
 		}
 		
-		if (!StringUtils.isEmptys(decimalKeys)) {
+		if (!StrUtils.isEmptys(decimalKeys)) {
 			paramFormatBigDecimal(paramJson, decimalKeys);
 		}
 		
-		if (!StringUtils.isEmptys(jsonObjectKeys)) {
+		if (!StrUtils.isEmptys(jsonObjectKeys)) {
 			paramFormatJSONObject(paramJson, jsonObjectKeys);
 		}
 		
-		if (!StringUtils.isEmptys(jsonArrayKeys)) {
+		if (!StrUtils.isEmptys(jsonArrayKeys)) {
 			paramFormatJSONArray(paramJson, jsonArrayKeys);
 		}
 	}
@@ -189,7 +189,7 @@ public class ParamUtils {
 		// 2. 必传参数是否为空字符串
 		if (!isHint) {
 			for (String key : mustContainKeys) {
-				if (StringUtils.isEmptyIfStr(paramJson.get(key))) {
+				if (StrUtils.isEmptyIfStr(paramJson.get(key))) {
 					isHint = true;
 					hintMsg = StrUtil.format("【错误提示】：必传参数 {} 的值为空，", key);
 					break;

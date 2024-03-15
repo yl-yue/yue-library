@@ -3,11 +3,12 @@ package ai.yue.library.data.mybatis.service;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.data.mybatis.entity.BaseEntity;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -37,7 +38,7 @@ import java.util.List;
  */
 @Slf4j
 @Getter
-public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity> {
+public abstract class BaseService<M extends BaseMapper<T>, T> {
 
     @Autowired
     protected M baseMapper;
@@ -201,6 +202,20 @@ public abstract class BaseService<M extends BaseMapper<T>, T extends BaseEntity>
         QueryWrapper<T> queryWrapper = new QueryWrapper<>(entityObject);
         List<T> list = serviceImpl.list(queryWrapper);
         return R.success(PageInfo.of(list));
+    }
+
+    /**
+     * 链式条件查询
+     */
+    public LambdaQueryChainWrapper<T> lambdaQuery() {
+        return serviceImpl.lambdaQuery();
+    }
+
+    /**
+     * 链式条件更新
+     */
+    public LambdaUpdateChainWrapper<T> lambdaUpdate() {
+        return serviceImpl.lambdaUpdate();
     }
 
 }

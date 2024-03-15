@@ -54,7 +54,7 @@ public class MapUtils extends MapUtil {
 		}
 		
 		// 2. 无可选参数
-		if (StringUtils.isEmptys(canContainKeys)) {
+		if (StrUtils.isEmptys(canContainKeys)) {
 			return true;
 		}
 		

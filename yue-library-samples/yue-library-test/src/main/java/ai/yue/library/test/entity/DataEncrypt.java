@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.time.LocalDate;
 
 /**
- * 数据审计
+ * 数据脱敏
  *
  * @author	ylyue
  * @since	2019年9月25日
@@ -17,8 +17,8 @@ import java.time.LocalDate;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@TableName("data_audit")
-public class DataAuditDO extends BaseEntity {
+@TableName("data_encrypt")
+public class DataEncrypt extends BaseEntity {
 
 	private static final long serialVersionUID = 6404495051129680239L;
 	

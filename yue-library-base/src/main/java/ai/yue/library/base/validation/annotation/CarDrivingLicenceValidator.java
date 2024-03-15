@@ -1,6 +1,6 @@
 package ai.yue.library.base.validation.annotation;
 
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.lang.Validator;
 
 import javax.validation.ConstraintValidator;
@@ -23,7 +23,7 @@ public class CarDrivingLicenceValidator implements ConstraintValidator<CarDrivin
 	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (StringUtils.isNotBlank(value)) {
+		if (StrUtils.isNotBlank(value)) {
 			return Validator.isCarDrivingLicence(value);
 		}
 		

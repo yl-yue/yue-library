@@ -17,8 +17,8 @@ import java.time.LocalDate;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@TableName("data_encrypt")
-public class DataEncryptDO extends BaseEntity {
+@TableName("data_encrypt_2")
+public class DataEncrypt2 extends BaseEntity {
 
 	private static final long serialVersionUID = 6404495051129680239L;
 	

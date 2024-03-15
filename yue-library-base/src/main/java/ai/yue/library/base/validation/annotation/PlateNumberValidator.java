@@ -3,7 +3,7 @@ package ai.yue.library.base.validation.annotation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.lang.Validator;
 
 /**
@@ -21,7 +21,7 @@ public class PlateNumberValidator implements ConstraintValidator<PlateNumber, St
 	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (StringUtils.isNotBlank(value)) {
+		if (StrUtils.isNotBlank(value)) {
 			return Validator.isPlateNumber(value);
 		}
 		

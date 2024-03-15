@@ -3,7 +3,7 @@ package ai.yue.library.base.validation.annotation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.lang.Validator;
 
 /**
@@ -21,7 +21,7 @@ public class IPV4Validator implements ConstraintValidator<IPV4, String> {
 	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (StringUtils.isNotBlank(value)) {
+		if (StrUtils.isNotBlank(value)) {
 			return Validator.isIpv4(value);
 		}
 		

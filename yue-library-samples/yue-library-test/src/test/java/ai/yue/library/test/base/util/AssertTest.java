@@ -1,4 +1,4 @@
-package ai.yue.library.test.jdbc;
+package ai.yue.library.test.base.util;
 
 import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.Assert;

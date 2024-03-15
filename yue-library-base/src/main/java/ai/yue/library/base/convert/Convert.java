@@ -3,26 +3,33 @@ package ai.yue.library.base.convert;
 import ai.yue.library.base.convert.converter.JSONArrayConverter;
 import ai.yue.library.base.convert.converter.JSONListConverter;
 import ai.yue.library.base.convert.converter.JSONObjectConverter;
+import ai.yue.library.base.util.BeanUtils;
+import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalTime;
+import java.time.temporal.Temporal;
+import java.util.*;
 
 import static com.alibaba.fastjson.JSON.toJSON;
 import static com.alibaba.fastjson.util.TypeUtils.cast;
@@ -161,7 +168,48 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	}
 	
 	// ----------------------------------------------------------------------- 推荐转换方法
-	
+
+	/**
+	 * 可读序列化
+	 * <p>JavaBean与map类型将序列化为标准的Json字符串</p>
+	 * <p>Number类型将直接转换为可读数字</p>
+	 * <p>String类型将直接toString</p>
+	 *
+	 * @param value 被转换的值，可以是Java简单类型也可以是JavaBean
+	 */
+	public static String serializer(Object value) {
+		return JSONObject.toJSONString(value);
+	}
+
+	public static String serializerWriteClassName(Object value) {
+		return JSONObject.toJSONString(value, SerializerFeature.WriteClassName);
+	}
+
+	/**
+	 * 反序列化
+	 * <p>最大兼容性的反序列化转换，期望的值可以是JavaBean可以是简单类型</p>
+	 * <p>如果你明确的知道期望类型是JavaBean，请直接使用{@link #toJavaBean(Object, Class)}以节约多类型判断的性能开销</p>
+	 *
+	 * @param value 被转换的值
+	 */
+	@SneakyThrows
+	public static <T> T deserialize(Object value) {
+		Method deserialize = Convert.class.getMethod("deserialize", Object.class);
+		return (T) deserialize(value, deserialize.getReturnType());
+	}
+
+	/**
+	 * 反序列化
+	 * <p>最大兼容性的反序列化转换，期望的值可以是JavaBean可以是简单类型</p>
+	 * <p>如果你明确的知道期望类型是JavaBean，请直接使用{@link #toJavaBean(Object, Class)}以节约多类型判断的性能开销</p>
+	 *
+	 * @param value 被转换的值
+	 * @param clazz 期望转换的类型
+	 */
+	public static <T> T deserialize(Object value, Class<T> clazz) {
+		return toObject(value, clazz);
+	}
+
 	/**
 	 * 转换值为指定类型 <code style="color:red">（推荐）</code>
 	 * 
@@ -190,14 +238,25 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		if (value != null && clazz != null && (clazz == value.getClass() || clazz.isInstance(value))) {
 			return (T) value;
 		}
-		
+
 		// JDK8日期时间转换
-		if (value != null && value instanceof String) {
-			String str = (String) value;
-			if (clazz == LocalDate.class) {
-				return (T) LocalDate.parse(str);
-			} else if (clazz == LocalDateTime.class) {
-				return (T) LocalDateTime.parse(str);
+		if (value != null && value instanceof String && (Temporal.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz))) {
+			String dateStr = (String) value;
+			LocalDateTime localDateTime = null;
+			if (NumberUtil.isLong(dateStr)) {
+				localDateTime = DateTime.of(Long.parseLong(dateStr)).toLocalDateTime();
+			} else {
+				localDateTime = DateUtil.parse(dateStr).toLocalDateTime();
+			}
+
+			if (clazz == LocalDateTime.class) {
+				return (T) localDateTime;
+			} else if (clazz == LocalDate.class) {
+				return (T) localDateTime.toLocalDate();
+			} else if (clazz == LocalTime.class) {
+				return (T) localDateTime.toLocalTime();
+			} else if (clazz == Date.class || clazz == DateTime.class) {
+				return (T) DateUtil.date(localDateTime);
 			}
 		}
 		
@@ -210,11 +269,16 @@ public class Convert extends cn.hutool.core.convert.Convert {
 		if (clazz == JSONArray.class) {
 			return (T) toJSONArray(value);
 		}
-		
+
 		// 采用 fastjson 转换
 		try {
 			return cast(value, clazz, ParserConfig.getGlobalInstance());
 		} catch (Exception e) {
+			// JavaBean转换
+			if (ClassUtils.isSimpleValueType(clazz) == false && BeanUtils.isBean(clazz)) {
+				return toJavaBean(value, clazz);
+			}
+
 			if (log.isDebugEnabled()) {
 				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
 				e.printStackTrace();

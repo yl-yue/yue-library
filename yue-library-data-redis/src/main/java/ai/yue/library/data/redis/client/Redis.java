@@ -1,24 +1,27 @@
 package ai.yue.library.data.redis.client;
 
-import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.DateUtils;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.data.redis.constant.RedisConstant;
 import ai.yue.library.data.redis.dto.LockInfo;
+import ai.yue.library.data.redis.dto.LockMapInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.redisson.Redisson;
+import org.redisson.api.*;
 
-import java.util.Map;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <h2>简单Redis</h2>
- * 命令详细说明请参照 Redis <a href="http://www.redis.net.cn/order">官方文档</a> 进行查阅
- * 
+ * <b>简单Redis</b>
+ * <p>封装或重载常用的方法，更丰富的实现请使用{@link #getRedisson()}</p>
+ * <p>命令详细说明请参照 Redis <a href="http://www.redis.net.cn/order">官方文档</a> 进行查阅</p>
+ *
  * @author	ylyue
  * @since	2018年3月27日
  */
@@ -27,21 +30,22 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class Redis {
 
-	RedisTemplate<String, Object> redisTemplate;
-	StringRedisTemplate stringRedisTemplate;
-	
-	// Redis分布式锁
+	Redisson redisson;
+
+	// ======Redis分布式锁======
 
 	/**
 	 * Redis分布式锁-加锁
-	 * <p>可用于实现接口幂等性、秒杀、库存加锁等业务场景需求
+	 * <p>简单redis锁满足常规使用场景，此锁特性：线程安全、不阻塞线程、防止死锁、不可重入、非公平锁</p>
+	 * <p>可用于实现接口幂等性、秒杀、库存加锁等业务场景需求</p>
 	 * <p>注意：服务器集群间需进行时间同步，保障分布式锁的时序性</p>
+	 * <p>可重入锁、公平锁请使用{@link #getRedisson()}</p>
 	 *
 	 * @param lockKey       分布式锁的key（全局唯一性）
 	 * @param lockTimeoutMs 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时
 	 * @return 是否成功拿到锁
 	 */
-	public LockInfo lock(String lockKey, Integer lockTimeoutMs) {
+	public synchronized LockInfo lock(String lockKey, Integer lockTimeoutMs) {
 		// 1. 设置锁
 		String redisLockKey = RedisConstant.LOCK_KEY_PREFIX + lockKey;
 		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
@@ -49,19 +53,20 @@ public class Redis {
 		lockInfo.setLockKey(redisLockKey);
 		lockInfo.setLockTimeoutMs(lockTimeoutMs);
 		lockInfo.setLockTimeoutStamp(lockTimeoutStamp);
-		if (stringRedisTemplate.opsForValue().setIfAbsent(redisLockKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS)) {
+		RBucket<String> bucket = redisson.getBucket(redisLockKey);
+		if (bucket.setIfAbsent(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs))) {
 			lockInfo.setLock(true);
 			return lockInfo;
 		}
 
 		// 2. 锁设置失败，拿到当前锁
-		String currentValue = stringRedisTemplate.opsForValue().get(redisLockKey);
+		String currentValue = bucket.get();
 		// 3. 判断当前锁是否过期
-		if (!StringUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
+		if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
 			// 4. 锁已过期 ，设置新锁同时得到上一个锁
-			String oldValue = stringRedisTemplate.opsForValue().getAndSet(redisLockKey, lockTimeoutStamp);
+			String oldValue = bucket.getAndSet(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs));
 			// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
-			if (!StringUtils.isEmpty(oldValue) && oldValue.equals(currentValue)) {
+			if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
 				// 此处只会有一个线程拿到锁
 				lockInfo.setLock(true);
 				return lockInfo;
@@ -82,261 +87,318 @@ public class Redis {
 		String lockTimeoutStamp = lockInfo.getLockTimeoutStamp();
 
 		try {
-			String currentValue = stringRedisTemplate.opsForValue().get(lockKey);
-			if (StringUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
-				stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
+			RBucket<String> bucket = redisson.getBucket(lockKey);
+			String currentValue = bucket.get();
+			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
+				bucket.delete();
 			}
 		} catch (Exception e) {
 			log.error("【redis分布式锁】解锁异常，{}", e);
 		}
 	}
-	
-	// Key（键），简单的key-value操作
-	
+
 	/**
-	 * 实现命令：TTL key，以秒为单位，返回给定 key的剩余生存时间(TTL, time to live)。
-	 * 
-	 * @param key key
-	 * @return key的剩余生存时间（单位：秒）
-	 */
-	public long ttl(String key) {
-		return stringRedisTemplate.getExpire(key);
-	}
-	
-	/**
-	 * 实现命令：expire 设置过期时间，单位秒
-	 * 
-	 * @param key key
-	 * @param timeout 过期时间（单位：秒）
-	 */
-	public void expire(String key, long timeout) {
-		stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
-	}
-	
-	/**
-	 * 实现命令：INCR key，将 key 中储存的数字值按增量递增。
-	 * 
-	 * @param key 不能为空
-	 * @param delta 增量数字
-	 * @return 递增后的值
-	 */
-	public long incr(String key, long delta) {
-		return stringRedisTemplate.opsForValue().increment(key, delta);
-	}
-	
-	/**
-	 * 实现命令：KEYS pattern，查找所有符合给定模式 pattern的 key
-	 * 
-	 * @param pattern 不能为空
-	 * @return keys
-	 */
-	public Set<String> keys(String pattern) {
-		return stringRedisTemplate.keys(pattern);
-	}
-	
-	/**
-	 * 实现命令：DEL key，删除一个key
+	 * Redis分布式锁-加锁（使用Map数据结构存储锁）
+	 * <p>简单redis锁满足常规使用场景，此锁特性：线程安全、不阻塞线程、防止死锁、不可重入、非公平锁</p>
+	 * <p>可用于实现接口幂等性、秒杀、库存加锁等业务场景需求</p>
+	 * <p>注意：服务器集群间需进行时间同步，保障分布式锁的时序性</p>
+	 * <p>可重入锁、公平锁请使用{@link #getRedisson()}</p>
 	 *
-	 * @param key 不能为空
-	 * @return
+	 * @param redisKey      分布式锁的redisKey（redisKey + mapKey = 全局唯一性）
+	 * @param mapKey        分布式锁的mapKey（redisKey + mapKey = 全局唯一性）
+	 * @param lockTimeoutMs 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时
+	 * @return 是否成功拿到锁
 	 */
-	public Boolean del(String key) {
-		return stringRedisTemplate.delete(key);
+	public synchronized <K> LockMapInfo lockMap(String redisKey, K mapKey, Integer lockTimeoutMs) {
+		// 1. 设置锁
+		redisKey = RedisConstant.LOCK_KEY_PREFIX + redisKey;
+		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
+		LockMapInfo<K> lockMapInfo = new LockMapInfo();
+		lockMapInfo.setRedisKey(redisKey);
+		lockMapInfo.setMapKey(mapKey);
+		lockMapInfo.setLockTimeoutMs(lockTimeoutMs);
+		lockMapInfo.setLockTimeoutStamp(lockTimeoutStamp);
+		RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
+		if (mapCache.fastPutIfAbsent(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS)) {
+			lockMapInfo.setLock(true);
+			return lockMapInfo;
+		}
+
+		// 2. 锁设置失败，拿到当前锁
+		String currentValue = mapCache.get(mapKey);
+		// 3. 判断当前锁是否过期
+		if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
+			// 4. 锁已过期 ，设置新锁同时得到上一个锁
+			String oldValue = mapCache.put(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS);
+			// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
+			if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
+				// 此处只会有一个线程拿到锁
+				lockMapInfo.setLock(true);
+				return lockMapInfo;
+			}
+		}
+
+		lockMapInfo.setLock(false);
+		return lockMapInfo;
 	}
-	
-	// get set ...
-	
+
 	/**
-	 * 实现命令：SET key value，设置一个key-value（将字符串对象 value 关联到 key）
-	 * 
-	 * @param key 不能为空
-	 * @param value 字符串对象
+	 * Redis分布式锁-解锁（使用Map数据结构存储锁）
+	 *
+	 * @param lockMapInfo 加锁时返回的map锁对象
 	 */
-	public void set(String key, String value) {
-		stringRedisTemplate.opsForValue().set(key, value);
+	public <K> void unlockMap(LockMapInfo<K> lockMapInfo) {
+		String redisKey = lockMapInfo.getRedisKey();
+		K mapKey = lockMapInfo.getMapKey();
+		String lockTimeoutStamp = lockMapInfo.getLockTimeoutStamp();
+
+		try {
+			RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
+			String currentValue = mapCache.get(mapKey);
+			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
+				mapCache.remove(mapKey);
+			}
+		} catch (Exception e) {
+			log.error("【redis分布式锁】解锁异常，{}", e);
+		}
 	}
-	
+
+	// ======value操作======
+
 	/**
-	 * 实现命令：SET key value，设置一个key-value（将可序列化对象 value 关联到 key）
-	 * 
-	 * @param key 不能为空
+	 * 获取value对象
+	 * <p>对象的最大大小为512MB</p>
+	 */
+	public <V> RBucket<V> getBucket(String key) {
+		return redisson.getBucket(key);
+	}
+
+	/**
+	 * 检查对象是否存在
+	 */
+	public boolean isExists(@NotNull String key) {
+		return getBucket(key).isExists();
+	}
+
+	/**
+	 * 获取值
+	 */
+	public <V> V get(@NotNull String key) {
+		return (V) getBucket(key).get();
+	}
+
+	/**
+	 * 设置值
+	 *
+	 * @param key   不能为空
 	 * @param value 可序列化对象
 	 */
-	public void set(String key, Object value) {
-		redisTemplate.opsForValue().set(key, value);
+	public <V> void set(String key, V value) {
+		getBucket(key).set(value);
 	}
-	
+
 	/**
-	 * 实现命令：SET key value EX seconds，设置key-value和超时时间（秒）
-	 * 
-	 * @param key 不能为空
-	 * @param value 可序列化对象
-	 * @param timeout 超时时间（单位：秒）
+	 * 设置值
+	 *
+	 * @param key     不能为空
+	 * @param value   可序列化对象
+	 * @param timeout 超时时间
 	 */
-	public void set(String key, Object value, long timeout) {
-		redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+	public <V> void set(String key, V value, Duration timeout) {
+		getBucket(key).set(value, timeout);
 	}
-	
+
 	/**
-	 * 实现命令：SET key value EX seconds，设置key-value和超时时间（秒）
-	 * 
-	 * @param key 不能为空
-	 * @param value 字符串对象
-	 * @param timeout 超时时间（单位：秒）
+	 * 删除对象
+	 * <p>删除redis中的整个key，如果这个key是map或list数据结构，那么将删除的是整个map或list</p>
 	 */
-	public void set(String key, String value, long timeout) {
-		stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+	public Boolean delete(@NotNull String key) {
+		return getBucket(key).delete();
 	}
-	
+
+	// ======map操作======
+
 	/**
-	 * 实现命令：GET key，返回 key所关联的字符串值。
-	 * 
-	 * @param key 不能为空
-	 * @return value
+	 * 获取map对象
+	 * <p>不允许将null存储为键或值</p>
 	 */
-	public String get(String key) {
-		return stringRedisTemplate.opsForValue().get(key);
+	public <K, V> RMap<K, V> getMap(String key) {
+		return redisson.getMap(key);
 	}
-	
+
 	/**
-	 * 实现命令：GET key，返回 key 所关联的对象。
-	 * 
-	 * @param key 不能为空
-	 * @return 对象
+	 * 获取map值
+	 *
+	 * @param key    不能为空
+	 * @param mapKey 不能为空
 	 */
-	public Object getObject(String key) {
-		return redisTemplate.opsForValue().get(key);
+	public <K, V> V getMapValue(String key, K mapKey) {
+		return (V) getMap(key).get(mapKey);
 	}
-	
+
 	/**
-	 * 实现命令：GET key，返回 key 所关联的反序列化对象。
-	 * 
-	 * @param <T> 反序列化对象类型
-	 * @param key 不能为空
-	 * @param clazz 反序列化对象类
-	 * @return 反序列化对象
+	 * 添加map值
+	 *
+	 * @param key      不能为空
+	 * @param mapKey   不能为空
+	 * @param mapValue 设置的值
 	 */
-	public <T> T get(String key, Class<T> clazz) {
-		return Convert.convert(redisTemplate.opsForValue().get(key), clazz);
+	public <K, V> void addMapValue(String key, K mapKey, V mapValue) {
+		getMap(key).put(mapKey, mapValue);
 	}
-	
-	// Hash（哈希表）
-	
+
 	/**
-	 * 实现命令：HSET key field value，将哈希表 key中的域 field的值设为 value
-	 * <p>设置hashKey的值
-	 * 
-	 * @param key 不能为空
-	 * @param hashKey 不能为空
-	 * @param value 设置的值
+	 * 删除map值
+	 *
+	 * @param key     不能为空
+	 * @param mapKeys 不能为空
 	 */
-	public void hset(String key, String hashKey, Object value) {
-		redisTemplate.opsForHash().put(key, hashKey, value);
+	public <K> long removeMapValue(String key, K... mapKeys) {
+		return getMap(key).fastRemove(mapKeys);
 	}
-	
+
+	// ======List操作======
+
 	/**
-	 * 实现命令：HGET key field，返回哈希表 key中给定域 field的值
-	 * <p>从hashKey获取值
-	 * 
-	 * @param key 不能为空
-	 * @param hashKey 不能为空
-	 * @return hashKey的值
+	 * 获取list对象
 	 */
-	public Object hget(String key, String hashKey) {
-		return redisTemplate.opsForHash().get(key, hashKey);
+	public <V> RList<V> getList(String key) {
+		return redisson.getList(key);
 	}
-	
+
 	/**
-	 * 实现命令：HGET key field，返回哈希表 key中给定域 field的值
-	 * <p>从hashKey获取值
-	 * 
-	 * @param <T> 反序列化对象类型
-	 * @param key 不能为空
-	 * @param hashKey 不能为空
-	 * @param clazz 反序列化对象类
-	 * @return hashKey的反序列化对象
+	 * 获取list值
+	 *
+	 * @param key   不能为空
+	 * @param index 索引值
 	 */
-	public <T> T hget(String key, String hashKey, Class<T> clazz) {
-		return Convert.convert(redisTemplate.opsForHash().get(key, hashKey), clazz);
+	public <V> V getListValue(String key, int index) {
+		return (V) getList(key).get(index);
 	}
-	
+
 	/**
-	 * 实现命令：HDEL key field [field ...]，删除哈希表 key 中的一个或多个指定域，不存在的域将被忽略。
-	 * <p>删除给定的hashKeys
-	 * 
-	 * @param key 不能为空
-	 * @param hashKeys 不能为空
+	 * 获取list值
+	 *
+	 * @param key     不能为空
+	 * @param indexes 索引值
 	 */
-	public void hdel(String key, Object... hashKeys) {
-		redisTemplate.opsForHash().delete(key, hashKeys);
+	public <V> List<V> getListValue(String key, int... indexes) {
+		return (List<V>) getList(key).get(indexes);
 	}
-	
+
 	/**
-	 * 实现命令：HGETALL key，返回哈希表 key中，所有的域和值。
-	 * <p>获取存储在键上的整个散列
-	 * 
-	 * @param key 不能为空
-	 * @return map
+	 * 添加list值
+	 *
+	 * @param key       不能为空
+	 * @param listValue 设置的值
 	 */
-	public Map<Object, Object> hgetall(String key) {
-		return redisTemplate.opsForHash().entries(key);
+	public <V> boolean addListValue(String key, V listValue) {
+		return getList(key).add(listValue);
 	}
-	
-	// List（列表）
-	
+
 	/**
-	 * 实现命令：LPUSH key value，将一个值 value插入到列表 key的表头
-	 * 
-	 * @param key 不能为空
-	 * @param value 插入的值
-	 * @return 执行 LPUSH命令后，列表的长度。
+	 * 添加list值
+	 *
+	 * @param key       不能为空
+	 * @param listValue 设置的值
 	 */
-	public long lpush(String key, String value) {
-		return stringRedisTemplate.opsForList().leftPush(key, value);
+	public <V> boolean addListValue(String key, Collection<V> listValue) {
+		return getList(key).addAll(listValue);
 	}
-	
+
 	/**
-	 * 实现命令：RPUSH key value，将一个值 value插入到列表 key的表尾(最右边)。
-	 * 
-	 * @param key 不能为空
-	 * @param value 插入的值
-	 * @return 执行 LPUSH命令后，列表的长度。
+	 * 删除list值
+	 *
+	 * @param key   不能为空
+	 * @param index 索引值
 	 */
-	public long rpush(String key, String value) {
-		return stringRedisTemplate.opsForList().rightPush(key, value);
+	public <V> V removeListValue(String key, int index) {
+		return (V) getList(key).remove(index);
 	}
-	
+
 	/**
-	 * 实现命令：LPOP key，移除并返回列表 key的头元素。
-	 * 
-	 * @param key 不能为空
-	 * @return 列表key的头元素。
+	 * ======list有界阻塞队列操作======
+	 * 建议在非必要的情况下，都使用有界阻塞队列操作，避免队列未消费，导致redis内存暴增
+	 * redis属于轻量级分布式队列，如果需要更加健壮可靠的队列操作，请根据业务需求使用：RabbitMQ、RocketMQ、Kafka等专业队列中间件实现
 	 */
-	public String lpop(String key) {
-		return stringRedisTemplate.opsForList().leftPop(key);
+
+	/**
+	 * 获得list有界阻塞队列
+	 * <p>建议在非必要的情况下，都使用有界阻塞队列操作，避免队列未消费，导致redis内存暴增</p>
+	 * <p>redis属于轻量级分布式队列，如果需要更加健壮可靠的队列操作，请根据业务需求使用：RabbitMQ、RocketMQ、Kafka等专业队列中间件实现</p>
+	 */
+	public <V> RBlockingQueue<V> getBoundedBlockingQueue(String key) {
+		/**
+		 * https://github.com/redisson/redisson/issues/3020
+		 * RBoundedBlockingQueue有界阻塞队列有bug，capacity值只减不增，导致队列最终可用容量为0，无法继续插入数据
+		 */
+		return redisson.getBlockingQueue(key);
 	}
-	
-	// static
+
+	/**
+	 * 获取并删除list有界阻塞队列值
+	 * <p>每次最大消费1000条数据</p>
+	 *
+	 * @param key redis key
+	 */
+	public <V> List<V> getAndRemoveBoundedBlockingQueueValue(String key) {
+		return getAndRemoveBoundedBlockingQueueValue(key, 1000);
+	}
+
+	/**
+	 * 获取并删除list有界阻塞队列值
+	 *
+	 * @param key         redis key
+	 * @param consumeSize 一次消费多少条数据
+	 */
+	public <V> List<V> getAndRemoveBoundedBlockingQueueValue(String key, int consumeSize) {
+		RBlockingQueue<V> queue = getBoundedBlockingQueue(key);
+		return queue.poll(consumeSize);
+	}
+
+	/**
+	 * 添加list有界阻塞队列值
+	 * <p>队列大小限制为100000，超过丢弃</p>
+	 *
+	 * @param key  redis key
+	 * @param list list值
+	 */
+	public <V> boolean addBoundedBlockingQueueValue(String key, List<V> list) {
+		return addBoundedBlockingQueueValue(key, list, 100000);
+	}
+
+	/**
+	 * 添加list有界阻塞队列值
+	 *
+	 * @param key       redis key
+	 * @param list      list值
+	 * @param blockSize 队列最大大小，队列满后，继续添加的数据将被直接丢弃
+	 */
+	public <V> boolean addBoundedBlockingQueueValue(String key, List<V> list, int blockSize) {
+		RBlockingQueue<V> queue = getBoundedBlockingQueue(key);
+		int size = queue.size();
+		if (size >= blockSize) {
+			return false;
+		}
+		return queue.addAll(list);
+	}
+
+	// util
 	
     /**
-     * Redis分割Key拼接，参考 {@linkplain String#join(CharSequence, CharSequence...)}
-     * 
-     * <blockquote>示例：
-     * <pre>
-     * {@code
-     *     String message = Redis.join("Java", "is", "cool");
-     *     // message returned is: "Java:is:cool"
-     * }
-     * </pre>
-     * </blockquote>
-     * 
-     * 注意，如果元素为null，则添加 {@code "null"}。
-     * 
-     * @param  elements 要连接在一起的元素。
-     * @return 由Redis Key分隔符分隔的元素组成的新字符串
+	 * <b>“:”分割的字符串连接，组成符合redis规范的key</b>
+	 *
+	 * <p>示例：{@code redisKeyJoin("Java", "is", "cool") == "Java:is:cool"}</p>
+     *
+     * @param elements 要连接在一起的字符串
+     * @return {@code ":"}分隔的redis规范key
      */
-	public static String separatorJoin(String... elements) {
+	public static String redisKey(String... elements) {
 		return String.join(RedisConstant.KEY_SEPARATOR, elements);
 	}
-	
+
+	public String redisKeyJoin(String... elements) {
+		return Redis.redisKey(elements);
+	}
+
 }

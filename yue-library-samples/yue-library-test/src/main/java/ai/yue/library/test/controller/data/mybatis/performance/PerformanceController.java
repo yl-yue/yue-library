@@ -1,33 +1,29 @@
-//package ai.yue.library.test.controller.data.jdbc.performance;
-//
-//import ai.yue.library.base.convert.Convert;
-//import ai.yue.library.base.view.R;
-//import ai.yue.library.base.view.Result;
-//import ai.yue.library.data.jdbc.client.Db;
-//import ai.yue.library.test.dataobject.jdbc.BasePersonDO;
-//import cn.hutool.core.date.DateUtil;
-//import cn.hutool.core.date.TimeInterval;
-//import cn.hutool.core.lang.Console;
-//import com.alibaba.fastjson.JSONObject;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.List;
-//import java.util.Map;
-//
-///**
-// * 性能测试
-// *
-// * @author	ylyue
-// * @since	2020年2月21日
-// */
-//@RestController
-//@RequestMapping("/performance")
-//public class PerformanceController {
-//
+package ai.yue.library.test.controller.data.mybatis.performance;
+
+import ai.yue.library.base.view.Result;
+import ai.yue.library.test.entity.User;
+import ai.yue.library.test.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 性能测试
+ *
+ * @author	ylyue
+ * @since	2020年2月21日
+ */
+@RestController
+@RequestMapping("/performance")
+public class PerformanceController {
+
+    @Autowired
+    UserService userService;
+
 //	@Autowired
 //	Db db;
 //	@Autowired
@@ -63,5 +59,18 @@
 //		Console.log("{}条Json数据转换JavaBean耗时：{}", javaBeanList.size(), timer.intervalRestart());
 //		return R.success(javaBeanList.size());
 //	}
-//
-//}
+
+    @PutMapping("/updateBatchById")
+    public Result<?> updateBatchById() {
+        List<User> userList = userService.getServiceImpl().list();
+        List<User> updateUserList = new ArrayList<>();
+        for (User user : userList) {
+            User updateUser = new User();
+            updateUser.setId(user.getId());
+            updateUser.setIsTempUser(false);
+            updateUserList.add(updateUser);
+        }
+        return userService.updateBatchById(updateUserList);
+    }
+
+}

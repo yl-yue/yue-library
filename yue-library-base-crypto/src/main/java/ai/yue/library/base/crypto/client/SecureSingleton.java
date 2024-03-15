@@ -2,7 +2,7 @@ package ai.yue.library.base.crypto.client;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ai.yue.library.base.util.URIUtils;
+import ai.yue.library.base.util.UrlUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -43,7 +43,7 @@ public class SecureSingleton {
 	 * @return 解密后的JSON
 	 */
 	public static JSONObject rsaUriDecodingAndDecrypt(String messageBody) {
-		String content = URIUtils.decode(messageBody);
+		String content = UrlUtils.decode(messageBody);
 		String jsonString = getRSA().decryptStrFromBcd(content, KeyType.PrivateKey);
 		JSONObject json = null;
 		try {

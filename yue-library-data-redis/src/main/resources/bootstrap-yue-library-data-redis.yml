@@ -2,3 +2,8 @@ spring:
   config:
     activate:
       on-profile: yue-library-data-redis
+  cache:
+    type: redis
+    redis:
+      key-prefix: "Cacheable:"
+      time-to-live: 7D # 缓存未使用时，默认7天过期，解决冷数据、赃数据等问题

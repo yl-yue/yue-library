@@ -254,7 +254,6 @@ public class R {
      * 参数校验未通过，无效的value-434
      *
      * @param data {@link Result#setData(Object)} 提示信息
-     * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> paramValueInvalid(T data) {
         return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
@@ -262,11 +261,16 @@ public class R {
 
     /**
      * 参数解密错误-435
-     *
-     * @return HTTP请求，最外层响应对象
      */
     public static Result<?> paramDecryptError() {
         return error(ResultEnum.PARAM_DECRYPT_ERROR.getCode(), ResultEnum.PARAM_DECRYPT_ERROR.getMsg());
+    }
+
+    /**
+     * 请勿重复操作-436（幂等错误）
+     */
+    public static <T> Result<T> apiIdempotent(T data) {
+        return error(ResultEnum.API_IDEMPOTENT.getCode(), ResultEnum.API_IDEMPOTENT.getMsg(), data);
     }
 
     // 500 - 服务器错误

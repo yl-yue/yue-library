@@ -1,6 +1,6 @@
 package ai.yue.library.base.validation.annotation;
 
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
@@ -29,7 +29,7 @@ public class ChineseValidator implements ConstraintValidator<Chinese, Object> {
 			validValue = StrUtil.toString(value);
 		}
 		
-		if (StringUtils.isNotBlank(validValue)) {
+		if (StrUtils.isNotBlank(validValue)) {
 			return Validator.isChinese(validValue);
 		}
 		

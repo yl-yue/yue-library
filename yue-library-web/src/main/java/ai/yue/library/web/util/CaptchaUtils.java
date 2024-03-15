@@ -1,6 +1,6 @@
 package ai.yue.library.web.util;
 
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.vo.CaptchaVO;
 
@@ -105,7 +105,7 @@ public class CaptchaUtils {
     public static boolean isValidateCaptcha(String captcha) {
     	HttpSession httpSession = ServletUtils.getSession();
 		String randCaptcha = (String) httpSession.getAttribute(CAPTCHA_KEY);
-		if (StringUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
+		if (StrUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
 			return false;
 		}
 		

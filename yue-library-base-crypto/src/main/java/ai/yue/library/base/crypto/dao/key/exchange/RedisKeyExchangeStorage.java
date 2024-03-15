@@ -16,11 +16,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 @AllArgsConstructor
 public class RedisKeyExchangeStorage implements KeyExchangeStorage {
 
-    private static final String REDIS_PREFIX = Redis.separatorJoin(CryptoProperties.REDIS_PREFIX, "key_exchange");
+    private static final String REDIS_PREFIX = Redis.redisKey(CryptoProperties.REDIS_PREFIX, "key_exchange");
     private RedisTemplate<String, KeyExchangeDTO> redisTemplate;
 
     private String getRedisKey(String storageKey) {
-        return Redis.separatorJoin(REDIS_PREFIX, storageKey);
+        return Redis.redisKey(REDIS_PREFIX, storageKey);
     }
 
     private KeyExchangeDTO getNotEmpty(String storageKey) {

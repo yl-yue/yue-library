@@ -26,12 +26,7 @@ public class RedisConstant {
 	/**
 	 * Redis幂等性的Key前缀
 	 */
-	public static final String API_IDEMPOTENT_KEY_PREFIX = RedisConstant.standardKey("api_idempotent:");
-
-	/**
-	 * 幂等性版本号请求key
-	 */
-	public static final String API_IDEMPOTENT_VERSION_REQUEST_KEY = "apiIdempotentVersion";
+	public static final String API_IDEMPOTENT_KEY_PREFIX = RedisConstant.standardKey("apiIdempotent:");
 
 	/**
 	 * 规范Redis Key

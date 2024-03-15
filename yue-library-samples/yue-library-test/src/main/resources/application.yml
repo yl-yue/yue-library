@@ -5,12 +5,12 @@ spring:
     name: yue-library-test
   profiles:
     group:
-      "yue": "yue-library-base,yue-library-data-mybatis,yue-library-auth-client"
+      "yue": "yue-library-base,yue-library-data-mybatis,yue-library-data-redis,yue-library-auth-client"
       "test": "test-confidential"
       "test-performance": "test-confidential-performance"
     active: yue,test
 #    active: yue,test-performance
 
-#logging:
-#  level:
-#    ai.yue.library: debug
+logging:
+  level:
+    ai.yue.library: debug

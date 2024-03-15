@@ -22,8 +22,11 @@ public class IdempotentController {
      * 幂等性测试
      */
     @ApiIdempotent
+//    @ApiIdempotent(paramKeys = "cellphone")
     @PostMapping("/test")
     public Result<?> test(JSONObject paramJson) {
+//        ThreadUtil.sleep(20000L);
+//        ThreadUtil.sleep(100L);
         return R.success(paramJson);
     }
 

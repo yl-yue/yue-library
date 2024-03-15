@@ -2,7 +2,7 @@ package ai.yue.library.auth.client.client;
 
 import ai.yue.library.auth.client.config.properties.AuthProperties;
 import ai.yue.library.base.exception.LoginException;
-import ai.yue.library.base.util.StringUtils;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.web.util.ServletUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -57,7 +57,7 @@ public class User {
 			String token = getRequestToken();
 			
 			// 2. 确认token
-			if (StringUtils.isEmpty(token)) {
+			if (StrUtils.isEmpty(token)) {
 				throw new LoginException("token == null");
 			}
 			
@@ -83,7 +83,7 @@ public class User {
 			String token = getRequestToken();
 			
 			// 2. 确认token
-			if (StringUtils.isEmpty(token)) {
+			if (StrUtils.isEmpty(token)) {
 				throw new LoginException("token == null");
 			}
 			
