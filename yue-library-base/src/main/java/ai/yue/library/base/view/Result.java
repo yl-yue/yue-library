@@ -115,32 +115,26 @@ public class Result<T> implements Serializable {
 	}
 
 	public Integer dataToInteger() {
-
 		return castToInt(data);
 	}
 
 	public Long dataToLong() {
-
 		return castToLong(data);
 	}
 
 	public Double dataToDouble() {
-
 		return castToDouble(data);
 	}
 
 	public BigDecimal dataToBigDecimal() {
-
 		return castToBigDecimal(data);
 	}
 
 	public BigInteger dataToBigInteger() {
-
 		return castToBigInteger(data);
 	}
 
 	public String dataToString() {
-
 		if (data == null) {
 			return null;
 		}
@@ -149,7 +143,6 @@ public class Result<T> implements Serializable {
 	}
 
 	public String dataToJSONString() {
-
 		if (data == null) {
 			return null;
 		}
@@ -158,17 +151,14 @@ public class Result<T> implements Serializable {
 	}
 
 	public Date dataToDate() {
-
 		return castToDate(data);
 	}
 
 	public java.sql.Date dataToSqlDate() {
-
 		return (java.sql.Date) castToSqlDate(data);
 	}
 
 	public java.sql.Timestamp dataToTimestamp() {
-
 		return (Timestamp) castToTimestamp(data);
 	}
 	
@@ -195,5 +185,17 @@ public class Result<T> implements Serializable {
 		WebEnv webEnv = SpringUtils.getBean(WebEnv.class);
 		webEnv.resultResponse(this);
 	}
-	
+
+	@Override
+	public String toString() {
+		this.setMsg(I18nUtils.getYueDefault(this.getMsg()));
+		return "Result{" +
+				"code=" + code +
+				", msg='" + msg + '\'' +
+				", flag=" + flag +
+				", traceId='" + traceId + '\'' +
+				", data=" + data +
+				'}';
+	}
+
 }

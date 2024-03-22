@@ -3,8 +3,10 @@ package ai.yue.library.data.redis.client;
 import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.data.redis.constant.RedisConstant;
-import ai.yue.library.data.redis.dto.LockInfo;
-import ai.yue.library.data.redis.dto.LockMapInfo;
+import ai.yue.library.data.redis.instance.BoundedBlockingQueue;
+import ai.yue.library.data.redis.instance.DelayedQueue;
+import ai.yue.library.data.redis.instance.LockInfo;
+import ai.yue.library.data.redis.instance.LockMapInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +16,9 @@ import org.redisson.api.*;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class Redis {
 
+	private static final Map<String, DelayedQueue> instanceDelayedQueue = new HashMap<>();
+	private static final Map<String, BoundedBlockingQueue> instanceBoundedBlockingQueue = new HashMap<>();
 	Redisson redisson;
 
 	// ======Redis分布式锁======
@@ -47,7 +53,7 @@ public class Redis {
 	 */
 	public synchronized LockInfo lock(String lockKey, Integer lockTimeoutMs) {
 		// 1. 设置锁
-		String redisLockKey = RedisConstant.LOCK_KEY_PREFIX + lockKey;
+		String redisLockKey = RedisConstant.LOCK_PREFIX + lockKey;
 		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
 		LockInfo lockInfo = new LockInfo();
 		lockInfo.setLockKey(redisLockKey);
@@ -111,7 +117,9 @@ public class Redis {
 	 */
 	public synchronized <K> LockMapInfo lockMap(String redisKey, K mapKey, Integer lockTimeoutMs) {
 		// 1. 设置锁
-		redisKey = RedisConstant.LOCK_KEY_PREFIX + redisKey;
+		if (redisKey.startsWith(RedisConstant.IDEMPOTENT_PREFIX) == false) {
+			redisKey = RedisConstant.LOCK_PREFIX + redisKey;
+		}
 		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
 		LockMapInfo<K> lockMapInfo = new LockMapInfo();
 		lockMapInfo.setRedisKey(redisKey);
@@ -327,63 +335,42 @@ public class Redis {
 	 * <p>建议在非必要的情况下，都使用有界阻塞队列操作，避免队列未消费，导致redis内存暴增</p>
 	 * <p>redis属于轻量级分布式队列，如果需要更加健壮可靠的队列操作，请根据业务需求使用：RabbitMQ、RocketMQ、Kafka等专业队列中间件实现</p>
 	 */
-	public <V> RBlockingQueue<V> getBoundedBlockingQueue(String key) {
+	public <V> BoundedBlockingQueue<V> getBoundedBlockingQueue(String queueName) {
 		/**
 		 * https://github.com/redisson/redisson/issues/3020
 		 * RBoundedBlockingQueue有界阻塞队列有bug，capacity值只减不增，导致队列最终可用容量为0，无法继续插入数据
 		 */
-		return redisson.getBlockingQueue(key);
-	}
-
-	/**
-	 * 获取并删除list有界阻塞队列值
-	 * <p>每次最大消费1000条数据</p>
-	 *
-	 * @param key redis key
-	 */
-	public <V> List<V> getAndRemoveBoundedBlockingQueueValue(String key) {
-		return getAndRemoveBoundedBlockingQueueValue(key, 1000);
-	}
-
-	/**
-	 * 获取并删除list有界阻塞队列值
-	 *
-	 * @param key         redis key
-	 * @param consumeSize 一次消费多少条数据
-	 */
-	public <V> List<V> getAndRemoveBoundedBlockingQueueValue(String key, int consumeSize) {
-		RBlockingQueue<V> queue = getBoundedBlockingQueue(key);
-		return queue.poll(consumeSize);
-	}
-
-	/**
-	 * 添加list有界阻塞队列值
-	 * <p>队列大小限制为100000，超过丢弃</p>
-	 *
-	 * @param key  redis key
-	 * @param list list值
-	 */
-	public <V> boolean addBoundedBlockingQueueValue(String key, List<V> list) {
-		return addBoundedBlockingQueueValue(key, list, 100000);
-	}
-
-	/**
-	 * 添加list有界阻塞队列值
-	 *
-	 * @param key       redis key
-	 * @param list      list值
-	 * @param blockSize 队列最大大小，队列满后，继续添加的数据将被直接丢弃
-	 */
-	public <V> boolean addBoundedBlockingQueueValue(String key, List<V> list, int blockSize) {
-		RBlockingQueue<V> queue = getBoundedBlockingQueue(key);
-		int size = queue.size();
-		if (size >= blockSize) {
-			return false;
+		queueName = RedisConstant.BOUNDED_BLOCKING_QUEUE_PREFIX + queueName;
+		BoundedBlockingQueue<V> boundedBlockingQueue = instanceBoundedBlockingQueue.get(queueName);
+		if (boundedBlockingQueue == null) {
+			boundedBlockingQueue = new BoundedBlockingQueue<>(redisson.getBlockingQueue(queueName));
+			instanceBoundedBlockingQueue.put(queueName, boundedBlockingQueue);
 		}
-		return queue.addAll(list);
+
+		return boundedBlockingQueue;
 	}
 
-	// util
+	// ======延迟队列操作======
+
+	/**
+	 * 获得延迟队列
+	 *
+	 * @param queueName 队列名
+	 */
+	public <V> DelayedQueue<V> getDelayedQueue(String queueName) {
+		queueName = RedisConstant.DELAYED_QUEUE_PREFIX + queueName;
+		DelayedQueue<V> delayedQueue = instanceDelayedQueue.get(queueName);
+		if (delayedQueue == null) {
+			RBlockingQueue<V> consumerQueue = redisson.getBlockingQueue(queueName);
+			RDelayedQueue<V> producerQueue = redisson.getDelayedQueue(consumerQueue);
+			delayedQueue = new DelayedQueue<>(producerQueue, consumerQueue);
+			instanceDelayedQueue.put(queueName, delayedQueue);
+		}
+
+		return delayedQueue;
+	}
+
+	// ======util======
 	
     /**
 	 * <b>“:”分割的字符串连接，组成符合redis规范的key</b>
@@ -397,6 +384,14 @@ public class Redis {
 		return String.join(RedisConstant.KEY_SEPARATOR, elements);
 	}
 
+	/**
+	 * <b>“:”分割的字符串连接，组成符合redis规范的key</b>
+	 *
+	 * <p>示例：{@code redisKeyJoin("Java", "is", "cool") == "Java:is:cool"}</p>
+	 *
+	 * @param elements 要连接在一起的字符串
+	 * @return {@code ":"}分隔的redis规范key
+	 */
 	public String redisKeyJoin(String... elements) {
 		return Redis.redisKey(elements);
 	}

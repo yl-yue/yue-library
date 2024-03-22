@@ -3,13 +3,14 @@ package ai.yue.library.web.config.idempotent;
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.ParamException;
 import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.view.R;
+import ai.yue.library.data.redis.annotation.Idempotent;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
 import ai.yue.library.data.redis.constant.RedisConstant;
-import ai.yue.library.data.redis.dto.LockMapInfo;
-import ai.yue.library.data.redis.idempotent.ApiIdempotent;
+import ai.yue.library.data.redis.instance.LockMapInfo;
 import ai.yue.library.web.util.ServletUtils;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -50,10 +51,10 @@ public class IdempotentInterceptor implements HandlerInterceptor {
 		Method method = handlerMethod.getMethod();
 
 		// 获取目标方法上的幂等注解
-		ApiIdempotent apiIdempotent = method.getAnnotation(ApiIdempotent.class);
-		if (apiIdempotent != null) {
+		Idempotent idempotent = method.getAnnotation(Idempotent.class);
+		if (idempotent != null) {
 			// 幂等性校验, 校验通过则放行, 校验失败则抛出异常, 并通过统一异常处理返回友好提示
-			checkApiIdempotent(request, apiIdempotent, method);
+			checkApiIdempotent(request, idempotent, method);
 		}
 
 		return true;
@@ -72,14 +73,14 @@ public class IdempotentInterceptor implements HandlerInterceptor {
 		}
 	}
 
-	private void checkApiIdempotent(HttpServletRequest request, ApiIdempotent apiIdempotent, Method method) {
+	private void checkApiIdempotent(HttpServletRequest request, Idempotent idempotent, Method method) {
 		// 获得幂等请求参数（加锁key）
-		String[] paramKeys = apiIdempotent.paramKeys();
+		String[] paramKeys = idempotent.paramKeys();
 		String paramKeyName = null;
-		String paramValueName = null;
+		String mapKey = null;
 		if (ArrayUtil.isEmpty(paramKeys)) {
 			paramKeyName = "all";
-			paramValueName = "all";
+			mapKey = "all";
 		} else {
 			for (int i = 0; i < paramKeys.length; i++) {
 				String paramKey = paramKeys[i];
@@ -111,33 +112,30 @@ public class IdempotentInterceptor implements HandlerInterceptor {
 
 				if (i == 0) {
 					paramKeyName = paramKey;
-					paramValueName = value;
+					mapKey = value;
 				} else {
 					paramKeyName = paramKeyName + "," + paramKey;
-					paramValueName = paramValueName + "_" + value;
+					mapKey = mapKey + "_" + value;
 				}
 			}
 		}
 
-		// 获得请求执行方法名
-		String requestHandlerMethod = method.getDeclaringClass() + "." + method.getName() + "()";
-
-		// 设置Redis
+		// 组装redis key
 		Redis redis = SpringUtils.getBean(Redis.class);
-		String redisKey = RedisConstant.API_IDEMPOTENT_KEY_PREFIX + requestHandlerMethod;
+		String redisKey = RedisConstant.IDEMPOTENT_PREFIX + ClassUtils.getMethodReferencePath(method);
 
 		// map加锁
-		int expire = apiIdempotent.expire();
+		int expire = idempotent.expire();
 		if (expire == -1) {
 			RedisProperties redisProperties = SpringUtils.getBean(RedisProperties.class);
-			expire = redisProperties.getApiIdempotentExpire();
+			expire = redisProperties.getIdempotentExpire();
 		}
-		lockMapInfo = redis.lockMap(redisKey, paramValueName, expire);
+		lockMapInfo = redis.lockMap(redisKey, mapKey, expire);
 
 		// 幂等判断
 		if (lockMapInfo.isLock() == false) {
-			String dataPrompt = StrUtil.format("【幂等性】幂等校验失败，请求校验参数 key: {}，请求校验参数 value: {}", paramKeyName, paramValueName);
-			throw new ResultException(R.apiIdempotent(dataPrompt));
+			String dataPrompt = StrUtil.format("【幂等性】幂等校验失败，请求校验参数 key: {}，请求校验参数 value: {}", paramKeyName, mapKey);
+			throw new ResultException(R.idempotent(dataPrompt));
 		}
 	}
 

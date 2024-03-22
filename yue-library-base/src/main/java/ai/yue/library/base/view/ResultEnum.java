@@ -84,7 +84,8 @@ public enum ResultEnum {
 	PARAM_CHECK_NOT_PASS(433, "ai.yue.library.base.view.ResultEnum.PARAM_CHECK_NOT_PASS.msg"),
 	PARAM_VALUE_INVALID(434, "ai.yue.library.base.view.ResultEnum.PARAM_VALUE_INVALID.msg"),
 	PARAM_DECRYPT_ERROR(435, "ai.yue.library.base.view.ResultEnum.PARAM_DECRYPT_ERROR.msg"),
-	API_IDEMPOTENT(436, "ai.yue.library.base.view.ResultEnum.API_IDEMPOTENT.msg"),
+	IDEMPOTENT(436, "ai.yue.library.base.view.ResultEnum.IDEMPOTENT.msg"),
+	LOCK_ACQUIRE_FAILURE(437, "ai.yue.library.base.view.ResultEnum.LOCK_ACQUIRE_FAILURE.msg"),
 
     // 500 - 服务器错误
 	
@@ -117,7 +118,8 @@ public enum ResultEnum {
     CLIENT_FALLBACK(507, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK.msg"),
     CLIENT_FALLBACK_ERROR(508, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK_ERROR.msg"),
     TYPE_CONVERT_ERROR(509, "ai.yue.library.base.view.ResultEnum.TYPE_CONVERT_ERROR.msg"),
-    
+    LOCK_ERROR(510, "ai.yue.library.base.view.ResultEnum.LOCK_ERROR.msg"),
+
 	// 600 - 自定义错误提示
     
     /**

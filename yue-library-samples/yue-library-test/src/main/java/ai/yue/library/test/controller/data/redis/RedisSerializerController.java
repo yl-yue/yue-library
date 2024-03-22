@@ -5,15 +5,14 @@ import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.test.dto.ConvertDTO;
-import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
-import com.alibaba.fastjson.JSONArray;
+import ai.yue.library.test.service.ParamService;
 import com.alibaba.fastjson.JSONObject;
+import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RMap;
 import org.redisson.api.RMapCache;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Redis序列化测试
@@ -33,89 +33,12 @@ import java.util.*;
  */
 @CacheConfig(cacheNames = "redisSerializer")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/redisSerializer")
 public class RedisSerializerController {
 
-    @Autowired
-    Redis redis;
-
-    private JSONObject getParamJson() {
-        Map<String, Object> map = new HashMap();
-        map.put("key1", "value1");
-        map.put("key2", "value2");
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("aaa", 1);
-        jsonObject.put("bbb", 2);
-        jsonObject.put("ccc", "11111");
-
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.add(jsonObject);
-
-        JSONObject paramJson = new JSONObject();
-        // JSON - JSON
-        paramJson.put("map", map);
-        paramJson.put("jsonObject", jsonObject);
-        paramJson.put("jsonArray", jsonArray);
-        paramJson.put("jsonObjectList", jsonArray);
-        // JSONString - JSON
-        paramJson.put("strToMap", map);
-        paramJson.put("strToJsonObject", jsonObject.toJSONString());
-        paramJson.put("strToJsonArray", jsonArray.toJSONString());
-        paramJson.put("strToJsonObjectList", jsonArray.toJSONString());
-
-        // 基本类型
-        paramJson.put("character", "c");
-        paramJson.put("str", "alfjja1@afa...afjIW2323");
-        paramJson.put("strChinese", "你大爷");
-        paramJson.put("strUrl", "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fmedia-cdn.tripadvisor.com%2Fmedia%2Fphoto-s%2F01%2F3e%2F05%2F40%2Fthe-sandbar-that-links.jpg&refer=http%3A%2F%2Fmedia-cdn.tripadvisor.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1613901291&t=ce8beb9cc15509951f4dbb423875427c");
-        paramJson.put("inta", "1");
-        paramJson.put("intb", "2");
-        paramJson.put("longa", "3");
-        paramJson.put("longb", 888L);
-        paramJson.put("booleana", "1");
-        paramJson.put("booleanb", true);
-
-        // 数组
-        paramJson.put("arrayStr", new String[]{"aaaa", "bbbbb", "cccc"});
-        paramJson.put("arrayLong", new Long[]{1L, 2L, 3L});
-        paramJson.put("list", new String[]{"aaaa", "bbbbb", "cccc"});
-
-        // 时间类型
-        paramJson.put("date", "2021-03-23");
-        paramJson.put("dateTime", "2021-03-24");
-        paramJson.put("localDate", "2021-03-24");
-        paramJson.put("localTime", "16:03:24");
-        paramJson.put("localDateTime", "2021-03-24 16:03:24");
-
-        // 其它
-        paramJson.put("convertEnum", "A_A");
-        // fastJsonHttpMessageConverterDTO
-        HashMap<Object, Object> map2 = new HashMap<>();
-        Boolean a = null;
-        map2.put("aaa", null);
-        map2.put(1, null);
-        map2.put(null, a);
-
-        JSONObject jsonObject2 = new JSONObject();
-        jsonObject2.put("aaa", null);
-        jsonObject2.put("", null);
-        jsonObject2.put(null, a);
-
-        List list2 = new ArrayList<>();
-        Map listMap = null;
-        list2.add(null);
-        list2.add(a);
-        list2.add("");
-        list2.add(listMap);
-        FastJsonHttpMessageConverterDTO fastJsonHttpMessageConverterDTO = new FastJsonHttpMessageConverterDTO();
-		fastJsonHttpMessageConverterDTO.setMap2(map2);
-		fastJsonHttpMessageConverterDTO.setJsonObject2(jsonObject2);
-        fastJsonHttpMessageConverterDTO.setList2(list2);
-        paramJson.put("fastJsonHttpMessageConverterDTO", fastJsonHttpMessageConverterDTO);
-
-        return paramJson;
-    }
+    final Redis redis;
+    final ParamService paramService;
 
     @Cacheable
     @PostMapping("/serializer")
@@ -124,7 +47,7 @@ public class RedisSerializerController {
         String str = "332str";
         Date date = new Date();
         LocalDateTime localDateTime = LocalDateTime.now();
-        JSONObject map = getParamJson();
+        JSONObject map = paramService.getParamJson();
         ConvertDTO javaBean = Convert.toJavaBean(map, ConvertDTO.class);
 
         // set value
@@ -159,22 +82,9 @@ public class RedisSerializerController {
             redis.addListValue("redisSerializer:addListValue:javaBean", javaBean);
         }
 
-        // set queue
-        if (serializerNumber == null || serializerNumber == 4) {
-            List<Double> doubleValues = new ArrayList<>();
-            List<LocalDateTime> localDateTimes = new ArrayList<>();
-            for (int i = 0; i < 3000; i++) {
-                doubleValues.add(doubleValue + i);
-                localDateTimes.add(localDateTime);
-            }
-            redis.addBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:doubleValue", doubleValues);
-            redis.addBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:localDateTime", localDateTimes);
-            redis.addBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:javaBean", Arrays.asList(javaBean, javaBean, javaBean));
-        }
-
         // redisson value
         Redisson redisson = redis.getRedisson();
-        if (serializerNumber == null || serializerNumber == 5) {
+        if (serializerNumber == null || serializerNumber == 4) {
             RBucket<Double> bucket1 = redisson.getBucket("redissonSerializer:bucket:doubleValue");
             RBucket<LocalDateTime> bucket2 = redisson.getBucket("redissonSerializer:bucket:localDateTime");
             RBucket<ConvertDTO> bucket3 = redisson.getBucket("redissonSerializer:bucket:javaBean");
@@ -184,7 +94,7 @@ public class RedisSerializerController {
         }
 
         // redisson map
-        if (serializerNumber == null || serializerNumber == 6) {
+        if (serializerNumber == null || serializerNumber == 5) {
             RMap<Long, Double> redissonMap1 = redisson.getMap("redissonSerializer:getMap:doubleValue");
             RMap<String, LocalDateTime> redissonMap2 = redisson.getMap("redissonSerializer:getMap:localDateTime");
             RMap<String, ConvertDTO> redissonMap3 = redisson.getMap("redissonSerializer:getMap:javaBean");
@@ -196,7 +106,7 @@ public class RedisSerializerController {
         }
 
         // redisson list
-        if (serializerNumber == null || serializerNumber == 7) {
+        if (serializerNumber == null || serializerNumber == 6) {
             RList<Double> redissonList1 = redisson.getList("redissonSerializer:getList:doubleValue");
             RList<LocalDateTime> redissonList2 = redisson.getList("redissonSerializer:getList:localDateTime");
             RList<ConvertDTO> redissonList3 = redisson.getList("redissonSerializer:getList:javaBean");
@@ -274,22 +184,9 @@ public class RedisSerializerController {
             System.out.println();
         }
 
-        // get queue
-        if (deserializeNumber == null || deserializeNumber == 4) {
-            List<Double> doubleValueQueueValue = redis.getAndRemoveBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:doubleValue");
-            List<LocalDateTime> localDateTimeQueueValue = redis.getAndRemoveBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:localDateTime");
-            List<ConvertDTO> javaBeanQueueValue = redis.getAndRemoveBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:javaBean");
-            System.out.println("======get queue======");
-            System.out.println("doubleValueQueueValue: " + doubleValueQueueValue);
-            System.out.println("localDateTimeQueueValue: " + localDateTimeQueueValue);
-            System.out.println("javaBeanQueueValue: " + javaBeanQueueValue);
-            System.out.println();
-            System.out.println();
-        }
-
         // redisson value
         Redisson redisson = redis.getRedisson();
-        if (deserializeNumber == null || deserializeNumber == 5) {
+        if (deserializeNumber == null || deserializeNumber == 4) {
             RBucket<Double> bucket1 = redisson.getBucket("redissonSerializer:bucket:doubleValue");
             RBucket<LocalDateTime> bucket2 = redisson.getBucket("redissonSerializer:bucket:localDateTime");
             RBucket<ConvertDTO> bucket3 = redisson.getBucket("redissonSerializer:bucket:javaBean");
@@ -305,7 +202,7 @@ public class RedisSerializerController {
         }
 
         // redisson map
-        if (deserializeNumber == null || deserializeNumber == 6) {
+        if (deserializeNumber == null || deserializeNumber == 5) {
             RMap<Long, Double> redissonMap1 = redisson.getMap("redissonSerializer:getMap:doubleValue");
             RMap<String, LocalDateTime> redissonMap2 = redisson.getMap("redissonSerializer:getMap:localDateTime");
             RMap<String, ConvertDTO> redissonMap3 = redisson.getMap("redissonSerializer:getMap:javaBean");
@@ -324,7 +221,7 @@ public class RedisSerializerController {
         }
 
         // redisson list
-        if (deserializeNumber == null || deserializeNumber == 7) {
+        if (deserializeNumber == null || deserializeNumber == 6) {
             RList<Double> redissonList1 = redisson.getList("redissonSerializer:getList:doubleValue");
             RList<LocalDateTime> redissonList2 = redisson.getList("redissonSerializer:getList:localDateTime");
             RList<ConvertDTO> redissonList3 = redisson.getList("redissonSerializer:getList:javaBean");
@@ -340,25 +237,6 @@ public class RedisSerializerController {
         }
 
         return R.success();
-    }
-
-    @PostMapping("/addBoundedBlockingQueueValue")
-    public Result<?> addBoundedBlockingQueueValue(int addSize) {
-        List<Double> doubleValues = new ArrayList<>();
-        for (int i = 0; i < addSize; i++) {
-            doubleValues.add(1.32D + i);
-        }
-        redis.addBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:doubleValue", doubleValues, 10000);
-        return R.success(doubleValues);
-    }
-
-    @GetMapping("/getAndRemoveBoundedBlockingQueueValue")
-    public Result<?> getAndRemoveBoundedBlockingQueueValue(int consumeSize) {
-        List<Double> doubleValueQueueValue = redis.getAndRemoveBoundedBlockingQueueValue("redisSerializer:addBoundedBlockingQueueValue:doubleValue", consumeSize);
-        System.out.println("======get queue======");
-        System.out.println("doubleValueQueueValue: " + doubleValueQueueValue);
-        System.out.println();
-        return R.success(doubleValueQueueValue);
     }
 
 }

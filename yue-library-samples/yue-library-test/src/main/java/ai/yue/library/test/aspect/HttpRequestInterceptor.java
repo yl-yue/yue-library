@@ -1,5 +1,6 @@
 package ai.yue.library.test.aspect;
 
+import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.web.util.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
@@ -32,7 +33,7 @@ public class HttpRequestInterceptor implements HandlerInterceptor {
 		String requestHandlerMethod = "";
 		if (handler instanceof HandlerMethod) {
 			Method method = ((HandlerMethod) handler).getMethod();
-			requestHandlerMethod = method.getDeclaringClass().getName() + "." + method.getName() + "()";
+			requestHandlerMethod = ClassUtils.getMethodReferencePath(method);
 		}
 
 		// 3. 打印日志

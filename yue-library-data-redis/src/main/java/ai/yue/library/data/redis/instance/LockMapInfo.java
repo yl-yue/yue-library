@@ -1,4 +1,4 @@
-package ai.yue.library.data.redis.dto;
+package ai.yue.library.data.redis.instance;
 
 import ai.yue.library.base.util.DateUtils;
 import lombok.Data;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
  * @since 2023/2/6
  */
 @Data
-public class LockInfo {
+public class LockMapInfo<K> {
 
     /**
      * 是否成功拿到锁
@@ -20,10 +20,16 @@ public class LockInfo {
     private boolean lock;
 
     /**
-     * 分布式锁的key（全局唯一性）
+     * 分布式锁的redisKey（redisKey + mapKey = 全局唯一性）
      */
     @NotBlank
-    private String lockKey;
+    private String redisKey;
+
+    /**
+     * 分布式锁的mapKey（redisKey + mapKey = 全局唯一性）
+     */
+    @NotBlank
+    private K mapKey;
 
     /**
      * 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时

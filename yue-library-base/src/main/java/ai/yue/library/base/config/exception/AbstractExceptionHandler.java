@@ -90,8 +90,8 @@ public abstract class AbstractExceptionHandler {
 	 */
     @ResponseBody
     @ResponseStatus(code = HttpStatus.GONE)
-    @ExceptionHandler(ApiVersionDeprecatedException.class)
-	public Result<?> apiVersionDeprecatedExceptionHandler(ApiVersionDeprecatedException e) {
+    @ExceptionHandler(ApiDeprecatedException.class)
+	public Result<?> apiVersionDeprecatedExceptionHandler(ApiDeprecatedException e) {
     	ExceptionUtils.printException(e);
     	return R.gone();
 	}
@@ -140,7 +140,7 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ParamDecryptException.class)
 	public abstract Result<?> paramDecryptExceptionHandler(ParamDecryptException e);
-    
+
     /**
      * DB异常统一处理-506
      * @param e DB异常

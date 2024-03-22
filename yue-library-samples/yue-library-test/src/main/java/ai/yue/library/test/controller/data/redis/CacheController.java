@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @EnableCaching
 @RestController
+//@CacheConfig(cacheNames = "cache_test")
 @RequestMapping("/cache")
 public class CacheController {
 
@@ -49,7 +50,7 @@ public class CacheController {
      */
     @CacheEvict(value = "cache_test", key = "#id")
     @DeleteMapping("/delete")
-    public Result<?> delete(@RequestParam("id") Long id) {
+    public Result<?> delete(Long id) {
         userService.deleteById(id);
         return R.success();
     }

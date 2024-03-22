@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 /**
  * <b>I18n（国际化）</b>
@@ -59,6 +60,20 @@ public class I18nUtils {
 	public static String getYue(String msgKey) {
 		try {
 			return messageSourceYue.getMessage(msgKey, null, LocaleContextHolder.getLocale());
+		} catch (Exception e) {
+			if (log.isDebugEnabled()) {
+				e.printStackTrace();
+			}
+			return msgKey;
+		}
+	}
+
+	/**
+	 * 获取yue-library内置的单个国际化翻译值
+	 */
+	public static String getYueDefault(String msgKey) {
+		try {
+			return messageSourceYue.getMessage(msgKey, null, Locale.CHINA);
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
 				e.printStackTrace();

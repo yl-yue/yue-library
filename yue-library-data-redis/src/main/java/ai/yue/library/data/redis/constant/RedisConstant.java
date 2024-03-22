@@ -14,28 +14,23 @@ public class RedisConstant {
 	public static final String KEY_SEPARATOR = ":";
 
 	/**
-	 * Redis Key前缀
-	 */
-	public static final String KEY_PREFIX = "yue" + KEY_SEPARATOR + "redis" + KEY_SEPARATOR;
-
-	/**
 	 * Redis锁的Key前缀
 	 */
-	public static final String LOCK_KEY_PREFIX = RedisConstant.standardKey("lock:");
+	public static final String LOCK_PREFIX = "Lock:";
 
 	/**
 	 * Redis幂等性的Key前缀
 	 */
-	public static final String API_IDEMPOTENT_KEY_PREFIX = RedisConstant.standardKey("apiIdempotent:");
+	public static final String IDEMPOTENT_PREFIX = "Idempotent:";
 
 	/**
-	 * 规范Redis Key
-	 *
-	 * @param key Redis Key
-	 * @return 加上yue前缀的key
+	 * Redis延迟队列Key前缀
 	 */
-	public static String standardKey(String key) {
-		return KEY_PREFIX + key;
-	}
+	public static final String DELAYED_QUEUE_PREFIX = "DelayedQueue:";
+
+	/**
+	 * Redis有界阻塞队列Key前缀
+	 */
+	public static final String BOUNDED_BLOCKING_QUEUE_PREFIX = "BoundedBlockingQueue:";
 
 }

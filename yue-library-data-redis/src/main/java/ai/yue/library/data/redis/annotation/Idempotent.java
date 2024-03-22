@@ -1,4 +1,4 @@
-package ai.yue.library.data.redis.idempotent;
+package ai.yue.library.data.redis.annotation;
 
 import ai.yue.library.data.redis.config.properties.RedisProperties;
 
@@ -15,10 +15,10 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ApiIdempotent {
+public @interface Idempotent {
 
     /**
-     * 唯一索引条件（加锁、幂等条件）
+     * 唯一索引条件key（加锁、幂等条件）
      * <pre>
      *     如：userId、token等 -- 基于用户进行加锁，同一用户对同一接口的请求，必须执行完毕后才能发起新的请求，否则视为重复请求（无效请求）
      *     key的value会依次从Header、Query、Body中获取
@@ -32,7 +32,7 @@ public @interface ApiIdempotent {
      * 幂等锁过期时间（单位：毫秒）
      * <p>超过此时间，如果幂等锁还未被释放，那么锁也将自动失效，解决幂等锁未被正确释放导致的阻塞问题。</p>
      * <p>此时间应该比接口的执行时间更长，避免锁的提前释放，导致的幂等问题</p>
-     * <p>默认值：{@link RedisProperties#getApiIdempotentExpire()}</p>
+     * <p>默认值：{@link RedisProperties#getIdempotentExpire()}</p>
      */
     int expire() default -1;
 

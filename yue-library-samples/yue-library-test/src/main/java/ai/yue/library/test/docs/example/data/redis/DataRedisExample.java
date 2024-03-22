@@ -3,8 +3,9 @@ package ai.yue.library.test.docs.example.data.redis;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.redis.client.Redis;
-import ai.yue.library.data.redis.dto.LockInfo;
-import cn.hutool.core.util.RandomUtil;
+import ai.yue.library.data.redis.instance.BoundedBlockingQueue;
+import ai.yue.library.data.redis.instance.DelayedQueue;
+import ai.yue.library.data.redis.instance.LockInfo;
 import cn.hutool.core.util.StrUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RList;
@@ -12,15 +13,17 @@ import org.redisson.api.RMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author  ylyue
  * @version 创建时间：2019年3月12日
  */
 @Repository
-public class DataRedisExampleDAO {
+public class DataRedisExample {
 
 	@Autowired
 	Redis redis;// 直接注入即可
@@ -46,13 +49,6 @@ public class DataRedisExampleDAO {
 		list.get(0);
 		list.add("str");
 
-		// 有界阻塞队列
-		ArrayList<Object> arrayList = new ArrayList<>();
-		arrayList.add("1");
-		arrayList.add("2");
-		redis.addBoundedBlockingQueueValue("queueKey", arrayList);
-		List<Object> queueValue = redis.getAndRemoveBoundedBlockingQueueValue("queueKey");
-
 		// 分布式锁
 		String lockKey = "lockKey";
 		int lockTimeoutMs = 3600;
@@ -70,8 +66,11 @@ public class DataRedisExampleDAO {
 	 * @return 结果
 	 */
 	public Result<?> userLock(String userId) {
+		// 准备参数
 		String lockKey = Redis.redisKey("userId", userId);
 		int lockTimeout = 3600;
+
+		// 加锁
 		LockInfo lock = redis.lock(lockKey, lockTimeout);
 		if (lock.isLock() == false) {
 			return R.errorPrompt(StrUtil.format("用户{}未拿到锁", userId));
@@ -79,8 +78,43 @@ public class DataRedisExampleDAO {
 
 		// 业务逻辑 ...
 
+		// 解锁
 		redis.unlock(lock);
 		return R.success();
+	}
+
+	/**
+	 * 有界阻塞队列
+	 */
+	public void boundedBlockingQueue() {
+		// 准备参数
+		List<String> list = new ArrayList<>();
+		list.add("1");
+		list.add("2");
+		BoundedBlockingQueue<String> boundedBlockingQueue = redis.getBoundedBlockingQueue("queueKey");
+
+		// 往队列添加数据
+		boundedBlockingQueue.addData(list);
+
+		// 消费队列数据
+		List<String> queueValue = boundedBlockingQueue.consumerData();
+	}
+
+	public void delayedQueue() {
+		// 准备参数
+		LocalDateTime now = LocalDateTime.now();
+		DelayedQueue<LocalDateTime> delayedQueue = redis.getDelayedQueue("delayedQueueKey");
+
+		// 发送一条延迟消息
+		delayedQueue.sendDelayedMsg(now, 5, TimeUnit.SECONDS);
+
+		// 消费一条延迟消息
+		LocalDateTime delayedMsg = delayedQueue.consumerDelayedMsg();
+
+		// 持续消费（监听）
+		delayedQueue.consumerDelayedMsg(msg -> {
+			System.out.println(msg);
+		});
 	}
 
 }

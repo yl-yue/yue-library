@@ -269,8 +269,15 @@ public class R {
     /**
      * 请勿重复操作-436（幂等错误）
      */
-    public static <T> Result<T> apiIdempotent(T data) {
-        return error(ResultEnum.API_IDEMPOTENT.getCode(), ResultEnum.API_IDEMPOTENT.getMsg(), data);
+    public static <T> Result<T> idempotent(T data) {
+        return error(ResultEnum.IDEMPOTENT.getCode(), ResultEnum.IDEMPOTENT.getMsg(), data);
+    }
+
+    /**
+     * 锁争抢失败-437（分布式锁错误）
+     */
+    public static <T> Result<T> lockAcquireFailure(T data) {
+        return error(ResultEnum.LOCK_ACQUIRE_FAILURE.getCode(), ResultEnum.LOCK_ACQUIRE_FAILURE.getMsg(), data);
     }
 
     // 500 - 服务器错误
@@ -435,6 +442,16 @@ public class R {
         return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR.getMsg(), data);
     }
 
+    /**
+     * 尝试获取锁时引发未知异常-510
+     *
+     * @param data {@link Result#setData(Object)} 提示信息
+     * @return HTTP请求，最外层响应对象
+     */
+    public static <T> Result<T> lockError(T data) {
+        return error(ResultEnum.LOCK_ERROR.getCode(), ResultEnum.LOCK_ERROR.getMsg(), data);
+    }
+
     // 600 - 自定义错误提示
 
     /**
@@ -531,7 +548,7 @@ public class R {
             // 无权限异常访问处理-403
             ExceptionUtils.printException(e);
             return forbidden();
-        } else if (e instanceof ApiVersionDeprecatedException) {
+        } else if (e instanceof ApiDeprecatedException) {
             // API接口版本弃用异常-410
             ExceptionUtils.printException(e);
             return gone();

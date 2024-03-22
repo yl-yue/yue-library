@@ -2,6 +2,8 @@ package ai.yue.library.base.util;
 
 import cn.hutool.core.util.ClassUtil;
 
+import java.lang.reflect.Method;
+
 /**
  * 类工具类
  * 
@@ -26,5 +28,15 @@ public class ClassUtils extends ClassUtil {
 		
 		return false;
 	}
-	
+
+	/**
+	 * 获得方法引用路径，示例：
+	 * <pre>
+	 *     ai.yue.library.base.util.ClassUtils#getMethodReferencePath()
+	 * </pre>
+	 */
+	public static String getMethodReferencePath(Method method) {
+		return method.getDeclaringClass().getName() + "#" + method.getName() + "()";
+	}
+
 }

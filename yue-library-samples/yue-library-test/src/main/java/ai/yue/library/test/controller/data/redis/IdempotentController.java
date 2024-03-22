@@ -2,7 +2,8 @@ package ai.yue.library.test.controller.data.redis;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.data.redis.idempotent.ApiIdempotent;
+import ai.yue.library.data.redis.annotation.Idempotent;
+import cn.hutool.core.thread.ThreadUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,11 @@ public class IdempotentController {
     /**
      * 幂等性测试
      */
-    @ApiIdempotent
-//    @ApiIdempotent(paramKeys = "cellphone")
+    @Idempotent
+//    @Idempotent(paramKeys = "cellphone")
     @PostMapping("/test")
     public Result<?> test(JSONObject paramJson) {
-//        ThreadUtil.sleep(20000L);
+        ThreadUtil.sleep(20000L);
 //        ThreadUtil.sleep(100L);
         return R.success(paramJson);
     }

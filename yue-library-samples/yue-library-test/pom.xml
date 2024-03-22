@@ -38,15 +38,15 @@
 			<artifactId>yue-library-data-redis</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-es</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ai.ylyue</groupId>-->
+<!--			<artifactId>yue-library-data-es</artifactId>-->
+<!--		</dependency>-->
 
-		<dependency>
-			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-auth-client</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ai.ylyue</groupId>-->
+<!--			<artifactId>yue-library-auth-client</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- SpringBoot -->
 		<dependency>
@@ -81,11 +81,11 @@
 			<groupId>com.baomidou</groupId>
 			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.3.8</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.postgresql</groupId>-->
+<!--			<artifactId>postgresql</artifactId>-->
+<!--			<version>42.3.8</version>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>

@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -35,6 +36,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
 @EnableConfigurationProperties({RedisProperties.class})
+@Import(LockAutoConfiguration.class)
 public class RedisAutoConfig {
 
 	@Autowired
@@ -71,7 +73,6 @@ public class RedisAutoConfig {
 	}
 
 	@Scheduled(cron = "0/30 * * * * *")
-//	@Scheduled(cron = "0 * * * * *")
 	public void heartbeat() {
 		SpringUtils.getBean(Redis.class).getBucket("heartbeat").getAndSet(System.currentTimeMillis());
 		log.debug("Redis heartbeat");

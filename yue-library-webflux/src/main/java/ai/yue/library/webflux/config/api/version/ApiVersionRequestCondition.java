@@ -7,7 +7,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import ai.yue.library.base.annotation.api.version.ApiVersion;
 import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
-import ai.yue.library.base.exception.ApiVersionDeprecatedException;
+import ai.yue.library.base.exception.ApiDeprecatedException;
 import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -49,7 +49,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
 			double minimumVersion = apiVersionProperties.getMinimumVersion();
 			if ((this.getApiVersion().deprecated() || minimumVersion > pathVersion) && NumberUtil.equals(pathVersion, apiVersionValue)) {
 				// 匹配到弃用版本接口
-				throw new ApiVersionDeprecatedException(StrUtil.format("客户端调用弃用版本API接口，requestURI：{}", requestURI));
+				throw new ApiDeprecatedException(StrUtil.format("客户端调用弃用版本API接口，requestURI：{}", requestURI));
 			} else if (this.getApiVersion().deprecated()) {
 				// 继续匹配
 				return null;
