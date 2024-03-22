@@ -1,7 +1,7 @@
 package ai.yue.library.web.config.properties;
 
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -27,45 +27,38 @@ public class FastJsonHttpMessageConverterProperties {
 	private boolean enabled = false;
 
 	/**
-	 * 启用属性声明顺序进行序列化排序
-	 * <p>FastJson序列化时默认根据字母（ASCII）排序而非成员变量声明顺序，详情见：<a href="https://github.com/alibaba/fastjson/issues/3115">#3115</a></p>
-	 */
-	private boolean enablePropertyDefineOrderSerializer = true;
-
-	/**
 	 * 字段命名策略
 	 */
 	private FieldNamingStrategyEnum fieldNamingStrategy;
-	
+
 	/**
 	 * 自定义序列化特性
 	 * <p>HTTP序列化时对null值进行初始化处理，默认做如下配置：
 	 * <pre>
-	 * SerializerFeature.PrettyFormat, // 格式化Json文本
-	 * SerializerFeature.BrowserCompatible, // 浏览器兼容（IE）
-	 * SerializerFeature.IgnoreErrorGetter, // 忽略错误的字段Get方法
-	 * SerializerFeature.WriteDateUseDateFormat, // 对时间类型进行格式化（默认：yyyy-MM-dd HH:mm:ss）
-	 * SerializerFeature.WriteMapNullValue, // 对Null值进行输出
-	 * SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
-	 * SerializerFeature.WriteNullStringAsEmpty // Null String 输出为空字符串
-	 * SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
+	 * JSONWriter.Feature.PrettyFormat,           // 格式化Json文本
+	 * JSONWriter.Feature.BrowserCompatible,      // 浏览器兼容（IE）
+	 * JSONWriter.Feature.IgnoreErrorGetter,      // 忽略错误的字段Get方法
+	 * JSONWriter.Feature.WriteDateUseDateFormat, // 对时间类型进行格式化（默认：yyyy-MM-dd HH:mm:ss）
+	 * JSONWriter.Feature.WriteMapNullValue,      // 对Null值进行输出
+	 * JSONWriter.Feature.WriteNullListAsEmpty,   // Null List 输出为 []
+	 * JSONWriter.Feature.WriteNullStringAsEmpty  // Null String 输出为空字符串
+	 * JSONWriter.Feature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
 	 * </pre>
 	 */
-	private SerializerFeature[] serializerFeatures = {
-			SerializerFeature.PrettyFormat, // 格式化Json文本
-			SerializerFeature.BrowserCompatible, // 浏览器兼容（IE）
-			SerializerFeature.IgnoreErrorGetter, // 忽略错误的字段Get方法
-			SerializerFeature.WriteDateUseDateFormat, // 对时间类型进行格式化（默认：yyyy-MM-dd HH:mm:ss）
-			SerializerFeature.WriteMapNullValue, // 对Null值进行输出
-			SerializerFeature.WriteNullListAsEmpty, // Null List 输出为 []
-			SerializerFeature.WriteNullStringAsEmpty, // Null String 输出为空字符串
-			SerializerFeature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
-//			SerializerFeature.WriteNullNumberAsZero // Null Number 输出为 0
+	private JSONWriter.Feature[] writerFeatures = {
+			JSONWriter.Feature.PrettyFormat,           // 格式化Json文本
+			JSONWriter.Feature.BrowserCompatible,      // 浏览器兼容（IE）
+			JSONWriter.Feature.IgnoreErrorGetter,      // 忽略错误的字段Get方法
+			JSONWriter.Feature.WriteMapNullValue,      // 对Null值进行输出
+			JSONWriter.Feature.WriteNullListAsEmpty,   // Null List 输出为 []
+			JSONWriter.Feature.WriteNullStringAsEmpty, // Null String 输出为空字符串
+			JSONWriter.Feature.WriteNullBooleanAsFalse // Null Boolean 输出为 false
+//			JSONWriter.Feature.WriteNullNumberAsZero   // Null Number 输出为 0
 	};
 	
 	/**
 	 * 输出Null值为空字符串
-	 * <p>排除 {@link #getSerializerFeatures()} 中可配置的Null处理（基本数据类型、List、Boolean）
+	 * <p>排除 {@link #getWriterFeatures()} 中可配置的Null处理（基本数据类型、List、Boolean）
 	 * <p>排除 {@link #isWriteNullMapAsEmpty()} (Map)
 	 * <p>默认：false
 	 */

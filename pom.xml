@@ -39,9 +39,9 @@
         <revision>j${java.version}.2.6.3</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <spring-boot.version>2.6.14</spring-boot.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <spring-boot.version>2.6.15</spring-boot.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.6.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
@@ -60,24 +60,24 @@
         <yue-library-auth-service.version>j${java.version}.2.6.1</yue-library-auth-service.version>
 
         <!-- dependencies.version -->
-        <hutool.version>5.8.24</hutool.version>
-        <bouncycastle.version>1.68</bouncycastle.version>
-        <fastjson.version>1.2.83</fastjson.version>
+        <hutool.version>5.8.26</hutool.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
+        <fastjson.version>2.0.47</fastjson.version>
+        <redisson.version>3.26.1</redisson.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-pagehelper.version>2.1.0</mybatis-pagehelper.version>
+        <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
+        <druid-spring-boot-starter.version>1.2.22</druid-spring-boot-starter.version>
         <plumelog.version>3.5.2</plumelog.version>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <mybatis-pagehelper.version>1.4.6</mybatis-pagehelper.version>
-        <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
-        <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
-        <forest.version>1.5.35</forest.version>
-        <easyexcel.version>3.3.3</easyexcel.version>
+        <forest.version>1.5.36</forest.version>
+        <easyexcel.version>3.3.4</easyexcel.version>
         <poi.version>5.2.5</poi.version>
-        <jpush.version>3.7.6</jpush.version>
 
         <!-- plugins.version -->
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <flatten-maven-plugin.version>1.4.0</flatten-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     </properties>
 
@@ -169,7 +169,7 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15to18</artifactId><!-- sm2、sm3、sm4国密算法 -->
+                <artifactId>bcprov-jdk18on</artifactId><!-- sm2、sm3、sm4国密算法 -->
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
@@ -200,10 +200,15 @@
 
             <!-- alibaba工具包 -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+            <dependency>
+			    <groupId>com.alibaba.fastjson2</groupId>
+			    <artifactId>fastjson2-extension-spring5</artifactId>
+                <version>${fastjson.version}</version>
+		    </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
@@ -245,6 +250,18 @@
                 <version>${dynamic-datasource.version}</version>
             </dependency>
 
+            <!-- redisson -->
+            <dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson</artifactId>
+				<version>${redisson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-data-27</artifactId>
+				<version>${redisson.version}</version>
+			</dependency>
+
             <!-- poi -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -267,11 +284,6 @@
                 <groupId>com.dtflys.forest</groupId>
                 <artifactId>forest-spring-boot-starter</artifactId>
                 <version>${forest.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.jpush.api</groupId>
-                <artifactId>jpush-client</artifactId>
-                <version>${jpush.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

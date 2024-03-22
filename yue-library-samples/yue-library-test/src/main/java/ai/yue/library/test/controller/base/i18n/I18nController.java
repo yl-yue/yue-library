@@ -35,7 +35,7 @@ public class I18nController {
     @GetMapping("/getNotI18n")
     public Result<?> getNotI18n() {
         Result<?> result = R.errorPrompt("不使用国际化定义");
-        System.out.println(result.castToJSONString());
+        System.out.println(result.toJSONString());
         return result;
     }
 

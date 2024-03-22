@@ -3,7 +3,7 @@ package ai.yue.library.base.convert.converter;
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

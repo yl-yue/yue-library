@@ -4,7 +4,7 @@ import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
 import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
+import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

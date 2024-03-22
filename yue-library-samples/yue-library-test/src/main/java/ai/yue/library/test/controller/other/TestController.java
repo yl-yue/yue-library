@@ -1,16 +1,14 @@
 package ai.yue.library.test.controller.other;
 
+import ai.yue.library.base.util.MapUtils;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.PropertyNamingStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-
-import ai.yue.library.base.util.MapUtils;
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue

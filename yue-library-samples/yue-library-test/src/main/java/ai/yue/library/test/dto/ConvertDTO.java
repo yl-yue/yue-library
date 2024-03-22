@@ -1,8 +1,8 @@
 package ai.yue.library.test.dto;
 
 import ai.yue.library.test.constant.ConvertEnum;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

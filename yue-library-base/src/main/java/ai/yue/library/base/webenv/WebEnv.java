@@ -1,9 +1,8 @@
 package ai.yue.library.base.webenv;
 
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.view.Result;
+import com.alibaba.fastjson2.JSONObject;
 
 /**
  * <b>Web环境实现</b>

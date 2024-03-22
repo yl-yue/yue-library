@@ -4,10 +4,9 @@ import ai.yue.library.base.convert.Convert;
 import ai.yue.library.test.dto.ConvertDTO;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.util.TypeUtils;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -125,7 +124,7 @@ public class ConvertTest {
 		log.info("BeanUtil.toBean转换成功，结果为：{}", convertDTO);
 
 		// 对比fastjson转换结果
-		ConvertDTO fastjsonConvertDTO = TypeUtils.castToJavaBean(paramJson, ConvertDTO.class, ParserConfig.getGlobalInstance());
+		ConvertDTO fastjsonConvertDTO = JSON.to(ConvertDTO.class, paramJson);
 		log.info("TypeUtils.castToJavaBean转换成功，结果为：{}", fastjsonConvertDTO);
 	}
 

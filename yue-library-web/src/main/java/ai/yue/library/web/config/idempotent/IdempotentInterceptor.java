@@ -14,7 +14,7 @@ import ai.yue.library.data.redis.instance.LockMapInfo;
 import ai.yue.library.web.util.ServletUtils;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.method.HandlerMethod;

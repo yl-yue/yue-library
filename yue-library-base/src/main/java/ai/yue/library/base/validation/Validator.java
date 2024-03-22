@@ -12,9 +12,9 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -503,15 +503,15 @@ public class Validator {
 				String errorkey = violation.getPropertyPath().toString();
 				Object errorValue = violation.getInvalidValue();
 				String errorHintMsg = I18nUtils.getYue(violation.getMessage());
-				JSONObject errorHint = new JSONObject(true);
+				JSONObject errorHint = new JSONObject();
 				errorHint.put("errorkey", errorkey);
 				errorHint.put("errorValue", errorValue);
 				errorHint.put("errorHintMsg", errorHintMsg);
 				errorHints.add(errorHint);
-				System.out.println(errorHint.toString(SerializerFeature.WriteMapNullValue));
+				System.out.println(errorHint.toString(JSONWriter.Feature.WriteMapNullValue));
 			});
 			
-			throw new ValidateException(errorHints.toString(SerializerFeature.WriteMapNullValue));
+			throw new ValidateException(errorHints.toString(JSONWriter.Feature.WriteMapNullValue));
 		}
     	
     	return this;

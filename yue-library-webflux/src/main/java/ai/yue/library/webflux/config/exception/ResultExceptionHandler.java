@@ -8,7 +8,7 @@ import ai.yue.library.base.view.Result;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.BindException;

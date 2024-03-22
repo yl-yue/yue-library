@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ai.ylyue</groupId>
 		<artifactId>yue-library</artifactId>
-		<version>j11.2.6.2-SNAPSHOT</version>
+		<version>j11.2.6.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>yue-library-template-cloud</artifactId>
 	<name>${project.artifactId}</name>
@@ -36,14 +36,14 @@
 		</dependency>
 
 		<!-- spring-cloud-alibaba -->
-<!--		<dependency>-->
-<!--			<groupId>com.alibaba.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.alibaba.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
 
 		<!-- 其他 -->
 	</dependencies>

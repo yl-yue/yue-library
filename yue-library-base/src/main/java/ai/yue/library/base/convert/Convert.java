@@ -15,11 +15,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.*;
+import com.alibaba.fastjson2.util.TypeUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,10 +27,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
 import java.util.*;
-
-import static com.alibaba.fastjson.JSON.toJSON;
-import static com.alibaba.fastjson.util.TypeUtils.cast;
-import static com.alibaba.fastjson.util.TypeUtils.castToJavaBean;
 
 /**
  * <b>类型转换器</b>
@@ -182,7 +175,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	}
 
 	public static String serializerWriteClassName(Object value) {
-		return JSONObject.toJSONString(value, SerializerFeature.WriteClassName);
+		return JSONObject.toJSONString(value, JSONWriter.Feature.WriteClassName);
 	}
 
 	/**
@@ -272,7 +265,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 
 		// 采用 fastjson 转换
 		try {
-			return cast(value, clazz, ParserConfig.getGlobalInstance());
+			return TypeUtils.cast(value, clazz);
 		} catch (Exception e) {
 			// JavaBean转换
 			if (ClassUtils.isSimpleValueType(clazz) == false && BeanUtils.isBean(clazz)) {
@@ -321,7 +314,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 				return JSONObject.parseObject((String) value, clazz);
 			}
 
-			return castToJavaBean(toJSONObject(value), clazz, ParserConfig.getGlobalInstance());
+			return toJSONObject(value).toJavaObject(clazz);
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
 				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
@@ -386,7 +379,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 			return JSONArray.parseArray((String) value);
 		}
         
-        return (JSONArray) toJSON(value);
+        return (JSONArray) JSON.toJSON(value);
     }
     
 	// ----------------------------------------------------------------------- List转换方法
@@ -400,7 +393,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @return		被转换数组的列表视图
 	 * @see ListUtils#toList(Object[])
 	 */
-	public static <T> ArrayList<T> toList(T[] array) {
+	public static <T> List<T> toList(T[] array) {
 		return ListUtils.toList(array);
 	}
 	

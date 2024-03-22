@@ -9,7 +9,7 @@ import ai.yue.library.test.ipo.ValidationAnnotationInIPO;
 import ai.yue.library.test.ipo.ValidationGroupIPO;
 import ai.yue.library.test.ipo.ValidationIPO;
 import ai.yue.library.test.ipo.ValidationMutualIPO;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

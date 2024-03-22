@@ -1,9 +1,8 @@
 package ai.yue.library.base.convert.converter;
 
-import com.alibaba.fastjson.JSONArray;
-
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.convert.AbstractConverter;
+import com.alibaba.fastjson2.JSONArray;
 
 /**
  * JSONArray类型转换器

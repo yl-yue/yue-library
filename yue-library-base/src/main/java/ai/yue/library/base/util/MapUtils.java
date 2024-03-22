@@ -1,5 +1,12 @@
 package ai.yue.library.base.util;
 
+import ai.yue.library.base.convert.Convert;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.*;
+import com.alibaba.fastjson2.writer.ObjectWriterProvider;
+import lombok.extern.slf4j.Slf4j;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -9,22 +16,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.PropertyNamingStrategy;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-
-import ai.yue.library.base.convert.Convert;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Map工具类
@@ -477,19 +470,18 @@ public class MapUtils extends MapUtil {
 			if (MapUtils.isEmpty(jsonObject)) {
 				return jsonObject;
 			}
-			
-			JSONObject paramJson = new JSONObject(true);
+
+			JSONObject paramJson = new JSONObject();
 			jsonObject.forEach((key, value) -> {
-				paramJson.put(propertyNamingStrategy.translate(key), value);
+				paramJson.put(propertyNamingStrategy.fieldName(key), value);
 			});
 			
 			return paramJson;
 		}
-		
+
 		// POJO对象
-		SerializeConfig serializeConfig = new SerializeConfig();
-		serializeConfig.setPropertyNamingStrategy(propertyNamingStrategy);
-		JSONObject paramJson = (JSONObject) JSONObject.toJSON(param, serializeConfig);
+		JSONWriter.Context context = new JSONWriter.Context(new ObjectWriterProvider(propertyNamingStrategy));
+		JSONObject paramJson = JSONObject.parseObject(JSON.toJSONString(param, context));
 		return paramJson;
 	}
 	

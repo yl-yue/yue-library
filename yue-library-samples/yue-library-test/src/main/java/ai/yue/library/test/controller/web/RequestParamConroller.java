@@ -5,7 +5,7 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.test.constant.TestEnum;
 import ai.yue.library.test.ipo.ParamParseIPO;
 import ai.yue.library.test.ipo.ValidationIPO;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

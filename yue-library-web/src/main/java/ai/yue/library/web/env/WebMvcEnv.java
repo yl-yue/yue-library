@@ -3,7 +3,7 @@ package ai.yue.library.web.env;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.webenv.WebEnv;
 import ai.yue.library.web.util.ServletUtils;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;

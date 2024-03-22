@@ -38,7 +38,7 @@ public class ResultErrorController extends BasicErrorController {
 			log.debug("【异常响应控制器】拦截到异常类型：{}，异常信息：{}，处理后响应内容：{}", 404, result.getMsg(), result);
 		}
 
-		return ResponseEntity.status(result.getCode()).body(result.castToJSONObject());
+		return ResponseEntity.status(result.getCode()).body(result.toJSONObject());
 	}
 	
 }

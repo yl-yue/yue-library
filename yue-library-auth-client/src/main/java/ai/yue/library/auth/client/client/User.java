@@ -5,7 +5,7 @@ import ai.yue.library.base.exception.LoginException;
 import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.web.util.ServletUtils;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 

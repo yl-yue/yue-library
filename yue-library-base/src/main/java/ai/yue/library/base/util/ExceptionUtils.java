@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.lang.Nullable;
 
 /**
@@ -15,7 +15,7 @@ public class ExceptionUtils {
 	private synchronized static <T> T getPrintException(Throwable e, @Nullable Integer line, ExceptionConvertEnum exceptionConvertEnum) {
 		T msg = null;
 		if (exceptionConvertEnum == ExceptionConvertEnum.JSONObject) {
-			msg = (T) new JSONObject(true);
+			msg = (T) new JSONObject();
 			if (e == null) {
 				((JSONObject) msg).put("0", "The stack trace is null");
 				return msg;

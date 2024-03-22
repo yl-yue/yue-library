@@ -1,13 +1,11 @@
 package ai.yue.library.test.docs.example.quickstart;
 
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONObject;
-
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
 
 /**
  * 快速开始示例

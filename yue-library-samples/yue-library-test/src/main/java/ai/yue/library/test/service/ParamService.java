@@ -1,8 +1,8 @@
 package ai.yue.library.test.service;
 
 import ai.yue.library.test.dto.FastJsonHttpMessageConverterDTO;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

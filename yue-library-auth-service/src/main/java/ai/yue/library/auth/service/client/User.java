@@ -16,7 +16,7 @@ import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.util.CaptchaUtils;
 import ai.yue.library.web.util.ServletUtils;
 import ai.yue.library.web.vo.CaptchaVO;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.dtflys.forest.Forest;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

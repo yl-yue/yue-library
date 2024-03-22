@@ -1,7 +1,6 @@
 package ai.yue.library.auth.service.dto;
 
-import com.alibaba.fastjson.JSONArray;
-
+import com.alibaba.fastjson2.JSONArray;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

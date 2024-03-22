@@ -5,8 +5,8 @@ import ai.yue.library.base.crypto.dto.key.exchange.KeyExchangeDTO;
 import ai.yue.library.base.crypto.util.EncryptParamUtils;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

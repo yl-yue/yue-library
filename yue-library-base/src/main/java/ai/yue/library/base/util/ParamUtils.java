@@ -9,7 +9,7 @@ import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.webenv.WebEnv;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;

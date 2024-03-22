@@ -2,7 +2,7 @@ package ai.yue.library.webflux.env;
 
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 
 import ai.yue.library.base.view.Result;
 import ai.yue.library.base.webenv.WebEnv;

@@ -6,12 +6,10 @@ import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -350,14 +348,14 @@ public class ListUtils extends ListUtil {
 		
 		return sort(list, "frequency", sortEnum);
 	}
-	
+
 	/**
 	 * 数组转List
 	 * <p>此方法为 {@linkplain Arrays#asList(Object...)} 的安全实现</p>
-	 * 
-	 * @param <T>	数组中的对象类
-	 * @param array	将被转换的数组
-	 * @return		被转换数组的列表视图
+	 *
+	 * @param <T>   数组中的对象类
+	 * @param array 将被转换的数组
+	 * @return 被转换数组的列表视图
 	 */
 	public static <T> ArrayList<T> toList(T[] array) {
 		ArrayList<T> toList = new ArrayList<>(Arrays.asList(array));

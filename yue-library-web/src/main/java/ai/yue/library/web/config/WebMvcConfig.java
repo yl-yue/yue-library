@@ -13,14 +13,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.BeanContext;
-import com.alibaba.fastjson.serializer.ContextValueFilter;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.filter.BeanContext;
+import com.alibaba.fastjson2.filter.ContextNameFilter;
+import com.alibaba.fastjson2.filter.ContextValueFilter;
+import com.alibaba.fastjson2.filter.Filter;
+import com.alibaba.fastjson2.support.config.FastJsonConfig;
+import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -68,7 +67,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 		if (fastJsonProperties.isEnabled()) {
 			// 使用FastJson优先于默认的Jackson做json解析
-			// https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
+			// https://github.com/alibaba/fastjson2/blob/main/docs/spring_support_cn.md
 			fastJsonHttpMessageConverterConfig(converters);
 		} else if (jacksonProperties.isEnabled()) {
 			// 启用yue-library对Jackson进行增强配置
@@ -78,56 +77,59 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	}
 	
 	private void fastJsonHttpMessageConverterConfig(List<HttpMessageConverter<?>> converters) {
-		// 1. 创建FastJsonHttpMessageConverter
+		// 1. 创建消息转换器
 		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
 		converter.setSupportedMediaTypes(CollUtil.newArrayList(MediaType.APPLICATION_JSON, new MediaType("application", "*+json")));
 		FastJsonConfig config = new FastJsonConfig();
-		config.setDateFormat(JSON.DEFFAULT_DATE_FORMAT);
-		config.setSerializerFeatures(fastJsonProperties.getSerializerFeatures());
+		config.setWriterFeatures(fastJsonProperties.getWriterFeatures());
+		Filter[] writerFilters = config.getWriterFilters();
+		List<Filter> writerFilterList = ListUtils.toList(writerFilters);
 
-		// 2. 配置属性声明顺序进行序列化排序
-		if (fastJsonProperties.isEnablePropertyDefineOrderSerializer()) {
-			JSON.DEFAULT_GENERATE_FEATURE &= ~SerializerFeature.SortField.getMask();
-			SerializeConfig serializeConfig = new SerializeConfig(true);
-			config.setSerializeConfig(serializeConfig);
+		// 2. 创建key拦截器
+		FieldNamingStrategyEnum fieldNamingStrategy = fastJsonProperties.getFieldNamingStrategy();
+		if (fieldNamingStrategy != null) {
+			ContextNameFilter contextNameFilter = (context, object, name, value) -> fieldNamingStrategy.getPropertyNamingStrategy().fieldName(name);
+			writerFilterList.add(contextNameFilter);
 		}
 
-		// 3. 配置FastJsonHttpMessageConverter规则
-		ContextValueFilter contextValueFilter = (BeanContext context, Object object, String name, Object value) -> {
-			if (context == null) {
+		// 3. 创建value拦截器
+		if (fastJsonProperties.isWriteNullAsStringEmpty() || fastJsonProperties.isWriteNullMapAsEmpty()) {
+			ContextValueFilter contextValueFilter = (BeanContext context, Object object, String name, Object value) -> {
+				if (context == null) {
+					if (fastJsonProperties.isWriteNullAsStringEmpty()) {
+						return StrUtil.EMPTY;
+					}
+
+					return value;
+				}
+
+				Class<?> fieldClass = context.getFieldClass();
+				if (value != null || ClassUtils.isBasicType(fieldClass) || Collection.class.isAssignableFrom(fieldClass)) {
+					return value;
+				}
+
+				if (fastJsonProperties.isWriteNullMapAsEmpty() && Map.class.isAssignableFrom(fieldClass)) {
+					return new JSONObject();
+				} else if (fastJsonProperties.isWriteNullArrayAsEmpty() && fieldClass.isArray()) {
+					return ArrayUtil.newArray(0);
+				}
+
 				if (fastJsonProperties.isWriteNullAsStringEmpty()) {
 					return StrUtil.EMPTY;
 				}
-				
+
 				return value;
-			}
-			
-			Class<?> fieldClass = context.getFieldClass();
-			if (value != null || ClassUtils.isBasicType(fieldClass) || Collection.class.isAssignableFrom(fieldClass)) {
-				return value;
-			}
-			
-			if (fastJsonProperties.isWriteNullMapAsEmpty() && Map.class.isAssignableFrom(fieldClass)) {
-				return new JSONObject();
-			} else if (fastJsonProperties.isWriteNullArrayAsEmpty() && fieldClass.isArray()) {
-				return ArrayUtil.newArray(0);
-			}
-			
-			if (fastJsonProperties.isWriteNullAsStringEmpty()) {
-				return StrUtil.EMPTY;
-			}
-			
-			return value;
-		};
-		
-		// 4. 配置FastJsonHttpMessageConverter
-		if (fastJsonProperties.isWriteNullAsStringEmpty() || fastJsonProperties.isWriteNullMapAsEmpty()) {
-			config.setSerializeFilters(contextValueFilter);
+			};
+
+			writerFilterList.add(contextValueFilter);
 		}
-		FieldNamingStrategyEnum fieldNamingStrategy = fastJsonProperties.getFieldNamingStrategy();
-		if (fieldNamingStrategy != null) {
-			config.getSerializeConfig().setPropertyNamingStrategy(fieldNamingStrategy.getPropertyNamingStrategy());
-		}
+
+		// 4. 配置拦截器
+		writerFilters = new Filter[writerFilterList.size()];
+		writerFilters = writerFilterList.toArray(writerFilters);
+		config.setWriterFilters(writerFilters);
+
+		// 5. 配置消息转换器
 		converter.setFastJsonConfig(config);
 		converters.add(0, converter);
 		log.info("【初始化配置-FastJsonHttpMessageConverter】默认配置为false，当前环境为true：使用FastJson优先于默认的Jackson做json解析 ... 已初始化完毕。");

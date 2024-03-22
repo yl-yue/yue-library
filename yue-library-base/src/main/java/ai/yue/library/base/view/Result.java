@@ -6,9 +6,9 @@ import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.webenv.WebEnv;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +18,10 @@ import org.springframework.http.ResponseEntity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import static com.alibaba.fastjson.util.TypeUtils.*;
+import static com.alibaba.fastjson2.util.TypeUtils.*;
 
 /**
  * HTTP请求最外层响应对象，更适应RESTful风格API
@@ -111,27 +110,27 @@ public class Result<T> implements Serializable {
 			return null;
 		}
 
-		return castToBoolean(data);
+		return toBoolean(data);
 	}
 
 	public Integer dataToInteger() {
-		return castToInt(data);
+		return toInteger(data);
 	}
 
 	public Long dataToLong() {
-		return castToLong(data);
+		return toLong(data);
 	}
 
 	public Double dataToDouble() {
-		return castToDouble(data);
+		return toDouble(data);
 	}
 
 	public BigDecimal dataToBigDecimal() {
-		return castToBigDecimal(data);
+		return toBigDecimal(data);
 	}
 
 	public BigInteger dataToBigInteger() {
-		return castToBigInteger(data);
+		return toBigInteger(data);
 	}
 
 	public String dataToString() {
@@ -151,29 +150,21 @@ public class Result<T> implements Serializable {
 	}
 
 	public Date dataToDate() {
-		return castToDate(data);
+		return toDate(data);
 	}
 
-	public java.sql.Date dataToSqlDate() {
-		return (java.sql.Date) castToSqlDate(data);
-	}
-
-	public java.sql.Timestamp dataToTimestamp() {
-		return (Timestamp) castToTimestamp(data);
-	}
-	
 	// -------- result convert --------
 	
-	public ResponseEntity<Result<?>> castToResponseEntity() {
+	public ResponseEntity<Result<?>> toResponseEntity() {
 		return ResponseEntity.status(getCode()).body(this);
 	}
 
-	public String castToJSONString() {
+	public String toJSONString() {
 		this.setMsg(I18nUtils.getYue(this.getMsg()));
 		return JSONObject.toJSONString(this);
 	}
 
-	public JSONObject castToJSONObject() {
+	public JSONObject toJSONObject() {
 		this.setMsg(I18nUtils.getYue(this.getMsg()));
 		return Convert.toJSONObject(this);
 	}

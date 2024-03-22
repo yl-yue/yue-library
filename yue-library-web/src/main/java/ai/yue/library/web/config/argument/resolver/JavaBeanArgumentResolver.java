@@ -6,7 +6,7 @@ import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.annotation.Validated;

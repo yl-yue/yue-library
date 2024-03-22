@@ -1,7 +1,6 @@
 package ai.yue.library.base.constant;
 
-import com.alibaba.fastjson.PropertyNamingStrategy;
-
+import com.alibaba.fastjson2.PropertyNamingStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,7 +18,7 @@ public enum FieldNamingStrategyEnum {
 	 * 驼峰命名法，即：小驼峰命名法
 	 * <p>CAMEL_CASE策略，Java对象属性：personId，序列化后属性：persionId
 	 */
-	CAMEL_CASE(PropertyNamingStrategy.CamelCase), 
+	CAMEL_CASE(PropertyNamingStrategy.CamelCase),
 	
 	/**
 	 * 小驼峰命名法

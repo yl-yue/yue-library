@@ -6,7 +6,7 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.test.dto.ConvertDTO;
 import ai.yue.library.test.service.ParamService;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
 import org.redisson.api.RBucket;

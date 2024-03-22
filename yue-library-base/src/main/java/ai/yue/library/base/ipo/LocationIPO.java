@@ -1,7 +1,6 @@
 package ai.yue.library.base.ipo;
 
-import com.alibaba.fastjson.JSONObject;
-
+import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

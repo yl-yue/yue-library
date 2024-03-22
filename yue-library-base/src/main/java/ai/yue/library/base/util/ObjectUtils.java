@@ -1,13 +1,12 @@
 package ai.yue.library.base.util;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import ai.yue.library.base.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * 对象工具类，包括对象比较与转换等问题
@@ -73,26 +72,6 @@ public class ObjectUtils extends ObjectUtil {
 	 */
 	public static <T> T toObject(Object value, Class<T> clazz) {
 		return Convert.toObject(value, clazz);
-	}
-	
-	/**
-	 * 对象类型转换
-	 * <h1>{@linkplain Object} 转 {@linkplain Class}</h1>
-	 * 
-	 * @deprecated 请使用 {@link #toJavaBean(Object, Class)}
-	 * @param <T> 泛型
-	 * @param obj 需要转换的对象
-	 * @param clazz 泛型类型
-	 * @return 转换后的POJO
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public static <T> T toJavaObject(Object obj, Class<T> clazz) {
-		if (clazz == obj.getClass() || clazz.isInstance(obj)) {
-			return (T) obj;
-		}
-		
-		return JSONObject.toJavaObject(toJSONObject(obj), clazz);
 	}
 	
 	/**
