@@ -13,14 +13,12 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -50,7 +48,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	@ExceptionHandler(ResultException.class)
 	public synchronized Result<?> resultExceptionHandler(ResultException e) {
 		var result = e.getResult();
-		ServletUtils.getResponse().setStatus(result.getCode());
 		log.error(result.toString());
 		ExceptionUtils.printException(e);
 		return result;
@@ -64,7 +61,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
      * @return 结果
 	 */
 	@ResponseBody
-	@ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public Result<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
     	String uri = ServletUtils.getRequest().getRequestURI();
@@ -81,7 +77,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler(ParamVoidException.class)
 	public Result<?> paramVoidExceptionHandler() {
-		ServletUtils.getResponse().setStatus(432);
 		return R.paramVoid();
 	}
     
@@ -94,7 +89,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ParamException.class)
 	public Result<?> paramExceptionHandler(ParamException e) {
-    	ServletUtils.getResponse().setStatus(433);
     	ExceptionUtils.printException(e);
 		return R.paramCheckNotPass(e.getMessage());
 	}
@@ -108,7 +102,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(BindException.class)
 	public Result<?> bindExceptionHandler(BindException e) {
-		ServletUtils.getResponse().setStatus(433);
     	String uri = ServletUtils.getRequest().getRequestURI();
     	Console.error("uri={}", uri);
 		List<ObjectError> errors = e.getAllErrors();
@@ -133,7 +126,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ValidateException.class)
 	public Result<?> validateExceptionHandler(ValidateException e) {
-    	ServletUtils.getResponse().setStatus(433);
     	ExceptionUtils.printException(e);
 		try {
 			return R.paramCheckNotPass(Convert.toJSONArray(e.getMessage()));
@@ -152,7 +144,6 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler(ParamDecryptException.class)
 	public Result<?> paramDecryptExceptionHandler(ParamDecryptException e) {
-		ServletUtils.getResponse().setStatus(435);
 		log.error("【解密错误】错误信息如下：{}", e.getMessage());
 		ExceptionUtils.printException(e);
 		return R.paramDecryptError();

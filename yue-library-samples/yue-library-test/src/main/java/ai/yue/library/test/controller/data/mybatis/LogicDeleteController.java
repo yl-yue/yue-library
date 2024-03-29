@@ -20,9 +20,29 @@ public class LogicDeleteController {
 	@Autowired
     LogicDeleteService logicDeleteService;
 
-    @DeleteMapping("/test")
-    public Result<?> test() {
-        return logicDeleteService.test();
+    @DeleteMapping("/testDefault")
+    public Result<?> testDefault() {
+        return logicDeleteService.testDefault();
+    }
+
+    @DeleteMapping("/getLogicDelete")
+    public Result<?> getLogicDelete() {
+        return logicDeleteService.getLogicDelete();
+    }
+
+    @DeleteMapping("/listLogicDelete")
+    public Result<?> listLogicDelete() {
+        return logicDeleteService.listLogicDelete();
+    }
+
+    @DeleteMapping("/updateLogicDelete")
+    public Result<?> updateLogicDelete() {
+        return logicDeleteService.updateLogicDelete();
+    }
+
+    @DeleteMapping("/delLogicDelete")
+    public Result<?> delLogicDelete() {
+        return logicDeleteService.delLogicDelete();
     }
 
 }

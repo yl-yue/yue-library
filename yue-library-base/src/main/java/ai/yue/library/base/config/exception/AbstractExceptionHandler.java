@@ -7,11 +7,9 @@ import ai.yue.library.base.view.Result;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
@@ -49,7 +47,6 @@ public abstract class AbstractExceptionHandler {
      * @return 结果
 	 */
     @ResponseBody
-    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(LoginException.class)
 	public Result<?> loginExceptionHandler(LoginException e) {
     	ExceptionUtils.printException(e);
@@ -62,7 +59,6 @@ public abstract class AbstractExceptionHandler {
      * @return 结果
 	 */
     @ResponseBody
-    @ResponseStatus(code = HttpStatus.PAYMENT_REQUIRED)
     @ExceptionHandler(AttackException.class)
 	public Result<?> attackExceptionHandler(AttackException e) {
     	ExceptionUtils.printException(e);
@@ -75,7 +71,6 @@ public abstract class AbstractExceptionHandler {
      * @return 结果
 	 */
     @ResponseBody
-    @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)
 	public Result<?> forbiddenExceptionHandler(ForbiddenException e) {
     	ExceptionUtils.printException(e);
@@ -89,7 +84,6 @@ public abstract class AbstractExceptionHandler {
      * @return 结果
 	 */
     @ResponseBody
-    @ResponseStatus(code = HttpStatus.GONE)
     @ExceptionHandler(ApiDeprecatedException.class)
 	public Result<?> apiVersionDeprecatedExceptionHandler(ApiDeprecatedException e) {
     	ExceptionUtils.printException(e);
@@ -140,23 +134,6 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ParamDecryptException.class)
 	public abstract Result<?> paramDecryptExceptionHandler(ParamDecryptException e);
-
-    /**
-     * DB异常统一处理-506
-     * @param e DB异常
-     * @return 结果
-	 */
-    @ResponseBody
-    @ResponseStatus(code = HttpStatus.VARIANT_ALSO_NEGOTIATES)
-    @ExceptionHandler(DbException.class)
-	public Result<?> dbExceptionHandler(DbException e) {
-		e.printStackTrace();
-		if (e.isShowMsg()) {
-			return R.dbError(e.getMessage());
-		}
-		
-		return R.dbError();
-	}
     
 	/**
 	 * 服务降级-507
@@ -164,7 +141,6 @@ public abstract class AbstractExceptionHandler {
 	 * @return 结果
 	 */
 	@ResponseBody
-	@ResponseStatus(code = HttpStatus.INSUFFICIENT_STORAGE)
     @ExceptionHandler(ClientFallbackException.class)
 	public Result<?> clientFallbackExceptionHandler(ClientFallbackException e) {
 		ExceptionUtils.printException(e);
@@ -178,7 +154,6 @@ public abstract class AbstractExceptionHandler {
      * @return 结果
      */
     @ResponseBody
-    @ResponseStatus(code = HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
     @ExceptionHandler(ConvertException.class)
 	public Result<?> convertExceptionHandler(ConvertException e) {
     	log.error("【类型转换异常】转换类型失败，错误信息如下：{}", e.getMessage());

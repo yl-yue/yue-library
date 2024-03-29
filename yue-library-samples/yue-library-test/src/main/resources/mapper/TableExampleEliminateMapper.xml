@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.yue.library.test.mapper.TableExampleEliminateMapper">
+    <select id="getDataNotLogicDelete" resultType="ai.yue.library.test.entity.TableExampleEliminate">
+        SELECT a.*
+        FROM table_example_eliminate a,
+             (SELECT id FROM table_example_eliminate ORDER BY id DESC LIMIT 1) b
+        WHERE a.id = b.id
+    </select>
+
+    <update id="updateLogicDelete">
+        UPDATE table_example_eliminate
+        SET cellphone = 18523116324
+        WHERE cellphone = 18523116323;
+    </update>
+
+    <delete id="delLogicDelete">
+        DELETE FROM table_example_eliminate
+        WHERE cellphone=18523116324;
+    </delete>
+</mapper>

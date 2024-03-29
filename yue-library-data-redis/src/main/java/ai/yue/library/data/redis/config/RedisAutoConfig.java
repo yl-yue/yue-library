@@ -25,6 +25,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.annotation.PostConstruct;
+
 /**
  * redis自动配置
  * 
@@ -35,21 +37,24 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Configuration
 @EnableScheduling
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
-@EnableConfigurationProperties({RedisProperties.class})
+@EnableConfigurationProperties(RedisProperties.class)
 @Import(LockAutoConfiguration.class)
 public class RedisAutoConfig {
 
 	@Autowired
 	RedisProperties redisProperties;
+	@Autowired(required = false)
+	RedisCacheManager redisCacheManager;
+	@Autowired(required = false)
+	CacheProperties cacheProperties;
 
-	@Bean
-	@Primary
-	public Redis redis(RedissonClient redisson, RedisCacheManager redisCacheManager, CacheProperties cacheProperties) {
-		log.info("【初始化配置-Redis客户端】配置项：{}，使用 JsonCodec 进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。", RedisProperties.PREFIX);
-		Config config = redisson.getConfig();
-		config.setCodec(new JsonCodec());
-		redisson = Redisson.create(config);
+	@PostConstruct
+	private void init() {
+		if (redisCacheManager == null) {
+			return;
+		}
 
+		log.debug("【初始化配置-@EnableCaching】解决缓存乱码、Key规范等问题。");
 		// 解决@Cacheable、@CachePut注解，Redis序列化乱码的问题
 		String keyPrefix = cacheProperties.getRedis().getKeyPrefix();
 		RedisCacheConfiguration defaultCacheConfig = ((RedisCacheConfiguration) ReflectUtil.getFieldValue(redisCacheManager, "defaultCacheConfig"))
@@ -68,7 +73,15 @@ public class RedisAutoConfig {
 				})
 				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer()));
 		ReflectUtil.setFieldValue(redisCacheManager, "defaultCacheConfig", defaultCacheConfig);
+	}
 
+	@Bean
+	@Primary
+	public Redis redis(RedissonClient redisson) {
+		log.info("【初始化配置-Redis客户端】配置项：{}，使用 JsonCodec 进行Redis存储对象序列/反序列化。Bean：Redis ... 已初始化完毕。", RedisProperties.PREFIX);
+		Config config = redisson.getConfig();
+		config.setCodec(new JsonCodec());
+		redisson = Redisson.create(config);
 		return new Redis((Redisson) redisson);
 	}
 

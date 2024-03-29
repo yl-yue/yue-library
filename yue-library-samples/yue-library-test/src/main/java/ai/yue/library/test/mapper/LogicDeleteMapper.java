@@ -1,6 +1,6 @@
 package ai.yue.library.test.mapper;
 
-import ai.yue.library.test.entity.TableExampleTest;
+import ai.yue.library.test.entity.TableExampleStandard;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,11 +13,11 @@ import java.util.List;
  * @since	2020年2月21日
  */
 @Mapper
-public interface LogicDeleteMapper extends BaseMapper<TableExampleTest> {
+public interface LogicDeleteMapper extends BaseMapper<TableExampleStandard> {
 
-    TableExampleTest getLogicDelete();
+    TableExampleStandard getLogicDelete();
 
-    List<TableExampleTest> listLogicDelete();
+    List<TableExampleStandard> listLogicDelete();
 
     void updateLogicDelete();
 

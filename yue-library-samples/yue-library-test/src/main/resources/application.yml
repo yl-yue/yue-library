@@ -14,3 +14,4 @@ spring:
 logging:
   level:
     ai.yue.library: debug
+#    org.springframework: debug

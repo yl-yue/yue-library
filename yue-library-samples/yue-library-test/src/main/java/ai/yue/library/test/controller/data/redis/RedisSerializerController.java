@@ -13,9 +13,6 @@ import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RMap;
 import org.redisson.api.RMapCache;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +28,6 @@ import java.util.List;
  * @author ylyue
  * @since 2021/1/22
  */
-@CacheConfig(cacheNames = "redisSerializer")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/redisSerializer")
@@ -40,7 +36,6 @@ public class RedisSerializerController {
     final Redis redis;
     final ParamService paramService;
 
-    @Cacheable
     @PostMapping("/serializer")
     public Result<?> serializer(Integer serializerNumber) {
         double doubleValue = 332D;
@@ -118,7 +113,6 @@ public class RedisSerializerController {
         return R.success(map);
     }
 
-    @CacheEvict
     @GetMapping("/deserialize")
     public Result<?> deserialize(Integer deserializeNumber) {
         String str = "332str";

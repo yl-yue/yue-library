@@ -4,6 +4,8 @@ import ai.yue.library.base.ipo.ValidationGroups;
 import ai.yue.library.base.validation.annotation.Cellphone;
 import ai.yue.library.base.validation.annotation.IdCard;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
@@ -16,6 +18,8 @@ import java.time.LocalDate;
  * @version 创建时间：2018年9月25日
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ValidationGroupIPO extends ValidationGroups {
 
     @Null(groups = {Create.class})

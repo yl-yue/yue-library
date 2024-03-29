@@ -16,15 +16,13 @@ yue:
   api-version:
     minimum-version: 1
   web:
-#    enabled-repeatedly-read-servlet-request: true
-#    enabled-repeatedly-read-servlet-request: false
+    enabled-repeatedly-read-servlet-request: true
     http-message-converter:
       jackson:
         enabled: true
-#        write-null-number-as-zero: true
-#    http-message-converter:
-#      fastjson:
-#        enabled: true
+        write-null-number-as-zero: true
+      fastjson:
+        enabled: true
   net:
     proxy:
       enabled: true
@@ -60,42 +58,10 @@ yue:
       enable-servlet-async-context: true                    # 是否开启 ServletAsyncContext
       servlet-async-context-timeout-millis: 600             # ServletAsyncContext阻塞超时时长（单位：毫秒），异步上下文最长生命周期（最大阻塞父线程多久）
 
-  jdbc:
-    enable-boolean-map-recognition: true                    # 启用布尔值映射识别
-    enable-logic-delete-filter: true                        # 启用逻辑删除过滤（只对自动生成的sql生效）
-    enable-field-naming-strategy-recognition: true          # 启用数据库字段命名策略识别
-    database-field-naming-strategy: snake_case              # 数据库字段命名策略
-    field-definition-uuid: uuid                             # 关键字段定义-无序主键名
-    field-definition-sort-idx: sort_idx                     # 关键字段定义-排序
-    field-definition-delete-time: delete_time               # 关键字段定义-数据删除标识
-    data-encrypt-algorithm: AES                             # 缺省数据加密算法（仅当在表级未配置单独的加密算法时，以缺省值的方式生效）
-    data-encrypt-key: 1234567890123456                      # 缺省数据加密密钥（仅当在表级未配置单独的加密密钥时，以缺省值的方式生效）
-    data-encrypt-configs:                                   # 数据加密配置（key：表名，value：数据加密规则）
-      data_encrypt:                                         # 数据库对应的表名
-        data-encrypt-algorithm: AES                         # 当前表加密算法（未设置使用缺省值）
-        data-encrypt-key: 1234567890123455                  # 当前表加密密钥（未设置使用缺省值）
-        fieldNames:                                         # 加密字段
-          - cellphone
-          - password
-      data_encrypt_2:                                       # 数据库对应的表名
-        fieldNames:                                         # 加密字段
-          - email
-          - password
-    data-audit-table-name-match-enum: match                 # 数据审计表名匹配方式
-    data-audit-table-names:                                 # 数据审计表名
-      - data_audit
-      - data_audit2
-    data-audit-properties:                                  # 数据审计属性
-      field-name-create-user: create_user                   # 审计字段定义-创建人
-      field_name_create_user_uuid: create_user_uuid         # 审计字段定义-创建人uuid
-      field_name_create_time: create_time                   # 审计字段定义-创建时间
-      field_name_update_user: update_user                   # 审计字段定义-更新人
-      field_name_update_user_uuid: update_user_uuid         # 审计字段定义-更新人uuid
-      field_name_update_time: update_time                   # 审计字段定义-更新时间
-      field_name_delete_user: delete_user                   # 审计字段定义-删除人
-      field_name_delete_user_uuid: delete_user_uuid         # 审计字段定义-删除人uuid
-      field_name_delete_time: delete_time                   # 审计字段定义-删除时间戳
-    data-fill-table-name-match-enum: exclude                # 数据填充表名匹配方式
-    data-fill-table-names:                                  # 数据填充表名
-      - data_fill
-      - data_fill2
+  data:
+    mybatis:
+      enable-data-audit: true
+      enable-logic-delete: true                             # 启用逻辑删除
+      logic-delete-ignore-tables:                           # 配置逻辑删除需要忽略的表（额外的表）
+        - aaa
+        - bbb

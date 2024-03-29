@@ -61,9 +61,9 @@ public class I18nUtils {
 		try {
 			return messageSourceYue.getMessage(msgKey, null, LocaleContextHolder.getLocale());
 		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				e.printStackTrace();
-			}
+//			if (log.isDebugEnabled()) {
+//				e.printStackTrace();
+//			}
 			return msgKey;
 		}
 	}
@@ -75,9 +75,9 @@ public class I18nUtils {
 		try {
 			return messageSourceYue.getMessage(msgKey, null, Locale.CHINA);
 		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				e.printStackTrace();
-			}
+//			if (log.isDebugEnabled()) {
+//				e.printStackTrace();
+//			}
 			return msgKey;
 		}
 	}

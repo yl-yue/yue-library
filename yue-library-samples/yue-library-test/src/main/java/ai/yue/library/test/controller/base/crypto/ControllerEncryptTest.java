@@ -5,7 +5,7 @@ import ai.yue.library.base.crypto.annotation.key.exchange.ResponseEncrypt;
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.test.ipo.UserIPO;
+import ai.yue.library.test.ipo.TableExampleIPO;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,14 +20,14 @@ public class ControllerEncryptTest {
 
     @RequestDecrypt
     @PostMapping("/decrypt")
-    public Result<?> decrypt(@RequestBody UserIPO userIPO) {
-        return R.success(userIPO);
+    public Result<?> decrypt(@RequestBody TableExampleIPO tableExampleIPO) {
+        return R.success(tableExampleIPO);
     }
 
     @RequestDecrypt(exchangeKeyType = ExchangeKeyEnum.SM2_SM4)
     @PostMapping("/decrypt/SM2_SM4")
-    public Result<?> decryptSM2_SM4(@RequestBody UserIPO userIPO) {
-        return R.success(userIPO);
+    public Result<?> decryptSM2_SM4(@RequestBody TableExampleIPO tableExampleIPO) {
+        return R.success(tableExampleIPO);
     }
 
     @ResponseEncrypt

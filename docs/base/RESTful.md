@@ -6,14 +6,14 @@ RESTful是一种架构的规范与约束、原则，符合这种规范的架构�
 
 |参数名称	|参数类型	|最大长度	|描述													|示例																	|
 |--			|--			|--			|--														|--																		|
-|`code`		|Int		|3			|响应状态码（同步HTTP状态码）								|200																	|
-|`msg`		|String		|30			|响应提示（除状态码600外，此msg皆表示给开发者的提示）		|成功																	|
+|`code`		|Int		|3			|响应状态码（参考HTTP状态码分组，但不做同步）				|200																	|
+|`msg`		|String		|30			|响应提示（除状态码`>=600`外，此msg皆表示给开发者的提示）	|成功																	|
 |`flag`		|Boolean	|			|响应状态												|true																	|
 |`traceId`	|String		|			|链路追踪码												|1cc00a1d8be14acc98457b23b8f5ab9f										|
 |`data`		|Object		|			|业务数据												|【钉钉】通知结果：{\"errcode\":0,\"success\":true,\"errmsg\":\"ok\"}		|
 
 msg提示约定：
-- 除状态码600外，此msg皆表示服务端给客户端（即开发者）的请求提示
+- 除状态码`>=600`外，此msg皆表示服务端给客户端（即开发者）的请求提示
 - 一般情况其它错误提示，如：500，服务器内部错误等，需前端结合各自业务情况统一拦截处理，转换为优化的用户提示，如：`网络开小差了，请稍后重试...`
 - 优好的用户提示，甚至可到页面步骤级别，不同步骤错误基于不同的友好提示。
 
@@ -28,10 +28,19 @@ msg提示约定：
 }
 ```
 
-## RESTful与Result
-- `ai.yue.library.base.view.Result<T>` 定义为HTTP请求最外层响应对象，更适应RESTful风格API。
-- `ai.yue.library.base.view.ResultEnum` 定义Result HTTP状态码枚举与默认的提示信息。
-- `ai.yue.library.base.view.R` 定义为工具类便捷返回`Result`，构建RESTful风格API结果。
+## RESTful风格与Result实现
+- `ai.yue.library.base.view.Result`
+  - HTTP请求最外层响应对象：`code`、`msg`、`flag`、`traceId`、`data`
+  - 内置结果转换与异常校验等
+- `ai.yue.library.base.view.ResultEnum`
+  - 定义了默认的`code`与`msg`，支持I18N
+- `ai.yue.library.base.view.ResultCode`
+  - 使用枚举实现此接口，可自定义`code`与`msg`值，参考：`ResultEnum`
+  - `R.errorPromptI18n(ResultCode resultCode)`可返回自定义`code`与`msg`
+- `ai.yue.library.base.view.R` 
+  - 工具类，可便捷返回`Result`对象
+  - 内置基本的响应：成功、失败、限流等
+  - `R.errorPromptI18n(ResultCode resultCode)`可返回自定义`code`与`msg`
 
 ### Result使用示例
 **Controller定义：**

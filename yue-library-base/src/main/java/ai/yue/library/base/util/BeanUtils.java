@@ -33,5 +33,12 @@ public class BeanUtils extends BeanUtil {
 	public static String getSetMethodName(String fieldName) {
 		return String.format(SET_METHOD_NAME_FORMAT, StrUtil.upperFirst(fieldName));
 	}
-	
+
+	/**
+	 * 是否存在字段
+	 */
+	public static boolean isExistField(Class<?> clazz, String fieldName) {
+		return getBeanDesc(clazz).getField(fieldName) != null;
+	}
+
 }

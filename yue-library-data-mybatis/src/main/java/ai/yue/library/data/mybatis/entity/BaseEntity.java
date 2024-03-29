@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <h2>RESTful驼峰命名法基础实体</h2><br>
@@ -60,13 +59,13 @@ public abstract class BaseEntity implements Serializable {
 	 * 创建人：用户id
 	 */
 	@TableField(fill = FieldFill.INSERT)
-	protected String createUserId;
+	protected Long createUserId;
 
 	/**
 	 * 创建时间
 	 */
 	@TableField(fill = FieldFill.INSERT)
-	protected LocalDateTime createTime;
+	protected Long createTime;
 
 	/**
 	 * 更新人：用户名、昵称、人名
@@ -78,13 +77,13 @@ public abstract class BaseEntity implements Serializable {
 	 * 更新人：用户id
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-	protected String updateUserId;
+	protected Long updateUserId;
 
 	/**
 	 * 更新时间
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-	protected LocalDateTime updateTime;
+	protected Long updateTime;
 
 	/**
 	 * 删除时间：默认0（未删除）

@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
  */
 @Getter
 @AllArgsConstructor
-public enum ResultEnum {
+public enum ResultEnum implements ResultCode {
 	
 	// 200 - 正确结果
 	
@@ -113,8 +113,8 @@ public enum ResultEnum {
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
 	 */
 	GATEWAY_TIMEOUT(504, "ai.yue.library.base.view.ResultEnum.GATEWAY_TIMEOUT.msg"),
-	DATA_STRUCTURE(505, "ai.yue.library.base.view.ResultEnum.DATA_STRUCTURE.msg"),
-	DB_ERROR(506, "ai.yue.library.base.view.ResultEnum.DB_ERROR.msg"),
+	SQL_DATA_INTEGRITY_VIOLATION(505, "ai.yue.library.base.view.ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.msg"),
+	SQL_ERROR(506, "ai.yue.library.base.view.ResultEnum.SQL_ERROR.msg"),
     CLIENT_FALLBACK(507, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK.msg"),
     CLIENT_FALLBACK_ERROR(508, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK_ERROR.msg"),
     TYPE_CONVERT_ERROR(509, "ai.yue.library.base.view.ResultEnum.TYPE_CONVERT_ERROR.msg"),

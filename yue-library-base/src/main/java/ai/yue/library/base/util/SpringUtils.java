@@ -144,9 +144,9 @@ public class SpringUtils implements BeanFactoryPostProcessor, ApplicationContext
 	}
 
 	/**
-	 * 获取当前的环境配置，无配置返回null
+	 * 获取当前的环境配置
 	 *
-	 * @return 当前的环境配置
+	 * @return 无配置返回null
 	 */
 	public static String[] getActiveProfiles() {
 		if (null == applicationContext) {
@@ -158,7 +158,7 @@ public class SpringUtils implements BeanFactoryPostProcessor, ApplicationContext
 	/**
 	 * 获取当前的环境配置，当有多个环境配置时，只获取第一个
 	 *
-	 * @return 当前的环境配置
+	 * @return 无配置返回null
 	 */
 	public static String getActiveProfile() {
 		final String[] activeProfiles = getActiveProfiles();

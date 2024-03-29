@@ -1,6 +1,6 @@
 package ai.yue.library.test.config;
 
-import ai.yue.library.data.mybatis.provider.DataAuditProvider;
+import ai.yue.library.data.mybatis.provider.AuditDataFill;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @since  2022/12/29
  */
 @Configuration
-public class DataFillProvider extends DataAuditProvider {
+public class DataFillProvider extends AuditDataFill {
 
     @Override
     public void insertFill(MetaObject metaObject) {
@@ -19,8 +19,8 @@ public class DataFillProvider extends DataAuditProvider {
         super.insertFill(metaObject);
 
         // 自定义填充
-        this.strictInsertFill(metaObject, "tenantCo", String.class, "co");
-        this.strictInsertFill(metaObject, "tenantSys", String.class, "sys");
+        this.strictInsertFill(metaObject, "aaa", String.class, "co");
+        this.strictInsertFill(metaObject, "bbb", String.class, "sys");
     }
 
     @Override

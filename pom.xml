@@ -65,7 +65,7 @@
         <fastjson.version>2.0.47</fastjson.version>
         <redisson.version>3.26.1</redisson.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
-        <mybatis-pagehelper.version>2.1.0</mybatis-pagehelper.version>
+        <mybatis-pagehelper.version>2.0.0</mybatis-pagehelper.version>
         <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
         <druid-spring-boot-starter.version>1.2.22</druid-spring-boot-starter.version>
         <plumelog.version>3.5.2</plumelog.version>

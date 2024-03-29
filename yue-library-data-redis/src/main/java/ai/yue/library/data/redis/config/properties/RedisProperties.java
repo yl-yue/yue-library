@@ -18,7 +18,7 @@ public class RedisProperties {
 	/**
 	 * Prefix of {@link RedisProperties}.
 	 */
-	public static final String PREFIX = "yue.redis";
+	public static final String PREFIX = "yue.data.redis";
 	
 	/**
 	 * IP前缀（自定义值，请保留“<code style="color:red">_%s</code>”部分）

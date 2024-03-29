@@ -4,9 +4,11 @@ import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.I18nUtils;
+import ai.yue.library.base.util.SpringUtils;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,6 +19,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +31,13 @@ import java.util.List;
  */
 @Slf4j
 public class R {
+
+    private static final String FeignException = "feign.FeignException";
+    private static final String NotLoginException = "cn.dev33.satoken.exception.NotLoginException";
+    private static final String PageException = "com.github.pagehelper.PageException";
+    private static final String DataAccessException = "org.springframework.dao.DataAccessException";
+    private static final String MyBatisSystemException = "org.mybatis.spring.MyBatisSystemException";
+    private static final String DataIntegrityViolationException = "org.springframework.dao.DataIntegrityViolationException";
 
     // ------ Result error builder ------
 
@@ -355,43 +365,21 @@ public class R {
     }
 
     /**
-     * 数据结构异常-505
-     *
-     * @return HTTP请求，最外层响应对象
-     */
-    public static Result<?> dataStructure() {
-        return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg());
-    }
-
-    /**
-     * 数据结构异常-505
-     * <p><i>不正确的结果大小</i>
-     *
-     * @param expected 预期值
-     * @param actual   实际值
-     * @return HTTP请求，最外层响应对象
-     */
-    public static Result<?> dataStructure(int expected, int actual) {
-        return error(ResultEnum.DATA_STRUCTURE.getCode(), ResultEnum.DATA_STRUCTURE.getMsg(), ResultPrompt.dataStructure(expected, actual));
-    }
-
-    /**
-     * 数据结构异常，请检查相应数据结构一致性-506
-     *
-     * @return HTTP请求，最外层响应对象
-     */
-    public static Result<?> dbError() {
-        return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg());
-    }
-
-    /**
-     * 数据结构异常，请检查相应数据结构一致性-506
+     * Sql错误，数据完整性违规-505
      *
      * @param data {@link Result#setData(Object)} 提示信息
-     * @return HTTP请求，最外层响应对象
      */
-    public static <T> Result<T> dbError(T data) {
-        return error(ResultEnum.DB_ERROR.getCode(), ResultEnum.DB_ERROR.getMsg(), data);
+    public static <T> Result<T> sqlDataIntegrityViolation(@Nullable T data) {
+        return error(ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getCode(), ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getMsg(), data);
+    }
+
+    /**
+     * Sql错误，请检查数据-506
+     *
+     * @param data {@link Result#setData(Object)} 提示信息
+     */
+    public static <T> Result<T> sqlError(T data) {
+        return error(ResultEnum.SQL_ERROR.getCode(), ResultEnum.SQL_ERROR.getMsg(), data);
     }
 
     /**
@@ -520,6 +508,26 @@ public class R {
         return errorPrompt(I18nUtils.get(msgKey), data);
     }
 
+    /**
+     * <b>错误提示-自定义code（&gt;600）</b>
+     * <p>适用于用户操作提示、业务消息提示、友好的错误提示等场景。
+     *
+     * @param resultCode 请使用枚举实现自定义的{@link ResultCode}
+     */
+    public static Result<?> errorPrompt(ResultCode resultCode) {
+        return error(resultCode.getCode(), resultCode.getMsg());
+    }
+
+    /**
+     * <b>错误提示-自定义code（&gt;600）</b>
+     * <p>适用于i18n资源包定义（messages.properties），遵循SpringBoot默认值规范</p>
+     *
+     * @param resultCode 请使用枚举实现自定义的{@link ResultCode}
+     */
+    public static Result<?> errorPromptI18n(ResultCode resultCode) {
+        return error(resultCode.getCode(), I18nUtils.get(resultCode.getMsg()));
+    }
+
     // ------ Result exception builder ------
 
     public static Result<?> getResult(Throwable e) {
@@ -581,14 +589,6 @@ public class R {
             log.error("【解密错误】错误信息如下：{}", e.getMessage());
             ExceptionUtils.printException(e);
             return paramDecryptError();
-        } else if (e instanceof DbException) {
-            // DB异常统一处理-506
-            e.printStackTrace();
-            if (((DbException) e).isShowMsg()) {
-                return dbError(e.getMessage());
-            }
-
-            return dbError();
         } else if (e instanceof ClientFallbackException) {
             // 服务降级-507
             ExceptionUtils.printException(e);
@@ -606,8 +606,7 @@ public class R {
             if (resultEnum != null) {
                 return error(resultEnum.getCode(), resultEnum.getMsg(), e.toString());
             }
-        } else if (ClassLoaderUtil.isPresent("feign.FeignException")
-                && ClassLoaderUtil.loadClass("feign.FeignException").isAssignableFrom(e.getClass())) {
+        } else if (isInstanceofExceptionClass(e, FeignException)) {
             log.error("【服务降级】接口调用失败，FeignException 错误内容如下：", e);
             String contentUTF8 = ReflectUtil.invoke(e, "contentUTF8");
             try {
@@ -619,22 +618,49 @@ public class R {
             } catch (Exception ex) {
                 return clientFallback(contentUTF8);
             }
-        } else if (ClassLoaderUtil.isPresent("org.mybatis.spring.MyBatisSystemException")
-                && ClassLoaderUtil.loadClass("org.mybatis.spring.MyBatisSystemException").isAssignableFrom(e.getClass())) {
-            try {
-                if (e.getCause().getCause() instanceof ResultException) {
-                    return ((ResultException) e.getCause().getCause()).getResult();
-                }
-            } catch (Exception ignore) {
-            }
-        } else if (ClassLoaderUtil.isPresent("cn.dev33.satoken.exception.NotLoginException")
-                && ClassLoaderUtil.loadClass("cn.dev33.satoken.exception.NotLoginException").isAssignableFrom(e.getClass())) {
+        } else if (isInstanceofExceptionClass(e, NotLoginException)) {
             return R.unauthorized();
+        } else if (isInstanceofExceptionClass(e, PageException)) {
+            return R.paramCheckNotPass(e.getMessage());
+        }
+        // 数据库访问异常统一处理
+        else if (isInstanceofExceptionClass(e, DataAccessException)) {
+            // 处理MyBatis拦截器中抛出的嵌套ResultException
+            if (isInstanceofExceptionClass(e, MyBatisSystemException)) {
+                try {
+                    if (e.getCause().getCause() instanceof ResultException) {
+                        return ((ResultException) e.getCause().getCause()).getResult();
+                    }
+                } catch (Exception ignore) {
+                }
+            }
+
+            // ===处理数据库操作异常===
+            e.printStackTrace();
+
+            // 是否开启debug日志等级 或 是否开发环境
+            String message = null;
+            String[] activeProfiles = SpringUtils.getActiveProfiles();
+            if (log.isDebugEnabled() || (activeProfiles != null && ArrayUtil.containsIgnoreCase(activeProfiles, "dev"))) {
+                message = e.getMessage();
+            }
+
+            // 数据完整性违规异常-505
+            if (isInstanceofExceptionClass(e, DataIntegrityViolationException)) {
+                return sqlDataIntegrityViolation(message);
+            }
+
+            // 数据访问异常-506
+            return sqlError(message);
         }
 
         // 处理所有未处理异常-500
         log.error(e.getMessage(), e);
         return internalServerError(ExceptionUtils.getPrintExceptionToJson(e));
+    }
+
+    private static boolean isInstanceofExceptionClass(Throwable e, String exceptionClass) {
+        return ClassLoaderUtil.isPresent(exceptionClass) && ClassLoaderUtil.loadClass(exceptionClass).isAssignableFrom(e.getClass());
     }
 
 }

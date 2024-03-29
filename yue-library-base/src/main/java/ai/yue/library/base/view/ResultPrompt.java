@@ -58,7 +58,7 @@ public class ResultPrompt {
 	 * @return 提示信息
 	 */
 	public static String dataStructure(Object expected, Object actual) {
-		return ResultEnum.DATA_STRUCTURE.getMsg() + " Incorrect result size: expected " + expected + ", actual " + actual;
+		return ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getMsg() + " Incorrect result size: expected " + expected + ", actual " + actual;
 	}
 
 	/**

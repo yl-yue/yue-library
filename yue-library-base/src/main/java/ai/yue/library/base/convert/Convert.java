@@ -26,7 +26,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <b>类型转换器</b>
@@ -314,7 +317,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 				return JSONObject.parseObject((String) value, clazz);
 			}
 
-			return toJSONObject(value).toJavaObject(clazz);
+			return toJSONObject(value).toJavaObject(clazz, JSONReader.Feature.SupportArrayToBean);
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
 				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
@@ -342,7 +345,6 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @param value 被转换的值
 	 * @return JSON对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static JSONObject toJSONObject(Object value) {
 		if (value instanceof JSONObject) {
 			return (JSONObject) value;
@@ -365,7 +367,6 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @param value 被转换的值
 	 * @return JSON数组
 	 */
-    @SuppressWarnings("unchecked")
 	public static JSONArray toJSONArray(Object value) {
         if (value instanceof JSONArray) {
             return (JSONArray) value;

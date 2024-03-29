@@ -3,7 +3,7 @@ package ai.yue.library.test.base.crypto;
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.util.IdUtils;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.test.ipo.UserIPO;
+import ai.yue.library.test.ipo.TableExampleIPO;
 import cn.hutool.core.lang.Console;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
@@ -21,8 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.LocalDate;
 
 /**
  * 密钥交换
@@ -74,11 +72,14 @@ public class KeyExchangeTest {
         exchangeKeyResult3.successValidate();
 
         // 业务接口请求解密测试
-        UserIPO userIPO = new UserIPO();
-        userIPO.setCellphone("18523146311");
-        userIPO.setNickname("123456");
-        userIPO.setBirthday(LocalDate.now());
-        String userIPOToEncryptBase64 = aes.encryptBase64(JSONObject.toJSONString(userIPO));
+        TableExampleIPO tableExampleIPO = new TableExampleIPO();
+//        tableExampleIPO.setFieldOne();
+//
+//        UserIPO userIPO = new UserIPO();
+//        userIPO.setCellphone("18523146311");
+//        userIPO.setNickname("123456");
+//        userIPO.setBirthday(LocalDate.now());
+        String userIPOToEncryptBase64 = aes.encryptBase64(JSONObject.toJSONString(tableExampleIPO));
         System.out.println(userIPOToEncryptBase64);
         MultiValueMap headers = new LinkedMultiValueMap();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -133,11 +134,12 @@ public class KeyExchangeTest {
         exchangeKeyResult3.successValidate();
 
         // 业务接口请求解密测试
-        UserIPO userIPO = new UserIPO();
-        userIPO.setCellphone("18523146311");
-        userIPO.setNickname("123456");
-        userIPO.setBirthday(LocalDate.now());
-        String userIPOToEncryptBase64 = sm4.encryptBase64(JSONObject.toJSONString(userIPO));
+        TableExampleIPO tableExampleIPO = new TableExampleIPO();
+//        UserIPO userIPO = new UserIPO();
+//        userIPO.setCellphone("18523146311");
+//        userIPO.setNickname("123456");
+//        userIPO.setBirthday(LocalDate.now());
+        String userIPOToEncryptBase64 = sm4.encryptBase64(JSONObject.toJSONString(tableExampleIPO));
         Console.log("storageKey={}", storageKey);
         Console.log("storageKeyAlias={}", storageKeyAlias);
         Console.log("exchangeKey={}", exchangeKey);
