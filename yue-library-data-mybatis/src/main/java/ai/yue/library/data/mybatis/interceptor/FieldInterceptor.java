@@ -3,8 +3,6 @@ package ai.yue.library.data.mybatis.interceptor;
 import ai.yue.library.base.util.BeanUtils;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.SpringUtils;
-import ai.yue.library.data.mybatis.config.MybatisProperties;
-import ai.yue.library.data.mybatis.constant.DbConstant;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
@@ -12,10 +10,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.statement.insert.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.executor.Executor;
@@ -26,8 +22,6 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,19 +30,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 逻辑删除拦截器
+ * 字段拦截器
  *
  * @author yl-yue
  * @since 2023/2/20
  */
 @Slf4j
-@Configuration
-@RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-logic-delete", havingValue = "true", matchIfMissing = true)
-public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor implements ApplicationRunner {
+public class FieldInterceptor extends TenantLineInnerInterceptor implements ApplicationRunner {
 
-    Set<String> ignoreTableList;
-    final MybatisProperties mybatisProperties;
+    protected String interceptorName;
+    protected Set<String> ignoreTableList;
+    protected String classField;
+    protected String dbField;
+    protected Expression tenantIdExpression;
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
@@ -69,17 +63,21 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor impl
     }
 
     private boolean isExecute(BoundSql boundSql) {
-        return !StrUtil.containsAny(boundSql.getSql(), "delete_time=0", "delete_time = 0");
+        TenantLineHandler tenantLineHandler = getTenantLineHandler();
+        String tenantIdColumn = tenantLineHandler.getTenantIdColumn();
+        String tenantId = tenantLineHandler.getTenantId().toString();
+        String whereSql1 = StrUtil.format("{}={}", tenantIdColumn, tenantId);
+        String whereSql2 = StrUtil.format("{} = {}", tenantIdColumn, tenantId);
+        return !StrUtil.containsAny(boundSql.getSql(), whereSql1, whereSql2);
     }
 
     /**
      * 扫描所有的Mapper类，查找实体
-     * 忽略没有DbConstant.DB_DELETE_TIME字段的表
+     * 忽略没有dbField字段的表
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // 1. 添加需要忽略的表
-        ignoreTableList = mybatisProperties.getLogicDeleteIgnoreTables();
+        // 1. 处理需要忽略的表
         if (ignoreTableList == null) {
             ignoreTableList = new HashSet<>();
         }
@@ -88,12 +86,12 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor impl
         TenantLineHandler tenantLineHandler = new TenantLineHandler() {
             @Override
             public String getTenantIdColumn() {
-                return DbConstant.DB_DELETE_TIME;
+                return dbField;
             }
 
             @Override
             public Expression getTenantId() {
-                return new LongValue(0L);
+                return tenantIdExpression;
             }
 
             @Override
@@ -114,7 +112,7 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor impl
         mapperBeans.forEach((key, value) -> {
             if (value instanceof BaseMapper) {
                 Class<?> entityClass = ClassUtils.getTypeArgument((Class) ReflectUtil.getFieldValue(ReflectUtil.getFieldValue(value, "h"), "mapperInterface"));
-                boolean existField = BeanUtils.isExistField(entityClass, DbConstant.CLASS_DELETE_TIME);
+                boolean existField = BeanUtils.isExistField(entityClass, classField);
                 if (!existField) {
                     TableName tableName = entityClass.getAnnotation(TableName.class);
                     String ignoreTable = tableName.value();
@@ -127,7 +125,7 @@ public class LogicDeleteInnerInterceptor extends TenantLineInnerInterceptor impl
                 }
             }
         });
-        log.debug("【逻辑删除-初始化配置】忽略没有 {} 字段的表：{}", DbConstant.DB_DELETE_TIME, ignoreTableList);
+        log.debug("【{}-初始化忽略表】忽略没有 {} 字段的表：{}", interceptorName, dbField, ignoreTableList);
     }
 
 }

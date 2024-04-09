@@ -256,6 +256,16 @@ public class Redis {
 	}
 
 	/**
+	 * 添加map值
+	 *
+	 * @param key 不能为空
+	 * @param map 设置的map
+	 */
+	public <K, V> void addMapValue(String key, Map<K, V> map) {
+		getMap(key).putAll(map);
+	}
+
+	/**
 	 * 删除map值
 	 *
 	 * @param key     不能为空

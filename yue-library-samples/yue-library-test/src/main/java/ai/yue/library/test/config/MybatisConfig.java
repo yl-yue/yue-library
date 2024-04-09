@@ -1,8 +1,8 @@
 package ai.yue.library.test.config;
 
-import ai.yue.library.data.mybatis.interceptor.LogicDeleteInnerInterceptor;
+import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.data.mybatis.provider.AuditDataProvider;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import ai.yue.library.web.util.ServletUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -38,7 +38,12 @@ public class MybatisConfig {
 
             @Override
             public String getTenantCo() {
-                return "co";
+                String tenantCo = ServletUtils.getRequest().getHeader("tenantCo");
+                if (StrUtils.isBlank(tenantCo)) {
+                    tenantCo = "co";
+                }
+
+                return tenantCo;
             }
         };
     }

@@ -1,5 +1,6 @@
 package ai.yue.library.test.entity;
 
+import ai.yue.library.data.mybatis.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -20,8 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("data_audit")
-//public class DataAudit extends BaseEntity {
-public class DataAudit {
+public class DataAudit extends BaseEntity {
 
 	private static final long serialVersionUID = 6404495051129680239L;
 

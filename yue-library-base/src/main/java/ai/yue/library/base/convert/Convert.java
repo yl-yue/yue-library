@@ -26,10 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <b>类型转换器</b>
@@ -330,6 +327,22 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	}
 
 	/**
+	 * {@linkplain List}-{@linkplain Object} 转 {@linkplain List}-{@linkplain Class}
+	 *
+	 * @param <T>		泛型
+	 * @param list 		需要转换的List
+	 * @param clazz		类型
+	 * @return			转换后的List
+	 */
+	public static <T> List<T> toJavaBeanList(List<?> list, Class<T> clazz) {
+		List<T> resultList = new ArrayList<>(list.size());
+		for (Object value : list) {
+			resultList.add(toJavaBean(value, clazz));
+		}
+		return resultList;
+	}
+
+	/**
 	 * 转换为 JSONString
 	 *
 	 * @param value 被转换的值
@@ -423,7 +436,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	public static <T> List<T> toList(List<JSONObject> list, Class<T> clazz) {
 		return ListUtils.toList(list, clazz);
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain String}
 	 * 
