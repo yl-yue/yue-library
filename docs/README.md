@@ -1,6 +1,6 @@
 <p align="center">
 	<a target="_blank" href="https://ylyue.cn/">
-		<img src="https://dcloud.ylyue.cn/yue-library/_images/logo.png" width="400">
+		<img src="http://dcloud.ylyue.cn/yue-library/_images/logo.png" width="400">
 	</a>
 </p>
 <p align="center">
@@ -217,8 +217,8 @@ yue-library欢迎你的加入，进行[开源共建](https://ylyue.cn/#/开源�
 
 ## 特别鸣谢
 <a target="_blank" href="https://www.jetbrains.com/?from=yue-library">
-	<img src="https://dcloud.ylyue.cn/yue-library/_images/jetbrains.svg" alt="logo-jetbrains">
+	<img src="http://dcloud.ylyue.cn/yue-library/_images/jetbrains.svg" alt="logo-jetbrains">
 </a>&emsp;&emsp;&emsp;&emsp;&emsp;
 <a target="_blank" href="https://spring.io/tools/?from=yue-library">
-	<img src="https://dcloud.ylyue.cn/yue-library/_images/logo-spring-tools-4.png" alt="logo-spring-tools-4">
+	<img src="http://dcloud.ylyue.cn/yue-library/_images/logo-spring-tools-4.png" alt="logo-spring-tools-4">
 </a>
