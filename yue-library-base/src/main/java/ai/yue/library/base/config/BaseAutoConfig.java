@@ -1,9 +1,9 @@
 package ai.yue.library.base.config;
 
-import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
 import ai.yue.library.base.config.datetime.DateTimeFormatConfig;
 import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
 import ai.yue.library.base.config.net.proxy.NetProxy;
+import ai.yue.library.base.config.properties.ApiVersionProperties;
 import ai.yue.library.base.config.properties.CorsProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
 import ai.yue.library.base.util.I18nUtils;

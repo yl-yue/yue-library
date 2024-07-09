@@ -2,8 +2,21 @@ spring:
   config:
     activate:
       on-profile: yue-library-data-redis
+
   cache:
     type: redis
     redis:
       key-prefix: "Cacheable:"
       time-to-live: 7D # 缓存未使用时，默认7天过期，解决冷数据、赃数据等问题
+
+  # 下述Redisson配置会被识别为文本（即：单个value），会被全覆盖，不能增量配置，因此下面调优配置需要复制到对应服务中才好生效
+#  redis:
+#    redisson:
+#      config: |
+#        masterSlaveServersConfig:
+#          timeout: 30000
+#          idleConnectionTimeout: 60000
+#          masterConnectionPoolSize: 72
+#          slaveConnectionPoolSize: 72
+#        threads: 32
+#        nettyThreads: 64

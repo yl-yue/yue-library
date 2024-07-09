@@ -1,18 +1,17 @@
 package ai.yue.library.webflux.config.api.version;
 
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.reactive.result.condition.RequestCondition;
-import org.springframework.web.server.ServerWebExchange;
-
-import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
+import ai.yue.library.base.annotation.ApiVersion;
+import ai.yue.library.base.config.properties.ApiVersionProperties;
 import ai.yue.library.base.exception.ApiDeprecatedException;
 import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.reactive.result.condition.RequestCondition;
+import org.springframework.web.server.ServerWebExchange;
 
 /**
  * @author	ylyue

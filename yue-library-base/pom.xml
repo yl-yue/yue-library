@@ -58,12 +58,16 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
 		<!-- @Nullable注解，jsr305标准 -->
 		<dependency>
-		    <groupId>com.google.code.findbugs</groupId>
-		    <artifactId>jsr305</artifactId>
-		    <version>${jsr305.version}</version>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>${jsr305.version}</version>
 		</dependency>
 	</dependencies>
 </project>

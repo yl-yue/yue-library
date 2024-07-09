@@ -26,8 +26,6 @@
         <module>yue-library-data-mybatis</module>
         <!-- 增强库-redis模块 -->
         <module>yue-library-data-redis</module>
-        <!-- 增强库-es模块 -->
-        <module>yue-library-data-es</module>
         <!-- 增强库-认证客户端模块 -->
         <module>yue-library-auth-client</module>
         <!-- 增强库-认证服务模块 -->
@@ -36,7 +34,7 @@
 
     <properties>
         <!-- yue.version -->
-        <revision>j${java.version}.2.6.3</revision>
+        <revision>j${java.version}.2.6.4</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <spring-boot.version>2.6.15</spring-boot.version>
@@ -49,33 +47,38 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- yue-library.version -->
-        <yue-library-base.version>j${java.version}.2.6.3</yue-library-base.version>
-        <yue-library-base-crypto.version>j${java.version}.2.6.1</yue-library-base-crypto.version>
-        <yue-library-web.version>j${java.version}.2.6.3</yue-library-web.version>
-        <yue-library-webflux.version>j${java.version}.2.6.1</yue-library-webflux.version>
-        <yue-library-data-mybatis.version>j${java.version}.2.6.3</yue-library-data-mybatis.version>
-        <yue-library-data-redis.version>j${java.version}.2.6.3</yue-library-data-redis.version>
-        <yue-library-data-es.version>j${java.version}.2.6.2</yue-library-data-es.version>
-        <yue-library-auth-client.version>j${java.version}.2.6.1</yue-library-auth-client.version>
-        <yue-library-auth-service.version>j${java.version}.2.6.1</yue-library-auth-service.version>
+        <yue-library-base.version>j${java.version}.2.6.4</yue-library-base.version>
+        <yue-library-base-crypto.version>j${java.version}.2.6.4</yue-library-base-crypto.version>
+        <yue-library-web.version>j${java.version}.2.6.4</yue-library-web.version>
+        <yue-library-webflux.version>j${java.version}.2.6.4</yue-library-webflux.version>
+        <yue-library-data-mybatis.version>j${java.version}.2.6.4</yue-library-data-mybatis.version>
+        <yue-library-data-redis.version>j${java.version}.2.6.4</yue-library-data-redis.version>
+        <yue-library-auth-client.version>j${java.version}.2.6.4</yue-library-auth-client.version>
+        <yue-library-auth-service.version>j${java.version}.2.6.4</yue-library-auth-service.version>
 
         <!-- dependencies.version -->
         <hutool.version>5.8.26</hutool.version>
         <bouncycastle.version>1.77</bouncycastle.version>
+        <guava.version>33.1.0-jre</guava.version>
         <fastjson.version>2.0.47</fastjson.version>
         <redisson.version>3.26.1</redisson.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mybatis-pagehelper.version>2.0.0</mybatis-pagehelper.version>
         <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
         <druid-spring-boot-starter.version>1.2.22</druid-spring-boot-starter.version>
-        <plumelog.version>3.5.2</plumelog.version>
+        <plumelog.version>3.5.3</plumelog.version>
         <forest.version>1.5.36</forest.version>
         <easyexcel.version>3.3.4</easyexcel.version>
         <poi.version>5.2.5</poi.version>
+        <sa-token.version>1.35.0.RC</sa-token.version>
+        <es.version>7.10.2</es.version>
+        <es-rest-high-level-client.version>7.10.2</es-rest-high-level-client.version>
+        <easy-es.version>2.0.0</easy-es.version>
 
         <!-- plugins.version -->
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
@@ -132,11 +135,6 @@
             </dependency>
             <dependency>
                 <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-data-es</artifactId>
-                <version>${yue-library-data-es.version}${sha1}${changelist}</version>
-            </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-auth-client</artifactId>
                 <version>${yue-library-auth-client.version}${sha1}${changelist}</version>
             </dependency>
@@ -147,11 +145,6 @@
             </dependency>
 
             <!-- hutool工具包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-aop</artifactId>
@@ -197,6 +190,11 @@
                 <artifactId>hutool-poi</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
 
             <!-- alibaba工具包 -->
             <dependency>
@@ -205,14 +203,9 @@
                 <version>${fastjson.version}</version>
             </dependency>
             <dependency>
-			    <groupId>com.alibaba.fastjson2</groupId>
-			    <artifactId>fastjson2-extension-spring5</artifactId>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2-extension-spring5</artifactId>
                 <version>${fastjson.version}</version>
-		    </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid-spring-boot-starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -249,18 +242,23 @@
                 <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
                 <version>${dynamic-datasource.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
 
             <!-- redisson -->
             <dependency>
-				<groupId>org.redisson</groupId>
-				<artifactId>redisson</artifactId>
-				<version>${redisson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.redisson</groupId>
-				<artifactId>redisson-spring-data-27</artifactId>
-				<version>${redisson.version}</version>
-			</dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-data-27</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
 
             <!-- poi -->
             <dependency>
@@ -276,7 +274,7 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml-schemas</artifactId>
-                <version>${poi.version}</version>
+                <version>4.1.2</version>
             </dependency>
 
             <!-- 其他 -->
@@ -284,6 +282,31 @@
                 <groupId>com.dtflys.forest</groupId>
                 <artifactId>forest-spring-boot-starter</artifactId>
                 <version>${forest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${es.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${es-rest-high-level-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.easy-es</groupId>
+                <artifactId>easy-es-boot-starter</artifactId>
+                <version>${easy-es.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,22 +1,24 @@
-package ai.yue.library.webflux.config;
+package ai.yue.library.web.config;
 
 import ai.yue.library.base.config.properties.ApiVersionProperties;
-import ai.yue.library.webflux.config.api.version.ApiVersionRequestMappingHandlerMapping;
+import ai.yue.library.web.config.api.version.ApiVersionRequestMappingHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.reactive.WebFluxRegistrations;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
+ * WebMvcRegistrations
+ *
  * @author	ylyue
  * @since	2020年2月27日
  */
 @Slf4j
 @Configuration
 @EnableConfigurationProperties(ApiVersionProperties.class)
-public class WebFluxRegistrationsConfig implements WebFluxRegistrations {
+public class WebMvcHandlerRegistrations implements WebMvcRegistrations {
 
 	@Autowired
 	private ApiVersionProperties apiVersionProperties;
@@ -24,7 +26,7 @@ public class WebFluxRegistrationsConfig implements WebFluxRegistrations {
 	@Override
 	public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
 		if (!apiVersionProperties.isEnabled()) {
-			return WebFluxRegistrations.super.getRequestMappingHandlerMapping();
+			return WebMvcRegistrations.super.getRequestMappingHandlerMapping();
 		}
 		
 		log.info("【初始化配置-ApiVersionRequestMappingHandlerMapping】默认配置为true，当前环境为true：RESTful API接口版本控制，执行初始化 ...");

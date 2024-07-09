@@ -44,7 +44,7 @@ public class ResultExceptionHandler extends AbstractExceptionHandler {
 	@ResponseBody
     @ExceptionHandler(ResultException.class)
 	public synchronized Result<?> resultExceptionHandler(ResultException e) {
-		var result = e.getResult();
+		Result result = e.getResult();
 		log.error(result.toString());
     	ExceptionUtils.printException(e);
     	return result;

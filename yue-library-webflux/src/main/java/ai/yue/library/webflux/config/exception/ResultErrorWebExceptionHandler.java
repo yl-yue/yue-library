@@ -2,7 +2,7 @@ package ai.yue.library.webflux.config.exception;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import cn.hutool.core.lang.Console;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
@@ -24,10 +24,11 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  * @author	ylyue
  * @since	2020年9月16日
  */
+@Slf4j
 public class ResultErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
 
 	public ResultErrorWebExceptionHandler(ErrorAttributes errorAttributes, WebProperties.Resources resources,
-			ErrorProperties errorProperties, ApplicationContext applicationContext) {
+										  ErrorProperties errorProperties, ApplicationContext applicationContext) {
 		super(errorAttributes, resources, errorProperties, applicationContext);
 	}
 	
@@ -38,10 +39,15 @@ public class ResultErrorWebExceptionHandler extends DefaultErrorWebExceptionHand
 	
 	@Override
 	protected Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
-		Console.error("path={}", request.path());
-		Throwable e = getError(request);
-		Result<?> result = R.getResult(e);
-		return ServerResponse.status(result.getCode()).contentType(MediaType.APPLICATION_JSON).bodyValue(result);
+		Throwable error = getError(request);
+		Result<?> result = R.getResult(error);
+		if (error != null) {
+			log.debug("【异常响应控制器】拦截到异常类型：{}，异常信息：{}，处理后响应内容：{}", error.getClass().getName(), error.getMessage(), result);
+		} else {
+			log.debug("【异常响应控制器】拦截到异常类型：{}，异常信息：{}，处理后响应内容：{}", 404, result.getMsg(), result);
+		}
+
+		return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(result);
 	}
     
 }

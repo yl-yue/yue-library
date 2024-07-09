@@ -2,22 +2,38 @@ spring:
   config:
     activate:
       on-profile: yue-library-data-mybatis
+
+  autoconfigure:
+    exclude:
+      - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+
   datasource:
-    druid:
-      keep-alive: true
-      filter:
-        slf4j:
-          enabled: true
-          statement-executable-sql-log-enable: true
-          statement-execute-query-after-log-enabled: false
-          statement-execute-after-log-enabled: false
-          statement-create-after-log-enabled: false
-          statement-close-after-log-enabled: false
-          statement-parameter-set-log-enabled: false
-          statement-prepare-after-log-enabled: false
     dynamic:
       druid:
-        keep-alive: true
+        ### 连接池 ###
+        async-init: true                          # 异步初始化，加快服务启动时间，默认：false
+        initial-size: 5                           # 初始化连接数，默认：0
+        min-idle: 5                               # 最小空闲连接数，默认：0
+        max-active: 300                           # 最大活跃连接数，默认：8
+        max-wait: 8000                            # 获取连接最大等待时间，默认：-1L
+
+        ### 连接保活 ###
+        keep-alive: true                          # 最小空闲(minIdle)连接保活，超过minEvictableIdleTimeMillis时执行保活操作，默认：false
+        test-while-idle: true                     # 是否在空闲时测试连接的有效性，testOnBorrow=true此配置将无效，默认：true
+        test-on-borrow: false                     # 在从连接池获取连接时测试连接的有效性，影响性能，默认：false
+        test-on-return: false                     # 在连接返回连接池时测试连接的有效性，影响性能，默认：false
+        validation-query: SELECT 1                # 检测连接是否有效的查询sql，默认：null
+        validation-query-timeout: 3               # 检测连接是否有效的查询超时时间，单位：秒，默认：-1
+        time-between-eviction-runs-millis: 90000  # 需要关闭的空闲连接检测时间，默认：60000L
+        min-evictable-idle-time-millis: 900000    # 连接保持空闲而不被驱逐的最小时间，默认：1800000L
+        max-evictable-idle-time-millis: 1800000   # 连接保持空闲而不被驱逐的最大时间，默认：25200000L
+
+        ### jdbc 连接参数设置 timeout 不生效时，采用 druid 显式声明 ###
+        #        connect-timeout: 10000      # 临时兼容，设置创建连接（创建）超时，单位毫秒
+        #        socket-timeout: 300000      # 临时兼容，设置执行响应（假死）超时，单位毫秒
+        #        query-timeout: 300          # 临时兼容，设置查询执行（慢查）超时，单位秒
+
+        ### 打印可执行SQL ###
         slf4j:
           enable: true
           statement-executable-sql-log-enable: true
@@ -28,6 +44,7 @@ spring:
           statement-parameter-set-log-enabled: false
           statement-prepare-after-log-enabled: false
         filters: slf4j
+
 logging:
   level:
     # 默认执行SQL打印

@@ -52,6 +52,10 @@ public class R {
         return Result.builder().code(code).msg(msg).flag(false).build();
     }
 
+    private static Result<?> error(Integer code, ResultEnum resultEnum) {
+        return Result.builder().code(code).msg(I18nUtils.getYue(resultEnum)).flag(false).build();
+    }
+
     /**
      * 失败后调用
      *
@@ -63,6 +67,10 @@ public class R {
      */
     private static <T> Result<T> error(Integer code, String msg, T data) {
         return new Result<T>().toBuilder().code(code).msg(msg).flag(false).data(data).build();
+    }
+
+    private static <T> Result<T> error(Integer code, ResultEnum resultEnum, T data) {
+        return new Result<T>().toBuilder().code(code).msg(I18nUtils.getYue(resultEnum)).flag(false).data(data).build();
     }
 
     // ------ Result success builder ------
@@ -80,6 +88,14 @@ public class R {
                 .build();
     }
 
+    private static Result<?> success(Integer code, ResultEnum resultEnum) {
+        return Result.builder()
+                .code(code)
+                .msg(I18nUtils.getYue(resultEnum))
+                .flag(true)
+                .build();
+    }
+
     // 200 - 正确结果
 
     /**
@@ -88,7 +104,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> success() {
-        return success(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+        return success(ResultEnum.SUCCESS.getCode(), I18nUtils.getYue(ResultEnum.SUCCESS));
     }
 
     /**
@@ -101,7 +117,7 @@ public class R {
     public static <T> Result<T> success(T data) {
         return new Result<T>().toBuilder()
                 .code(ResultEnum.SUCCESS.getCode())
-                .msg(ResultEnum.SUCCESS.getMsg())
+                .msg(I18nUtils.getYue(ResultEnum.SUCCESS))
                 .flag(true)
                 .data(data)
                 .build();
@@ -113,7 +129,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> loggedIn() {
-        return success(ResultEnum.LOGGED_IN.getCode(), ResultEnum.LOGGED_IN.getMsg());
+        return success(ResultEnum.LOGGED_IN.getCode(), ResultEnum.LOGGED_IN);
     }
 
     // 300 - 资源、重定向、定位等提示
@@ -124,7 +140,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> resourceAlreadyInvalid() {
-        return error(ResultEnum.RESOURCE_ALREADY_INVALID.getCode(), ResultEnum.RESOURCE_ALREADY_INVALID.getMsg());
+        return error(ResultEnum.RESOURCE_ALREADY_INVALID.getCode(), ResultEnum.RESOURCE_ALREADY_INVALID);
     }
 
     /**
@@ -133,7 +149,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> movedPermanently() {
-        return error(ResultEnum.MOVED_PERMANENTLY.getCode(), ResultEnum.MOVED_PERMANENTLY.getMsg());
+        return error(ResultEnum.MOVED_PERMANENTLY.getCode(), ResultEnum.MOVED_PERMANENTLY);
     }
 
     /**
@@ -142,7 +158,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> fileEmpty() {
-        return error(ResultEnum.FILE_EMPTY.getCode(), ResultEnum.FILE_EMPTY.getMsg());
+        return error(ResultEnum.FILE_EMPTY.getCode(), ResultEnum.FILE_EMPTY);
     }
 
     // 400 - 客户端错误
@@ -153,7 +169,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> unauthorized() {
-        return error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED.getMsg());
+        return error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED);
     }
 
     /**
@@ -162,7 +178,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> attack() {
-        return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg());
+        return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK);
     }
 
     /**
@@ -173,7 +189,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> attack(T data) {
-        return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK.getMsg(), data);
+        return error(ResultEnum.ATTACK.getCode(), ResultEnum.ATTACK, data);
     }
 
     /**
@@ -182,7 +198,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> forbidden() {
-        return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN.getMsg());
+        return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN);
     }
 
     /**
@@ -191,7 +207,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> notFound() {
-        return error(ResultEnum.NOT_FOUND.getCode(), ResultEnum.NOT_FOUND.getMsg());
+        return error(ResultEnum.NOT_FOUND.getCode(), ResultEnum.NOT_FOUND);
     }
 
     /**
@@ -202,7 +218,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> methodNotAllowed(T data) {
-        return error(ResultEnum.METHOD_NOT_ALLOWED.getCode(), ResultEnum.METHOD_NOT_ALLOWED.getMsg(), data);
+        return error(ResultEnum.METHOD_NOT_ALLOWED.getCode(), ResultEnum.METHOD_NOT_ALLOWED, data);
     }
 
     /**
@@ -211,7 +227,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> gone() {
-        return error(ResultEnum.GONE.getCode(), ResultEnum.GONE.getMsg());
+        return error(ResultEnum.GONE.getCode(), ResultEnum.GONE);
     }
 
     /**
@@ -220,7 +236,14 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> tooManyRequests() {
-        return error(ResultEnum.TOO_MANY_REQUESTS.getCode(), ResultEnum.TOO_MANY_REQUESTS.getMsg());
+        return error(ResultEnum.TOO_MANY_REQUESTS.getCode(), ResultEnum.TOO_MANY_REQUESTS);
+    }
+
+    /**
+     * qps限流-429
+     */
+    public static Result<?> qpsLimit(String msg) {
+        return error(ResultEnum.TOO_MANY_REQUESTS.getCode(), ResultEnum.TOO_MANY_REQUESTS, msg);
     }
 
     /**
@@ -229,7 +252,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> paramVoid() {
-        return error(ResultEnum.PARAM_VOID.getCode(), ResultEnum.PARAM_VOID.getMsg());
+        return error(ResultEnum.PARAM_VOID.getCode(), ResultEnum.PARAM_VOID);
     }
 
     /**
@@ -238,7 +261,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> paramCheckNotPass() {
-        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg());
+        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS);
     }
 
     /**
@@ -248,7 +271,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> paramCheckNotPass(T data) {
-        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
+        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS, data);
     }
 
     /**
@@ -257,7 +280,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> paramValueInvalid() {
-        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg());
+        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID);
     }
 
     /**
@@ -266,28 +289,28 @@ public class R {
      * @param data {@link Result#setData(Object)} 提示信息
      */
     public static <T> Result<T> paramValueInvalid(T data) {
-        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
+        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID, data);
     }
 
     /**
      * 参数解密错误-435
      */
     public static Result<?> paramDecryptError() {
-        return error(ResultEnum.PARAM_DECRYPT_ERROR.getCode(), ResultEnum.PARAM_DECRYPT_ERROR.getMsg());
+        return error(ResultEnum.PARAM_DECRYPT_ERROR.getCode(), ResultEnum.PARAM_DECRYPT_ERROR);
     }
 
     /**
      * 请勿重复操作-436（幂等错误）
      */
     public static <T> Result<T> idempotent(T data) {
-        return error(ResultEnum.IDEMPOTENT.getCode(), ResultEnum.IDEMPOTENT.getMsg(), data);
+        return error(ResultEnum.IDEMPOTENT.getCode(), ResultEnum.IDEMPOTENT, data);
     }
 
     /**
      * 锁争抢失败-437（分布式锁错误）
      */
     public static <T> Result<T> lockAcquireFailure(T data) {
-        return error(ResultEnum.LOCK_ACQUIRE_FAILURE.getCode(), ResultEnum.LOCK_ACQUIRE_FAILURE.getMsg(), data);
+        return error(ResultEnum.LOCK_ACQUIRE_FAILURE.getCode(), ResultEnum.LOCK_ACQUIRE_FAILURE, data);
     }
 
     // 500 - 服务器错误
@@ -298,7 +321,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> internalServerError() {
-        return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR.getMsg());
+        return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -309,7 +332,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> internalServerError(T data) {
-        return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR.getMsg(), data);
+        return error(ResultEnum.INTERNAL_SERVER_ERROR.getCode(), ResultEnum.INTERNAL_SERVER_ERROR, data);
     }
 
     /**
@@ -318,7 +341,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> requestError() {
-        return error(ResultEnum.REQUEST_ERROR.getCode(), ResultEnum.REQUEST_ERROR.getMsg());
+        return error(ResultEnum.REQUEST_ERROR.getCode(), ResultEnum.REQUEST_ERROR);
     }
 
     /**
@@ -329,7 +352,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> requestError(T data) {
-        return error(ResultEnum.REQUEST_ERROR.getCode(), ResultEnum.REQUEST_ERROR.getMsg(), data);
+        return error(ResultEnum.REQUEST_ERROR.getCode(), ResultEnum.REQUEST_ERROR, data);
     }
 
     /**
@@ -339,7 +362,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> serviceUnavailable() {
-        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg());
+        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE);
     }
 
     /**
@@ -349,7 +372,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> serviceUnavailable(LocalDateTime restoreTime) {
-        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg(), ResultPrompt.serviceUnavailable(restoreTime));
+        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE, ResultPrompt.serviceUnavailable(restoreTime));
     }
 
     /**
@@ -361,7 +384,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> serviceUnavailable(T data) {
-        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMsg(), data);
+        return error(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE, data);
     }
 
     /**
@@ -370,7 +393,7 @@ public class R {
      * @param data {@link Result#setData(Object)} 提示信息
      */
     public static <T> Result<T> sqlDataIntegrityViolation(@Nullable T data) {
-        return error(ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getCode(), ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getMsg(), data);
+        return error(ResultEnum.SQL_DATA_INTEGRITY_VIOLATION.getCode(), ResultEnum.SQL_DATA_INTEGRITY_VIOLATION, data);
     }
 
     /**
@@ -379,7 +402,7 @@ public class R {
      * @param data {@link Result#setData(Object)} 提示信息
      */
     public static <T> Result<T> sqlError(T data) {
-        return error(ResultEnum.SQL_ERROR.getCode(), ResultEnum.SQL_ERROR.getMsg(), data);
+        return error(ResultEnum.SQL_ERROR.getCode(), ResultEnum.SQL_ERROR, data);
     }
 
     /**
@@ -388,7 +411,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> clientFallback() {
-        return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg());
+        return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK);
     }
 
     /**
@@ -398,7 +421,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> clientFallback(T data) {
-        return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK.getMsg(), data);
+        return error(ResultEnum.CLIENT_FALLBACK.getCode(), ResultEnum.CLIENT_FALLBACK, data);
     }
 
     /**
@@ -407,7 +430,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static Result<?> clientFallbackError() {
-        return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg());
+        return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR);
     }
 
     /**
@@ -417,7 +440,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> clientFallbackError(T data) {
-        return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR.getMsg(), data);
+        return error(ResultEnum.CLIENT_FALLBACK_ERROR.getCode(), ResultEnum.CLIENT_FALLBACK_ERROR, data);
     }
 
     /**
@@ -427,7 +450,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> typeConvertError(T data) {
-        return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR.getMsg(), data);
+        return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR, data);
     }
 
     /**
@@ -437,7 +460,7 @@ public class R {
      * @return HTTP请求，最外层响应对象
      */
     public static <T> Result<T> lockError(T data) {
-        return error(ResultEnum.LOCK_ERROR.getCode(), ResultEnum.LOCK_ERROR.getMsg(), data);
+        return error(ResultEnum.LOCK_ERROR.getCode(), ResultEnum.LOCK_ERROR, data);
     }
 
     // 600 - 自定义错误提示
@@ -492,7 +515,7 @@ public class R {
      * @param values messages.properties中占位符被替换的值
      * @return HTTP请求，最外层响应对象
      */
-    public static Result<?> errorPromptI18n(String msgKey, Object... values) {
+    public static Result<?> errorPromptI18n(String msgKey, @Nullable Object... values) {
         return errorPrompt(I18nUtils.get(msgKey, values));
     }
 
@@ -500,12 +523,13 @@ public class R {
      * <b>错误提示-600</b>
      * <p>适用于i18n资源包定义（messages.properties），遵循SpringBoot默认值规范</p>
      *
-     * @param msgKey messages.properties中定义的key
+     * @param msgKey messages.properties中定义的key，被替换的部分用 {} 表示
+     * @param values messages.properties中占位符被替换的值
      * @param data   业务处理数据
      * @return HTTP请求，最外层响应对象
      */
-    public static <T> Result<T> errorPromptI18nT(String msgKey, T data) {
-        return errorPrompt(I18nUtils.get(msgKey), data);
+    public static <T> Result<T> errorPromptI18nT(String msgKey, @Nullable T data, @Nullable Object... values) {
+        return errorPrompt(I18nUtils.get(msgKey, values), data);
     }
 
     /**
@@ -514,7 +538,7 @@ public class R {
      *
      * @param resultCode 请使用枚举实现自定义的{@link ResultCode}
      */
-    public static Result<?> errorPrompt(ResultCode resultCode) {
+    public static Result<?> errorPromptCode(ResultCode resultCode) {
         return error(resultCode.getCode(), resultCode.getMsg());
     }
 
@@ -523,9 +547,10 @@ public class R {
      * <p>适用于i18n资源包定义（messages.properties），遵循SpringBoot默认值规范</p>
      *
      * @param resultCode 请使用枚举实现自定义的{@link ResultCode}
+     * @param values     messages.properties中 {} 占位符被替换的值
      */
-    public static Result<?> errorPromptI18n(ResultCode resultCode) {
-        return error(resultCode.getCode(), I18nUtils.get(resultCode.getMsg()));
+    public static Result<?> errorPromptCodeI18n(ResultCode resultCode, @Nullable Object... values) {
+        return error(resultCode.getCode(), I18nUtils.get(resultCode.getMsg(), values));
     }
 
     // ------ Result exception builder ------
@@ -604,7 +629,7 @@ public class R {
             int code = httpStatus.value();
             ResultEnum resultEnum = ResultEnum.valueOf(code);
             if (resultEnum != null) {
-                return error(resultEnum.getCode(), resultEnum.getMsg(), e.toString());
+                return error(resultEnum.getCode(), resultEnum, e.toString());
             }
         } else if (isInstanceofExceptionClass(e, FeignException)) {
             log.error("【服务降级】接口调用失败，FeignException 错误内容如下：", e);

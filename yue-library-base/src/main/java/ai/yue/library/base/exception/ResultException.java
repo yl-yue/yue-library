@@ -2,6 +2,7 @@ package ai.yue.library.base.exception;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,6 +32,19 @@ public class ResultException extends RuntimeException {
 	public ResultException(String msg) {
 		super(msg);
 		this.result = R.errorPrompt(msg);
+	}
+
+	/**
+	 * <b>异常消息格式化构造</b>
+	 * <p>{@linkplain R#errorPromptFormat(String, Object...)} 的便捷方式
+	 * <p>msg支持文本模板格式化，{} 表示占位符
+	 * <pre class="code">例：("this is {} for {}", "a", "b") = this is a for b</pre>
+	 *
+	 * @param msg    文本模板，被替换的部分用 {} 表示
+	 * @param values 文本模板中占位符被替换的值
+	 */
+	public ResultException(String msg, Object... values) {
+		this(StrUtil.format(msg, values));
 	}
 
 	public ResultException(Result<?> result) {

@@ -64,6 +64,10 @@ public class FieldInterceptor extends TenantLineInnerInterceptor implements Appl
 
     private boolean isExecute(BoundSql boundSql) {
         TenantLineHandler tenantLineHandler = getTenantLineHandler();
+        if (tenantLineHandler == null) {
+            return false;
+        }
+
         String tenantIdColumn = tenantLineHandler.getTenantIdColumn();
         String tenantId = tenantLineHandler.getTenantId().toString();
         String whereSql1 = StrUtil.format("{}={}", tenantIdColumn, tenantId);
@@ -109,22 +113,42 @@ public class FieldInterceptor extends TenantLineInnerInterceptor implements Appl
 
         // 3. 扫描需要忽略的表
         Map<String, Object> mapperBeans = SpringUtils.getApplicationContext().getBeansWithAnnotation(Mapper.class);
-        mapperBeans.forEach((key, value) -> {
+        for (Object value : mapperBeans.values()) {
             if (value instanceof BaseMapper) {
+                // 获得 Mapper 对应的 entity
                 Class<?> entityClass = ClassUtils.getTypeArgument((Class) ReflectUtil.getFieldValue(ReflectUtil.getFieldValue(value, "h"), "mapperInterface"));
+                if (entityClass == null) {
+                    try {
+                        entityClass = ClassUtils.getTypeArgument(((Class[]) ReflectUtil.getFieldValue(ReflectUtil.getFieldValue(value, "h"), "proxiedInterfaces"))[0]);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }
+                if (entityClass == null) {
+                    continue;
+                }
+
+                // 跳过存在 dbField 字段的 entity
                 boolean existField = BeanUtils.isExistField(entityClass, classField);
-                if (!existField) {
-                    TableName tableName = entityClass.getAnnotation(TableName.class);
+                if (existField) {
+                    continue;
+                }
+
+                // 添加不存在 dbField 字段的 entity 到 ignoreTableList
+                TableName tableName = entityClass.getAnnotation(TableName.class);
+                String simpleName = entityClass.getSimpleName();
+                if (tableName != null) {
                     String ignoreTable = tableName.value();
                     if (StrUtil.isNotBlank(ignoreTable)) {
                         ignoreTableList.add(ignoreTable);
-                    } else {
-                        ignoreTableList.add(entityClass.getSimpleName());
-                        ignoreTableList.add(PropertyNamingStrategy.SnakeCase.fieldName(entityClass.getSimpleName()));
+                        continue;
                     }
                 }
+                ignoreTableList.add(simpleName);
+                ignoreTableList.add(PropertyNamingStrategy.SnakeCase.fieldName(simpleName));
             }
-        });
+        }
+
         log.debug("【{}-初始化忽略表】忽略没有 {} 字段的表：{}", interceptorName, dbField, ignoreTableList);
     }
 

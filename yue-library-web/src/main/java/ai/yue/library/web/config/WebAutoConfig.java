@@ -35,7 +35,7 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@Import({WebMvcConfig.class, WebMvcRegistrationsConfig.class, CustomArgumentResolversConfig.class, WebMvcEnv.class})
+@Import({WebMvcConfig.class, WebMvcHandlerRegistrations.class, CustomArgumentResolversConfig.class, WebMvcEnv.class})
 @EnableConfigurationProperties({WebProperties.class, JacksonHttpMessageConverterProperties.class, FastJsonHttpMessageConverterProperties.class})
 public class WebAutoConfig {
 	
@@ -77,7 +77,7 @@ public class WebAutoConfig {
 	 * 配置输入流可反复读取的HttpServletRequest
 	 */
 	@Bean
-	@ConditionalOnProperty(prefix = "yue.web", name = "enabled-repeatedly-read-servlet-request", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "yue.web", name = "enable-repeatedly-read-servlet-request", havingValue = "true", matchIfMissing = true)
 	public FilterRegistrationBean<RepeatedlyReadServletRequestFilter> registerRepeatedlyReadRequestFilter() {
 		FilterRegistrationBean<RepeatedlyReadServletRequestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 		// 设置比常规过滤器更高的优先级，防止输入流被更早读取

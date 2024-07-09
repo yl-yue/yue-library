@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-tenant-co", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-tenant-co", havingValue = "true")
 public class TenantCoInterceptor extends FieldInterceptor {
 
     public TenantCoInterceptor(MybatisProperties mybatisProperties) {

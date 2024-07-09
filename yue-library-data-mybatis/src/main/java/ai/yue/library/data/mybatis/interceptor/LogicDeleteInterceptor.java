@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2023/2/20
  */
 @Configuration
-@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-logic-delete", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-logic-delete", havingValue = "true")
 public class LogicDeleteInterceptor extends FieldInterceptor {
 
     public LogicDeleteInterceptor(MybatisProperties mybatisProperties) {

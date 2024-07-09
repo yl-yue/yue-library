@@ -1,19 +1,18 @@
 package ai.yue.library.webflux.config.api.version;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
-
+import ai.yue.library.base.annotation.ApiVersion;
+import ai.yue.library.base.config.properties.ApiVersionProperties;
+import ai.yue.library.base.util.StrUtils;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.result.condition.RequestCondition;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 
-import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
-import ai.yue.library.base.util.StrUtils;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
-import lombok.AllArgsConstructor;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * @author	ylyue

@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 @ConditionalOnMissingBean(MetaObjectHandler.class)
-@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-data-audit", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-data-audit", havingValue = "true")
 public class AuditDataFill implements MetaObjectHandler {
 
     @Override

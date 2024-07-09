@@ -6,11 +6,14 @@ import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
-import ai.yue.library.web.config.idempotent.IdempotentInterceptorRegistry;
+import ai.yue.library.web.config.idempotent.IdempotentInterceptor;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
+import ai.yue.library.web.config.properties.WebProperties;
+import ai.yue.library.web.config.qps.limit.QpsLimitInterceptor;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
@@ -25,10 +28,9 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -50,15 +52,12 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-@Import(IdempotentInterceptorRegistry.class)
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
-	
-	@Autowired
-	FastJsonHttpMessageConverterProperties fastJsonProperties;
-	@Autowired
-	JacksonHttpMessageConverterProperties jacksonProperties;
-	@Autowired(required = false)
-	IdempotentInterceptorRegistry idempotentInterceptorRegistry;
+
+	final WebProperties webProperties;
+	final FastJsonHttpMessageConverterProperties fastJsonProperties;
+	final JacksonHttpMessageConverterProperties jacksonProperties;
 
 	/**
 	 * 扩展HTTP消息转换器做Json解析处理
@@ -70,7 +69,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			// https://github.com/alibaba/fastjson2/blob/main/docs/spring_support_cn.md
 			fastJsonHttpMessageConverterConfig(converters);
 		} else if (jacksonProperties.isEnabled()) {
-			// 启用yue-library对Jackson进行增强配置
+			// 启用bl对Jackson进行增强配置
 			MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = ListUtils.get(converters, MappingJackson2HttpMessageConverter.class);
 			mappingJackson2HttpMessageConverterConfig(mappingJackson2HttpMessageConverter);
 		}
@@ -228,13 +227,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	}
 
 	/**
-	 * 添加自定义拦截器
+	 * 注册接口拦截器
+	 * - 幂等
+	 * - 限流
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		// 添加幂等性拦截器
-		if (idempotentInterceptorRegistry != null) {
-			idempotentInterceptorRegistry.registry(registry);
+		if (webProperties.isEnableApiIdempotent()) {
+			if (ClassLoaderUtil.isPresent("ai.yue.library.data.redis.client.Redis")) {
+				registry.addInterceptor(new IdempotentInterceptor(webProperties));
+			}
+		}
+
+		if (webProperties.isEnableApiQpsLimit()) {
+			registry.addInterceptor(new QpsLimitInterceptor(webProperties));
 		}
 	}
 

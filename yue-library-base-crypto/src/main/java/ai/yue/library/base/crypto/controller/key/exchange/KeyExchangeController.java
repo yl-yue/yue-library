@@ -1,6 +1,6 @@
 package ai.yue.library.base.crypto.controller.key.exchange;
 
-import ai.yue.library.base.annotation.api.version.ApiVersion;
+import ai.yue.library.base.annotation.ApiVersion;
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.crypto.dao.key.exchange.KeyExchangeStorage;
 import ai.yue.library.base.util.IdUtils;

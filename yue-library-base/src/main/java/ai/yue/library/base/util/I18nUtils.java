@@ -1,5 +1,6 @@
 package ai.yue.library.base.util;
 
+import ai.yue.library.base.view.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -55,7 +56,7 @@ public class I18nUtils {
 	}
 
 	/**
-	 * 获取yue-library内置的单个国际化翻译值
+	 * 获取bl内置的单个国际化翻译值
 	 */
 	public static String getYue(String msgKey) {
 		try {
@@ -69,7 +70,21 @@ public class I18nUtils {
 	}
 
 	/**
-	 * 获取yue-library内置的单个国际化翻译值
+	 * 获取bl内置的单个国际化翻译值
+	 */
+	public static String getYue(ResultEnum resultEnum) {
+		try {
+			return messageSourceYue.getMessage(resultEnum.getMsg(), null, LocaleContextHolder.getLocale());
+		} catch (Exception e) {
+//			if (log.isDebugEnabled()) {
+//				e.printStackTrace();
+//			}
+			return resultEnum.getMsg();
+		}
+	}
+
+	/**
+	 * 获取bl内置的单个国际化翻译值
 	 */
 	public static String getYueDefault(String msgKey) {
 		try {

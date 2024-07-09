@@ -59,10 +59,12 @@ public class Result<T> implements Serializable {
 	 * 
 	 * @throws ResultException 返回的请求异常结果
 	 */
-	public void successValidate() {
+	public Result<T> successValidate() {
 		if (!flag) {
 			throw new ResultException(this);
 		}
+
+		return this;
 	}
 	
 	// -------- getData --------

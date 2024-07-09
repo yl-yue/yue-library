@@ -1,9 +1,8 @@
 package ai.yue.library.webflux.config;
 
+import ai.yue.library.webflux.env.WebFluxEnv;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import ai.yue.library.webflux.env.WebFluxEnv;
 
 /**
  * webflux bean 自动配置

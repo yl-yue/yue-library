@@ -1,7 +1,7 @@
 package ai.yue.library.web.config.api.version;
 
-import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.base.annotation.api.version.ApiVersionProperties;
+import ai.yue.library.base.annotation.ApiVersion;
+import ai.yue.library.base.config.properties.ApiVersionProperties;
 import ai.yue.library.base.exception.ApiDeprecatedException;
 import ai.yue.library.base.util.StrUtils;
 import cn.hutool.core.util.NumberUtil;

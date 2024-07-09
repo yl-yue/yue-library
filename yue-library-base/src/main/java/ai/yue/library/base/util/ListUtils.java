@@ -11,6 +11,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * List工具类
@@ -60,16 +61,17 @@ public class ListUtils extends ListUtil {
 	/**
 	 * 数据分组
 	 * <p>将拥有相同的 key 值的JSON数据归为一组</p>
+	 *
 	 * @param list	要处理的集合
-	 * @param key	分组依据
+	 * @param groupingKey 分组依据
 	 * @return 分组后的list
 	 */
-	public static List<List<JSONObject>> grouping(List<JSONObject> list, String key) {
+	public static List<List<JSONObject>> grouping(List<JSONObject> list, String groupingKey) {
 		List<List<JSONObject>> result = new ArrayList<>();
-		toListAndDistinct(list, key).forEach(str -> {
+		toListAndDistinct(list, groupingKey).forEach(str -> {
 			List<JSONObject> jsonList = new ArrayList<>();
 			list.forEach(json -> {
-				if (str.equals(json.getString(key))) {
+				if (str.equals(json.getString(groupingKey))) {
 					jsonList.add(json);
 				}
 			});
@@ -81,22 +83,22 @@ public class ListUtils extends ListUtil {
 
 	/**
 	 * 数据分组
-	 * <p>将拥有相同的 key 值的数据归为一组</p>
+	 * <p>将拥有相同的 key 值的JavaBean数据归为一组</p>
 	 *
 	 * @param list	要处理的集合
-	 * @param key	分组依据
+	 * @param groupingKey 分组依据字段名
 	 * @return 分组后的list
 	 */
-	public static <T> List<List<T>> groupingT(List<T> list, String key) {
+	public static <T, K> List<List<T>> groupingT(List<T> list, Function<T, K> groupingKey) {
 		List<List<T>> result = new ArrayList<>();
-		toListAndDistinctT(list, key, String.class).forEach(str -> {
-			List<T> jsonList = new ArrayList<>();
-			list.forEach(json -> {
-				if (str.equals(Convert.toObject(ReflectUtil.getFieldValue(json, key), String.class))) {
-					jsonList.add(json);
+		toListAndDistinctT(list, groupingKey).forEach(keepValue -> {
+			List<T> objList = new ArrayList<>();
+			list.forEach(obj -> {
+				if (keepValue.equals(ReflectUtil.getFieldValue(obj, groupingKey.toString()))) {
+					objList.add(obj);
 				}
 			});
-			result.add(jsonList);
+			result.add(objList);
 		});
 
 		return result;
@@ -398,10 +400,10 @@ public class ListUtils extends ListUtil {
 	 * @param keepKey	保留值的key
 	 * @return			转换后的List
 	 */
-	public static <T, D> List<T> toListT(List<D> list, String keepKey) {
+	public static <T, D, K> List<T> toListT(List<D> list, Function<D, K> keepKey) {
 		List<T> toList = new ArrayList<>();
 		for(D json : list) {
-			T value = (T) ReflectUtil.getFieldValue(json, keepKey);
+			T value = (T) ReflectUtil.getFieldValue(json, keepKey.toString());
 			toList.add(value);
 		}
 
@@ -437,7 +439,7 @@ public class ListUtils extends ListUtil {
 	public static <T> List<T> toList(List<JSONObject> list, String keepKey, Class<T> clazz) {
 		List<T> toList = new ArrayList<> ();
 		for(JSONObject json : list) {
-			toList.add(Convert.toObject(json.get(keepKey), clazz));
+			toList.add(Convert.toJavaBean(json.get(keepKey), clazz));
 		}
 		
 		return toList;
@@ -474,20 +476,14 @@ public class ListUtils extends ListUtil {
 	}
 
 	/**
-	 * {@linkplain List} - {@linkplain T} 转 {@linkplain List} - {@linkplain D} 并去除重复元素
+	 * {@linkplain List} - {@linkplain D} 转 {@linkplain List} - {@linkplain T} 并去除重复元素
 	 *
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
 	 * @return			处理后的List
 	 */
-	public static <T, D> List<D> toListAndDistinctT(List<T> list, String keepKey, Class<D> clazz) {
-		List<D> toList = new ArrayList<> ();
-		for(T json : list) {
-			D value = Convert.toObject(ReflectUtil.getFieldValue(json, keepKey), clazz);
-			toList.add(value);
-		}
-
-		return distinct(toList);
+	public static <T, D, K> List<T> toListAndDistinctT(List<D> list, Function<D, K> keepKey) {
+		return distinct(toListT(list, keepKey));
 	}
 
 	/**

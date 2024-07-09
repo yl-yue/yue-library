@@ -1,8 +1,8 @@
 package ai.yue.library.data.redis.annotation;
 
+import ai.yue.library.data.redis.config.properties.RedisProperties.LockProperties;
 import ai.yue.library.data.redis.custom.LockFailureStrategy;
 import ai.yue.library.data.redis.custom.LockKeyBuilder;
-import ai.yue.library.data.redis.config.properties.RedisProperties.LockProperties;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

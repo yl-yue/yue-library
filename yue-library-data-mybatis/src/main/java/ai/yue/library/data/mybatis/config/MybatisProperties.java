@@ -14,19 +14,19 @@ public class MybatisProperties {
 	public static final String PREFIX = "yue.data.mybatis";
 
 	/**
-	 * 启用数据审计
-	 */
-	private boolean enableDataAudit = true;
-
-	/**
 	 * 启用逻辑删除
 	 */
-	private boolean enableLogicDelete = true;
+	private boolean enableLogicDelete = false;
+
+	/**
+	 * 启用数据审计
+	 */
+	private boolean enableDataAudit = false;
 
 	/**
 	 * 启用企业租户
 	 */
-	private boolean enableTenantCo = true;
+	private boolean enableTenantCo = false;
 
 	/**
 	 * 逻辑删除忽略表

@@ -2,7 +2,7 @@ package ai.yue.library.webflux.config.exception;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
@@ -13,10 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
-import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
 import org.springframework.web.reactive.result.view.ViewResolver;
 
 import java.util.stream.Collectors;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
  * @since	2020年9月16日
  */
 @Configuration
-//@AutoConfigureBefore(ErrorWebFluxAutoConfiguration.class)
+@AutoConfigureBefore(ErrorWebFluxAutoConfiguration.class)
 @Import({ ResultExceptionHandler.class })
 @EnableConfigurationProperties({ ServerProperties.class })
 public class ResultErrorAutoConfig {
@@ -43,10 +41,9 @@ public class ResultErrorAutoConfig {
 	@Bean
 	@Order(-2)
 	public ErrorWebExceptionHandler errorWebExceptionHandler(ErrorAttributes errorAttributes,
-															 WebProperties.Resources resources, ObjectProvider<ViewResolver> viewResolvers,
+															 WebProperties webProperties, ObjectProvider<ViewResolver> viewResolvers,
 															 ServerCodecConfigurer serverCodecConfigurer, ApplicationContext applicationContext) {
-		ResultErrorWebExceptionHandler exceptionHandler = new ResultErrorWebExceptionHandler(errorAttributes,
-				resources, this.serverProperties.getError(), applicationContext);
+		ResultErrorWebExceptionHandler exceptionHandler = new ResultErrorWebExceptionHandler(errorAttributes, webProperties.getResources(), this.serverProperties.getError(), applicationContext);
 		exceptionHandler.setViewResolvers(viewResolvers.orderedStream().collect(Collectors.toList()));
 		exceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
 		exceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
@@ -56,12 +53,12 @@ public class ResultErrorAutoConfig {
 	/**
 	 * 默认优先级高于 ResponseBodyResultHandler
 	 */
-	@Bean
-	public ResultResponseBodyHandler resultResponseBodyHandler(ServerCodecConfigurer serverCodecConfigurer,
-			@Qualifier("webFluxContentTypeResolver") RequestedContentTypeResolver contentTypeResolver,
-			@Qualifier("webFluxAdapterRegistry") ReactiveAdapterRegistry reactiveAdapterRegistry) {
-		return new ResultResponseBodyHandler(serverCodecConfigurer.getWriters(), contentTypeResolver,
-				reactiveAdapterRegistry);
-	}
+//	@Bean
+//	public ResultResponseBodyHandler resultResponseBodyHandler(ServerCodecConfigurer serverCodecConfigurer,
+//			@Qualifier("webFluxContentTypeResolver") RequestedContentTypeResolver contentTypeResolver,
+//			@Qualifier("webFluxAdapterRegistry") ReactiveAdapterRegistry reactiveAdapterRegistry) {
+//		return new ResultResponseBodyHandler(serverCodecConfigurer.getWriters(), contentTypeResolver,
+//				reactiveAdapterRegistry);
+//	}
 	
 }

@@ -1,7 +1,6 @@
 package ai.yue.library.web.config.exception;
 
 import ai.yue.library.base.constant.Constant;
-import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.view.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -48,10 +47,10 @@ public class ResultResponseBodyHandler implements ResponseBodyAdvice<Result> {
 		 *   - code >= 600 需调用 R.errorPromptI18n() 方法
 		 *   - 此处统一翻译 code < 600 的 msg
 		 */
-		Integer code = body.getCode();
-		if (code != null && code >= 200 && code < 600) {
-			body.setMsg(I18nUtils.getYue(body.getMsg()));
-		}
+//		Integer code = body.getCode();
+//		if (code != null && code >= 200 && code < 600) {
+//			body.setMsg(I18nUtils.getYue(body.getMsg()));
+//		}
 
 		// 3. 设置链路ID
 		body.setTraceId(MDC.get(Constant.TRACE_ID));
