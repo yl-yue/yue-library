@@ -2,10 +2,10 @@ server:
   port: 8080
 spring:
   application:
-    name: bl-test
+    name: yue-library-test
   profiles:
     group:
-      "yue": "bl-web,bl-data-mybatis,bl-data-redis"
+      "yue": "yue-library-web,yue-library-data-mybatis,yue-library-data-redis"
       "test-confidential": "test-confidential"
       "test-performance": "test-performance"
       "test-confidential-performance": "test-confidential-performance"
