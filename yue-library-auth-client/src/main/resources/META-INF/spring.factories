@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ai.yue.library.auth.client.config.AuthClientAutoConfig
