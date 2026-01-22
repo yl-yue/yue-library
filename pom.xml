@@ -26,67 +26,73 @@
         <module>yue-library-data-mybatis</module>
         <!-- 增强库-redis模块 -->
         <module>yue-library-data-redis</module>
-        <!-- 增强库-认证客户端模块 -->
-        <module>yue-library-auth-client</module>
-        <!-- 增强库-认证服务模块 -->
-        <module>yue-library-auth-service</module>
     </modules>
 
     <properties>
-        <!-- yue.version -->
-        <revision>j${java.version}.2.6.4</revision>
+        <!-- project.version -->
+        <java.version>17</java.version>
+        <revision>j${java.version}.3.3.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <spring-boot.version>2.6.15</spring-boot.version>
-        <spring-cloud.version>2021.0.9</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.6.0</spring-cloud-alibaba.version>
+        <spring-boot.version>3.3.13</spring-boot.version>
+        <spring-cloud.version>2023.0.6</spring-cloud.version>
+        <spring-cloud-alibaba.version>2023.0.3.4</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- yue-library.version -->
-        <yue-library-base.version>j${java.version}.2.6.4</yue-library-base.version>
-        <yue-library-base-crypto.version>j${java.version}.2.6.4</yue-library-base-crypto.version>
-        <yue-library-web.version>j${java.version}.2.6.4</yue-library-web.version>
-        <yue-library-webflux.version>j${java.version}.2.6.4</yue-library-webflux.version>
-        <yue-library-data-mybatis.version>j${java.version}.2.6.4</yue-library-data-mybatis.version>
-        <yue-library-data-redis.version>j${java.version}.2.6.4</yue-library-data-redis.version>
-        <yue-library-auth-client.version>j${java.version}.2.6.4</yue-library-auth-client.version>
-        <yue-library-auth-service.version>j${java.version}.2.6.4</yue-library-auth-service.version>
+        <yue-library-base.version>j${java.version}.3.3.0</yue-library-base.version>
+        <yue-library-base-crypto.version>j${java.version}.3.3.0</yue-library-base-crypto.version>
+        <yue-library-web.version>j${java.version}.3.3.0</yue-library-web.version>
+        <yue-library-webflux.version>j${java.version}.3.3.0</yue-library-webflux.version>
+        <yue-library-data-mybatis.version>j${java.version}.3.3.0</yue-library-data-mybatis.version>
+        <yue-library-data-redis.version>j${java.version}.3.3.0</yue-library-data-redis.version>
 
         <!-- dependencies.version -->
-        <hutool.version>5.8.26</hutool.version>
-        <bouncycastle.version>1.77</bouncycastle.version>
-        <guava.version>33.1.0-jre</guava.version>
-        <fastjson.version>2.0.47</fastjson.version>
-        <redisson.version>3.26.1</redisson.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
-        <mybatis-pagehelper.version>2.0.0</mybatis-pagehelper.version>
-        <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
-        <druid-spring-boot-starter.version>1.2.22</druid-spring-boot-starter.version>
+<!--        <nacos.client.version>2.4.3</nacos.client.version>-->
+        <hutool.version>7.0.0-M3</hutool.version>
+        <bouncycastle.version>1.80</bouncycastle.version>
+        <guava.version>33.4.8-jre</guava.version>
+        <fastjson.version>2.0.60</fastjson.version>
+        <redisson.version>3.45.1</redisson.version>
+        <jetcache.version>2.7.8</jetcache.version>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <pagehelper.version>6.1.1</pagehelper.version>
+        <pagehelper-spring-boot-starter.version>2.1.1</pagehelper-spring-boot-starter.version>
+        <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
+        <druid-spring-boot-3-starter.version>1.2.23</druid-spring-boot-3-starter.version>
         <plumelog.version>3.5.3</plumelog.version>
-        <forest.version>1.5.36</forest.version>
-        <easyexcel.version>3.3.4</easyexcel.version>
+        <spring-boot-admin.version>3.3.6</spring-boot-admin.version>
+        <forest.version>1.7.6</forest.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
         <poi.version>5.2.5</poi.version>
-        <sa-token.version>1.35.0.RC</sa-token.version>
-        <es.version>7.10.2</es.version>
-        <es-rest-high-level-client.version>7.10.2</es-rest-high-level-client.version>
-        <easy-es.version>2.0.0</easy-es.version>
+        <sa-token.version>1.44.0</sa-token.version>
+<!--        <es.version>7.10.2</es.version>-->
+<!--        <es-rest-high-level-client.version>7.10.2</es-rest-high-level-client.version>-->
+        <easy-es.version>2.1.0</easy-es.version>
+        <datafaker.version>2.4.3</datafaker.version>
 
         <!-- plugins.version -->
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- spring-cloud-alibaba -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-parent</artifactId>
@@ -101,6 +107,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.nacos</groupId>-->
+<!--                <artifactId>nacos-client</artifactId>-->
+<!--                <version>${nacos.client.version}</version>-->
+<!--            </dependency>-->
 
             <!-- yue-library -->
             <dependency>
@@ -133,60 +144,50 @@
                 <artifactId>yue-library-data-redis</artifactId>
                 <version>${yue-library-data-redis.version}${sha1}${changelist}</version>
             </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-auth-client</artifactId>
-                <version>${yue-library-auth-client.version}${sha1}${changelist}</version>
-            </dependency>
-            <dependency>
-                <groupId>ai.ylyue</groupId>
-                <artifactId>yue-library-auth-service</artifactId>
-                <version>${yue-library-auth-service.version}${sha1}${changelist}</version>
-            </dependency>
 
             <!-- hutool工具包 -->
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-aop</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-core</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-crypto</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk18on</artifactId><!-- sm2、sm3、sm4国密算法 -->
+                <artifactId>bcprov-jdk18on</artifactId> <!-- sm2、sm3、sm4国密算法 -->
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-extra</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-system</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-script</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-http</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>cn.hutool.v7</groupId>
                 <artifactId>hutool-poi</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
@@ -203,18 +204,71 @@
                 <version>${fastjson.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2-extension-spring5</artifactId>
+			    <groupId>com.alibaba.fastjson2</groupId>
+			    <artifactId>fastjson2-extension-spring5</artifactId>
                 <version>${fastjson.version}</version>
-            </dependency>
+		    </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
             </dependency>
 
+            <!-- mybatis-plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+                <version>${dynamic-datasource.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid-spring-boot-3-starter.version}</version>
+            </dependency>
+
+            <!-- redisson -->
+            <dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson</artifactId>
+				<version>${redisson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-data-33</artifactId>
+				<version>${redisson.version}</version>
+			</dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alicp.jetcache</groupId>
+                <artifactId>jetcache-starter-redisson</artifactId>
+                <version>${jetcache.version}</version>
+            </dependency>
+
             <!-- 微服务 -->
-            <!-- 微服务-log -->
             <dependency>
                 <groupId>com.plumelog</groupId>
                 <artifactId>plumelog-logback</artifactId>
@@ -225,39 +279,10 @@
                 <artifactId>plumelog-trace</artifactId>
                 <version>${plumelog.version}</version>
             </dependency>
-
-            <!-- mybatis-plus -->
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${mybatis-pagehelper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-                <version>${dynamic-datasource.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid-spring-boot-starter.version}</version>
-            </dependency>
-
-            <!-- redisson -->
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson</artifactId>
-                <version>${redisson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-data-27</artifactId>
-                <version>${redisson.version}</version>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <!-- poi -->
@@ -277,36 +302,53 @@
                 <version>4.1.2</version>
             </dependency>
 
-            <!-- 其他 -->
+            <!-- sa-token -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redisson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <!-- 其他优秀项目 -->
             <dependency>
                 <groupId>com.dtflys.forest</groupId>
-                <artifactId>forest-spring-boot-starter</artifactId>
+                <artifactId>forest-spring-boot3-starter</artifactId>
                 <version>${forest.version}</version>
             </dependency>
-            <dependency>
-                <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-spring-boot-starter</artifactId>
-                <version>${sa-token.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-redis-jackson</artifactId>
-                <version>${sa-token.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.elasticsearch</groupId>
-                <artifactId>elasticsearch</artifactId>
-                <version>${es.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.elasticsearch.client</groupId>
-                <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                <version>${es-rest-high-level-client.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.elasticsearch</groupId>-->
+<!--                <artifactId>elasticsearch</artifactId>-->
+<!--                <version>${es.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.elasticsearch.client</groupId>-->
+<!--                <artifactId>elasticsearch-rest-high-level-client</artifactId>-->
+<!--                <version>${es-rest-high-level-client.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.dromara.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
                 <version>${easy-es.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.datafaker</groupId>
+                <artifactId>datafaker</artifactId>
+                <version>${datafaker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -362,14 +404,19 @@
                     <version>${maven-jar-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>flatten-maven-plugin</artifactId>
-                    <version>${flatten-maven-plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
@@ -380,6 +427,19 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <!-- 编译时保留参数名信息，解决 @RequestParam.value() 需要显示声明的情况 -->
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
             <!-- install时打包源码 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -411,7 +471,8 @@
                         <properties>interpolate</properties>
                         <dependencyManagement>interpolate</dependencyManagement>
                         <pluginManagement>interpolate</pluginManagement>
-                        <repositories>interpolate</repositories>
+                        <build>interpolate</build>
+                        <repositories>remove</repositories>
                     </pomElements>
                 </configuration>
                 <executions>
