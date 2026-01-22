@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>bl</artifactId>
+		<artifactId>yue-library</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-webflux</artifactId>
-	<version>${bl-webflux.version}${sha1}${changelist}</version>
-	<name>bl-webflux</name>
+	<version>${yue-library-webflux.version}${sha1}${changelist}</version>
+	<name>yue-library-webflux</name>
 	<description>yue-基础库-webflux</description>
 	
 	<dependencies>

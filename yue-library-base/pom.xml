@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>bl</artifactId>
+		<artifactId>yue-library</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base</artifactId>
-	<version>${bl-base.version}${sha1}${changelist}</version>
-	<name>bl-base</name>
-	<description>bl-基础库</description>
+	<version>${yue-library-base.version}${sha1}${changelist}</version>
+	<name>yue-library-base</name>
+	<description>yue-library-基础库</description>
 	
 	<properties>
 		<jsr305.version>3.0.2</jsr305.version>

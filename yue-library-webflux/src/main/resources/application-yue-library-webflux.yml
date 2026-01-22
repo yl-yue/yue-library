@@ -2,3 +2,77 @@ spring:
   config:
     activate:
       on-profile: yue-library-webflux
+
+  main:
+    allow-bean-definition-overriding: true  # 允许Bean覆盖
+    allow-circular-references: true # 允许Bean循环引用
+
+  devtools:
+    restart:
+      log-condition-evaluation-delta: false
+
+  ### 默认线程池调优 ###
+  task:
+    execution:
+      pool:
+        max-size: 50
+        queue-capacity: 200
+      shutdown:
+        await-termination: true
+        await-termination-period: 25s
+    scheduling:
+      pool:
+        size: 3
+      shutdown:
+        await-termination: true
+        await-termination-period: 25s
+
+  cloud:
+    nacos:
+      discovery:
+        cluster-name: DEFAULT
+
+    loadbalancer:
+      nacos:
+        enabled: true # 启用nacos负载均衡器，可即时发现服务健康状态（nacos采用订阅监听更新缓存）
+
+server:
+  shutdown: graceful # 优雅停机
+
+########## actuator 安全配置 ##########
+management:
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*' # spring.security.user 配置项解决安全问题
+      base-path: /actuator-security  # 提升actuator安全
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+
+feign:
+  okhttp:
+    enabled: true                        # 启用 okhttp
+  httpclient:
+    enabled: false                       # 关闭 Apache HttpClient
+    max-connections: 500                 # 最大连接数（包含空闲连接），默认：200
+    time-to-live: 900                    # 空闲连接存活时间，默认：900
+    time-to-live-unit: seconds           # 空闲连接存活时间单位，默认：seconds
+    connection-timeout: 10000            # 连接超时时间，默认：2000
+    ok-http:
+      read-timeout: 60s                  # 读取超时时间，默认：60s
+
+easy-es:
+  max-conn-total: 500 # 最大连接数 单位:个
+  max-conn-per-route: 100 # 最大连接路由数 单位:个
+  keep-alive-millis: 30000 # 心跳策略时间 单位:ms
+  connect-timeout: 50000 # 连接超时时间 单位:ms
+  connection-request-timeout: 5000 # 连接请求超时时间 单位:ms
+  socket-timeout: 600000 # 通信超时时间 单位:ms

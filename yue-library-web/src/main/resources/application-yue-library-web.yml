@@ -20,19 +20,31 @@ spring:
   task:
     execution:
       pool:
-        max-size: 30
+        max-size: 50
         queue-capacity: 200
       shutdown:
         await-termination: true
-        await-termination-period: 5s
+        await-termination-period: 25s
     scheduling:
       pool:
         size: 3
       shutdown:
         await-termination: true
-        await-termination-period: 5s
+        await-termination-period: 25s
+
+  cloud:
+    nacos:
+      discovery:
+        cluster-name: DEFAULT
+
+    loadbalancer:
+      nacos:
+        enabled: true # 启用nacos负载均衡器，可即时发现服务健康状态（nacos采用订阅监听更新缓存）
 
 server:
+  http2:
+    enabled: true
+  shutdown: graceful # 优雅停机
   # 基于8-16cpu、16-32G内存调优，提升服务容错能力与吞吐量
   tomcat:
     accept-count: 200
@@ -41,6 +53,24 @@ server:
       min-spare: 20 # 最小线程数
     max-connections: 10000
     processor-cache: 400
+
+########## actuator 安全配置 ##########
+management:
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*' # spring.security.user 配置项解决安全问题
+      base-path: /actuator-security  # 提升actuator安全
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
 
 feign:
   okhttp:

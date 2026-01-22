@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>bl</artifactId>
+		<artifactId>yue-library</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base-crypto</artifactId>
-	<version>${bl-base-crypto.version}${sha1}${changelist}</version>
+	<version>${yue-library-base-crypto.version}${sha1}${changelist}</version>
 	<name>${project.artifactId}</name>
-	<description>bl 加密解密</description>
+	<description>yue-library 加密解密</description>
 
 	<properties>
 		<caffeine.version>2.9.3</caffeine.version>
@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>bl-data-redis</artifactId>
+			<artifactId>yue-library-data-redis</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>bl-web</artifactId>
+			<artifactId>yue-library-web</artifactId>
 			<optional>true</optional>
 		</dependency>
 
