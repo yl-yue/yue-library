@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 /**
  * List工具类
- * 
+ *
  * @author	ylyue
  * @since	2017年10月27日
  */
@@ -29,7 +29,7 @@ public class ListUtils extends ListUtil {
 	public static boolean isEmpty(List<?> list) {
 		return null == list || list.isEmpty();
 	}
-	
+
 	/**
 	 * List数组是否不为空
 	 * @param list list
@@ -38,10 +38,10 @@ public class ListUtils extends ListUtil {
 	public static boolean isNotEmpty(List<?> list) {
 		return !isEmpty(list);
 	}
-	
+
 	/**
 	 * 获得List数组中对应类型的第一个值
-	 * 
+	 *
 	 * @param <T> 想要的类型
 	 * @param list List数组
 	 * @param clazz 想要的类型Class
@@ -54,7 +54,7 @@ public class ListUtils extends ListUtil {
 				return (T) value;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -77,7 +77,7 @@ public class ListUtils extends ListUtil {
 			});
 			result.add(jsonList);
 		});
-		
+
 		return result;
 	}
 
@@ -121,7 +121,7 @@ public class ListUtils extends ListUtil {
 		});
 		return result;
 	}
-	
+
 	/**
 	 * 将JSON集合，合并到数组的JSON集合
 	 * <p>
@@ -129,28 +129,28 @@ public class ListUtils extends ListUtil {
 	 * JSON对象key获得的值，应该是一个JSONObject对象<br>
 	 * </p>
 	 * <blockquote>示例：
-     * <pre>
-     *	JSONArray array = [
-     * 		{
-     * 			"id": 1,
-     * 			"name": "name"
-     * 		}
-     * 	]
-     * 	JSONObject json = {
-     * 		1: {
-     * 			"sex": "男",
-     * 			"age": 18
-     * 		}
-     * 	}
-     * 
-     * 	String key = "id";
-     * 		
-     *	JSONArray mergeResult = merge(array, json, key);
-     * 	System.out.println(mergeResult);
-     * </pre>
-     * 结果：
-     * 		[{"id": 1, "name": "name", "sex": "男", "age": 18}]
-     * </blockquote>
+	 * <pre>
+	 *	JSONArray array = [
+	 * 		{
+	 * 			"id": 1,
+	 * 			"name": "name"
+	 * 		}
+	 * 	]
+	 * 	JSONObject json = {
+	 * 		1: {
+	 * 			"sex": "男",
+	 * 			"age": 18
+	 * 		}
+	 * 	}
+	 *
+	 * 	String key = "id";
+	 *
+	 *	JSONArray mergeResult = merge(array, json, key);
+	 * 	System.out.println(mergeResult);
+	 * </pre>
+	 * 结果：
+	 * 		[{"id": 1, "name": "name", "sex": "男", "age": 18}]
+	 * </blockquote>
 	 * @param array	JSONObject数组
 	 * @param json	JSON对象
 	 * @param key	条件
@@ -162,14 +162,14 @@ public class ListUtils extends ListUtil {
 			String value = temp.getString(key);
 			temp.putAll(json.getJSONObject(value));
 		});
-		
+
 		return array;
 	}
-	
+
 	/**
 	 * List合并
 	 * <p>将<b> list2 </b>合并到<b> list1 </b>里面
-	 * 
+	 *
 	 * @param list1		需要合并的列表
 	 * @param list2		被合并的列表
 	 * @param key1		list1中JSON所使用的key
@@ -188,10 +188,10 @@ public class ListUtils extends ListUtil {
 			}
 		});
 	}
-	
+
 	/**
 	 * List-JSONObject集合排序
-	 * 
+	 *
 	 * @param list 需要处理的集合
 	 * @param sortKey 排序依据（JSONObject的key）
 	 * @param sortEnum 排序方式
@@ -207,13 +207,13 @@ public class ListUtils extends ListUtil {
 				return CompareUtil.compare(json2value, json1value, false);
 			}
 		});
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * List-T集合排序
-	 * 
+	 *
 	 * @param <T> 泛型
 	 * @param list 需要处理的集合
 	 * @param sortField 排序字段
@@ -232,10 +232,10 @@ public class ListUtils extends ListUtil {
 				return CompareUtil.compare(json2value, json1value, false);
 			}
 		});
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * 反转集合
 	 * @param <T> 泛型
@@ -246,10 +246,10 @@ public class ListUtils extends ListUtil {
 	public static <T> List<T> reverse(List<T> list, Class<T> clazz) {
 		return ListUtils.toList(ArrayUtil.reverse(ArrayUtil.toArray(list, clazz)));
 	}
-	
+
 	/**
-	 * HashSet去重
-	 * @param <T>	泛型
+	 * HashSet去重（无序）
+	 *
 	 * @param list	需要去重的list
 	 * @return		去重后的list
 	 */
@@ -259,7 +259,20 @@ public class ListUtils extends ListUtil {
 		list.addAll(h);
 		return list;
 	}
-	
+
+	/**
+	 * LinkedHashSet去重（有序）
+	 *
+	 * @param list	需要去重的list
+	 * @return		去重后的list
+	 */
+	public static <T> List<T> distinctLinked(List<T> list) {
+		LinkedHashSet<T> h = new LinkedHashSet<T>(list);
+		list.clear();
+		list.addAll(h);
+		return list;
+	}
+
 	/**
 	 * {@linkplain List} - {@linkplain JSONObject} value去重
 	 * <p>根据参数distinctKey去重。
@@ -277,16 +290,16 @@ public class ListUtils extends ListUtil {
 				}
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject}集合去重统计与排序
 	 * <p>根据参数distinctKey（JSONObject的key）计算元素重复次数，并为每个JSONObject添加一个 <b>frequency</b>（频率元素），value的值是从整数1开始计数。
 	 * <p>示例：<code>json.put("frequency", frequency)</code>
 	 * <p><b>根据frequency（重复频率）排序</b>
-	 * 
+	 *
 	 * @param list 需要处理的集合
 	 * @param distinctKey 去重的依据（JSONObject的key）
 	 * @param sortEnum 排序方式
@@ -305,10 +318,10 @@ public class ListUtils extends ListUtil {
 			}
 			jsoni.put("frequency", frequency);
 		}
-		
+
 		return sort(list, "frequency", sortEnum);
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject}集合——去重、统计、排序与元素选择性保留
 	 * <p>根据参数distinctKey（JSONObject的key），计算元素重复次数。并为每个JSONObject添加一个<b>frequency</b>（频率元素），value的值是从整数1开始计数。
@@ -347,7 +360,7 @@ public class ListUtils extends ListUtil {
 			}
 			jsoni.put("frequency", frequency);
 		}
-		
+
 		return sort(list, "frequency", sortEnum);
 	}
 
@@ -363,10 +376,10 @@ public class ListUtils extends ListUtil {
 		ArrayList<T> toList = new ArrayList<>(Arrays.asList(array));
 		return toList;
 	}
-	
+
 	/**
 	 * {@linkplain JSONArray} 转 {@linkplain List}-{@linkplain Class}
-	 * 
+	 *
 	 * @param <T>       泛型
 	 * @param jsonArray 需要转换的JSONArray
 	 * @param clazz     json转换的POJO类型
@@ -375,10 +388,10 @@ public class ListUtils extends ListUtil {
 	public static <T> List<T> toList(JSONArray jsonArray, Class<T> clazz) {
 		return jsonArray.toJavaList(clazz);
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}
-	 * 
+	 *
 	 * @param <T> 		泛型
 	 * @param list 		需要转换的List
 	 * @param clazz		json转换的POJO类型
@@ -389,7 +402,7 @@ public class ListUtils extends ListUtil {
 		for(JSONObject json : list) {
 			toList.add(Convert.toJavaBean(json, clazz));
 		}
-		
+
 		return toList;
 	}
 
@@ -412,7 +425,7 @@ public class ListUtils extends ListUtil {
 
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain String}
-	 * 
+	 *
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
 	 * @return			转换后的List
@@ -423,13 +436,13 @@ public class ListUtils extends ListUtil {
 			String value = json.getString(keepKey);
 			toList.add(value);
 		}
-		
+
 		return toList;
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class}
-	 * 
+	 *
 	 * @param <T>		泛型
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
@@ -441,13 +454,13 @@ public class ListUtils extends ListUtil {
 		for(JSONObject json : list) {
 			toList.add(Convert.toJavaBean(json.get(keepKey), clazz));
 		}
-		
+
 		return toList;
 	}
-	
+
 	/**
 	 * {@linkplain List} - {@linkplain JSONObject} 转 {@linkplain List} - {@linkplain String} 并去除重复元素
-	 * 
+	 *
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
 	 * @return			处理后的List
@@ -458,13 +471,13 @@ public class ListUtils extends ListUtil {
 			String value = json.getString(keepKey);
 			toList.add(value);
 		}
-		
+
 		return distinct(toList);
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain List}-{@linkplain Class} 并去除重复元素
-	 * 
+	 *
 	 * @param <T>		泛型
 	 * @param list 		需要转换的List
 	 * @param keepKey	保留值的key
@@ -493,7 +506,7 @@ public class ListUtils extends ListUtil {
 	 * 	<i>测试CPU：</i>i7-4710MQ<br>
 	 * 	<i>测试结果：</i>百万级数据平均200ms（毫秒）<br>
 	 * </p>
-	 * 
+	 *
 	 * @param list 		需要转换的List
 	 * @return			转换后的List
 	 */
@@ -502,10 +515,10 @@ public class ListUtils extends ListUtil {
 		for (int i = 0; i < list.size(); i++) {
 			jsonList.add(new JSONObject(list.get(i)));
 		}
-		
+
 		return jsonList;
 	}
-	
+
 	/**
 	 * {@linkplain JSONArray} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>
@@ -513,7 +526,7 @@ public class ListUtils extends ListUtil {
 	 *  <i>无类型转换（类型推断）：</i>见 {@linkplain #toJsonList(List)}<br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
 	 * </p>
-	 * 
+	 *
 	 * @param jsonArray 需要转换的JSONArray
 	 * @return 转换后的jsonList
 	 */
@@ -522,17 +535,17 @@ public class ListUtils extends ListUtil {
 		for (int i = 0; i < jsonArray.size(); i++) {
 			jsonList.add(jsonArray.getJSONObject(i));
 		}
-		
+
 		return jsonList;
 	}
-	
+
 	/**
 	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain List} - {@linkplain JSONObject}
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
 	 * </p>
-	 * 
+	 *
 	 * @param <T> 泛型
 	 * @param list 需要转换的List
 	 * @return 转换后的jsonList
@@ -542,14 +555,14 @@ public class ListUtils extends ListUtil {
 		for (T obj : list) {
 			jsonList.add(Convert.toJSONObject(obj));
 		}
-		
+
 		return jsonList;
 	}
-	
+
 	/**
 	 * {@linkplain JSONArray} 转 {@linkplain JSONObject}[]
 	 * <p>对象引用转换，内存指针依旧指向元数据
-	 * 
+	 *
 	 * @param jsonArray 需要转换的JSONArray
 	 * @return			转换后的jsons
 	 */
@@ -559,14 +572,14 @@ public class ListUtils extends ListUtil {
 		for (int i = 0; i < size; i++) {
 			jsons[i] = jsonArray.getJSONObject(i);
 		}
-		
+
 		return jsons;
 	}
-	
+
 	/**
 	 * {@linkplain List}-{@linkplain JSONObject} 转 {@linkplain JSONObject}[]
 	 * <p>对象引用转换，内存指针依旧指向元数据
-	 * 
+	 *
 	 * @param list 		需要转换的List
 	 * @return			转换后的jsons
 	 */
@@ -579,14 +592,14 @@ public class ListUtils extends ListUtil {
 		}
 		return jsons;
 	}
-	
+
 	/**
 	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[]
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
 	 * </p>
-	 * 
+	 *
 	 * @param <T> 泛型
 	 * @param list 需要转换的List
 	 * @return 转换后的jsons
@@ -598,17 +611,17 @@ public class ListUtils extends ListUtil {
 			jsons[index] = Convert.toJSONObject(obj);
 			index++;
 		}
-		
+
 		return jsons;
 	}
-	
+
 	/**
 	 * {@linkplain List} - {@linkplain Class} 转 {@linkplain JSONObject}[] 并移除空对象
 	 * <p>
 	 * 	<b><i>性能测试报告：</i></b><br>
 	 * 	<i>安全模式强制类型转换：</i>暂未测试<br>
 	 * </p>
-	 * 
+	 *
 	 * @param <T> 泛型
 	 * @param list 需要转换的List
 	 * @return 转换后的jsons
@@ -622,34 +635,34 @@ public class ListUtils extends ListUtil {
 			jsons[index] = json;
 			index++;
 		}
-		
+
 		return jsons;
 	}
-	
+
 	/**
 	 * {@linkplain String} 转 {@linkplain JSONObject}[]
-	 * 
+	 *
 	 * @param jsonString	需要转换的JSON字符串
 	 * @return JSON数组
 	 */
 	public static JSONObject[] toJsons(String jsonString) {
 		return toJsons(JSONArray.parseArray(jsonString));
 	}
-	
+
 	/**
 	 * {@linkplain String} 转 {@linkplain JSONObject}[]
 	 * <blockquote>示例：
-     * <pre>
-     * 	{@code
-     * 		String text = "1,3,5,9";
-     * 		JSONObject[] jsons = toJsons(text, ",", "id");
-     * 		System.out.println(Arrays.toString(jsons));
-     * }
-     * </pre>
-     * 结果：
-     * 		[{"id":"1"}, {"id":"3"}, {"id":"5"}, {"id":"9"}]
-     * </blockquote>
-     * 
+	 * <pre>
+	 * 	{@code
+	 * 		String text = "1,3,5,9";
+	 * 		JSONObject[] jsons = toJsons(text, ",", "id");
+	 * 		System.out.println(Arrays.toString(jsons));
+	 * }
+	 * </pre>
+	 * 结果：
+	 * 		[{"id":"1"}, {"id":"3"}, {"id":"5"}, {"id":"9"}]
+	 * </blockquote>
+	 *
 	 * @param text		需要转换的文本
 	 * @param regex		文本分割表达式，同{@linkplain String}类的split()方法
 	 * @param key		JSON的key名称
@@ -663,7 +676,7 @@ public class ListUtils extends ListUtil {
 			paramJson.put(key, texts[i]);
 			jsons[i] = paramJson;
 		}
-		
+
 		return jsons;
 	}
 

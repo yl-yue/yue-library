@@ -428,21 +428,21 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>aliyun-central-repo</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>aliyun</id>
-                    <url>https://maven.aliyun.com/repository/central</url>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-        </profile>
+<!--        <profile>-->
+<!--            <id>aliyun-central-repo</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <repositories>-->
+<!--                <repository>-->
+<!--                    <id>aliyun</id>-->
+<!--                    <url>https://maven.aliyun.com/repository/central</url>-->
+<!--                    <snapshots>-->
+<!--                        <enabled>false</enabled>-->
+<!--                    </snapshots>-->
+<!--                </repository>-->
+<!--            </repositories>-->
+<!--        </profile>-->
 
         <profile>
             <id>release</id>
