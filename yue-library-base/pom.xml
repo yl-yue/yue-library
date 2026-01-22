@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library</artifactId>
+		<artifactId>bl</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base</artifactId>
-	<version>${yue-library-base.version}${sha1}${changelist}</version>
-	<name>yue-library-base</name>
-	<description>yue-基础库</description>
+	<version>${bl-base.version}${sha1}${changelist}</version>
+	<name>bl-base</name>
+	<description>bl-基础库</description>
 	
 	<properties>
 		<jsr305.version>3.0.2</jsr305.version>
@@ -27,8 +27,8 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -36,7 +36,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<!-- Spring Boot - end -->
 
@@ -49,25 +49,25 @@
 			<groupId>com.alibaba.fastjson2</groupId>
 			<artifactId>fastjson2-extension-spring5</artifactId>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>cn.hutool.v7</groupId>
 			<artifactId>hutool-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
+		
 		<!-- @Nullable注解，jsr305标准 -->
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>${jsr305.version}</version>
+		    <groupId>com.google.code.findbugs</groupId>
+		    <artifactId>jsr305</artifactId>
+		    <version>${jsr305.version}</version>
 		</dependency>
 	</dependencies>
 </project>

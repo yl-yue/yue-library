@@ -1,5 +1,6 @@
 package ai.yue.library.base.util;
 
+import ai.yue.library.base.config.properties.BaseProperties;
 import ai.yue.library.base.view.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -30,11 +31,29 @@ public class I18nUtils {
 	private static MessageSource messageSource;
 	private static ResourceBundleMessageSource messageSourceYue;
 
-	public I18nUtils(MessageSource messageSource) {
+	public I18nUtils(MessageSource messageSource, BaseProperties baseProperties) {
 		I18nUtils.messageSource = messageSource;
 		I18nUtils.messageSourceYue = new ResourceBundleMessageSource();
 		I18nUtils.messageSourceYue.setBasenames("YueMessages", "messages");
 		I18nUtils.messageSourceYue.setDefaultEncoding(StandardCharsets.UTF_8.name());
+
+		// 设置默认语言
+		String i18nLanguage = baseProperties.getI18nLanguage();
+		Locale locale;
+		if (i18nLanguage.contains("-")) {
+			String[] languages = i18nLanguage.split("-");
+			String language = languages[0];
+			String country = languages[1];
+			locale = new Locale(language, country);
+		} else {
+			locale = new Locale(i18nLanguage);
+		}
+		try {
+			((ResourceBundleMessageSource) I18nUtils.messageSource).setDefaultLocale(locale);
+		} catch (Exception e) {
+			// 忽略
+		}
+		I18nUtils.messageSourceYue.setDefaultLocale(locale);
 	}
 
 	/**
@@ -48,9 +67,7 @@ public class I18nUtils {
 		try {
 			return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
 		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				e.printStackTrace();
-			}
+			log.debug("未找到对应资源包中定义的翻译value，code=" + code, e);
 			return code;
 		}
 	}
@@ -62,9 +79,6 @@ public class I18nUtils {
 		try {
 			return messageSourceYue.getMessage(msgKey, null, LocaleContextHolder.getLocale());
 		} catch (Exception e) {
-//			if (log.isDebugEnabled()) {
-//				e.printStackTrace();
-//			}
 			return msgKey;
 		}
 	}
@@ -76,9 +90,6 @@ public class I18nUtils {
 		try {
 			return messageSourceYue.getMessage(resultEnum.getMsg(), null, LocaleContextHolder.getLocale());
 		} catch (Exception e) {
-//			if (log.isDebugEnabled()) {
-//				e.printStackTrace();
-//			}
 			return resultEnum.getMsg();
 		}
 	}
@@ -90,9 +101,6 @@ public class I18nUtils {
 		try {
 			return messageSourceYue.getMessage(msgKey, null, Locale.CHINA);
 		} catch (Exception e) {
-//			if (log.isDebugEnabled()) {
-//				e.printStackTrace();
-//			}
 			return msgKey;
 		}
 	}

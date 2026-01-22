@@ -1,11 +1,12 @@
 package ai.yue.library.web.config.api.version;
 
 import ai.yue.library.base.annotation.ApiVersion;
-import ai.yue.library.base.config.properties.ApiVersionProperties;
+import ai.yue.library.base.config.properties.BaseProperties;
 import ai.yue.library.base.util.StrUtils;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
+import cn.hutool.v7.core.lang.Assert;
+import cn.hutool.v7.core.text.StrUtil;
+import cn.hutool.v7.core.text.split.SplitUtil;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 
-	private ApiVersionProperties apiVersionProperties;
+	private BaseProperties.ApiVersionProperties apiVersionProperties;
 	
     @Override
 	protected RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
@@ -57,7 +58,7 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 		}
 		
 		// 3. 解析版本占位符索引位置
-		String[] versionPlaceholderValues = StrUtils.splitToArray(requestMappingValues[0], "/");
+		String[] versionPlaceholderValues = SplitUtil.splitToArray(requestMappingValues[0], "/");
 		Integer index = null;
 		for (int i = 0; i < versionPlaceholderValues.length; i++) {
 			if (StrUtils.equals(versionPlaceholderValues[i], apiVersionProperties.getVersionPlaceholder())) {

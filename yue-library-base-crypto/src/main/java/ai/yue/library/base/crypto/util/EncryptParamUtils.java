@@ -1,7 +1,7 @@
 package ai.yue.library.base.crypto.util;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
+import cn.hutool.v7.core.util.ObjUtil;
 
 /**
  * 加密参数处理
@@ -18,7 +18,7 @@ public class EncryptParamUtils {
      * @return 字节数据
      */
     public static byte[] toEncryptByte(Object data) {
-        if (ObjectUtil.isNull(data)) {
+        if (ObjUtil.isNull(data)) {
             return null;
         }
 

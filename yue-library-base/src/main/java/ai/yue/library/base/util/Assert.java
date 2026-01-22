@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since  2022/7/22
  */
 @Slf4j
-public class Assert extends cn.hutool.core.lang.Assert {
+public class Assert extends cn.hutool.v7.core.lang.Assert {
 
     /**
      * 断言-执行给定代码块不会抛出异常
@@ -53,8 +53,7 @@ public class Assert extends cn.hutool.core.lang.Assert {
         try {
             lambdaRun.run();
         } catch (Exception e) {
-            log.warn(printMsg);
-            e.printStackTrace();
+            log.warn(printMsg, e);
         }
     }
 

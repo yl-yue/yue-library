@@ -1,9 +1,8 @@
 package ai.yue.library.base.validation.annotation;
 
-import cn.hutool.core.util.ReflectUtil;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import cn.hutool.v7.core.reflect.FieldUtil;
 
 /**
  * 互斥关系校验器
@@ -25,7 +24,7 @@ public class ExclusionValidator implements ConstraintValidator<Exclusion, Object
 		// 互斥关系逻辑，多个字段只能其中一个有值
 		boolean isExclusionValueExist = false;
 		for (String exclusion : exclusions) {
-			if (ReflectUtil.getFieldValue(value, exclusion) != null) {
+			if (FieldUtil.getFieldValue(value, exclusion) != null) {
 				if (isExclusionValueExist == false) {
 					isExclusionValueExist = true;
 				} else {

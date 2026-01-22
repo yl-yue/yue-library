@@ -8,7 +8,7 @@ import ai.yue.library.test.ipo.ValidationIPO;
 import com.alibaba.fastjson2.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

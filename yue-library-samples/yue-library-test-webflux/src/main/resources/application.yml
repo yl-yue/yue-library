@@ -2,11 +2,11 @@ server:
   port: 8081
 spring:
   application:
-    name: yue-library-test-webflux
+    name: bl-test-webflux
   profiles:
-    include:    - yue-library-data-jdbc
-    - yue-library-data-redis
-    active:
-    - test-confidential
-#yue:#  api-version:#    enabled: false
-#  exception-handler:#    enabled: false
+    group:
+      "yue": "bl-webflux,bl-data-mybatis,bl-data-redis"
+      "test-confidential": "test-confidential"
+      "test-performance": "test-performance"
+      "test-confidential-performance": "test-confidential-performance"
+    active: yue,test-confidential

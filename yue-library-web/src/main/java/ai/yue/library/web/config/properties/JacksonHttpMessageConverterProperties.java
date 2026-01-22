@@ -1,9 +1,8 @@
 package ai.yue.library.web.config.properties;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Jackson HTTP消息转换器配置
@@ -21,7 +20,7 @@ public class JacksonHttpMessageConverterProperties {
 	public static final String PREFIX = WebProperties.PREFIX + ".http-message-converter.jackson";
 	
 	/**
-	 * 启用yue-library对Jackson进行增强配置
+	 * 启用bl对Jackson进行增强配置
 	 * <p>Jackson是SpringBoot默认的Json解析器
 	 * <p>默认：false
 	 */

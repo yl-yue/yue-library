@@ -4,13 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library</artifactId>
+		<artifactId>bl</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-base-crypto</artifactId>
-	<version>${yue-library-base-crypto.version}${sha1}${changelist}</version>
+	<version>${bl-base-crypto.version}${sha1}${changelist}</version>
 	<name>${project.artifactId}</name>
-	<description>yue-library 加密解密</description>
+	<description>bl 加密解密</description>
+
+	<properties>
+		<caffeine.version>2.9.3</caffeine.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -19,17 +23,22 @@
 		</dependency>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-data-redis</artifactId>
+			<artifactId>bl-data-redis</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+			<version>${caffeine.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>ai.ylyue</groupId>
-			<artifactId>yue-library-web</artifactId>
+			<artifactId>bl-web</artifactId>
 			<optional>true</optional>
 		</dependency>
 
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>cn.hutool.v7</groupId>
 			<artifactId>hutool-crypto</artifactId>
 		</dependency>
 		<dependency>

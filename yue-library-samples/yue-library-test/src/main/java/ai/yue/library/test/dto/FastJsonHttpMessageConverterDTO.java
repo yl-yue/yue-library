@@ -1,7 +1,7 @@
 package ai.yue.library.test.dto;
 
 import ai.yue.library.test.constant.TestEnum;
-import cn.hutool.core.date.DateTime;
+import cn.hutool.v7.core.date.DateTime;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;

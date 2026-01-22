@@ -1,8 +1,10 @@
 package ai.yue.library.webflux.config.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
@@ -26,10 +28,12 @@ import java.util.stream.Collectors;
  * @author	ylyue
  * @since	2020年9月16日
  */
+@Slf4j
 @Configuration
 @AutoConfigureBefore(ErrorWebFluxAutoConfiguration.class)
 @Import({ ResultExceptionHandler.class })
 @EnableConfigurationProperties({ ServerProperties.class })
+@ConditionalOnProperty(prefix = "yue.exception-handler", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class ResultErrorAutoConfig {
 
 	@Autowired
@@ -47,6 +51,7 @@ public class ResultErrorAutoConfig {
 		exceptionHandler.setViewResolvers(viewResolvers.orderedStream().collect(Collectors.toList()));
 		exceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
 		exceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
+		log.info("【初始化配置-全局统一异常处理】拦截所有Controller层异常，返回HTTP请求最外层对象 ... 已初始化完毕。");
 		return exceptionHandler;
 	}
 	

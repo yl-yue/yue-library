@@ -1,7 +1,10 @@
 package ai.yue.library.base.config.thread.pool;
 
+import cn.hutool.v7.core.util.RuntimeUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.io.Serializable;
 
 /**
  * <h2>异步线程池自动配置属性</h2>
@@ -20,7 +23,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties("yue.thread-pool.async")
-public class AsyncProperties {
+public class AsyncProperties implements Serializable {
 
 	/**
 	 * ServletAsyncContext阻塞超时时长 setAttribute 时所使用的固定变量名
@@ -34,7 +37,7 @@ public class AsyncProperties {
 	 * <p>
 	 * <b style="color:red">注意，@Async异步执行方法，不要和同步调用方法写在同一个类中，否则异步执行将失效。</b>
 	 */
-	private boolean enabled = false;
+	private boolean enabled = true;
 	
 	/**
 	 * 线程池名的前缀
@@ -50,18 +53,18 @@ public class AsyncProperties {
 	 * <p>
 	 * 线程池创建时候初始化的线程数
 	 * <p>
-	 * 默认：10
+	 * 默认：JVM的可用处理器数量
 	 */
-	private Integer corePoolSize = 10;
+	private Integer corePoolSize = RuntimeUtil.getProcessorCount();
 	
 	/**
 	 * 最大线程数
 	 * <p>
 	 * 线程池最大的线程数，只有在缓冲队列满了之后才会申请超过核心线程数的线程
 	 * <p>
-	 * 默认：20
+	 * 默认：JVM的可用处理器数量 * 5
 	 */
-	private Integer maxPoolSize = 20;
+	private Integer maxPoolSize = corePoolSize * 5;
 	
 	/**
 	 * 允许线程的空闲时间（单位：秒）
@@ -102,9 +105,9 @@ public class AsyncProperties {
 	 * <p>
 	 * 如果超过这个时间还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
 	 * <p>
-	 * 默认：5
+	 * 默认：25
 	 */
-	private Integer awaitTerminationSeconds = 5;
+	private Integer awaitTerminationSeconds = 25;
 	
 	/**
 	 * 线程池拒绝策略

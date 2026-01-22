@@ -4,9 +4,10 @@ import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.util.ParamUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.validation.Valid;
+import cn.hutool.v7.core.bean.BeanUtil;
+import cn.hutool.v7.core.text.StrUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +17,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.validation.Valid;
 import java.util.Iterator;
 
 /**
@@ -30,7 +30,7 @@ public class JavaBeanArgumentResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> parameterType = parameter.getParameterType();
-		return !BeanUtils.isSimpleProperty(parameterType) && BeanUtil.isBean(parameterType);
+		return !BeanUtils.isSimpleProperty(parameterType) && BeanUtil.isWritableBean(parameterType);
 	}
 	
 	@Override

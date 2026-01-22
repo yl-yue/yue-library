@@ -24,7 +24,7 @@ public class TableExampleStandardService extends ServiceImpl<TableExampleStandar
      * @return 填充后的实体
      */
     public Result<TableExampleStandard> insert(Object entity) {
-        TableExampleStandard entityObject = Convert.toJavaBean(entity, entityClass);
+        TableExampleStandard entityObject = Convert.toJavaBean(entity, getEntityClass());
         super.save(entityObject);
         return R.success(entityObject);
     }

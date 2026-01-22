@@ -2,16 +2,13 @@ server:
   port: 8080
 spring:
   application:
-    name: yue-library-test
+    name: bl-test
   profiles:
     group:
-      "yue": "yue-library-base,yue-library-data-mybatis,yue-library-data-redis,yue-library-auth-client"
-      "test": "test-confidential"
-      "test-performance": "test-confidential-performance"
-    active: yue,test
+      "yue": "bl-web,bl-data-mybatis,bl-data-redis"
+      "test-confidential": "test-confidential"
+      "test-performance": "test-performance"
+      "test-confidential-performance": "test-confidential-performance"
+    active: yue,test-confidential
 #    active: yue,test-performance
-
-logging:
-  level:
-    ai.yue.library: debug
-#    org.springframework: debug
+#    active: yue,test-confidential-performance

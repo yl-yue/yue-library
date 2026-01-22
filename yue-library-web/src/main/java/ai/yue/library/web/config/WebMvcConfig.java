@@ -3,6 +3,7 @@ package ai.yue.library.web.config;
 import ai.yue.library.base.constant.FieldNamingStrategyEnum;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.web.config.argument.resolver.ArrayArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.CustomRequestParamMethodArgumentResolver;
 import ai.yue.library.web.config.argument.resolver.JavaBeanArgumentResolver;
@@ -11,11 +12,6 @@ import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperti
 import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.WebProperties;
 import ai.yue.library.web.config.qps.limit.QpsLimitInterceptor;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.filter.BeanContext;
 import com.alibaba.fastjson2.filter.ContextNameFilter;
@@ -30,6 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.array.ArrayUtil;
+import cn.hutool.v7.core.classloader.ClassLoaderUtil;
+import cn.hutool.v7.core.reflect.ConstructorUtil;
+import cn.hutool.v7.core.reflect.FieldUtil;
+import cn.hutool.v7.core.text.StrUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -55,6 +56,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
+	private static final String REQUEST_DECRYPT_HANDLER_CLASS = "ai.yue.library.base.crypto.aspect.key.exchange.RequestDecryptHandler";
+	private static final String KEY_EXCHANGE_ENABLED_KEY = "yue.crypto.key-exchange.enabled";
+
 	final WebProperties webProperties;
 	final FastJsonHttpMessageConverterProperties fastJsonProperties;
 	final JacksonHttpMessageConverterProperties jacksonProperties;
@@ -78,7 +82,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private void fastJsonHttpMessageConverterConfig(List<HttpMessageConverter<?>> converters) {
 		// 1. 创建消息转换器
 		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-		converter.setSupportedMediaTypes(CollUtil.newArrayList(MediaType.APPLICATION_JSON, new MediaType("application", "*+json")));
+		converter.setSupportedMediaTypes(List.of(MediaType.APPLICATION_JSON, new MediaType("application", "*+json")));
 		FastJsonConfig config = new FastJsonConfig();
 		config.setWriterFeatures(fastJsonProperties.getWriterFeatures());
 		Filter[] writerFilters = config.getWriterFilters();
@@ -166,7 +170,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		String currentName = outputContext.getCurrentName();
 		Field field = null;
 		try {
-			field = ReflectUtil.getField(currentValue.getClass(), currentName);
+			field = FieldUtil.getField(currentValue.getClass(), currentName);
 		} catch (Exception e) {
 			// 不做处理
 		}
@@ -221,6 +225,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		// 注册密钥交换请求加密Advice
+		if (ClassLoaderUtil.isPresent(REQUEST_DECRYPT_HANDLER_CLASS)) {
+			boolean keyExchangeEnabled = Boolean.valueOf(SpringUtils.getProperty(KEY_EXCHANGE_ENABLED_KEY));
+			if (keyExchangeEnabled) {
+				resolvers.add(ConstructorUtil.newInstance(REQUEST_DECRYPT_HANDLER_CLASS));
+			}
+		}
+
 		resolvers.add(new JavaBeanArgumentResolver());
 		resolvers.add(new ArrayArgumentResolver(true));
 		resolvers.add(new CustomRequestParamMethodArgumentResolver(true));

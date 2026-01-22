@@ -1,5 +1,7 @@
 package ai.yue.library.base.crypto.config.properties;
 
+import ai.yue.library.base.crypto.annotation.RequestDecrypt;
+import ai.yue.library.base.crypto.annotation.ResponseEncrypt;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -17,21 +19,17 @@ public class CryptoProperties {
 	 * Prefix of {@link CryptoProperties}.
 	 */
 	public static final String PREFIX = "yue.crypto";
-	public static final String REDIS_PREFIX = "yue:crypto";
 
 	/**
-	 * AES密钥
+	 * 启用 {@link RequestDecrypt} 注解
+	 * <p>默认：false</p>
 	 */
-	private String aesKeyt;
-	
+	private boolean enableRequestDecryptAnnotation = false;
+
 	/**
-	 * RSA公钥
+	 * 启用 {@link ResponseEncrypt} 注解
+	 * <p>默认：false</p>
 	 */
-	private String rsaPublicKeyt;
-	
-	/**
-	 * RSA私钥
-	 */
-	private String rsaPrivateKeyt;
+	private boolean enableResponseEncryptAnnotation = false;
 
 }

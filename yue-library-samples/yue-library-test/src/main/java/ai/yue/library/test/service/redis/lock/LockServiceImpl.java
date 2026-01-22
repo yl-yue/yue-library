@@ -1,11 +1,12 @@
 package ai.yue.library.test.service.redis.lock;
 
+import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.data.redis.annotation.Lock;
 import ai.yue.library.data.redis.client.LockClient;
 import ai.yue.library.test.ipo.LockIPO;
 import ai.yue.library.test.service.redis.lock.custom.CustomLockFailureStrategy;
 import ai.yue.library.test.service.redis.lock.custom.CustomLockKeyBuilder;
-import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.v7.core.thread.ThreadUtil;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,7 +72,7 @@ public class LockServiceImpl implements LockService {
         // 获取锁
         final RLock lockInstance = lockClient.lock(userId, 30000L, 5000L);
         if (lockInstance == null) {
-            throw new RuntimeException("业务处理中,请稍后再试");
+            throw new ResultException("业务处理中,请稍后再试");
         }
 
         // 获取锁成功，处理业务

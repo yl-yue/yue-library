@@ -1,11 +1,11 @@
 package ai.yue.library.base.util;
 
 import ai.yue.library.base.convert.Convert;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.*;
 import com.alibaba.fastjson2.writer.ObjectWriterProvider;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.map.MapUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -179,7 +179,7 @@ public class MapUtils extends MapUtil {
 	    while (iter.hasNext()) {
 	        Entry<String, Object> entry = iter.next();
 	        Object value = entry.getValue();
-	        if (ObjectUtils.isNull(value)) {
+	        if (ObjUtils.isNull(value)) {
 	        	iter.remove();
 	        }
 	    }

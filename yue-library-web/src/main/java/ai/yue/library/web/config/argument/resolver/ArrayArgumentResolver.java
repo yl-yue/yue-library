@@ -5,9 +5,12 @@ import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.web.util.ServletUtils;
-import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+import jakarta.validation.Valid;
+import cn.hutool.v7.core.bean.BeanUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
@@ -32,9 +35,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import javax.validation.Valid;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
@@ -151,7 +151,7 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 			}
 		}
 		
-		// yue-library
+		// bl
 		if (arg == null) {
 			JSONObject param = null;
 			try {
@@ -178,7 +178,7 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 					arg = Convert.toJSONArray(body);
 				} else if (actualTypeArgument == JSONObject.class) {
 					arg = ListUtils.toJsonList(Convert.toJSONArray(body));
-				} else if (!BeanUtils.isSimpleProperty(actualTypeArgument) && BeanUtil.isBean(actualTypeArgument)) {
+				} else if (!BeanUtils.isSimpleProperty(actualTypeArgument) && BeanUtil.isWritableBean(actualTypeArgument)) {
 					List<?> value = Convert.toJSONArray(body).toJavaList(actualTypeArgument);
 					arg = value;
 

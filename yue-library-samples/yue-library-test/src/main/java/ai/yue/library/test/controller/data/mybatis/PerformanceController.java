@@ -45,7 +45,7 @@ public class PerformanceController {
 //		Console.log("{}条JavaBean数据查询，使用Spring原生转换耗时：{}", springOriginalConvert.size(), timer.intervalRestart());
 //
 //		List<BasePersonDO> javaBeans = db.queryForList(sql, paramJson, BasePersonDO.class);
-//		Console.log("{}条JavaBean数据查询，使用yue-library Convert转换耗时：{}", javaBeans.size(), timer.intervalRestart());
+//		Console.log("{}条JavaBean数据查询，使用bl Convert转换耗时：{}", javaBeans.size(), timer.intervalRestart());
 //
 //		List<BasePersonDO> javaBeanList = Convert.toList(jsons, BasePersonDO.class);
 //		Console.log("{}条Json数据转换JavaBean耗时：{}", javaBeanList.size(), timer.intervalRestart());

@@ -2,14 +2,14 @@ package ai.yue.library.test.controller.other.docs.example.data.redis;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import ai.yue.library.data.redis.annotation.Lock;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.instance.BoundedBlockingQueue;
 import ai.yue.library.data.redis.instance.DelayedQueue;
 import ai.yue.library.data.redis.instance.LockInfo;
 import ai.yue.library.test.entity.TableExampleStandard;
 import ai.yue.library.test.service.TableExampleStandardService;
-import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.v7.core.text.StrUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RList;
 import org.redisson.api.RMap;
@@ -19,7 +19,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -115,31 +114,42 @@ public class DataRedisExample {
 	 * 有界阻塞队列
 	 */
 	public void boundedBlockingQueue() {
-		// 准备参数
+		// 准备队列数据（pojo、json、str等支持存储任意数据类型）
 		List<String> list = new ArrayList<>();
 		list.add("1");
 		list.add("2");
+
+		// 获得有界阻塞队列
 		BoundedBlockingQueue<String> boundedBlockingQueue = redis.getBoundedBlockingQueue("queueKey");
 
 		// 往队列添加数据
 		boundedBlockingQueue.addData(list);
 
-		// 消费队列数据
-		List<String> queueValue = boundedBlockingQueue.consumerData();
+		// 消费队列数据（推荐使用定时任务每隔一段时间进行消费一次）
+		List<String> queueData = boundedBlockingQueue.consumerData();
 	}
 
+	/**
+	 * 延迟队列
+	 */
 	public void delayedQueue() {
-		// 准备参数
-		LocalDateTime now = LocalDateTime.now();
-		DelayedQueue<LocalDateTime> delayedQueue = redis.getDelayedQueue("delayedQueueKey");
+		// 准备需要发送的数据（支持存储任意数据类型）
+		JSONObject msg1 = new JSONObject();
+		msg1.put("key", "msg1");
+		JSONObject msg2 = new JSONObject();
+		msg2.put("key", "msg2");
 
-		// 发送一条延迟消息
-		delayedQueue.sendDelayedMsg(now, 5, TimeUnit.SECONDS);
+		// 获得延迟队列
+		DelayedQueue<JSONObject> delayedQueue = redis.getDelayedQueue("delayedQueueKey");
+
+		// 发送一条延迟消息（msg2会被优先消费，因为msg2延迟5秒，msg1延迟10秒）
+		delayedQueue.sendDelayedMsg(msg1, 10, TimeUnit.SECONDS);
+		delayedQueue.sendDelayedMsg(msg2, 5, TimeUnit.SECONDS);
 
 		// 消费一条延迟消息
-		LocalDateTime delayedMsg = delayedQueue.consumerDelayedMsg();
+		JSONObject delayedMsg = delayedQueue.consumerDelayedMsg();
 
-		// 持续消费（监听）
+		// 持续消费-监听（此段代码只需要执行一次即可）
 		delayedQueue.consumerDelayedMsg(msg -> {
 			System.out.println(msg);
 		});

@@ -1,11 +1,11 @@
 package ai.yue.library.data.redis.aop;
 
-import ai.yue.library.base.exception.ResultException;
 import ai.yue.library.base.util.ClassUtils;
-import ai.yue.library.base.view.R;
 import ai.yue.library.data.redis.annotation.Lock;
 import ai.yue.library.data.redis.client.LockClient;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
+import ai.yue.library.data.redis.custom.DefaultLockFailureStrategy;
+import ai.yue.library.data.redis.custom.DefaultLockKeyBuilder;
 import ai.yue.library.data.redis.custom.LockFailureStrategy;
 import ai.yue.library.data.redis.custom.LockKeyBuilder;
 import lombok.Builder;
@@ -16,8 +16,6 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.redisson.api.RLock;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.OrderComparator;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.StringUtils;
 
@@ -40,7 +38,7 @@ public class LockInterceptor implements MethodInterceptor,InitializingBean {
     private final LockClient lockClient;
     private final List<LockKeyBuilder> keyBuilders;
     private final List<LockFailureStrategy> failureStrategies;
-    private LockOperation primaryLockOperation;
+    private LockOperation defaultLockOperation;
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -52,39 +50,32 @@ public class LockInterceptor implements MethodInterceptor,InitializingBean {
 
         Lock lock = AnnotatedElementUtils.findMergedAnnotation(invocation.getMethod(), Lock.class);
         RLock lockInstance = null;
+        LockOperation lockOperation = buildLockOperation(lock);
+
+        // 处理redis key前缀
+        String lockPrefix = lockProperties.getLockKeyPrefix() + ":";
+        if (StringUtils.hasText(lock.name())) {
+            lockPrefix += lock.name() + ":";
+        } else {
+            lockPrefix += ClassUtils.getMethodReferencePath(invocation.getMethod()) + ":";
+        }
+
+        // 尝试获得锁实例
+        String key = lockPrefix + lockOperation.lockKeyBuilder.buildKey(invocation, lock.keys());
         try {
-            LockOperation lockOperation = buildLockOperation(lock);
-
-            // 处理redis key前缀
-            String lockPrefix = lockProperties.getLockKeyPrefix() + ":";
-            if (StringUtils.hasText(lock.name())) {
-                lockPrefix += lock.name() + ":";
-            } else {
-                lockPrefix += ClassUtils.getMethodReferencePath(invocation.getMethod()) + ":";
-            }
-
-            // 尝试获得锁实例
-            String key = lockPrefix + lockOperation.lockKeyBuilder.buildKey(invocation, lock.keys());
             lockInstance = lockClient.lock(key, lock.expire(), lock.acquireTimeout());
             if (lockInstance != null) {
                 return invocation.proceed();
-            }
-
-            // 调用锁失败处理策略
-            lockOperation.lockFailureStrategy.onLockFailure(key, invocation.getMethod(), invocation.getArguments());
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (e instanceof ResultException) {
-                throw e;
             } else {
-                throw new ResultException(R.lockError(e.getMessage()));
+                // 调用锁失败处理策略
+                lockOperation.lockFailureStrategy.onLockFailure(key, invocation.getMethod(), invocation.getArguments());
+                return null;
             }
         } finally {
             if (lockInstance != null && lock.autoUnlock()) {
                 final boolean unlock = lockClient.unlock(lockInstance);
                 if (!unlock) {
-                    log.error("unlock fail, lockKey={}", lockInstance.getName());
+                    log.warn("unlock fail, lockKey={}", lockInstance.getName());
                 }
             }
         }
@@ -97,27 +88,22 @@ public class LockInterceptor implements MethodInterceptor,InitializingBean {
 
         LockKeyBuilder lockKeyBuilder;
         LockFailureStrategy lockFailureStrategy;
-        List<LockKeyBuilder> priorityOrderedLockBuilders = keyBuilders.stream().filter(Ordered.class::isInstance).collect(Collectors.toList());
-        if (lockProperties.getPrimaryKeyBuilder() != null) {
-            lockKeyBuilder = keyBuilderMap.get(lockProperties.getPrimaryKeyBuilder());
-        } else if (!priorityOrderedLockBuilders.isEmpty()) {
-            sortOperation(priorityOrderedLockBuilders);
-            lockKeyBuilder = priorityOrderedLockBuilders.get(0);
+
+        Class<? extends LockKeyBuilder> defaultKeyBuilder = lockProperties.getDefaultKeyBuilder();
+        if (defaultKeyBuilder != null) {
+            lockKeyBuilder = keyBuilderMap.get(defaultKeyBuilder);
         } else {
             lockKeyBuilder = keyBuilders.get(0);
         }
 
-        List<LockFailureStrategy> priorityOrderedFailures = failureStrategies.stream().filter(Ordered.class::isInstance).collect(Collectors.toList());
-        if (lockProperties.getPrimaryFailureStrategy() != null) {
-            lockFailureStrategy = failureStrategyMap.get(lockProperties.getPrimaryFailureStrategy());
-        } else if (!priorityOrderedFailures.isEmpty()) {
-            sortOperation(priorityOrderedFailures);
-            lockFailureStrategy = priorityOrderedFailures.get(0);
+        Class<? extends LockFailureStrategy> defaultFailureStrategy = lockProperties.getDefaultFailureStrategy();
+        if (defaultFailureStrategy != null) {
+            lockFailureStrategy = failureStrategyMap.get(lockProperties.getDefaultFailureStrategy());
         } else {
             lockFailureStrategy = failureStrategies.get(0);
         }
 
-        primaryLockOperation = LockOperation.builder().lockKeyBuilder(lockKeyBuilder).lockFailureStrategy(lockFailureStrategy).build();
+        defaultLockOperation = LockOperation.builder().lockKeyBuilder(lockKeyBuilder).lockFailureStrategy(lockFailureStrategy).build();
     }
 
     @Builder
@@ -138,30 +124,19 @@ public class LockInterceptor implements MethodInterceptor,InitializingBean {
         Class<? extends LockKeyBuilder> keyBuilderStrategy = lock.keyBuilderStrategy();
         Class<? extends LockFailureStrategy> failStrategy = lock.failStrategy();
 
-        if (keyBuilderStrategy == null || keyBuilderStrategy == LockKeyBuilder.class) {
-            lockKeyBuilder = primaryLockOperation.lockKeyBuilder;
+        if (keyBuilderStrategy == null || keyBuilderStrategy == DefaultLockKeyBuilder.class) {
+            lockKeyBuilder = defaultLockOperation.lockKeyBuilder;
         } else {
             lockKeyBuilder = keyBuilderMap.get(keyBuilderStrategy);
-            if (lockKeyBuilder == null) {
-
-            }
         }
 
-        if (failStrategy == null || failStrategy == LockFailureStrategy.class) {
-            lockFailureStrategy = primaryLockOperation.lockFailureStrategy;
+        if (failStrategy == null || failStrategy == DefaultLockFailureStrategy.class) {
+            lockFailureStrategy = defaultLockOperation.lockFailureStrategy;
         } else {
             lockFailureStrategy = failureStrategyMap.get(failStrategy);
         }
 
         return LockOperation.builder().lockKeyBuilder(lockKeyBuilder).lockFailureStrategy(lockFailureStrategy).build();
-    }
-
-    private void sortOperation(List<?> operations) {
-        if (operations.size() <= 1) {
-            return;
-        }
-
-        operations.sort(OrderComparator.INSTANCE);
     }
 
 }

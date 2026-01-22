@@ -1,8 +1,7 @@
 package ai.yue.library.base.config.exception;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 全局统一异常处理自动配置属性

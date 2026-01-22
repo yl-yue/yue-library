@@ -1,12 +1,11 @@
 package ai.yue.library.base.validation.annotation;
 
 import ai.yue.library.base.util.StrUtils;
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import cn.hutool.v7.core.lang.Validator;
+import cn.hutool.v7.core.text.CharUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 /**
  * @author	ylyue

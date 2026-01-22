@@ -1,16 +1,14 @@
 package ai.yue.library.data.redis.config;
 
 import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.data.redis.cache.Fastjson2SpringEncoderParser;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
-import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,14 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.cache.CacheKeyPrefix;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import javax.annotation.PostConstruct;
 
 /**
  * redis自动配置
@@ -37,43 +29,9 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableScheduling
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
-@EnableConfigurationProperties(RedisProperties.class)
-@Import(LockAutoConfiguration.class)
+@EnableConfigurationProperties({RedisProperties.class, CacheProperties.class})
+@Import({LockAutoConfiguration.class, Fastjson2SpringEncoderParser.class})
 public class RedisAutoConfig {
-
-	@Autowired
-	RedisProperties redisProperties;
-	@Autowired(required = false)
-	RedisCacheManager redisCacheManager;
-	@Autowired(required = false)
-	CacheProperties cacheProperties;
-
-	@PostConstruct
-	private void init() {
-		if (redisCacheManager == null) {
-			return;
-		}
-
-		log.debug("【初始化配置-@EnableCaching】解决缓存乱码、Key规范等问题。");
-		// 解决@Cacheable、@CachePut注解，Redis序列化乱码的问题
-		String keyPrefix = cacheProperties.getRedis().getKeyPrefix();
-		RedisCacheConfiguration defaultCacheConfig = ((RedisCacheConfiguration) ReflectUtil.getFieldValue(redisCacheManager, "defaultCacheConfig"))
-				// 解决双冒号问题（:: -> :）
-				.computePrefixWith(new CacheKeyPrefix() {
-					String SEPARATOR = ":";
-
-					@Override
-					public String compute(String cacheName) {
-						if (keyPrefix != null) {
-							return keyPrefix + cacheName + SEPARATOR;
-						} else {
-							return cacheName + SEPARATOR;
-						}
-					}
-				})
-				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer()));
-		ReflectUtil.setFieldValue(redisCacheManager, "defaultCacheConfig", defaultCacheConfig);
-	}
 
 	@Bean
 	@Primary

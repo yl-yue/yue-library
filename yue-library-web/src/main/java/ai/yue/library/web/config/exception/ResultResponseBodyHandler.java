@@ -1,6 +1,7 @@
 package ai.yue.library.web.config.exception;
 
 import ai.yue.library.base.constant.Constant;
+import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.view.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;

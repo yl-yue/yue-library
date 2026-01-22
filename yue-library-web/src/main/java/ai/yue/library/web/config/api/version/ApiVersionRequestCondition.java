@@ -1,17 +1,17 @@
 package ai.yue.library.web.config.api.version;
 
 import ai.yue.library.base.annotation.ApiVersion;
-import ai.yue.library.base.config.properties.ApiVersionProperties;
+import ai.yue.library.base.config.properties.BaseProperties;
 import ai.yue.library.base.exception.ApiDeprecatedException;
-import ai.yue.library.base.util.StrUtils;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import cn.hutool.v7.core.comparator.CompareUtil;
+import cn.hutool.v7.core.math.NumberUtil;
+import cn.hutool.v7.core.text.StrUtil;
+import cn.hutool.v7.core.text.split.SplitUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 优雅的接口版本控制，URL匹配器
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRequestCondition> {
 
 	private ApiVersion apiVersion;
-	private ApiVersionProperties apiVersionProperties;
+	private BaseProperties.ApiVersionProperties apiVersionProperties;
 	/**
 	 * {@link RequestMapping} 版本占位符索引
 	 */
@@ -40,7 +40,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     public ApiVersionRequestCondition getMatchingCondition(HttpServletRequest request) {
     	// 校验请求url中是否包含版本信息
     	String requestURI = request.getRequestURI();
-    	String[] versionPaths = StrUtils.splitToArray(requestURI, "/");
+    	String[] versionPaths = SplitUtil.splitToArray(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
 		
 		// pathVersion的值大于等于apiVersionValue皆可匹配，除非ApiVersion的deprecated值已被标注为true
@@ -66,7 +66,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
 	@Override
 	public int compareTo(ApiVersionRequestCondition apiVersionRequestCondition, HttpServletRequest request) {
 		// 当出现多个符合匹配条件的ApiVersionCondition，优先匹配版本号较大的
-		return NumberUtil.compare(apiVersionRequestCondition.getApiVersion().value(), getApiVersion().value());
+		return CompareUtil.compare(apiVersionRequestCondition.getApiVersion().value(), getApiVersion().value());
 	}
 
 }

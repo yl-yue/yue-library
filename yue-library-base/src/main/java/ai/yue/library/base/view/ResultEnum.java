@@ -47,7 +47,12 @@ public enum ResultEnum implements ResultCode {
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
 	 */
 	BAD_REQUEST(400, "ai.yue.library.base.view.ResultEnum.BAD_REQUEST.msg"),
+
 	UNAUTHORIZED(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED.msg"),
+	UNAUTHORIZED_BE_REPLACED(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_BE_REPLACED.msg"),
+	UNAUTHORIZED_KICK_OUT(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_KICK_OUT.msg"),
+	UNAUTHORIZED_TOKEN_FREEZE(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_TOKEN_FREEZE.msg"),
+
 	ATTACK(402, "ai.yue.library.base.view.ResultEnum.ATTACK.msg"),
 	FORBIDDEN(403, "ai.yue.library.base.view.ResultEnum.FORBIDDEN.msg"),
 	
@@ -87,7 +92,7 @@ public enum ResultEnum implements ResultCode {
 	IDEMPOTENT(436, "ai.yue.library.base.view.ResultEnum.IDEMPOTENT.msg"),
 	LOCK_ACQUIRE_FAILURE(437, "ai.yue.library.base.view.ResultEnum.LOCK_ACQUIRE_FAILURE.msg"),
 
-    // 500 - 服务器错误
+    // 500 - 服务端错误
 	
 	/**
 	 * {@link HttpStatus#INTERNAL_SERVER_ERROR}
@@ -118,7 +123,6 @@ public enum ResultEnum implements ResultCode {
     CLIENT_FALLBACK(507, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK.msg"),
     CLIENT_FALLBACK_ERROR(508, "ai.yue.library.base.view.ResultEnum.CLIENT_FALLBACK_ERROR.msg"),
     TYPE_CONVERT_ERROR(509, "ai.yue.library.base.view.ResultEnum.TYPE_CONVERT_ERROR.msg"),
-    LOCK_ERROR(510, "ai.yue.library.base.view.ResultEnum.LOCK_ERROR.msg"),
 
 	// 600 - 自定义错误提示
     

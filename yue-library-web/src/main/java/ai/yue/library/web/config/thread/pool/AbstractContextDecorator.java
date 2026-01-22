@@ -1,12 +1,11 @@
 package ai.yue.library.web.config.thread.pool;
 
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
-import cn.hutool.core.convert.Convert;
+import ai.yue.library.base.convert.Convert;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * <h2>子线程上下文装饰器</h2>

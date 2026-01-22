@@ -1,9 +1,8 @@
 package ai.yue.library.test.controller.other.gitee.I2ALJW;
 
-import cn.hutool.core.date.DateUtil;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
+import cn.hutool.v7.core.date.DateUtil;
 
 /**
  * @author ylyue
@@ -27,6 +26,6 @@ public class QimenApiRequest {
     @NotBlank
     private String customerId = "wms";
     @NotBlank
-    private String timestamp = DateUtil.now();
+    private String timestamp = DateUtil.now().toString();
 
 }

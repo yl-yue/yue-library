@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library</artifactId>
+		<artifactId>bl</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-web</artifactId>
-	<version>${yue-library-web.version}${sha1}${changelist}</version>
-	<name>yue-library-web</name>
+	<version>${bl-web.version}${sha1}${changelist}</version>
+	<name>bl-web</name>
 	<description>yue-基础库-web</description>
 	
 	<dependencies>

@@ -3,9 +3,7 @@ package ai.yue.library.test.controller.data.mybatis;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.test.service.LogicDeleteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 逻辑删除测试
@@ -20,22 +18,42 @@ public class LogicDeleteController {
 	@Autowired
     LogicDeleteService logicDeleteService;
 
-    @DeleteMapping("/testDefault")
+    @PostMapping("/testDefault")
     public Result<?> testDefault() {
         return logicDeleteService.testDefault();
     }
 
-    @DeleteMapping("/getLogicDelete")
+    @GetMapping("/getLogicDelete")
     public Result<?> getLogicDelete() {
         return logicDeleteService.getLogicDelete();
     }
 
-    @DeleteMapping("/listLogicDelete")
+    @GetMapping("/listLogicDelete")
     public Result<?> listLogicDelete() {
         return logicDeleteService.listLogicDelete();
     }
 
-    @DeleteMapping("/updateLogicDelete")
+    @GetMapping("/listLogicDeleteData")
+    public Result<?> listLogicDeleteData() {
+        return logicDeleteService.listLogicDeleteData();
+    }
+
+    @GetMapping("/queryLogicDelete1")
+    public Result<?> queryLogicDelete1() {
+        return logicDeleteService.queryLogicDelete1();
+    }
+
+    @GetMapping("/queryLogicDelete3")
+    public Result<?> queryLogicDelete3() {
+        return logicDeleteService.queryLogicDelete3();
+    }
+
+    @GetMapping("/queryLogicDeleteAll")
+    public Result<?> queryLogicDeleteAll() {
+        return logicDeleteService.queryLogicDeleteAll();
+    }
+
+    @PutMapping("/updateLogicDelete")
     public Result<?> updateLogicDelete() {
         return logicDeleteService.updateLogicDelete();
     }

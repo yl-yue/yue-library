@@ -1,16 +1,16 @@
 package ai.yue.library.web.config.argument.resolver;
 
+import ai.yue.library.web.util.ServletUtils;
+import lombok.extern.slf4j.Slf4j;
+
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import ai.yue.library.web.util.ServletUtils;
 
 /**
  * 包装HttpServletRequest实现输入流可重复读取
@@ -18,6 +18,7 @@ import ai.yue.library.web.util.ServletUtils;
  * @author	ylyue
  * @since	2020年9月3日
  */
+@Slf4j
 public class RepeatedlyReadServletRequestWrapper extends HttpServletRequestWrapper {
 	
 	/**
@@ -27,8 +28,15 @@ public class RepeatedlyReadServletRequestWrapper extends HttpServletRequestWrapp
 
 	public RepeatedlyReadServletRequestWrapper(HttpServletRequest request) {
 		super(request);
-		// 获取流中的数据放到字节数组中
-		body = ServletUtils.getBodyBytes(request);
+
+		try {
+			// 获取流中的数据放到字节数组中
+			body = ServletUtils.getBodyBytes(request);
+		} catch (Exception e) {
+			String requestUri = request.getMethod() + " " + request.getRequestURI();
+			log.error("requestUri: {}", requestUri);
+			throw e;
+		}
 	}
 
 	@Override
@@ -42,7 +50,7 @@ public class RepeatedlyReadServletRequestWrapper extends HttpServletRequestWrapp
 		final ByteArrayInputStream body = new ByteArrayInputStream(this.body);
 
 		return new ServletInputStream() {
-			
+
 			@Override
 			public boolean isFinished() {
 				return false;
@@ -55,7 +63,6 @@ public class RepeatedlyReadServletRequestWrapper extends HttpServletRequestWrapp
 
 			@Override
 			public void setReadListener(ReadListener readListener) {
-
 			}
 
 			@Override

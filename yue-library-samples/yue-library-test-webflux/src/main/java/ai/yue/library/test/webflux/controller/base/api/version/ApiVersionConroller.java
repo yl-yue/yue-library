@@ -1,13 +1,12 @@
 package ai.yue.library.test.webflux.controller.base.api.version;
 
+import ai.yue.library.base.annotation.ApiVersion;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import ai.yue.library.base.annotation.api.version.ApiVersion;
-import ai.yue.library.base.view.Result;
-import ai.yue.library.base.view.R;
 
 /**
  * @author	ylyue

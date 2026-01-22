@@ -3,11 +3,15 @@ package ai.yue.library.test.controller.data.redis;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.redis.annotation.Lock;
+import ai.yue.library.data.redis.client.Redis;
+import ai.yue.library.data.redis.custom.IgnoreLockFailureStrategy;
+import ai.yue.library.data.redis.instance.LockInfo;
+import ai.yue.library.data.redis.instance.LockMapInfo;
 import ai.yue.library.test.ipo.LockIPO;
 import ai.yue.library.test.service.redis.lock.LockService;
-import cn.hutool.core.thread.ThreadUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.hutool.v7.core.thread.ThreadUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +23,85 @@ import java.util.concurrent.Executors;
  * 分布式锁测试
  */
 @RestController
-@RequestMapping("lock")
+@RequestMapping("/lock")
+@RequiredArgsConstructor
 public class LockController {
 
-    @Autowired
-    LockService lockService;
+    final Redis redis;
+    final LockService lockService;
 
     @Lock
 //    @Lock(keys = "1")
     @PostMapping("/controller")
     public Result<?> controller() {
+        System.out.println("执行逻辑...开始...");
+        ThreadUtil.sleep(5000L);
+        System.out.println("执行逻辑...结束...");
+        return R.success();
+    }
+
+    @PostMapping("/testLockInfo")
+    public Result<?> testLockInfo() {
+        System.out.println("执行逻辑...开始...");
+        LockInfo lockInfo = redis.lock("testLockInfo", 5000);
+        if (lockInfo.isLock()) {
+            ThreadUtil.sleep(2000L);
+            System.out.println("执行逻辑...结束...");
+            redis.unlock(lockInfo);
+            return R.success();
+        }
+
+        return R.errorPrompt("未能获取锁");
+    }
+
+    @PostMapping("/testLockMapInfo")
+    public Result<?> testLockMapInfo() {
+        System.out.println("执行逻辑...开始...");
+        LockMapInfo lockMapInfo = redis.lockMap("testLockMapInfo", "uuid1", 5000);
+        if (lockMapInfo.isLock()) {
+            ThreadUtil.sleep(2000L);
+            System.out.println("执行逻辑...结束...");
+            redis.unlockMap(lockMapInfo);
+            return R.success();
+        }
+
+        return R.errorPrompt("未能获取锁");
+    }
+
+    @Lock
+    @PostMapping("/testLockException")
+    public Result<?> testLockException() {
+        System.out.println("执行逻辑...开始...");
+        ThreadUtil.sleep(1000L);
+        throw new RuntimeException("测试异常");
+//        throw new ResultException("测试异常");
+    }
+
+    @PostMapping("/testLockTimeoutException")
+    public Result<?> testLockTimeoutException() {
+        System.out.println("执行逻辑...开始...");
+        LockMapInfo lockMapInfo = redis.lockMap("mapLock", "uuid1", 1000);
+//        if (lockMapInfo.isLock()) {
+            ThreadUtil.sleep(35000L);
+            System.out.println("执行逻辑...结束...");
+//        }
+
+        redis.unlockMap(lockMapInfo);
+        return R.success();
+    }
+
+    @Lock
+    @PostMapping("/testDefaultLockFailureStrategy")
+    public Result<?> testDefaultLockFailureStrategy() {
+        System.out.println("执行逻辑...开始...");
+        ThreadUtil.sleep(5000L);
+        System.out.println("执行逻辑...结束...");
+        return R.success();
+    }
+
+    @Lock(acquireTimeout = 0, failStrategy = IgnoreLockFailureStrategy.class)
+    @PostMapping("/testIgnoreLockFailureStrategy")
+    public Result<?> testIgnoreLockFailureStrategy() {
         System.out.println("执行逻辑...开始...");
         ThreadUtil.sleep(5000L);
         System.out.println("执行逻辑...结束...");

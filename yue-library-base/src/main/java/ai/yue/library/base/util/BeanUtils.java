@@ -1,7 +1,7 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.v7.core.bean.BeanUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 /**
  * Bean解析工具类
@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
  * @author	ylyue
  * @since	2020年8月29日
  */
+
 public class BeanUtils extends BeanUtil {
 
 	public static final String GET_METHOD_NAME_FORMAT = "get%s";
@@ -38,7 +39,7 @@ public class BeanUtils extends BeanUtil {
 	 * 是否存在字段
 	 */
 	public static boolean isExistField(Class<?> clazz, String fieldName) {
-		return getBeanDesc(clazz).getField(fieldName) != null;
+		return getBeanDesc(clazz).getProp(fieldName) != null;
 	}
 
 }

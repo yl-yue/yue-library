@@ -1,9 +1,9 @@
 package ai.yue.library.base.util;
 
 import ai.yue.library.base.exception.ParamException;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.v7.core.math.NumberUtil;
+import cn.hutool.v7.core.text.CharUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

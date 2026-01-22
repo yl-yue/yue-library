@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 /**
  * String工具类

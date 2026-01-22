@@ -1,0 +1,32 @@
+spring:
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.actuate.autoconfigure.elasticsearch.ElasticSearchRestHealthContributorAutoConfiguration
+    - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    dynamic:
+      primary: mysql #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      datasource:
+        mysql:
+          url: jdbc:mysql://tidb.bkeopr166xzc.clusters.tidb-cloud.com:4000/live?useConfigs=maxPerformance&rewriteBatchedStatements=true&allowMultiQueries=true&useServerPrepStmts=true&socketTimeout=300000&sessionVariables=wait_timeout=3600&sessionVariables=max_execution_time=300000
+          username: root
+          password: wI7UOXPdwy91KlSM
+
+  redis:
+    redisson:
+      config: |
+        masterSlaveServersConfig:
+          masterAddress: "redis://10.233.70.160:6379"
+          slaveAddresses:
+            - "redis://10.233.70.160:6380"
+          password: QExBUFRPUC1FNFFHU1JVM342
+
+yue:
+  web:
+    enable-global-api-qps-limit: false
+
+# 扩展配置文件-覆盖引用配置
+logging:
+  level:
+    druid.sql.Statement: info

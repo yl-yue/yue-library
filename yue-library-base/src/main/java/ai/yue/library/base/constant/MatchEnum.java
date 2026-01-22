@@ -1,7 +1,7 @@
 package ai.yue.library.base.constant;
 
 import ai.yue.library.base.util.ListUtils;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.v7.core.text.StrUtil;
 
 import java.util.List;
 

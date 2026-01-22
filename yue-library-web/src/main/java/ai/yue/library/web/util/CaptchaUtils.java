@@ -1,21 +1,34 @@
 package ai.yue.library.web.util;
 
+import ai.yue.library.base.exception.ResultException;
+import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.util.StrUtils;
+import ai.yue.library.base.view.R;
+import ai.yue.library.base.view.ResultPrompt;
+import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.web.ipo.CaptchaIPO;
 import ai.yue.library.web.vo.CaptchaVO;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.Nullable;
+import javax.imageio.ImageIO;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.Duration;
 import java.util.Random;
 
 /**
  * 验证码工具类，用于创建验证码图片与验证验证码
- * <p>若需要分布式验证，推荐使用 yue-library-data-redis 模块 User 类所提供的 getCaptchaImage() 方法
+ * <p>若需要分布式验证，推荐使用 bl-data-redis 模块 User 类所提供的 getCaptchaImage() 方法
  * 
  * @author	ylyue
  * @since	2018年4月3日
  */
+@Slf4j
 public class CaptchaUtils {
 	
 	/**
@@ -112,5 +125,59 @@ public class CaptchaUtils {
 		httpSession.removeAttribute(CAPTCHA_KEY);
 		return true;
     }
-    
+
+    /**
+     * 获得-验证码图片（基于redis解决分布式验证的问题）
+     * <p>将验证码设置到redis
+     * <p>将验证码图片写入response，并设置ContentType为image/png
+     *
+     * @param captchaTimeout 验证码超时时间（单位：秒），默认360秒（6分钟）
+     */
+    public void getCaptchaImage(@Nullable Integer captchaTimeout) {
+        // 1. 处理参数
+        if (captchaTimeout == null) {
+            captchaTimeout = 360;
+        }
+
+        // 2. 创建图片验证码
+        CaptchaVO captchaVO = CaptchaUtils.createCaptchaImage(CaptchaIPO.builder().build());
+        String captcha = captchaVO.getCaptcha();
+        BufferedImage captchaImage = captchaVO.getCaptchaImage();
+
+        // 3. 设置验证码到Redis
+        String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
+        Redis redis = SpringUtils.getBean(Redis.class);
+        redis.set(captcha_redis_key, captcha, Duration.ofSeconds(captchaTimeout) );
+
+        // 4. 设置验证码到响应输出流
+        HttpServletResponse response = ServletUtils.getResponse();
+        response.setContentType("image/png");
+        OutputStream output;
+        try {
+            output = response.getOutputStream();
+            // 响应结束时servlet会自动将output关闭
+            ImageIO.write(captchaImage, "png", output);
+        } catch (IOException e) {
+            log.error("验证码响应输出流异常", e);
+        }
+    }
+
+    /**
+     * 验证-验证码（基于redis解决分布式验证的问题）
+     * <p>验证码错误会抛出一个{@linkplain ResultException}异常，作为结果提示...<br>
+     *
+     * @param captcha 验证码
+     * @throws ResultException 验证码错误
+     */
+    public void captchaValidate(String captcha) {
+        String captcha_redis_key = String.format(CaptchaUtils.CAPTCHA_REDIS_PREFIX, captcha);
+        Redis redis = SpringUtils.getBean(Redis.class);
+        String randCaptcha = redis.get(captcha_redis_key);
+        if (StrUtils.isEmpty(randCaptcha) || !randCaptcha.equalsIgnoreCase(captcha)) {
+            throw new ResultException(R.errorPrompt(ResultPrompt.CAPTCHA_ERROR));
+        }
+
+        redis.delete(captcha_redis_key);
+    }
+
 }

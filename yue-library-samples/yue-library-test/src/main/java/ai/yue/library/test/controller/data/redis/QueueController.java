@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,16 +35,27 @@ public class QueueController {
     /**
      * 持续消费延迟队列
      */
-//    @PostConstruct
+    @PostConstruct
     public void consumerDelayedMsg() {
+        // 同步等待消费
         DelayedQueue<LocalDateTime> delayedQueue = redis.getDelayedQueue("test");
         delayedQueue.consumerDelayedMsg(delayedMsg -> {
             System.out.println("接收到延迟消息：" + delayedMsg + ", 当前时间：" + LocalDateTime.now());
+//            throw new RuntimeException("抛出异常，不会中断循环线程下次执行");
         });
 
+        // 异步订阅消费
         DelayedQueue<LocalDateTime> delayedQueue2 = redis.getDelayedQueue("test2");
-        delayedQueue2.consumerDelayedMsg(delayedMsg -> {
+        delayedQueue2.consumerDelayedMsgAsync(delayedMsg -> {
             System.out.println("接收到延迟消息：" + delayedMsg + ", 当前时间：" + LocalDateTime.now());
+//            throw new RuntimeException("抛出异常，不会中断循环线程下次执行");
+
+            try {
+                Long heartbeat = redis.get("heartbeat");
+                System.out.println("heartbeat: " + heartbeat);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 

@@ -5,10 +5,7 @@ import ai.yue.library.data.redis.aop.LockInterceptor;
 import ai.yue.library.data.redis.client.LockClient;
 import ai.yue.library.data.redis.client.Redis;
 import ai.yue.library.data.redis.config.properties.RedisProperties;
-import ai.yue.library.data.redis.custom.DefaultLockFailureStrategy;
-import ai.yue.library.data.redis.custom.DefaultLockKeyBuilder;
-import ai.yue.library.data.redis.custom.LockFailureStrategy;
-import ai.yue.library.data.redis.custom.LockKeyBuilder;
+import ai.yue.library.data.redis.custom.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,15 +34,22 @@ public class LockAutoConfiguration {
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     @Bean
     @ConditionalOnMissingBean
-    public LockKeyBuilder lockKeyBuilder(BeanFactory beanFactory) {
+    public DefaultLockKeyBuilder defaultLockKeyBuilder(BeanFactory beanFactory) {
         return new DefaultLockKeyBuilder(beanFactory);
     }
 
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     @Bean
     @ConditionalOnMissingBean
-    public LockFailureStrategy lockFailureStrategy() {
+    public DefaultLockFailureStrategy defaultLockFailureStrategy() {
         return new DefaultLockFailureStrategy();
+    }
+
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    @Bean
+    @ConditionalOnMissingBean
+    public IgnoreLockFailureStrategy ignoreLockFailureStrategy() {
+        return new IgnoreLockFailureStrategy();
     }
 
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)

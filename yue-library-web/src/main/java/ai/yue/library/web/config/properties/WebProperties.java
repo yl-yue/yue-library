@@ -28,9 +28,9 @@ public class WebProperties {
 	/**
 	 * {@link RepeatedlyReadServletRequestFilter} 优先级
 	 * <p>值越小优先级越高
-	 * <p>默认：-999，比常规过滤器更高的优先级，防止输入流被更早读取
+	 * <p>默认：-1200，比常规过滤器更高的优先级，防止输入流被更早读取
 	 */
-	private int repeatedlyReadServletRequestFilterOrder = -999;
+	private int repeatedlyReadServletRequestFilterOrder = -1200;
 
 	/**
 	 * 启用接口幂等拦截
@@ -55,5 +55,12 @@ public class WebProperties {
 	 * <p>默认：3000
 	 */
 	private int globalApiQps = 3000;
+
+	/**
+	 * 启用Jvm空闲优化
+	 * - 程序空闲时进行回收内存，解除内存占用，让服务器资源得到充分利用，弹性资源策略
+	 * <p>默认：true
+	 */
+	private boolean enableJvmIdleOptimization = true;
 
 }

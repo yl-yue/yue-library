@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class TableExampleEliminateService extends ServiceImpl<TableExampleEliminateMapper, TableExampleEliminate> {
 
     public Result<TableExampleEliminate> insert(Object entity) {
-        TableExampleEliminate entityObject = Convert.toJavaBean(entity, entityClass);
+        TableExampleEliminate entityObject = Convert.toJavaBean(entity, getEntityClass());
         super.save(entityObject);
         return R.success(entityObject);
     }

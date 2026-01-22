@@ -3,7 +3,7 @@ package ai.yue.library.data.redis.instance;
 import ai.yue.library.base.util.DateUtils;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Redis Lock

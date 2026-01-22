@@ -1,13 +1,13 @@
 package ai.yue.library.base.config.net.proxy;
 
-import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.text.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 

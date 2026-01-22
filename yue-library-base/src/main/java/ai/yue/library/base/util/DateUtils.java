@@ -1,6 +1,7 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.date.DateUtil;
+import ai.yue.library.base.util.time.interval.TimeInterval;
+import cn.hutool.v7.core.date.DateUtil;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -256,7 +257,19 @@ public class DateUtils extends DateUtil {
 		ZoneId zoneId = ZoneId.systemDefault();// 时区
 		return instant.atZone(zoneId).toLocalDateTime();
 	}
-	
+
+	/**
+	 * 将 {@linkplain Long} 转 {@linkplain LocalDateTime}
+	 * <p>默认使用系统时区转换
+	 *
+	 * @param timestamp 时间戳
+	 * @return 本地日期时间
+	 */
+	public static LocalDateTime toLocalDateTime(long timestamp) {
+		Date date = new Date(timestamp);
+		return toLocalDateTime(date);
+	}
+
 	/**
 	 * 将毫秒时间（时间戳）转化为标准日期字符串格式
 	 * 
@@ -352,5 +365,15 @@ public class DateUtils extends DateUtil {
 	public static long dateDaysDifference(LocalDate startDate, LocalDate endDate) {
 		return startDate.toEpochDay() - endDate.toEpochDay();
 	}
-	
+
+	/**
+	 * 计时器<br>
+	 * 计算某个过程花费的时间，精确到毫秒
+	 *
+	 * @return Timer
+	 */
+	public static TimeInterval timer() {
+		return new TimeInterval();
+	}
+
 }

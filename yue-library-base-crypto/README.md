@@ -3,12 +3,12 @@
 
 ## 快速开始
 ### 引入模块
-`yue-library-dependencies`作为父项目，在`pom.xml`文件中添加：
+`bl-dependencies`作为父项目，在`pom.xml`文件中添加：
 ``` pom
 <dependencies>
 	<dependency>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library-base-crypto</artifactId>
+		<artifactId>bl-base-crypto</artifactId>
 	</dependency>
 </dependencies>
 ```

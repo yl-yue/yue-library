@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.RequestParamMethodArgumentResolver;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * {@linkplain RequestParamMethodArgumentResolver} 增强
@@ -34,7 +34,7 @@ public class CustomRequestParamMethodArgumentResolver extends RequestParamMethod
 		// 保留原始逻辑
 		Object arg = super.resolveName(name, parameter, request);
 
-		// yue-library
+		// bl
 		if (arg == null) {
 			arg = ServletUtils.getParamToJson(servletRequest).get(name);
 		}

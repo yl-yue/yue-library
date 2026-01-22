@@ -19,6 +19,7 @@ public class LogicDeleteInterceptor extends FieldInterceptor {
     public LogicDeleteInterceptor(MybatisProperties mybatisProperties) {
         this.interceptorName = "逻辑删除拦截器";
         this.ignoreTableList = mybatisProperties.getIgnoreTableLogicDeletes();
+        this.ignoreDsList = mybatisProperties.getIgnoreDsLogicDeletes();
         this.classField = DbConstant.CLASS_DELETE_TIME;
         this.dbField = DbConstant.DB_DELETE_TIME;
         this.tenantIdExpression = new LongValue(0L);

@@ -9,7 +9,7 @@
 - 异步线程池：共用父线程上下文环境，异步执行任务时不丢失token
 
 ## 配置项
-　　`yue-library-base`自动装配了一系列的基础Bean与环境配置项，可在<b>application.yml</b>文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
+　　`bl-base`自动装配了一系列的基础Bean与环境配置项，可在<b>application.yml</b>文件中配置关闭，所有配置项皆是以`yue.*`开头，如：`yue.cors.allow=false`代表不允许跨域。
 
 ### 默认配置项
 - Validator-校验器 （唯一Bean，可直接覆盖）

@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * yue-library测试用例
+ * bl测试用例
  * 区别于maven测试用例
  *
  * @author ylyue

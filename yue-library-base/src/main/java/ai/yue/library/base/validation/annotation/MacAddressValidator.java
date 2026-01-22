@@ -1,10 +1,10 @@
 package ai.yue.library.base.validation.annotation;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import ai.yue.library.base.util.StrUtils;
-import cn.hutool.core.lang.Validator;
+import cn.hutool.v7.core.lang.Validator;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * MAC地址校验器

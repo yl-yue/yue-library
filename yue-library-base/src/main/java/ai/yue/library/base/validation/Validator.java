@@ -6,20 +6,19 @@ import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.util.StrUtils;
 import ai.yue.library.base.view.R;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
+import jakarta.validation.ConstraintViolation;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.date.DateUtil;
+import cn.hutool.v7.core.exception.ValidateException;
+import cn.hutool.v7.core.math.NumberUtil;
+import cn.hutool.v7.core.text.StrUtil;
+import cn.hutool.v7.core.util.ObjUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintViolation;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +38,7 @@ public class Validator {
 
     private Object param;
     @Autowired
-	private javax.validation.Validator validator;
+	private jakarta.validation.Validator validator;
     
     // 提示
 	private static final String NOT_NULL_HINT_MSG = "参数 {} 必须不为 null";
@@ -97,7 +96,7 @@ public class Validator {
      * @return Validator
      */
     public Validator notNull(String paramName) {
-    	cn.hutool.core.lang.Validator.validateNotNull(param, StrUtil.format(NOT_NULL_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateNotNull(param, StrUtil.format(NOT_NULL_HINT_MSG, paramName));
         return this;
     }
     
@@ -108,7 +107,7 @@ public class Validator {
      * @return Validator
      */
     public Validator notEmpty(String paramName) {
-		cn.hutool.core.lang.Validator.validateNotEmpty(param, StrUtil.format(NOT_EMPTY_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateNotEmpty(param, StrUtil.format(NOT_EMPTY_HINT_MSG, paramName));
         return this;
     }
     
@@ -119,7 +118,7 @@ public class Validator {
      * @return Validator
      */
     public Validator assertTrue(String paramName) {
-		cn.hutool.core.lang.Validator.validateTrue((boolean) param, StrUtil.format(ASSERT_TRUE_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateTrue((boolean) param, StrUtil.format(ASSERT_TRUE_HINT_MSG, paramName));
         return this;
     }
     
@@ -130,7 +129,7 @@ public class Validator {
      * @return Validator
      */
     public Validator assertFalse(String paramName) {
-		cn.hutool.core.lang.Validator.validateFalse((boolean) param, StrUtil.format(ASSERT_FALSE_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateFalse((boolean) param, StrUtil.format(ASSERT_FALSE_HINT_MSG, paramName));
         return this;
     }
     
@@ -143,7 +142,7 @@ public class Validator {
      * @return Validator
      */
 	public Validator digits(Number min, Number max, String paramName) {
-		cn.hutool.core.lang.Validator.validateBetween((Number) param, min, max,	StrUtil.format(DIGITS_HINT_MSG, paramName, min, max));
+		cn.hutool.v7.core.lang.Validator.validateBetween((Number) param, min, max,	StrUtil.format(DIGITS_HINT_MSG, paramName, min, max));
 		return this;
 	}
     
@@ -157,10 +156,10 @@ public class Validator {
 	public Validator max(Number max, String paramName) {
 		BigDecimal bigNum1 = NumberUtil.toBigDecimal((Number) param);
 		BigDecimal bigNum2 = NumberUtil.toBigDecimal(max);
-		
-    	if (!NumberUtil.isLessOrEqual(bigNum1, bigNum2)) {
-    		throw new ValidateException(StrUtil.format(MAX_HINT_MSG, paramName, max));
-    	}
+
+		if (bigNum1.compareTo(bigNum2) != -1) {
+			throw new ValidateException(StrUtil.format(MAX_HINT_MSG, paramName, max));
+		}
         return this;
     }
     
@@ -174,8 +173,8 @@ public class Validator {
     public Validator min(Number min, String paramName) {
 		BigDecimal bigNum1 = NumberUtil.toBigDecimal((Number) param);
 		BigDecimal bigNum2 = NumberUtil.toBigDecimal(min);
-		
-    	if (!NumberUtil.isGreaterOrEqual(bigNum1, bigNum2)) {
+
+		if (bigNum1.compareTo(bigNum2) != 1) {
     		throw new ValidateException(StrUtil.format(MIN_HINT_MSG, paramName, min));
     	}
         return this;
@@ -190,7 +189,7 @@ public class Validator {
      * @return Validator
      */
 	public Validator length(int min, int max, String paramName) {
-		int length = ObjectUtil.length(param);
+		int length = ObjUtil.length(param);
 		if (false == (length >= min && length <= max)) {
 			throw new ValidateException(StrUtil.format(LENGTH_HINT_MSG, paramName, min, max));
 		}
@@ -205,7 +204,7 @@ public class Validator {
      * @return Validator
      */
     public Validator chinese(String paramName) {
-    	cn.hutool.core.lang.Validator.validateChinese((CharSequence) param, StrUtil.format(CHINESE_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateChinese((CharSequence) param, StrUtil.format(CHINESE_HINT_MSG, paramName));
         return this;
     }
     
@@ -216,7 +215,7 @@ public class Validator {
      * @return Validator
      */
     public Validator english(String paramName) {
-    	cn.hutool.core.lang.Validator.validateWord((CharSequence) param, StrUtil.format(ENGLISH_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateWord((CharSequence) param, StrUtil.format(ENGLISH_HINT_MSG, paramName));
         return this;
     }
 
@@ -245,7 +244,7 @@ public class Validator {
 			throw new ResultException(R.paramValueInvalid(StrUtil.format("参数 {} 未知类型，不支持生日校验", paramName)));
 		}
 		
-    	cn.hutool.core.lang.Validator.validateBirthday(date, StrUtil.format(BIRTHDAY_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateBirthday(date, StrUtil.format(BIRTHDAY_HINT_MSG, paramName));
         return this;
     }
 
@@ -263,7 +262,7 @@ public class Validator {
      * @return Validator
      */
     public Validator cellphone(String paramName) {
-    	cn.hutool.core.lang.Validator.validateMobile((CharSequence) param, StrUtil.format(CELLPHONE_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateMobile((CharSequence) param, StrUtil.format(CELLPHONE_HINT_MSG, paramName));
         return this;
     }
 
@@ -281,7 +280,7 @@ public class Validator {
      * @return Validator
      */
     public Validator email(String paramName) {
-    	cn.hutool.core.lang.Validator.validateEmail((CharSequence) param, StrUtil.format(EMAIL_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateEmail((CharSequence) param, StrUtil.format(EMAIL_HINT_MSG, paramName));
         return this;
     }
 
@@ -300,7 +299,7 @@ public class Validator {
      * @return Validator
      */
     public Validator idCard(String paramName) {
-    	cn.hutool.core.lang.Validator.validateCitizenIdNumber((CharSequence) param, StrUtil.format(ID_CARD_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateCitizenIdNumber((CharSequence) param, StrUtil.format(ID_CARD_HINT_MSG, paramName));
         return this;
     }
 
@@ -318,7 +317,7 @@ public class Validator {
      * @return Validator
      */
     public Validator plateNumber(String paramName) {
-    	cn.hutool.core.lang.Validator.validatePlateNumber((CharSequence) param, StrUtil.format(PLATE_NUMBER_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validatePlateNumber((CharSequence) param, StrUtil.format(PLATE_NUMBER_HINT_MSG, paramName));
         return this;
     }
     
@@ -329,7 +328,7 @@ public class Validator {
      * @return Validator
      */
     public Validator uuid(String paramName) {
-    	cn.hutool.core.lang.Validator.validateUUID((CharSequence) param, StrUtil.format(UUID_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateUUID((CharSequence) param, StrUtil.format(UUID_HINT_MSG, paramName));
         return this;
     }
     
@@ -340,7 +339,7 @@ public class Validator {
      * @return Validator
      */
     public Validator url(String paramName) {
-    	cn.hutool.core.lang.Validator.validateUrl((CharSequence) param, StrUtil.format(URL_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateUrl((CharSequence) param, StrUtil.format(URL_HINT_MSG, paramName));
         return this;
     }
     
@@ -351,7 +350,7 @@ public class Validator {
      * @return Validator
      */
     public Validator ipv4(String paramName) {
-    	cn.hutool.core.lang.Validator.validateIpv4((CharSequence) param, StrUtil.format(IPV4_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateIpv4((CharSequence) param, StrUtil.format(IPV4_HINT_MSG, paramName));
         return this;
     }
 	
@@ -362,7 +361,7 @@ public class Validator {
      * @return Validator
      */
     public Validator ipv6(String paramName) {
-    	cn.hutool.core.lang.Validator.validateIpv6((CharSequence) param, StrUtil.format(IPV6_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateIpv6((CharSequence) param, StrUtil.format(IPV6_HINT_MSG, paramName));
         return this;
     }
     
@@ -373,7 +372,7 @@ public class Validator {
      * @return Validator
      */
     public Validator macAddress(String paramName) {
-    	cn.hutool.core.lang.Validator.validateMac((CharSequence) param, StrUtil.format(MAC_ADDRESS_HINT_MSG, paramName));
+    	cn.hutool.v7.core.lang.Validator.validateMac((CharSequence) param, StrUtil.format(MAC_ADDRESS_HINT_MSG, paramName));
         return this;
     }
 
@@ -384,7 +383,7 @@ public class Validator {
 	 * @return Validator
 	 */
 	public Validator carDrivingLicence(String paramName) {
-		cn.hutool.core.lang.Validator.validateCarDrivingLicence((CharSequence) param, StrUtil.format(CAR_DRIVING_LICENCE_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateCarDrivingLicence((CharSequence) param, StrUtil.format(CAR_DRIVING_LICENCE_HINT_MSG, paramName));
 		return this;
 	}
 
@@ -395,7 +394,7 @@ public class Validator {
 	 * @return Validator
 	 */
 	public Validator carVin(String paramName) {
-		cn.hutool.core.lang.Validator.validateCarVin((CharSequence) param, StrUtil.format(CAR_VIN_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateCarVin((CharSequence) param, StrUtil.format(CAR_VIN_HINT_MSG, paramName));
 		return this;
 	}
 
@@ -413,7 +412,7 @@ public class Validator {
 	 * @return Validator
 	 */
 	public Validator creditCode(String paramName) {
-		if (cn.hutool.core.lang.Validator.isCreditCode((CharSequence) param) == false) {
+		if (cn.hutool.v7.core.lang.Validator.isCreditCode((CharSequence) param) == false) {
 			throw new ValidateException(CREDIT_CODE_HINT_MSG, paramName);
 		}
 
@@ -427,7 +426,7 @@ public class Validator {
 	 * @return Validator
 	 */
 	public Validator zipCode(String paramName) {
-		cn.hutool.core.lang.Validator.validateZipCode((CharSequence) param, StrUtil.format(ZIP_CODE_HINT_MSG, paramName));
+		cn.hutool.v7.core.lang.Validator.validateZipCode((CharSequence) param, StrUtil.format(ZIP_CODE_HINT_MSG, paramName));
 		return this;
 	}
 
@@ -460,7 +459,7 @@ public class Validator {
 			if (value.contains("@")) {
 				isValid = false;
 			}
-			if (cn.hutool.core.lang.Validator.isMobile(value) == true) {
+			if (cn.hutool.v7.core.lang.Validator.isMobile(value) == true) {
 				isValid = false;
 			}
 		} else {
@@ -482,7 +481,7 @@ public class Validator {
      * @return Validator
      */
 	public Validator regex(String regex, String paramName) {
-		cn.hutool.core.lang.Validator.validateMatchRegex(regex, (CharSequence) param, StrUtil.format(REGEX_HINT_MSG, paramName, regex));
+		cn.hutool.v7.core.lang.Validator.validateMatchRegex(regex, (CharSequence) param, StrUtil.format(REGEX_HINT_MSG, paramName, regex));
 		return this;
 	}
 
@@ -496,21 +495,19 @@ public class Validator {
 	public Validator valid(Object param, Class<?>... groups) {
 		Set<ConstraintViolation<Object>> violations = validator.validate(param, groups);
 		if (violations.size() > 0) {
-			log.warn("{} violations.", violations.size());
-			Console.log("校验对象：{}", param);
 			JSONArray errorHints = new JSONArray();
 			violations.forEach(violation -> {
-				String errorkey = violation.getPropertyPath().toString();
+				String errorKey = violation.getPropertyPath().toString();
 				Object errorValue = violation.getInvalidValue();
 				String errorHintMsg = I18nUtils.getYue(violation.getMessage());
 				JSONObject errorHint = new JSONObject();
-				errorHint.put("errorkey", errorkey);
+				errorHint.put("errorKey", errorKey);
 				errorHint.put("errorValue", errorValue);
 				errorHint.put("errorHintMsg", errorHintMsg);
 				errorHints.add(errorHint);
-				System.out.println(errorHint.toString(JSONWriter.Feature.WriteMapNullValue));
 			});
-			
+
+			log.error("校验对象：{}", param);
 			throw new ValidateException(errorHints.toString(JSONWriter.Feature.WriteMapNullValue));
 		}
     	

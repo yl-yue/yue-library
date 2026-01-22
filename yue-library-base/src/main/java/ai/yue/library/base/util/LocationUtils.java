@@ -1,9 +1,9 @@
 package ai.yue.library.base.util;
 
+import ai.yue.library.base.ipo.LocationIPO;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import ai.yue.library.base.ipo.LocationIPO;
 
 /**
  * 位置工具类，用于处理经纬度等问题

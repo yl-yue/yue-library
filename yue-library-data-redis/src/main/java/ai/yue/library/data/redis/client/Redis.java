@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,36 +51,38 @@ public class Redis {
 	 * @param lockTimeoutMs 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时
 	 * @return 是否成功拿到锁
 	 */
-	public synchronized LockInfo lock(String lockKey, Integer lockTimeoutMs) {
-		// 1. 设置锁
-		String redisLockKey = RedisConstant.LOCK_PREFIX + lockKey;
-		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
-		LockInfo lockInfo = new LockInfo();
-		lockInfo.setLockKey(redisLockKey);
-		lockInfo.setLockTimeoutMs(lockTimeoutMs);
-		lockInfo.setLockTimeoutStamp(lockTimeoutStamp);
-		RBucket<String> bucket = redisson.getBucket(redisLockKey);
-		if (bucket.setIfAbsent(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs))) {
-			lockInfo.setLock(true);
-			return lockInfo;
-		}
-
-		// 2. 锁设置失败，拿到当前锁
-		String currentValue = bucket.get();
-		// 3. 判断当前锁是否过期
-		if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
-			// 4. 锁已过期 ，设置新锁同时得到上一个锁
-			String oldValue = bucket.getAndSet(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs));
-			// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
-			if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
-				// 此处只会有一个线程拿到锁
+	public LockInfo lock(String lockKey, Integer lockTimeoutMs) {
+		synchronized (lockKey) {
+			// 1. 设置锁
+			String redisLockKey = RedisConstant.LOCK_PREFIX + lockKey;
+			String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
+			LockInfo lockInfo = new LockInfo();
+			lockInfo.setLockKey(redisLockKey);
+			lockInfo.setLockTimeoutMs(lockTimeoutMs);
+			lockInfo.setLockTimeoutStamp(lockTimeoutStamp);
+			RBucket<String> bucket = redisson.getBucket(redisLockKey);
+			if (bucket.setIfAbsent(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs))) {
 				lockInfo.setLock(true);
 				return lockInfo;
 			}
-		}
 
-		lockInfo.setLock(false);
-		return lockInfo;
+			// 2. 锁设置失败，拿到当前锁
+			String currentValue = bucket.get();
+			// 3. 判断当前锁是否过期
+			if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
+				// 4. 锁已过期 ，设置新锁同时得到上一个锁
+				String oldValue = bucket.getAndSet(lockTimeoutStamp, Duration.ofMillis(lockTimeoutMs));
+				// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
+				if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
+					// 此处只会有一个线程拿到锁
+					lockInfo.setLock(true);
+					return lockInfo;
+				}
+			}
+
+			lockInfo.setLock(false);
+			return lockInfo;
+		}
 	}
 
 	/**
@@ -92,15 +94,17 @@ public class Redis {
 		String lockKey = lockInfo.getLockKey();
 		String lockTimeoutStamp = lockInfo.getLockTimeoutStamp();
 
-		try {
-			RBucket<String> bucket = redisson.getBucket(lockKey);
-			String currentValue = bucket.get();
-			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
-				bucket.delete();
+		RBucket<String> bucket = redisson.getBucket(lockKey);
+		bucket.getAsync().whenComplete((currentValue, throwable) -> {
+			if (throwable != null) {
+				log.warn("【redis分布式锁】解锁异常：", throwable);
+				return;
 			}
-		} catch (Exception e) {
-			log.error("【redis分布式锁】解锁异常，{}", e);
-		}
+
+			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
+				bucket.deleteAsync();
+			}
+		});
 	}
 
 	/**
@@ -115,39 +119,41 @@ public class Redis {
 	 * @param lockTimeoutMs 分布式锁的超时时间（单位：毫秒），到期后锁将自动超时
 	 * @return 是否成功拿到锁
 	 */
-	public synchronized <K> LockMapInfo lockMap(String redisKey, K mapKey, Integer lockTimeoutMs) {
-		// 1. 设置锁
-		if (redisKey.startsWith(RedisConstant.IDEMPOTENT_PREFIX) == false) {
-			redisKey = RedisConstant.LOCK_PREFIX + redisKey;
-		}
-		String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
-		LockMapInfo<K> lockMapInfo = new LockMapInfo();
-		lockMapInfo.setRedisKey(redisKey);
-		lockMapInfo.setMapKey(mapKey);
-		lockMapInfo.setLockTimeoutMs(lockTimeoutMs);
-		lockMapInfo.setLockTimeoutStamp(lockTimeoutStamp);
-		RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
-		if (mapCache.fastPutIfAbsent(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS)) {
-			lockMapInfo.setLock(true);
-			return lockMapInfo;
-		}
-
-		// 2. 锁设置失败，拿到当前锁
-		String currentValue = mapCache.get(mapKey);
-		// 3. 判断当前锁是否过期
-		if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
-			// 4. 锁已过期 ，设置新锁同时得到上一个锁
-			String oldValue = mapCache.put(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS);
-			// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
-			if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
-				// 此处只会有一个线程拿到锁
+	public <K> LockMapInfo lockMap(String redisKey, K mapKey, Integer lockTimeoutMs) {
+		synchronized (redisKey + mapKey) {
+			// 1. 设置锁
+			if (redisKey.startsWith(RedisConstant.IDEMPOTENT_PREFIX) == false) {
+				redisKey = RedisConstant.LOCK_PREFIX + redisKey;
+			}
+			String lockTimeoutStamp = String.valueOf(DateUtils.getTimestamp(lockTimeoutMs));
+			LockMapInfo<K> lockMapInfo = new LockMapInfo();
+			lockMapInfo.setRedisKey(redisKey);
+			lockMapInfo.setMapKey(mapKey);
+			lockMapInfo.setLockTimeoutMs(lockTimeoutMs);
+			lockMapInfo.setLockTimeoutStamp(lockTimeoutStamp);
+			RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
+			if (mapCache.fastPutIfAbsent(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS)) {
 				lockMapInfo.setLock(true);
 				return lockMapInfo;
 			}
-		}
 
-		lockMapInfo.setLock(false);
-		return lockMapInfo;
+			// 2. 锁设置失败，拿到当前锁
+			String currentValue = mapCache.get(mapKey);
+			// 3. 判断当前锁是否过期
+			if (!StrUtils.isEmpty(currentValue) && Long.parseLong(currentValue) < System.currentTimeMillis()) {
+				// 4. 锁已过期 ，设置新锁同时得到上一个锁
+				String oldValue = mapCache.put(mapKey, lockTimeoutStamp, lockTimeoutMs, TimeUnit.MILLISECONDS);
+				// 5. 确认新锁是否设置成功（判断当前锁与上一个锁是否相等）
+				if (StrUtils.isNotEmpty(oldValue) && oldValue.equals(currentValue)) {
+					// 此处只会有一个线程拿到锁
+					lockMapInfo.setLock(true);
+					return lockMapInfo;
+				}
+			}
+
+			lockMapInfo.setLock(false);
+			return lockMapInfo;
+		}
 	}
 
 	/**
@@ -160,15 +166,17 @@ public class Redis {
 		K mapKey = lockMapInfo.getMapKey();
 		String lockTimeoutStamp = lockMapInfo.getLockTimeoutStamp();
 
-		try {
-			RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
-			String currentValue = mapCache.get(mapKey);
-			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
-				mapCache.remove(mapKey);
+		RMapCache<K, String> mapCache = redisson.getMapCache(redisKey);
+		mapCache.getAsync(mapKey).whenComplete((currentValue, throwable) -> {
+			if (throwable != null) {
+				log.warn("【redis分布式锁】解锁异常：", throwable);
+				return;
 			}
-		} catch (Exception e) {
-			log.error("【redis分布式锁】解锁异常，{}", e);
-		}
+
+			if (StrUtils.isNotEmpty(currentValue) && currentValue.equals(lockTimeoutStamp)) {
+				mapCache.fastRemoveAsync(mapKey);
+			}
+		});
 	}
 
 	// ======value操作======

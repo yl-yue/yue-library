@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.v7.core.util.ObjUtil;
 
 /**
  * Sql拼接
@@ -71,7 +71,7 @@ public class Sql {
      * @return 拼接的Sql
      */
     public static StringBuffer append(StringBuffer originalSql, CharSequence appendSql, Object isNotEmpty) {
-        return append(originalSql, appendSql, ObjectUtil.isNotEmpty(isNotEmpty));
+        return append(originalSql, appendSql, ObjUtil.isNotEmpty(isNotEmpty));
     }
 
     /**
@@ -108,7 +108,7 @@ public class Sql {
      * @return Sql拼接
      */
     public Sql append(CharSequence appendSql, Object isNotEmpty) {
-        return append(appendSql, ObjectUtil.isNotEmpty(isNotEmpty));
+        return append(appendSql, ObjUtil.isNotEmpty(isNotEmpty));
     }
 
     /**

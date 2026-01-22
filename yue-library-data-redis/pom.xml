@@ -1,26 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library</artifactId>
+		<artifactId>bl</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-data-redis</artifactId>
-	<name>yue-library-data-redis</name>
-	<description>yue-library-data-redis</description>
+	<version>${bl-data-redis.version}${sha1}${changelist}</version>
+	<name>bl-data-redis</name>
+	<description>bl-data-redis</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-base</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.redisson</groupId>
 			<artifactId>redisson-spring-boot-starter</artifactId>
-			<version>3.17.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.redisson</groupId>
+					<artifactId>redisson-spring-data-34</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -30,7 +36,12 @@
 
 		<dependency>
 			<groupId>org.redisson</groupId>
-			<artifactId>redisson-spring-data-27</artifactId>
+			<artifactId>redisson-spring-data-33</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alicp.jetcache</groupId>
+			<artifactId>jetcache-starter-redisson</artifactId>
 		</dependency>
 	</dependencies>
 </project>

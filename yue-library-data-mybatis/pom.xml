@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>yue-library</artifactId>
+		<artifactId>bl</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 	<artifactId>yue-library-data-mybatis</artifactId>
-	<version>${yue-library-data-mybatis.version}${sha1}${changelist}</version>
-	<name>yue-library-data-mybatis</name>
-	<description>yue-library-data-mybatis</description>
+	<version>${bl-data-mybatis.version}${sha1}${changelist}</version>
+	<name>bl-data-mybatis</name>
+	<description>bl-data-mybatis</description>
 
 	<dependencies>
 		<dependency>
@@ -20,7 +20,12 @@
 
 		<dependency>
 			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-jsqlparser</artifactId>
 		</dependency>
 
 		<dependency>
@@ -30,12 +35,12 @@
 
 		<dependency>
 			<groupId>com.baomidou</groupId>
-			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+			<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
+			<artifactId>druid-spring-boot-3-starter</artifactId>
 		</dependency>
 
 		<dependency>

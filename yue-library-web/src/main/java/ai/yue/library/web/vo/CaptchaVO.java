@@ -1,19 +1,19 @@
 package ai.yue.library.web.vo;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import ai.yue.library.web.util.CaptchaUtils;
 import ai.yue.library.web.util.ServletUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.imageio.ImageIO;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * 图片验证码VO，可直接将图片验证码写入响应结果中
@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
  * @author	ylyue
  * @since	2018年7月23日
  */
+@Slf4j
 @Data
 @Builder
 @NoArgsConstructor
@@ -51,7 +52,7 @@ public class CaptchaVO {
 			// 响应结束时servlet会自动将output关闭
 			ImageIO.write(captchaImage, "png", output);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("验证码写入响应失败", e);
 		}
 	}
 	

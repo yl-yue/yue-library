@@ -1,34 +1,36 @@
 package ai.yue.library.web.util;
 
 import ai.yue.library.base.convert.Convert;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.bean.copier.ValueProvider;
-import cn.hutool.core.collection.ArrayIter;
-import cn.hutool.core.collection.IterUtil;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.map.CaseInsensitiveMap;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.net.multipart.MultipartFormData;
-import cn.hutool.core.net.multipart.UploadSetting;
-import cn.hutool.core.util.*;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import cn.hutool.v7.core.array.ArrayUtil;
+import cn.hutool.v7.core.bean.BeanUtil;
+import cn.hutool.v7.core.bean.copier.CopyOptions;
+import cn.hutool.v7.core.bean.copier.ValueProvider;
+import cn.hutool.v7.core.collection.iter.ArrayIter;
+import cn.hutool.v7.core.exception.HutoolException;
+import cn.hutool.v7.core.io.IORuntimeException;
+import cn.hutool.v7.core.io.IoUtil;
+import cn.hutool.v7.core.io.file.FileUtil;
+import cn.hutool.v7.core.lang.Console;
+import cn.hutool.v7.core.map.CaseInsensitiveMap;
+import cn.hutool.v7.core.map.MapUtil;
+import cn.hutool.v7.core.net.NetUtil;
+import cn.hutool.v7.core.net.url.UrlEncoder;
+import cn.hutool.v7.core.reflect.ConstructorUtil;
+import cn.hutool.v7.core.text.StrUtil;
+import cn.hutool.v7.core.util.CharsetUtil;
+import cn.hutool.v7.core.util.ObjUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -54,7 +56,6 @@ public class ServletUtils {
 	public static final String HTTPS_TCP_NAME = "https://";
 	public static final String BEARER_TYPE = "Bearer ";
 	public static final String ACCESS_TOKEN = "access_token";
-
 
 	/**
 	 * 获得当前请求上下文中的{@linkplain ServletRequestAttributes}
@@ -106,12 +107,17 @@ public class ServletUtils {
 	 * @return token
 	 */
 	public static String getAuthToken(HttpServletRequest request) {
-		String authToken = StrUtil.subAfter(request.getHeader(HttpHeaders.AUTHORIZATION), BEARER_TYPE, false);
-		if (StrUtil.isBlank(authToken)) {
-			authToken = request.getParameter(ACCESS_TOKEN);
-		}
+		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (StrUtil.isNotBlank(authorization)) {
+			String authToken = StrUtil.subAfter(authorization, BEARER_TYPE, false);
+			if (StrUtil.isBlank(authToken)) {
+				authToken = StrUtil.subAfter(authorization, StrUtil.SPACE, false);
+			}
 
-		return authToken;
+			return authToken;
+		} else {
+			return request.getParameter(ACCESS_TOKEN);
+		}
 	}
 
 	/**
@@ -348,8 +354,8 @@ public class ServletUtils {
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBean(ServletRequest request, T bean, boolean isIgnoreError) {
-		return fillBean(request, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
+	public static <T> T fillBean(final ServletRequest request, final T bean, final boolean isIgnoreError) {
+		return fillBean(request, bean, CopyOptions.of().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -362,7 +368,7 @@ public class ServletUtils {
 	 * @return Bean
 	 */
 	public static <T> T toBean(ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBean(request, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
+		return fillBean(request, ConstructorUtil.newInstanceIfPossible(beanClass), isIgnoreError);
 	}
 	// --------------------------------------------------------- fillBean end
 
@@ -448,39 +454,39 @@ public class ServletUtils {
 		return NetUtil.getMultistageReverseProxyIp(ip);
 	}
 
-	/**
-	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
-	 *
-	 * @param request {@link ServletRequest}
-	 * @return MultipartFormData
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.2
-	 */
-	public static MultipartFormData getMultipart(ServletRequest request) throws IORuntimeException {
-		return getMultipart(request, new UploadSetting());
-	}
+//	/**
+//	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
+//	 *
+//	 * @param request {@link ServletRequest}
+//	 * @return MultipartFormData
+//	 * @throws IORuntimeException IO异常
+//	 * @since 4.0.2
+//	 */
+//	public static MultipartFormData getMultipart(ServletRequest request) throws IORuntimeException {
+//		return getMultipart(request, new UploadSetting());
+//	}
 
-	/**
-	 * 获得multipart/form-data 表单内容<br>
-	 * 包括文件和普通表单数据<br>
-	 * 在同一次请求中，此方法只能被执行一次！
-	 *
-	 * @param request       {@link ServletRequest}
-	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
-	 * @return MultiPart表单
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.2
-	 */
-	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
-		final MultipartFormData formData = new MultipartFormData(uploadSetting);
-		try {
-			formData.parseRequestStream(request.getInputStream(), CharsetUtil.charset(request.getCharacterEncoding()));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		return formData;
-	}
+//	/**
+//	 * 获得multipart/form-data 表单内容<br>
+//	 * 包括文件和普通表单数据<br>
+//	 * 在同一次请求中，此方法只能被执行一次！
+//	 *
+//	 * @param request       {@link ServletRequest}
+//	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
+//	 * @return MultiPart表单
+//	 * @throws IORuntimeException IO异常
+//	 * @since 4.0.2
+//	 */
+//	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
+//		final MultipartFormData formData = new MultipartFormData(uploadSetting);
+//		try {
+//			formData.parseRequestStream(request.getInputStream(), CharsetUtil.charset(request.getCharacterEncoding()));
+//		} catch (IOException e) {
+//			throw new IORuntimeException(e);
+//		}
+//
+//		return formData;
+//	}
 
 	// --------------------------------------------------------- Header start
 
@@ -549,7 +555,7 @@ public class ServletUtils {
 	public static String getHeader(HttpServletRequest request, String name, Charset charset) {
 		final String header = request.getHeader(name);
 		if (null != header) {
-			return CharsetUtil.convert(header, CharsetUtil.CHARSET_ISO_8859_1, charset);
+			return CharsetUtil.convert(header, CharsetUtil.ISO_8859_1, charset);
 		}
 		return null;
 	}
@@ -628,15 +634,15 @@ public class ServletUtils {
 	 * @param httpServletRequest {@link HttpServletRequest}
 	 * @return Cookie map
 	 */
-	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
+	public static Map<String, Cookie> readCookieMap(final HttpServletRequest httpServletRequest) {
 		final Cookie[] cookies = httpServletRequest.getCookies();
 		if (ArrayUtil.isEmpty(cookies)) {
 			return MapUtil.empty();
 		}
 
-		return IterUtil.toMap(
-				new ArrayIter<>(httpServletRequest.getCookies()),
+		return MapUtil.putAll(
 				new CaseInsensitiveMap<>(),
+				(Iterator<Cookie>) new ArrayIter<>(httpServletRequest.getCookies()),
 				Cookie::getName);
 	}
 
@@ -728,9 +734,9 @@ public class ServletUtils {
 			writer.write(text);
 			writer.flush();
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 	}
 
@@ -743,13 +749,13 @@ public class ServletUtils {
 	 */
 	public static void write(HttpServletResponse response, File file) {
 		final String fileName = file.getName();
-		final String contentType = ObjectUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
+		final String contentType = ObjUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
 			write(response, in, contentType, fileName);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -777,9 +783,9 @@ public class ServletUtils {
 	 * @since 4.1.15
 	 */
 	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
-		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
+		final String charset = ObjUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.NAME_UTF_8);
 		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename=\"{}\"",
-				URLUtil.encode(fileName, CharsetUtil.charset(charset))));
+				createAttachmentDisposition(fileName, CharsetUtil.charset(charset))));
 		response.setContentType(contentType);
 		write(response, in);
 	}
@@ -819,10 +825,10 @@ public class ServletUtils {
 			out = response.getOutputStream();
 			IoUtil.copy(in, out, bufferSize);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} finally {
-			IoUtil.close(out);
-			IoUtil.close(in);
+			IoUtil.closeQuietly(out);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -845,5 +851,21 @@ public class ServletUtils {
 		}
 	}
 	// --------------------------------------------------------- Response end
+
+	/**
+	 * 生成Content-Disposition头，用于下载文件<br>
+	 * 格式为：
+	 * <pre>{@code
+	 *     attachment;filename="example.txt";filename*=UTF-8''example.txt
+	 * }</pre>
+	 *
+	 * @param fileName 文件名
+	 * @param charset  编码
+	 * @return Content-Disposition头
+	 */
+	public static String createAttachmentDisposition(final String fileName, final Charset charset) {
+		final String encodeText = UrlEncoder.encodeAll(fileName, charset);
+		return StrUtil.format("attachment;filename=\"{}\";filename*={}''{}", encodeText, charset.name(), encodeText);
+	}
 
 }

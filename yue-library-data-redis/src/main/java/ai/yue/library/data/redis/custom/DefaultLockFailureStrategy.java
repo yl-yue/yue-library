@@ -13,7 +13,7 @@ public class DefaultLockFailureStrategy implements LockFailureStrategy {
 
     @Override
     public void onLockFailure(String key, Method method, Object[] arguments) {
-        log.error("获取锁失败了, key={}, method={}, arguments={}", key, method, arguments);
+        log.error("锁获取失败，锁已被其他线程持有，业务需排队重试或回退处理：key={}, method={}, arguments={}", key, method, arguments);
         throw new ResultException(R.lockAcquireFailure(DEFAULT_MESSAGE));
     }
 

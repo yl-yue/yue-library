@@ -1,12 +1,12 @@
 package ai.yue.library.web.config.argument.resolver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 配置-自定义顺序方法参数解析器

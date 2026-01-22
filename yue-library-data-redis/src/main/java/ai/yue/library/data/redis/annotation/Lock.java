@@ -1,6 +1,8 @@
 package ai.yue.library.data.redis.annotation;
 
 import ai.yue.library.data.redis.config.properties.RedisProperties.LockProperties;
+import ai.yue.library.data.redis.custom.DefaultLockFailureStrategy;
+import ai.yue.library.data.redis.custom.DefaultLockKeyBuilder;
 import ai.yue.library.data.redis.custom.LockFailureStrategy;
 import ai.yue.library.data.redis.custom.LockKeyBuilder;
 
@@ -61,11 +63,11 @@ public @interface Lock {
     /**
      * 失败策略
      */
-    Class<? extends LockFailureStrategy> failStrategy() default LockFailureStrategy.class;
+    Class<? extends LockFailureStrategy> failStrategy() default DefaultLockFailureStrategy.class;
 
     /**
      * key生成器策略
      */
-    Class<? extends LockKeyBuilder> keyBuilderStrategy() default LockKeyBuilder.class;
+    Class<? extends LockKeyBuilder> keyBuilderStrategy() default DefaultLockKeyBuilder.class;
 
 }

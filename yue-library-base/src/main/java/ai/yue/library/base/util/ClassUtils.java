@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.v7.core.reflect.ClassUtil;
 
 import java.lang.reflect.Method;
 

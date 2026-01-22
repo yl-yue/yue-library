@@ -1,5 +1,7 @@
 package ai.yue.library.data.redis.config.properties;
 
+import ai.yue.library.data.redis.custom.DefaultLockFailureStrategy;
+import ai.yue.library.data.redis.custom.DefaultLockKeyBuilder;
 import ai.yue.library.data.redis.custom.LockFailureStrategy;
 import ai.yue.library.data.redis.custom.LockKeyBuilder;
 import lombok.Data;
@@ -53,19 +55,14 @@ public class RedisProperties {
 		private Long acquireTimeout = 3000L;
 
 		/**
-		 * 获取锁失败时重试时间间隔 单位：毫秒
+		 * 默认失败策略
 		 */
-		private Long retryInterval = 100L;
+		private Class<? extends LockFailureStrategy> defaultFailureStrategy = DefaultLockFailureStrategy.class;
 
 		/**
-		 * 默认失败策略，不设置存在多个时默认根据PriorityOrdered、Ordered排序规则选择|注入顺序选择
+		 * 默认key生成策略
 		 */
-		private Class<? extends LockFailureStrategy> primaryFailureStrategy;
-
-		/**
-		 * 默认key生成策略，不设置存在多个时默认根据PriorityOrdered、Ordered排序规则选择|注入顺序选择
-		 */
-		private Class<? extends LockKeyBuilder> primaryKeyBuilder;
+		private Class<? extends LockKeyBuilder> defaultKeyBuilder = DefaultLockKeyBuilder.class;
 
 		/**
 		 * 锁key前缀

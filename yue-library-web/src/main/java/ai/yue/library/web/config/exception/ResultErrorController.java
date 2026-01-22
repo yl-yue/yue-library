@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**

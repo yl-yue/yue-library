@@ -1,26 +1,31 @@
 package ai.yue.library.base.crypto.controller.key.exchange;
 
 import ai.yue.library.base.annotation.ApiVersion;
+import ai.yue.library.base.crypto.config.properties.KeyExchangeProperties;
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
 import ai.yue.library.base.crypto.dao.key.exchange.KeyExchangeStorage;
+import ai.yue.library.base.crypto.dto.KeyExchangeStorageDTO;
 import ai.yue.library.base.util.IdUtils;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.asymmetric.AbstractAsymmetricCrypto;
-import cn.hutool.crypto.asymmetric.KeyType;
+import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.v7.core.codec.binary.HexUtil;
+import cn.hutool.v7.crypto.asymmetric.AbstractAsymmetricCrypto;
+import cn.hutool.v7.crypto.asymmetric.KeyType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
- * RSA密钥交换加密
- * <p>1. 前端大写UUID     →     后端返回RSA公钥</p>
- * <p>2. 前端生成RSA密钥对 → 前端通过后端RSA公钥加密前端RSA公钥并传输给后端     →     后端通过私钥解密前端的RSA公钥 → 后端通过前端RSA公钥加密AES密钥响应给前端</p>
+ * RSA密钥交换加解密
+ * <p>1. 前端生成会话key与RSA密钥对 → 前端将会话key与RSA公钥传输给后端</p>
+ * <p>2. 后端生成AES密钥，并使用会话key作为键存储AES密码 → 后端使用前端的RSA公钥加密AES密钥响应给前端</p>
  *
  * 好处：
  * <p>1. 最终的对称加密（AES）密钥未在传输过程中泄露</p>
@@ -29,59 +34,76 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ylyue
  * @since 2021/4/12
  */
-@ApiVersion(2.3)
+@ApiVersion(2.6)
 @RestController
 @RequestMapping("/open/{version}/keyExchange")
+@ConditionalOnProperty(prefix = KeyExchangeProperties.PREFIX, name = "enable-controller", havingValue = "true")
 public class KeyExchangeController {
 
     @Autowired
-    private KeyExchangeStorage keyExchangeStorage;
-    @Autowired
     private Validator validator;
+    @Autowired
+    private KeyExchangeProperties keyExchangeProperties;
+    @Autowired
+    private KeyExchangeStorage keyExchangeStorage;
 
     /**
-     * 获得交换密钥
-     *
-     * @param storageKey               密钥存储标识
-     * @param exchangeKeyType          交换密钥类型
-     * @param encryptedClientPublicKey 服务端公钥加密的客户端公钥（第二步逻辑必填参数）
-     * @return 第一次返回：服务端公钥
-     * <p>第二次返回：客户端公钥加密的交换密钥</p>
+     * 是否启用密钥交换
+     * <p>接口防刷：网关使用ip限流</p>
      */
-    @PostMapping("/{storageKey}")
-    public Result<?> getExchangeKey(@PathVariable String storageKey, ExchangeKeyEnum exchangeKeyType, @Nullable String encryptedClientPublicKey) {
-        // 参数校验
-        validator.param(storageKey).uuid(storageKey);
-
-        // 执行第一步逻辑：返回绑定当前UUID的RSA公钥
-        if (StrUtil.isEmpty(encryptedClientPublicKey)) {
-            AbstractAsymmetricCrypto asymmetricCrypto = exchangeKeyType.getAsymmetricCrypto();
-            keyExchangeStorage.setPrivateKeyBase64(storageKey, asymmetricCrypto.getPrivateKeyBase64());
-            return R.success(asymmetricCrypto.getPublicKeyBase64());
-        }
-
-        // 执行第二步逻辑：通过私钥解密客户端的RSA公钥，然后通过得到的客户端RSA公钥加密随机AES密钥
-        String privateKeyBase64 = keyExchangeStorage.getPrivateKeyBase64(storageKey);
-        AbstractAsymmetricCrypto asymmetricCrypto = exchangeKeyType.getAsymmetricCrypto(privateKeyBase64,null);
-        String clientPublicKey = asymmetricCrypto.decryptStr(encryptedClientPublicKey, KeyType.PrivateKey);
-        AbstractAsymmetricCrypto clientAsymmetricCrypto = exchangeKeyType.getAsymmetricCrypto(null, clientPublicKey);
-        // 128 bit = 128 / 8 = 16 byte
-        String exchangeKey = IdUtils.getRandomCode(16);
-        keyExchangeStorage.setExchangeKey(storageKey, exchangeKey);
-        String clientPublicKeyEncryptExchangeKey  = clientAsymmetricCrypto.encryptBase64(exchangeKey, KeyType.PublicKey);
-        return R.success(clientPublicKeyEncryptExchangeKey);
+    @GetMapping("/isEnabled")
+    public Result<?> isEnabled() {
+        return R.success(keyExchangeProperties.isEnabled());
     }
 
     /**
-     * 添加存储key别名
+     * 获得交换密钥
+     * <p>接口防刷：网关使用ip限流</p>
      *
-     * @param storageKey      存储时的唯一键，如：UUID、token、userId等。
-     * @param storageKeyAlias 存储别名
+     * @param sessionKey               会话key，用于存储生成的对称密钥（如：token、userId、设备id等）
+     * @param exchangeKeyType          交换密钥类型
+     * @param clientPublicKey          客户端公钥（用于响应传输时加密对称密钥）
+     * @return 客户端公钥加密的对称密钥
      */
-    @PostMapping("/{storageKey}/addAlias")
-    public Result<?> addAlias(@PathVariable String storageKey, String storageKeyAlias) {
-        keyExchangeStorage.addAlias(storageKey, storageKeyAlias);
+    @PostMapping("/getSymmetricKey")
+    public Result<?> getSymmetricKey(String sessionKey, ExchangeKeyEnum exchangeKeyType, String clientPublicKey) {
+        // 参数校验
+        validator.param(sessionKey).notEmpty(sessionKey);
+
+        // 客户端RSA公钥加密随机AES密钥
+        AbstractAsymmetricCrypto clientAsymmetricCrypto = exchangeKeyType.getAsymmetricCrypto(null, clientPublicKey);
+        String symmetricKey = IdUtils.getRandomCode(16); // 128 bit = 128 / 8 = 16 byte
+        if (exchangeKeyType == ExchangeKeyEnum.SM2_SM4) {
+            symmetricKey = HexUtil.encodeStr(symmetricKey);
+        }
+        KeyExchangeStorageDTO keyExchangeStorageDTO = new KeyExchangeStorageDTO(symmetricKey, exchangeKeyType);
+        keyExchangeStorage.setKeyExchangeStorageDTO(sessionKey, keyExchangeStorageDTO);
+        String clientPublicKeyEncryptSymmetricKey  = clientAsymmetricCrypto.encryptBase64(symmetricKey, KeyType.PublicKey);
+
+        // 返回结果
+        JSONObject data = new JSONObject();
+        data.put("symmetricKeyExpire", keyExchangeProperties.getCacheExpire().toHours());
+        data.put("clientPublicKeyEncryptSymmetricKey", clientPublicKeyEncryptSymmetricKey);
+        return R.success(data);
+    }
+
+    /**
+     * 注销交换密钥
+     *
+     * @param sessionKey 会话key，用于存储生成的对称密钥（如：token、userId、设备id等）
+     */
+    @PostMapping("/logoutSymmetricKey")
+    public Result<?> logoutSymmetricKey(String sessionKey) {
+        keyExchangeStorage.delKeyExchangeStorageDTO(sessionKey);
         return R.success();
+    }
+
+    /**
+     * 获得白名单
+     */
+    @GetMapping("/getWhiteList")
+    public Result<List<String>> getWhiteList() {
+        return R.success(keyExchangeProperties.getWhiteList());
     }
 
 }

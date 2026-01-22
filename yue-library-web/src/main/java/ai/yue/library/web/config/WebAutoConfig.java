@@ -1,16 +1,18 @@
 package ai.yue.library.web.config;
 
-import ai.yue.library.base.config.properties.CorsProperties;
+import ai.yue.library.base.config.properties.BaseProperties;
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
 import ai.yue.library.web.config.argument.resolver.CustomArgumentResolversConfig;
 import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
+import ai.yue.library.web.config.jvm.JvmIdleGcOptimization;
 import ai.yue.library.web.config.properties.FastJsonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.JacksonHttpMessageConverterProperties;
 import ai.yue.library.web.config.properties.WebProperties;
 import ai.yue.library.web.config.thread.pool.ContextDecorator;
 import ai.yue.library.web.env.WebMvcEnv;
+import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,6 +22,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.task.TaskDecorator;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -35,19 +42,20 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@Import({WebMvcConfig.class, WebMvcHandlerRegistrations.class, CustomArgumentResolversConfig.class, WebMvcEnv.class})
+@EnableWebSecurity
+@Import({WebMvcConfig.class, WebMvcHandlerRegistrations.class, CustomArgumentResolversConfig.class, WebMvcEnv.class, JvmIdleGcOptimization.class})
 @EnableConfigurationProperties({WebProperties.class, JacksonHttpMessageConverterProperties.class, FastJsonHttpMessageConverterProperties.class})
 public class WebAutoConfig {
-	
-	@Autowired
+
+	@Resource
 	WebProperties webProperties;
-	
+
 	// CorsConfig-跨域
 	
 	@Bean
 	@ConditionalOnMissingBean
-	@ConditionalOnProperty(prefix = "yue.cors", name = "allow", havingValue = "true", matchIfMissing = true)
-	public CorsFilter corsFilter(CorsProperties corsProperties) {
+	@ConditionalOnProperty(prefix = "yue.base.cors", name = "allow", havingValue = "true", matchIfMissing = true)
+	public CorsFilter corsFilter(BaseProperties baseProperties) {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		final CorsConfiguration config = new CorsConfiguration();
 		
@@ -58,7 +66,7 @@ public class WebAutoConfig {
 		config.setMaxAge(3600L);
 		
 		// 设置response允许暴露的Headers
-		List<String> exposedHeaders = corsProperties.getExposedHeaders();
+		List<String> exposedHeaders = baseProperties.getCors().getExposedHeaders();
 		if (exposedHeaders != null) {
 			config.setExposedHeaders(exposedHeaders);
 		} else {
@@ -98,5 +106,27 @@ public class WebAutoConfig {
 	public TaskDecorator taskDecorator(AsyncProperties asyncProperties) {
 		return new ContextDecorator(asyncProperties);
 	}
+
+    /**
+     * actuator 端点安全配置
+     */
+    @SneakyThrows
+    @Bean
+    protected SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) {
+        return http.authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers(new AntPathRequestMatcher("/actuator-security/health"))
+                                .permitAll()
+                                .requestMatchers("/actuator-security/health/**")
+                                .permitAll()
+                                .requestMatchers("/actuator-security/**")
+                                .authenticated()
+                                .requestMatchers("/**")
+                                .permitAll()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .csrf((csrf) -> csrf.disable())
+                .build();
+    }
 
 }

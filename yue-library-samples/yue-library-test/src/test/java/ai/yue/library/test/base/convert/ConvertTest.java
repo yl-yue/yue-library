@@ -2,8 +2,8 @@ package ai.yue.library.test.base.convert;
 
 import ai.yue.library.base.convert.Convert;
 import ai.yue.library.test.dto.ConvertDTO;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.Assert;
+import cn.hutool.v7.core.bean.BeanUtil;
+import cn.hutool.v7.core.lang.Assert;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;

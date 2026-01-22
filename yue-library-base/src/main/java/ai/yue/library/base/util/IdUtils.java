@@ -1,13 +1,10 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.v7.core.data.id.IdUtil;
 import org.springframework.lang.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 /**

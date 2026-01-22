@@ -1,9 +1,8 @@
 package ai.yue.library.base.validation.annotation;
 
-import cn.hutool.core.util.ReflectUtil;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import cn.hutool.v7.core.reflect.FieldUtil;
 
 /**
  * 相互关系校验器
@@ -25,7 +24,7 @@ public class MutualValidator implements ConstraintValidator<Mutual, Object> {
 		// 相互关系逻辑，多个字段必须有一个有值
 		boolean isMutualValueExist = false;
 		for (String mutual : mutuals) {
-			if (ReflectUtil.getFieldValue(value, mutual) != null) {
+			if (FieldUtil.getFieldValue(value, mutual) != null) {
 				isMutualValueExist = true;
 			}
 		}

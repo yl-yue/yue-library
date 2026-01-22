@@ -4,9 +4,10 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.base.webenv.WebEnv;
 import ai.yue.library.web.util.ServletUtils;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -14,6 +15,7 @@ import java.io.PrintWriter;
  * @author	ylyue
  * @since	2020年4月16日
  */
+@Slf4j
 @Component
 public class WebMvcEnv implements WebEnv {
 	
@@ -29,7 +31,7 @@ public class WebMvcEnv implements WebEnv {
 			writer.close();
 			response.flushBuffer();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("写入响应结果失败", e);
 		}
 	}
 

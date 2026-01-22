@@ -6,7 +6,7 @@
 //import ai.yue.library.data.jdbc.client.Db;
 //import ai.yue.library.data.redis.client.Redis;
 //import ai.yue.library.test.dataobject.performance.UserPerformanceDO;
-//import cn.hutool.core.util.StrUtil;
+//import cn.hutool.v7.core.util.StrUtil;
 //import com.alibaba.fastjson.JSONObject;
 //import com.amazon.opendistroforelasticsearch.jdbc.ElasticsearchDataSource;
 //import com.amazon.opendistroforelasticsearch.jdbc.config.HostnameVerificationConnectionProperty;
@@ -28,7 +28,7 @@
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RestController;
 //
-//import javax.annotation.PostConstruct;
+//import jakarta.annotation.PostConstruct;
 //import java.sql.SQLException;
 //import java.util.Properties;
 //

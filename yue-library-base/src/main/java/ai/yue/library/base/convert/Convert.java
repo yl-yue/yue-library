@@ -7,18 +7,19 @@ import ai.yue.library.base.util.BeanUtils;
 import ai.yue.library.base.util.ClassUtils;
 import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.MapUtils;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.*;
 import com.alibaba.fastjson2.util.TypeUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.bean.BeanUtil;
+import cn.hutool.v7.core.convert.CompositeConverter;
+import cn.hutool.v7.core.convert.ConvertException;
+import cn.hutool.v7.core.convert.ConvertUtil;
+import cn.hutool.v7.core.date.DateTime;
+import cn.hutool.v7.core.date.DateUtil;
+import cn.hutool.v7.core.math.NumberUtil;
+import cn.hutool.v7.core.reflect.TypeReference;
+import cn.hutool.v7.core.text.StrUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -36,16 +37,16 @@ import java.util.*;
  * @since 	2019年7月23日
  */
 @Slf4j
-public class Convert extends cn.hutool.core.convert.Convert {
+public class Convert extends ConvertUtil {
 	
 	// 注册自定义转换器
 	static {
-		ConverterRegistry converterRegistry = ConverterRegistry.getInstance();
-		converterRegistry.putCustom(JSONObject.class, JSONObjectConverter.class);
-		converterRegistry.putCustom(JSONArray.class, JSONArrayConverter.class);
+		CompositeConverter compositeConverter = CompositeConverter.getInstance();
+		compositeConverter.register(JSONObject.class, new JSONObjectConverter());
+		compositeConverter.register(JSONArray.class, new JSONArrayConverter());
 		List<Type> registryTypes = JSONListConverter.getRegistryTypes();
 		for (Type registryType : registryTypes) {
-			converterRegistry.putCustom(registryType, JSONListConverter.class);
+			compositeConverter.register(registryType, new JSONListConverter());
 		}
 	}
 	
@@ -61,7 +62,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convertByClassName(String className, Object value) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convertByClassName(className, value);
+		return ConvertUtil.convertByClassName(className, value);
 	}
 	
 	/**
@@ -76,20 +77,20 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 */
 	@Deprecated
 	public static <T> T convert(Class<T> type, Object value) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convert(type, value);
+		return ConvertUtil.convert(type, value);
 	}
-	
+
 	/**
 	 * 转换值为指定类型
-	 * 
-	 * @param <T> 目标类型
+	 *
+	 * @param <T>       目标类型
 	 * @param reference 类型参考，用于持有转换后的泛型类型
-	 * @param value 值
+	 * @param value     值
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(TypeReference<T> reference, Object value) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convert(reference, value);
+	public static <T> T convert(final TypeReference<T> reference, final Object value) throws ConvertException {
+		return ConvertUtil.convert(reference, value);
 	}
 	
 	/**
@@ -102,7 +103,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convert(Type type, Object value) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convert(type, value);
+		return ConvertUtil.convert(type, value);
 	}
 	
 	/**
@@ -116,7 +117,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convert(type, value, defaultValue);
+		return ConvertUtil.convert(type, value, defaultValue);
 	}
 	
 	/**
@@ -130,7 +131,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
-		return cn.hutool.core.convert.Convert.convert(type, value, defaultValue);
+		return ConvertUtil.convert(type, value, defaultValue);
 	}
 	
 	/**
@@ -143,7 +144,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @return 转换后的值，转换失败返回null
 	 */
 	public static <T> T convertQuietly(Type type, Object value) {
-		return cn.hutool.core.convert.Convert.convertQuietly(type, value);
+		return ConvertUtil.convertQuietly(type, value);
 	}
 	
 	/**
@@ -157,7 +158,7 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 * @return 转换后的值
 	 */
 	public static <T> T convertQuietly(Type type, Object value, T defaultValue) {
-		return cn.hutool.core.convert.Convert.convertQuietly(type, value, defaultValue);
+		return ConvertUtil.convertQuietly(type, value, defaultValue);
 	}
 	
 	// ----------------------------------------------------------------------- 推荐转换方法
@@ -268,18 +269,15 @@ public class Convert extends cn.hutool.core.convert.Convert {
 			return TypeUtils.cast(value, clazz);
 		} catch (Exception e) {
 			// JavaBean转换
-			if (ClassUtils.isSimpleValueType(clazz) == false && BeanUtils.isBean(clazz)) {
+			if (ClassUtils.isSimpleValueType(clazz) == false && BeanUtils.isWritableBean(clazz)) {
 				return toJavaBean(value, clazz);
 			}
 
-			if (log.isDebugEnabled()) {
-				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
-				e.printStackTrace();
-			}
+			log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。", e);
 		}
 		
-		// 采用 hutool 默认转换能力 + yue-library 扩展能力进行转换
-		return cn.hutool.core.convert.Convert.convert(clazz, value);
+		// 采用 hutool 默认转换能力 + bl 扩展能力进行转换
+		return ConvertUtil.convert(clazz, value);
 	}
 	
 	/**
@@ -316,13 +314,10 @@ public class Convert extends cn.hutool.core.convert.Convert {
 
 			return toJSONObject(value).toJavaObject(clazz, JSONReader.Feature.SupportArrayToBean);
 		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。");
-				e.printStackTrace();
-			}
+			log.debug("【Convert】采用 fastjson 类型转换器转换失败，正尝试 hutool 类型转换器转换。", e);
 		}
 		
-		// 采用 hutool 默认转换能力 + yue-library 扩展能力进行转换
+		// 采用 hutool 默认转换能力 + bl 扩展能力进行转换
 		return BeanUtil.toBean(value, clazz);
 	}
 
@@ -350,6 +345,17 @@ public class Convert extends cn.hutool.core.convert.Convert {
 	 */
 	public static String toJSONString(Object value) {
 		return JSONObject.toJSONString(value);
+	}
+
+	/**
+	 * 转换为 JSONString
+	 *
+	 * @param value    被转换的值
+	 * @param features 格式化特征
+	 * @return JSON字符串
+	 */
+	public static String toJSONString(Object value, JSONWriter.Feature... features) {
+		return JSONObject.toJSONString(value, features);
 	}
 
 	/**

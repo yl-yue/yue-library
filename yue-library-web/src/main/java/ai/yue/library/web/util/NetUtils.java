@@ -1,6 +1,6 @@
 package ai.yue.library.web.util;
 
-import cn.hutool.core.net.NetUtil;
+import cn.hutool.v7.core.net.NetUtil;
 
 /**
  * 网络相关工具

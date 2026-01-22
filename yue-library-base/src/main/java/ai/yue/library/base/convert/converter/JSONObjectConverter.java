@@ -1,8 +1,8 @@
 package ai.yue.library.base.convert.converter;
 
 import ai.yue.library.base.convert.Convert;
-import cn.hutool.core.convert.AbstractConverter;
 import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.v7.core.convert.AbstractConverter;
 
 /**
  * JSONObject类型转换器
@@ -10,12 +10,12 @@ import com.alibaba.fastjson2.JSONObject;
  * @author	ylyue
  * @since	2019年7月25日
  */
-public class JSONObjectConverter extends AbstractConverter<JSONObject> {
+public class JSONObjectConverter extends AbstractConverter {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected JSONObject convertInternal(Object value) {
+	protected JSONObject convertInternal(Class<?> targetClass, Object value) {
 		return Convert.toJSONObject(value);
 	}
 

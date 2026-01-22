@@ -1,18 +1,18 @@
 package ai.yue.library.base.config.net.http;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 /**
  * 跳过SSL证书校验，{@linkplain org.springframework.boot.actuate.autoconfigure.cloudfoundry.servlet.SkipSslVerificationHttpRequestFactory}
@@ -22,6 +22,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
  * @author	ylyue
  * @since	2018年11月10日
  */
+@Slf4j
 public class SkipSslVerificationHttpRequestFactory extends SimpleClientHttpRequestFactory {
 
 	@Override
@@ -50,7 +51,7 @@ public class SkipSslVerificationHttpRequestFactory extends SimpleClientHttpReque
 			sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(null, new TrustManager[] { new SkipX509TrustManager() }, new SecureRandom());
 		} catch (NoSuchAlgorithmException | KeyManagementException e) {
-			e.printStackTrace();
+			log.error("SSLContext init error", e);
 		}
 		
 		return sslContext;

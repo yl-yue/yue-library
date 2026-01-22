@@ -1,6 +1,6 @@
 package ai.yue.library.test.controller.base.api.version;
 
-import ai.yue.library.base.annotation.api.version.ApiVersion;
+import ai.yue.library.base.annotation.ApiVersion;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import org.springframework.web.bind.annotation.GetMapping;

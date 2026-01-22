@@ -1,11 +1,11 @@
 package ai.yue.library.test.controller.other.gitee.I2ALJW;
 
-import cn.hutool.core.util.XmlUtil;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.xml.XmlUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**

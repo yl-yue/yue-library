@@ -1,9 +1,9 @@
 package ai.yue.library.base.crypto.client;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.v7.core.codec.binary.Base64;
+import cn.hutool.v7.core.net.url.UrlEncoder;
+import cn.hutool.v7.crypto.SecureUtil;
+import cn.hutool.v7.crypto.digest.mac.HmacAlgorithm;
 
 /**
  * 加解密-常用业务
@@ -24,7 +24,7 @@ public class SecureCommon {
         Long timestamp = System.currentTimeMillis();
         String signContent = timestamp + "\n" + dingtalkRobotSignSecret;
         byte[] signByte = SecureUtil.hmac(HmacAlgorithm.HmacSHA256, dingtalkRobotSignSecret).digest(signContent);
-        String sign = URLUtil.encode(Base64.encode(signByte));
+        String sign = UrlEncoder.encodeQuery(Base64.encode(signByte));
         return dingtalkRobotWebhook + "&timestamp=" + timestamp + "&sign=" + sign;
 	}
 	

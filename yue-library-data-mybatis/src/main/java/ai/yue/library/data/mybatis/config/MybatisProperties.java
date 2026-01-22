@@ -5,6 +5,7 @@ import lombok.Data;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -35,7 +36,12 @@ public class MybatisProperties {
 	 *     此处可配置需要额外忽略的表名
 	 * </pre>
 	 */
-	private Set<String> ignoreTableLogicDeletes;
+	private Set<String> ignoreTableLogicDeletes = new HashSet<>();
+
+	/**
+	 * 逻辑删除忽略数据源
+	 */
+	private Set<String> ignoreDsLogicDeletes = new HashSet<>();
 
 	/**
 	 * 企业租户忽略表
@@ -44,6 +50,11 @@ public class MybatisProperties {
 	 *     此处可配置需要额外忽略的表名
 	 * </pre>
 	 */
-	private Set<String> ignoreTableTenantCos;
+	private Set<String> ignoreTableTenantCos = new HashSet<>();
+
+	/**
+	 * 企业租户忽略数据源
+	 */
+	private Set<String> ignoreDsTenantCos = new HashSet<>();
 
 }

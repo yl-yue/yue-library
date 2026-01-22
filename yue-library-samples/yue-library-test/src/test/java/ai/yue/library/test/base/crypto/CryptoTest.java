@@ -1,10 +1,9 @@
 package ai.yue.library.test.base.crypto;
 
 import ai.yue.library.base.crypto.constant.key.exchange.ExchangeKeyEnum;
-import ai.yue.library.base.crypto.dto.key.exchange.KeyExchangeDTO;
 import ai.yue.library.base.crypto.util.EncryptParamUtils;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.v7.crypto.SecureUtil;
+import cn.hutool.v7.crypto.symmetric.AES;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -63,14 +62,6 @@ public class CryptoTest {
         String encryptedBase646 = aes.encryptBase64(EncryptParamUtils.toEncryptByte(jsonObjectList));
         System.out.println(encryptedBase646);
         System.out.println(aes.decryptStr(encryptedBase646));
-        System.out.println();
-
-        KeyExchangeDTO keyExchangeDTO = new KeyExchangeDTO();
-        keyExchangeDTO.setExchangeKey("111111111");
-        keyExchangeDTO.setPrivateKeyBase64("222222222222");
-        String encryptedBase645 = aes.encryptBase64(EncryptParamUtils.toEncryptByte(keyExchangeDTO));
-        System.out.println(encryptedBase645);
-        System.out.println(aes.decryptStr(encryptedBase645));
         System.out.println();
 
         ExchangeKeyEnum exchangeKeyEnum = ExchangeKeyEnum.SM2_SM4;

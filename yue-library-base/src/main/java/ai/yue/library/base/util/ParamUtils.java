@@ -8,8 +8,8 @@ import ai.yue.library.base.ipo.ParamFormatIPO;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.webenv.WebEnv;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.v7.core.text.StrUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -161,7 +161,7 @@ public class ParamUtils {
 	public static void paramValidate(Object ...objects) {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
-			if (ObjectUtils.isNull(object)) {
+			if (ObjUtils.isNull(object)) {
 				throw new ResultException(R.paramCheckNotPass());
 			}
 		}

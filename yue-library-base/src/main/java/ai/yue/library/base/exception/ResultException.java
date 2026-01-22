@@ -2,9 +2,9 @@ package ai.yue.library.base.exception;
 
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import cn.hutool.v7.core.text.StrUtil;
 
 /**
  * {@linkplain Result} 结果异常定义
@@ -66,6 +66,16 @@ public class ResultException extends RuntimeException {
 		super(result.getMsg());
 		this.businessId = businessId;
 		this.result = result;
+	}
+
+	@Override
+	public String getMessage() {
+		Integer code = result.getCode();
+		if (code < 600) {
+			return StrUtil.format("code={}, msg={}, data=\n{}", code, result.getMsg(), result.getData());
+		} else {
+			return result.toString();
+		}
 	}
 
 }

@@ -18,11 +18,101 @@
     <update id="updateLogicDelete">
         UPDATE table_example_standard
         SET field_one = 23
-        WHERE field_one = 22;
+        WHERE field_one = '22';
     </update>
 
     <delete id="delLogicDelete">
         DELETE FROM table_example_standard
-        WHERE field_one=23;
+        WHERE field_one='23';
     </delete>
+
+    <!-- ========== 逻辑删除查询测试 ========== -->
+    <!-- 1. 基础三表 INNER JOIN（覆盖全部字段表） -->
+    <select id="queryLogicDelete1" resultType="hashmap">
+        SELECT
+            a.*,
+            b.field_four, b.field_five, b.field_six,
+            c.field_seven
+        FROM
+            delete_time_query_1 a
+                INNER JOIN delete_time_query_2 b ON a.uk = b.uk
+                INNER JOIN delete_time_query_4 c ON a.uk = c.uk
+        WHERE
+            a.field_one IS NOT NULL
+    </select>
+    <!-- 2. LEFT JOIN + RIGHT JOIN + 部分无字段表 -->
+    <select id="queryLogicDelete2" resultType="hashmap">
+        SELECT
+            a.uk, a.field_one,
+            b.field_four,
+            d.other_field
+        FROM
+            delete_time_query_1 a
+                LEFT JOIN delete_time_query_2 b ON a.uk = b.uk
+                RIGHT JOIN no_tenant_no_delete d ON a.uk = d.uk
+        WHERE
+            b.field_five IS NOT NULL
+    </select>
+    <!-- 3. 子查询 + EXISTS 场景 -->
+    <select id="queryLogicDelete3" resultType="hashmap">
+        SELECT *
+        FROM delete_time_query_1 a
+        WHERE EXISTS (
+            SELECT 1 FROM delete_time_query_2 b WHERE b.uk = a.uk AND b.field_five = '55'
+        )
+    </select>
+    <!-- 4. 嵌套子查询 + UNION -->
+    <select id="queryLogicDelete4" resultType="hashmap">
+        SELECT uk, field_one FROM delete_time_query_1
+        WHERE delete_time = 0
+        UNION ALL
+        SELECT uk, field_four FROM delete_time_query_2
+        WHERE delete_time = 0
+    </select>
+    <!-- 5. 复杂嵌套 JOIN + 子查询 -->
+    <select id="queryLogicDelete5" resultType="hashmap">
+        SELECT
+            a.uk, a.field_one, b.field_four,
+            (SELECT COUNT(*) FROM delete_time_query_4 c WHERE c.uk = a.uk) as cnt
+        FROM
+            delete_time_query_1 a
+                INNER JOIN delete_time_query_2 b ON a.uk = b.uk
+        WHERE
+            a.field_two = '2'
+    </select>
+    <!-- 6. 多表 CROSS JOIN -->
+    <select id="queryLogicDelete6" resultType="hashmap">
+        SELECT
+            a.uk, b.uk, d.other_field
+        FROM
+            delete_time_query_1 a
+                CROSS JOIN delete_time_query_2 b
+                CROSS JOIN no_tenant_no_delete d
+        WHERE
+            a.uk = b.uk AND b.uk = d.uk
+    </select>
+    <!-- 7. 复杂 LEFT JOIN 多表查询示例 -->
+    <select id="queryLogicDelete7" resultType="hashmap">
+        SELECT
+            a.id AS a_id,
+            a.uk AS a_uk,
+            a.field_one,
+            b.id AS b_id,
+            b.field_four,
+            c.id AS c_id,
+            c.field_seven,
+            d.id AS d_id,
+            d.other_field
+        FROM
+            delete_time_query_1 a
+                LEFT JOIN delete_time_query_2 b ON a.uk = b.uk
+                LEFT JOIN delete_time_query_4 c ON a.uk = c.uk AND c.tenant_co = 'co'
+                LEFT JOIN no_tenant_no_delete d ON a.uk = d.uk
+        WHERE
+            a.field_one IS NOT NULL
+          AND (b.field_five IS NULL OR b.field_five != 'forbidden')
+        ORDER BY
+            a.id, b.id, c.id, d.id
+            LIMIT 10;
+    </select>
 </mapper>

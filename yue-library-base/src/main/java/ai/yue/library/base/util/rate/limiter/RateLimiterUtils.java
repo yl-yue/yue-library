@@ -1,7 +1,7 @@
 package ai.yue.library.base.util.rate.limiter;
 
 import ai.yue.library.base.util.AsyncUtils;
-import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.v7.core.util.RuntimeUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;

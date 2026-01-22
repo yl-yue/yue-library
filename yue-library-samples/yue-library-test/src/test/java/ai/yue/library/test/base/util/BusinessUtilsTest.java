@@ -1,7 +1,7 @@
 package ai.yue.library.test.base.util;
 
 import ai.yue.library.base.util.BusinessUtils;
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.v7.core.util.RandomUtil;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

@@ -1,12 +1,14 @@
 package ai.yue.library.test.controller.other.docs.example.data.mybatis;
 
-import ai.yue.library.base.annotation.api.version.ApiVersion;
+import ai.yue.library.base.annotation.ApiVersion;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.test.ipo.TableExampleIPO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.validation.Valid;
 
 /**
  * Controller示例
@@ -26,7 +28,7 @@ public class AuthTableExampleController {
      * 插入数据
      */
     @PostMapping("/insert")
-    public Result<?> insert(TableExampleIPO tableExampleIPO) {
+    public Result<?> insert(@Valid TableExampleIPO tableExampleIPO) {
         return tableExampleService.insert(tableExampleIPO);
     }
 

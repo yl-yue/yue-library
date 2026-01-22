@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.v7.core.net.url.UrlUtil;
 import org.springframework.web.util.UriUtils;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.web.util.UriUtils;
  * @author	ylyue
  * @since	2018年4月24日
  */
-public class UrlUtils extends URLUtil {
+public class UrlUtils extends UrlUtil {
 
     /**
      * The default encoding for Url encode/decode: <kbd>UTF-8</kbd>.

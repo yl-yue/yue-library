@@ -1,6 +1,6 @@
 package ai.yue.library.base.util;
 
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.v7.core.util.RandomUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

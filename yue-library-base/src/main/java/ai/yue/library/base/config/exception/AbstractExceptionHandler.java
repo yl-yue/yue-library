@@ -1,18 +1,18 @@
 package ai.yue.library.base.config.exception;
 
+import ai.yue.library.base.convert.Convert;
 import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.exceptions.ValidateException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import cn.hutool.v7.core.convert.ConvertException;
+import cn.hutool.v7.core.exception.ValidateException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.PostConstruct;
-import javax.validation.Valid;
 import java.io.IOException;
 
 /**
@@ -23,24 +23,39 @@ import java.io.IOException;
  */
 @Slf4j
 public abstract class AbstractExceptionHandler {
-	
-    @PostConstruct
-    private void init() {
-    	log.info("【初始化配置-全局统一异常处理】拦截所有Controller层异常，返回HTTP请求最外层对象 ... 已初始化完毕。");
-    }
-    
+
     // RESTful 异常拦截
-    
-	/**
-	 * 异常结果处理-synchronized
+
+    /**
+     * 拦截所有未知异常（DispatcherServlet异常处理）
+     * <p>避免StandardWrapperValve类打印异常，导致堆栈信息重复打印</p>
+     */
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public Result<?> exception(Exception e) {
+		return R.getResult(e);
+    }
+
+    /**
+	 * RESTful 异常结果处理
 	 * 
 	 * @param e 结果异常
 	 * @return 结果
 	 */
 	@ResponseBody
-    @ExceptionHandler(ResultException.class)
-	public abstract Result<?> resultExceptionHandler(ResultException e);
-	
+	@ExceptionHandler(ResultException.class)
+	public Result<?> resultExceptionHandler(ResultException e) {
+		Result result = e.getResult();
+		Integer code = result.getCode();
+		if (code < 600) {
+			log.error("{}", ExceptionUtils.getPrintExceptionToStr(e));
+		} else {
+			log.warn(result.toString());
+		}
+
+		return result;
+	}
+
     /**
 	 * 拦截登录异常（User）-401
 	 * @param e 登录异常
@@ -49,7 +64,7 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(LoginException.class)
 	public Result<?> loginExceptionHandler(LoginException e) {
-    	ExceptionUtils.printException(e);
+		log.error("【登录异常】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
     	return R.unauthorized();
 	}
     
@@ -61,8 +76,8 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(AttackException.class)
 	public Result<?> attackExceptionHandler(AttackException e) {
-    	ExceptionUtils.printException(e);
-    	return R.attack(e.getMessage());
+		log.error("【非法请求】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
+		return R.attack(e.getMessage());
 	}
     
     /**
@@ -73,7 +88,7 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ForbiddenException.class)
 	public Result<?> forbiddenExceptionHandler(ForbiddenException e) {
-    	ExceptionUtils.printException(e);
+		log.error("【权限不足】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
     	return R.forbidden();
 	}
     
@@ -86,7 +101,7 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ApiDeprecatedException.class)
 	public Result<?> apiVersionDeprecatedExceptionHandler(ApiDeprecatedException e) {
-    	ExceptionUtils.printException(e);
+		log.error("【弃用接口】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
     	return R.gone();
 	}
     
@@ -96,7 +111,9 @@ public abstract class AbstractExceptionHandler {
 	 */
 	@ResponseBody
 	@ExceptionHandler(ParamVoidException.class)
-	public abstract Result<?> paramVoidExceptionHandler();
+	public Result<?> paramVoidExceptionHandler() {
+		return R.paramVoid();
+	}
     
     /**
 	 * 参数效验未通过统一处理-433
@@ -105,7 +122,10 @@ public abstract class AbstractExceptionHandler {
 	 */
     @ResponseBody
     @ExceptionHandler(ParamException.class)
-	public abstract Result<?> paramExceptionHandler(ParamException e);
+	public Result<?> paramExceptionHandler(ParamException e) {
+		log.error("{}", ExceptionUtils.getPrintExceptionToStr(e));
+		return R.paramCheckNotPass(e.getMessage());
+	}
     
     /**
 	 * {@linkplain Valid} 验证异常统一处理-433
@@ -123,7 +143,14 @@ public abstract class AbstractExceptionHandler {
 	 */
     @ResponseBody
     @ExceptionHandler(ValidateException.class)
-	public abstract Result<?> validateExceptionHandler(ValidateException e);
+	public Result<?> validateExceptionHandler(ValidateException e) {
+		log.error("{}", ExceptionUtils.getPrintExceptionToStr(e));
+		try {
+			return R.paramCheckNotPass(Convert.toJSONArray(e.getMessage()));
+		} catch (Exception exception) {
+			return R.paramCheckNotPass(e.getMessage());
+		}
+	}
     
 	/**
 	 * 解密异常统一处理-435
@@ -133,7 +160,10 @@ public abstract class AbstractExceptionHandler {
 	 */
     @ResponseBody
     @ExceptionHandler(ParamDecryptException.class)
-	public abstract Result<?> paramDecryptExceptionHandler(ParamDecryptException e);
+	public Result<?> paramDecryptExceptionHandler(ParamDecryptException e) {
+		log.error("【解密错误】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
+		return R.paramDecryptError();
+	}
     
 	/**
 	 * 服务降级-507
@@ -143,7 +173,7 @@ public abstract class AbstractExceptionHandler {
 	@ResponseBody
     @ExceptionHandler(ClientFallbackException.class)
 	public Result<?> clientFallbackExceptionHandler(ClientFallbackException e) {
-		ExceptionUtils.printException(e);
+		log.error("【服务降级】错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
 		return R.clientFallback();
 	}
 	
@@ -156,8 +186,7 @@ public abstract class AbstractExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ConvertException.class)
 	public Result<?> convertExceptionHandler(ConvertException e) {
-    	log.error("【类型转换异常】转换类型失败，错误信息如下：{}", e.getMessage());
-    	ExceptionUtils.printException(e);
+    	log.error("【类型转换异常】转换类型失败，错误信息如下：{}", ExceptionUtils.getPrintExceptionToStr(e));
     	return R.typeConvertError(e.getMessage());
 	}
     

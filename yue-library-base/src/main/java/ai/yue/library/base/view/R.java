@@ -5,21 +5,23 @@ import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import cn.hutool.v7.core.array.ArrayUtil;
+import cn.hutool.v7.core.classloader.ClassLoaderUtil;
+import cn.hutool.v7.core.convert.ConvertException;
+import cn.hutool.v7.core.exception.ValidateException;
+import cn.hutool.v7.core.lang.Console;
+import cn.hutool.v7.core.reflect.FieldUtil;
+import cn.hutool.v7.core.reflect.method.MethodUtil;
+import cn.hutool.v7.core.text.StrUtil;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,12 +34,25 @@ import java.util.List;
 @Slf4j
 public class R {
 
+    private static final String ServletUtils = "ai.yue.library.web.util.ServletUtils";
+
+    // ======web======
+    private static final String NoResourceFoundException = "org.springframework.web.servlet.resource.NoResourceFoundException";
+
+    // ======feign======
     private static final String FeignException = "feign.FeignException";
-    private static final String NotLoginException = "cn.dev33.satoken.exception.NotLoginException";
+
+    // ======dao======
     private static final String PageException = "com.github.pagehelper.PageException";
     private static final String DataAccessException = "org.springframework.dao.DataAccessException";
-    private static final String MyBatisSystemException = "org.mybatis.spring.MyBatisSystemException";
+    private static final String TooManyResultsException = "org.apache.ibatis.exceptions.TooManyResultsException";
     private static final String DataIntegrityViolationException = "org.springframework.dao.DataIntegrityViolationException";
+    private static final String MyBatisSystemException = "org.mybatis.spring.MyBatisSystemException";
+
+    // ======security======
+    private static final String NotLoginException = "cn.dev33.satoken.exception.NotLoginException";
+    private static final String AuthenticationException = "org.springframework.security.core.AuthenticationException";
+    private static final String AccessDeniedException = "org.springframework.security.access.AccessDeniedException";
 
     // ------ Result error builder ------
 
@@ -170,6 +185,27 @@ public class R {
      */
     public static Result<?> unauthorized() {
         return error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED);
+    }
+
+    /**
+     * 你已被顶下线-401
+     */
+    public static Result<?> unauthorizedBeReplaced() {
+        return error(ResultEnum.UNAUTHORIZED_BE_REPLACED.getCode(), ResultEnum.UNAUTHORIZED_BE_REPLACED);
+    }
+
+    /**
+     * 你已被踢下线-401
+     */
+    public static Result<?> unauthorizedKickOut() {
+        return error(ResultEnum.UNAUTHORIZED_KICK_OUT.getCode(), ResultEnum.UNAUTHORIZED_KICK_OUT);
+    }
+
+    /**
+     * 本次会话已被冻结，请重新登录-401
+     */
+    public static Result<?> unauthorizedTokenFreeze() {
+        return error(ResultEnum.UNAUTHORIZED_TOKEN_FREEZE.getCode(), ResultEnum.UNAUTHORIZED_TOKEN_FREEZE);
     }
 
     /**
@@ -307,7 +343,7 @@ public class R {
     }
 
     /**
-     * 锁争抢失败-437（分布式锁错误）
+     * 锁获取失败，锁已被其他线程持有，请重试-437
      */
     public static <T> Result<T> lockAcquireFailure(T data) {
         return error(ResultEnum.LOCK_ACQUIRE_FAILURE.getCode(), ResultEnum.LOCK_ACQUIRE_FAILURE, data);
@@ -453,16 +489,6 @@ public class R {
         return error(ResultEnum.TYPE_CONVERT_ERROR.getCode(), ResultEnum.TYPE_CONVERT_ERROR, data);
     }
 
-    /**
-     * 尝试获取锁时引发未知异常-510
-     *
-     * @param data {@link Result#setData(Object)} 提示信息
-     * @return HTTP请求，最外层响应对象
-     */
-    public static <T> Result<T> lockError(T data) {
-        return error(ResultEnum.LOCK_ERROR.getCode(), ResultEnum.LOCK_ERROR, data);
-    }
-
     // 600 - 自定义错误提示
 
     /**
@@ -561,8 +587,12 @@ public class R {
         } else if (e instanceof ResultException) {
             // 异常结果处理
             Result<?> result = ((ResultException) e).getResult();
-            log.error(result.toString());
-            ExceptionUtils.printException(e);
+            if (result.getCode() < 600) {
+                log.error("{}", ExceptionUtils.getPrintExceptionToStr(e));
+            } else {
+                log.warn(result.toString());
+            }
+
             return result;
         } else if (e instanceof AuthorizeException) {
             // WEB 异常拦截
@@ -581,6 +611,10 @@ public class R {
             // 无权限异常访问处理-403
             ExceptionUtils.printException(e);
             return forbidden();
+        } else if (isInstanceofExceptionClass(e, NoResourceFoundException)) {
+            // Not Found-404
+            log.error("【404异常】信息如下：", e);
+            return notFound();
         } else if (e instanceof ApiDeprecatedException) {
             // API接口版本弃用异常-410
             ExceptionUtils.printException(e);
@@ -625,7 +659,7 @@ public class R {
             return typeConvertError(e.getMessage());
         } else if (e instanceof ResponseStatusException) {
             ExceptionUtils.printException(e);
-            HttpStatus httpStatus = ((ResponseStatusException) e).getStatus();
+            HttpStatusCode httpStatus = ((ResponseStatusException) e).getStatusCode();
             int code = httpStatus.value();
             ResultEnum resultEnum = ResultEnum.valueOf(code);
             if (resultEnum != null) {
@@ -633,7 +667,7 @@ public class R {
             }
         } else if (isInstanceofExceptionClass(e, FeignException)) {
             log.error("【服务降级】接口调用失败，FeignException 错误内容如下：", e);
-            String contentUTF8 = ReflectUtil.invoke(e, "contentUTF8");
+            String contentUTF8 = MethodUtil.invoke(e, "contentUTF8");
             try {
                 Result<?> result = Convert.toJavaBean(contentUTF8, Result.class);
                 if (result == null) {
@@ -644,9 +678,72 @@ public class R {
                 return clientFallback(contentUTF8);
             }
         } else if (isInstanceofExceptionClass(e, NotLoginException)) {
-            return R.unauthorized();
+            String currentType = MethodUtil.invoke(e, "getType");
+            Class<?> notLoginExceptionClass = ClassLoaderUtil.loadClass(NotLoginException);
+            String[] types = new String[]{
+                    // 未能读取到有效 token
+                    (String) FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "NOT_TOKEN")),
+                    // token 无效
+                    (String) FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "INVALID_TOKEN")),
+                    // 未按照指定前缀提交 token
+                    (String) FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "NO_PREFIX"))
+            };
+
+            // 日志等级
+            if (ArrayUtil.contains(types, currentType)) {
+                log.error("NotLoginException: type = " + currentType, e);
+            } else {
+                /**
+                 * 1. token 已被顶下线
+                 * 2. token 已被踢下线
+                 * 3. token 已被冻结
+                 * 4. token 已过期
+                 * 5. 当前会话未登录
+                 */
+                log.warn(e.getMessage());
+            }
+
+            // 异常提示
+            if (currentType.equals(FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "BE_REPLACED")))) {
+                // token 已被顶下线
+                return unauthorizedBeReplaced();
+            } else if (currentType.equals(FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "KICK_OUT")))) {
+                // token 已被踢下线
+                return unauthorizedKickOut();
+            } else if (currentType.equals(FieldUtil.getStaticFieldValue(FieldUtil.getField(notLoginExceptionClass, "TOKEN_FREEZE")))) {
+                // token 已被冻结
+                return unauthorizedTokenFreeze();
+            }
+
+            return unauthorized();
+        } else if (isInstanceofExceptionClass(e, AuthenticationException)) {
+            String authToken = "";
+            if (ClassLoaderUtil.isPresent(ServletUtils)) {
+                Class<?> ServletUtilsClass = ClassLoaderUtil.loadClass(ServletUtils);
+                Method getAuthToken = MethodUtil.getPublicMethod(ServletUtilsClass,true, "getAuthToken");
+                authToken = "authToken=" + MethodUtil.invokeStatic(getAuthToken);
+            }
+
+            String msg = I18nUtils.getYueDefault(ResultEnum.UNAUTHORIZED.getMsg());
+            log.warn("【认证异常】{}, {}", msg, authToken);
+            return unauthorized();
+        } else if (isInstanceofExceptionClass(e, AccessDeniedException)) {
+            String authToken = "";
+            if (ClassLoaderUtil.isPresent(ServletUtils)) {
+                Class<?> ServletUtilsClass = ClassLoaderUtil.loadClass(ServletUtils);
+                Method getAuthToken = MethodUtil.getPublicMethod(ServletUtilsClass,true, "getAuthToken");
+                authToken = "authToken=" + MethodUtil.invokeStatic(getAuthToken);
+            }
+
+            String msg = I18nUtils.getYueDefault(ResultEnum.FORBIDDEN.getMsg());
+            log.error("【权限异常】{}, {}, {}", msg, e.getMessage(), authToken);
+            return forbidden();
         } else if (isInstanceofExceptionClass(e, PageException)) {
-            return R.paramCheckNotPass(e.getMessage());
+            return paramCheckNotPass(e.getMessage());
+        }
+        // Sql错误，请检查数据-506
+        else if (isInstanceofExceptionClass(e, TooManyResultsException)) {
+            return sqlError(StrUtil.format("TooManyResultsException: {}", e.getMessage()));
         }
         // 数据库访问异常统一处理
         else if (isInstanceofExceptionClass(e, DataAccessException)) {
@@ -661,7 +758,7 @@ public class R {
             }
 
             // ===处理数据库操作异常===
-            e.printStackTrace();
+            log.error("【数据库访问异常】信息如下：", e);
 
             // 是否开启debug日志等级 或 是否开发环境
             String message = null;
@@ -680,7 +777,7 @@ public class R {
         }
 
         // 处理所有未处理异常-500
-        log.error(e.getMessage(), e);
+        log.error("【未处理异常】信息如下：", e);
         return internalServerError(ExceptionUtils.getPrintExceptionToJson(e));
     }
 
