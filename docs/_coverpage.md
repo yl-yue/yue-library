@@ -1,6 +1,6 @@
 ![logo](_images/logo.png)
 
-# bl
+# yue-library
 
 > yue-library是一个基于SpringBoot封装的增强库
 

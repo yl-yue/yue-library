@@ -1,11 +1,11 @@
 * 🚪入门
 
-  * [介绍](README.md "SpringBoot增强库bl入门介绍")
-  * [快速开始](quickstart.md "快速使用bl")
+  * [介绍](README.md "SpringBoot增强库yue-library入门介绍")
+  * [快速开始](quickstart.md "快速使用yue-library")
 
-* 💡bl-base（必备）
+* 💡yue-library-base（必备）
 
-  * [介绍](base/介绍.md "bl-base介绍")
+  * [介绍](base/介绍.md "yue-library-base介绍")
   * [RESTful](base/RESTful.md)
   * [校验](base/校验.md "校验框架")
   * [类型转换器](base/类型转换器.md)
@@ -15,21 +15,21 @@
   * [i18n](base/i18n.md)
   * [Actuator 安全](base/Actuator安全.md)
 
-* 🔐bl-base-crypto
+* 🔐yue-library-base-crypto
 
-  * [快速开始](base-crypto/快速开始.md "bl-base-crypto快速开始")
+  * [快速开始](base-crypto/快速开始.md "yue-library-base-crypto快速开始")
   * [密钥交换加解密](base-crypto/密钥交换加解密.md "密钥交换加解密")
 
-* 🌐bl-web/webflux（web必备）
+* 🌐yue-library-web/webflux（web必备）
 
-  * [介绍](web/介绍.md "bl-web/webflux介绍")
-  * [QPS限流](web/QPS限流.md "bl-web/QPS限流")
+  * [介绍](web/介绍.md "yue-library-web/webflux介绍")
+  * [QPS限流](web/QPS限流.md "yue-library-web/QPS限流")
   * [请求参数解析与包装](web/请求参数解析与包装.md)
   * [响应消息转换器](web/响应消息转换器.md)
 
-* 🥞bl-data-mybatis（推荐）
+* 🥞yue-library-data-mybatis（推荐）
 
-  * [快速开始](data/mybatis/快速开始.md "bl-data-mybatis快速开始")
+  * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")
   * [BaseEntity](data/mybatis/BaseEntity.md "bl-data-mybatis BaseEntity")
   * [Mapper、Service、Controller示例](data/mybatis/Mapper、Service、Controller示例.md "bl-data-mybatis Mapper、Service、Controller示例")
   * [SqlService](data/mybatis/SqlService.md "bl-data-mybatis SqlService")

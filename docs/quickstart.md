@@ -2,12 +2,12 @@
 在多模块打包时，为加快构建速度并增强模块独立维护性，部分模块在未迭代且兼容的情况下，不再随主版本一起发布
 
 ```
-. bl
-├── bl                       bl顶级模块
-│   ├── bl-base                  基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
-│   ├── bl-base-crypto           加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
-│   ├── bl-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
-│   ├── bl-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
+. yue-library
+├── yue-library                       yue-library顶级模块
+│   ├── yue-library-base                  基础核心模块，提供丰富的Java工具类库、接口参数校验、类型转换器等
+│   ├── yue-library-base-crypto           加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
+│   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
+│   ├── yue-library-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
 │   ├── bl-data-mybatis          ORM框架，基于mybatis-plus，拥有着强大性能的同时又不失简单灵活等
 │   └── bl-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
 └── bl-samples               bl示例项目
