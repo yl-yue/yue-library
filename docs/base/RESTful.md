@@ -1,7 +1,7 @@
-# RESTful
-RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，yue-library在 [接口质检标准-RESTful](规约/接口质检标准-RESTful.md) 的介绍中，已对RESTful风格的API进行了详细的阐述与定义。
+## RESTful <!-- {docsify-ignore} -->
+RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，bl在 [接口质检标准-RESTful](规约/接口质检标准-RESTful.md) 的介绍中，已对RESTful风格的API进行了详细的阐述与定义。
 
-## 统一响应体定义（详见：[👉接口质检标准-RESTful](规约/接口质检标准-RESTful.md)）
+### 统一响应体定义（详见：[👉接口质检标准-RESTful](规约/接口质检标准-RESTful.md)）
 响应体参数介绍：
 
 |参数名称	|参数类型	|最大长度	|描述													|示例																	|
@@ -28,7 +28,7 @@ msg提示约定：
 }
 ```
 
-## RESTful风格与Result实现
+### RESTful风格与Result实现
 - `ai.yue.library.base.view.Result`
   - HTTP请求最外层响应对象：`code`、`msg`、`flag`、`traceId`、`data`
   - 内置结果转换与异常校验等
@@ -42,7 +42,7 @@ msg提示约定：
   - 内置基本的响应：成功、失败、限流等
   - `R.errorPromptI18n(ResultCode resultCode)`可返回自定义`code`与`msg`
 
-### Result使用示例
+#### Result使用示例
 **Controller定义：**
 ```java
 @PostMapping("/valid")
@@ -55,7 +55,7 @@ public Result<?> valid(@Valid ValidationIPO validationIPO) {
 
 ![请求参数与响应结果](_base_files/请求参数与响应结果.jpg)
 
-## API接口版本控制
+### API接口版本控制
 　　在前后端分离、RESTful 接口盛行的当下，接口的版本控制是一个成熟的系统所应该拥有的。web模块提供的版本控制，可以方便我们快速构建一个基于版本的api接口。<br>
 　　通过 `@ApiVersion` 注解可优雅的实现接口版本控制，注解定义如下：
 ```java
@@ -82,13 +82,18 @@ public @interface ApiVersion {
 }
 ```
 
-### 快速开始 @ApiVersion 注解的使用
+#### 快速开始 @ApiVersion 注解的使用
 　　版本控制默认为开启状态。可以通过 `yue.api-version.enabled=fasle` 关闭。
 ```java
 @ApiVersion(2)
 @RestController
 @RequestMapping("/{version}/apiVersion")
 public class ApiVersionConroller {
+// 配合RESTful接口规约，详情见开发文档：规约-2RESTful接口
+// @RequestMapping("/open/{version}/apiVersion")
+// public class OpenApiVersionConroller {
+// @RequestMapping("/auth/{version}/apiVersion")
+// public class AuthApiVersionConroller {
 
 	/**
 	 * get
@@ -144,7 +149,7 @@ public class ApiVersionConroller {
 
 注解优先级：方法上的 `@ApiVersion` > 类上面的 `@ApiVersion`
 
-#### /v2/apiVersion/get
+##### /v2/apiVersion/get
 ```json
 {
     "code": 410,
@@ -154,7 +159,7 @@ public class ApiVersionConroller {
 }
 ```
 
-#### /v3.1/apiVersion/get
+##### /v3.1/apiVersion/get
 ```json
 {
     "code": 200,
@@ -164,7 +169,7 @@ public class ApiVersionConroller {
 }
 ```
 
-#### /v4/apiVersion/get
+##### /v4/apiVersion/get
 ```json
 {
     "code": 200,
@@ -174,7 +179,7 @@ public class ApiVersionConroller {
 }
 ```
 
-### API接口版本废弃
+#### API接口版本废弃
 　　除了上面所演示的 `@ApiVersion(deprecated=true)` 通过注解来废弃版本之外，我们还提供了最小支持版本统一废弃处理。<br>
 　　您可以使用 `yue.api-version.minimum-version` 配置来设置当前系统中允许的最小版本，以此废弃该版本之前的所有版本。如：
 ```java
