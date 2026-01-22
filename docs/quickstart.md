@@ -8,33 +8,31 @@
 │   ├── yue-library-base-crypto           加解密模块，提供对称、非对称和摘要算法、密钥交换加解密等
 │   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
 │   ├── yue-library-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
-│   ├── bl-data-mybatis          ORM框架，基于mybatis-plus，拥有着强大性能的同时又不失简单灵活等
-│   └── bl-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
-└── bl-samples               bl示例项目
-    ├── bl-test                  web测试项目，提供详细的特性使用示例、接口单元测试
-    ├── bl-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
-    ├── bl-template-boot         SpringBoot项目模版，提供快速开发示例
-    └── bl-template-cloud        SpringCloud项目模版，SOA共享架构（阿里巴巴中台）
+│   ├── yue-library-data-mybatis          ORM框架，基于mybatis-plus，拥有着强大性能的同时又不失简单灵活等
+│   └── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+└── yue-library-samples               yue-library示例项目
+    ├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
+    └── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
 ```
 
 ### 快速开始
 #### 引入项目依赖
-maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/ai.ylyue/bl/j?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/bl-dependencies)
+maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/ai.ylyue/yue-library/j?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
 ```xml
 <parent>
 	<groupId>ai.ylyue</groupId>
-	<artifactId>bl</artifactId>
+	<artifactId>yue-library</artifactId>
 	<version>${version}</version>
 </parent>
 ```
-随后引入所需要的模块，如WebMvc项目引入：`bl-web`
+随后引入所需要的模块，如WebMvc项目引入：`yue-library-web`
 
-依赖说明：`bl-base`为基础模块，一般情况下不需要单独引入，如：web、data-jdbc、data-redis等模块皆已默认依赖。
+依赖说明：`yue-library-base`为基础模块，一般情况下不需要单独引入，如：web、data-jdbc、data-redis等模块皆已默认依赖。
 ```xml
 <dependencies>
 	<dependency>
 		<groupId>ai.ylyue</groupId>
-		<artifactId>bl-web</artifactId>
+		<artifactId>yue-library-web</artifactId>
 	</dependency>
 	...
 </dependencies>

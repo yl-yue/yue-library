@@ -30,24 +30,24 @@
 * 🥞yue-library-data-mybatis（推荐）
 
   * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")
-  * [BaseEntity](data/mybatis/BaseEntity.md "bl-data-mybatis BaseEntity")
-  * [Mapper、Service、Controller示例](data/mybatis/Mapper、Service、Controller示例.md "bl-data-mybatis Mapper、Service、Controller示例")
-  * [SqlService](data/mybatis/SqlService.md "bl-data-mybatis SqlService")
-  * [数据填充](data/mybatis/数据填充.md "bl-data-mybatis数据填充")
-  * [数据审计](data/mybatis/数据审计.md "bl-data-mybatis数据审计")
-  * [逻辑删除](data/mybatis/逻辑删除.md "bl-data-mybatis逻辑删除")
-  * [分页](data/mybatis/分页.md "bl-data-mybatis分页")
-  * [多租户与 i18n](data/mybatis/多租户与i18n.md "bl-data-mybatis多租户与i18n")
-  * [企业租户 tenant_co](data/mybatis/企业租户tenant_co.md "bl-data-mybatis企业租户tenant_co")
-  * [动态数据源](data/mybatis/动态数据源.md "bl-data-mybatis动态数据源")
-  * [性能调优](data/mybatis/性能调优.md "bl-data-mybatis性能调优")
-  * [启用插件](data/mybatis/启用插件.md "bl-data-mybatis启用插件")
+  * [BaseEntity](data/mybatis/BaseEntity.md "yue-library-data-mybatis BaseEntity")
+  * [Mapper、Service、Controller示例](data/mybatis/Mapper、Service、Controller示例.md "yue-library-data-mybatis Mapper、Service、Controller示例")
+  * [SqlService](data/mybatis/SqlService.md "yue-library-data-mybatis SqlService")
+  * [数据填充](data/mybatis/数据填充.md "yue-library-data-mybatis数据填充")
+  * [数据审计](data/mybatis/数据审计.md "yue-library-data-mybatis数据审计")
+  * [逻辑删除](data/mybatis/逻辑删除.md "yue-library-data-mybatis逻辑删除")
+  * [分页](data/mybatis/分页.md "yue-library-data-mybatis分页")
+  * [多租户与 i18n](data/mybatis/多租户与i18n.md "yue-library-data-mybatis多租户与i18n")
+  * [企业租户 tenant_co](data/mybatis/企业租户tenant_co.md "yue-library-data-mybatis企业租户tenant_co")
+  * [动态数据源](data/mybatis/动态数据源.md "yue-library-data-mybatis动态数据源")
+  * [性能调优](data/mybatis/性能调优.md "yue-library-data-mybatis性能调优")
+  * [启用插件](data/mybatis/启用插件.md "yue-library-data-mybatis启用插件")
 
-* 🥝bl-data-redis
+* 🥝yue-library-data-redis
 
-  * [快速开始](data/redis/快速开始.md "bl-data-redis快速开始")
-  * [分布式锁与接口幂等性](data/redis/分布式锁与接口幂等性.md "bl-data-redis分布式锁与接口幂等性")
-  * [二级缓存](data/redis/二级缓存.md "bl-data-redis二级缓存")
-  * [有界阻塞队列与延迟队列](data/redis/有界阻塞队列与延迟队列.md "bl-data-redis有界阻塞队列与延迟队列")
+  * [快速开始](data/redis/快速开始.md "yue-library-data-redis快速开始")
+  * [分布式锁与接口幂等性](data/redis/分布式锁与接口幂等性.md "yue-library-data-redis分布式锁与接口幂等性")
+  * [二级缓存](data/redis/二级缓存.md "yue-library-data-redis二级缓存")
+  * [有界阻塞队列与延迟队列](data/redis/有界阻塞队列与延迟队列.md "yue-library-data-redis有界阻塞队列与延迟队列")
 
 * [Changelog<sup style="color:red">(new)<sup>](changelog.md)
