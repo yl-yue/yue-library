@@ -356,7 +356,7 @@
     <distributionManagement>
         <snapshotRepository>
             <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/2138714-snapshot-1klhWJ/</url>
+            <url>https://packages.aliyun.com/614409d1c0c796adef4f37ac/maven/2138714-snapshot-1klhwj</url>
         </snapshotRepository>
         <repository>
             <id>oss-releases</id>
