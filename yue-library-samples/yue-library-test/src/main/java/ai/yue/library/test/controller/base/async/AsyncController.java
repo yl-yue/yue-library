@@ -225,32 +225,24 @@ public class AsyncController {
         Set<String> set = new HashSet<>();
         Set<String> set2 = new HashSet<>();
 
-        AsyncUtils.execParallelLimit(5, () -> {
-            split.parallelStream().forEach(item -> {
-                log.info("{}", item);
-                String name = Thread.currentThread().getName();
-                String s = StrUtil.subAfter(name, "-", true);
-                set.add(s);
-            });
+        AsyncUtils.execParallelLimit(5, split,item   -> {
+            log.info("{}", item);
+            String name = Thread.currentThread().getName();
+            String s = StrUtil.subAfter(name, "-", true);
+            set.add(s);
         });
 
-        AsyncUtils.execParallelLimit(8, () -> {
-            split.parallelStream().forEach(item -> {
-                log.info("{}", item);
-                String name = Thread.currentThread().getName();
-                String s = StrUtil.subAfter(name, "-", true);
-                set2.add(s);
-            });
+        AsyncUtils.execParallelLimit(8, split, item -> {
+            log.info("{}", item);
+            String name = Thread.currentThread().getName();
+            String s = StrUtil.subAfter(name, "-", true);
+            set2.add(s);
         });
         
         CompletableFuture<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
-            split.parallelStream().forEach(item -> {
-                log.info("{}", item);
-                String name = Thread.currentThread().getName();
-                String s = StrUtil.subAfter(name, "-", true);
-                set.add(s);
-            });
-
+            String name = Thread.currentThread().getName();
+            String s = StrUtil.subAfter(name, "-", true);
+            set.add(s);
             return "aaaa";
         });
 
