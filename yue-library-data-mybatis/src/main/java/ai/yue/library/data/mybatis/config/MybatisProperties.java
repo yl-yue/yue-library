@@ -46,7 +46,7 @@ public class MybatisProperties {
 	/**
 	 * 企业租户忽略表
 	 * <pre>
-	 *     企业租户插件会自动扫描所有 @{@linkplain Mapper} Bean，如果实体中没有 {@value DbConstant#CLASS_TENANT_CO} 字段，则忽略此表。
+	 *     企业租户插件会自动扫描所有 @{@linkplain Mapper} Bean，如果实体中没有 {@value DbConstant#CLASS_TENANT_CO_ID} 字段，则忽略此表。
 	 *     此处可配置需要额外忽略的表名
 	 * </pre>
 	 */

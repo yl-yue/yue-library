@@ -28,8 +28,8 @@ public class TableExampleStandard extends BaseEntity {
 	String fieldTwo;
 	String fieldThree;
 	@TableField(fill = FieldFill.INSERT)
-	String tenantCo;
+	String tenantCoId;
 	@TableField(fill = FieldFill.INSERT)
-	String tenantSys;
+	String tenantSysId;
 
 }

@@ -5,9 +5,6 @@ import ai.yue.library.base.exception.*;
 import ai.yue.library.base.util.ExceptionUtils;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
-import com.alibaba.fastjson2.JSONObject;
-import jakarta.annotation.Nullable;
-import lombok.extern.slf4j.Slf4j;
 import cn.hutool.v7.core.array.ArrayUtil;
 import cn.hutool.v7.core.classloader.ClassLoaderUtil;
 import cn.hutool.v7.core.convert.ConvertException;
@@ -16,6 +13,9 @@ import cn.hutool.v7.core.lang.Console;
 import cn.hutool.v7.core.reflect.FieldUtil;
 import cn.hutool.v7.core.reflect.method.MethodUtil;
 import cn.hutool.v7.core.text.StrUtil;
+import com.alibaba.fastjson2.JSONObject;
+import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
@@ -186,7 +186,14 @@ public class R {
     public static Result<?> unauthorized() {
         return error(ResultEnum.UNAUTHORIZED.getCode(), ResultEnum.UNAUTHORIZED);
     }
-
+    
+    /**
+     * 错误的登录-401
+     */
+    public static <T> Result<T> unauthorizedError(T data) {
+        return error(ResultEnum.UNAUTHORIZED_ERROR.getCode(), ResultEnum.UNAUTHORIZED_ERROR, data);
+    }
+    
     /**
      * 你已被顶下线-401
      */
@@ -236,7 +243,14 @@ public class R {
     public static Result<?> forbidden() {
         return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN);
     }
-
+    
+    /**
+     * 无权限-403
+     */
+    public static <T> Result<T> forbidden(T data) {
+        return error(ResultEnum.FORBIDDEN.getCode(), ResultEnum.FORBIDDEN, data);
+    }
+    
     /**
      * Not Found-404
      *
@@ -715,7 +729,7 @@ public class R {
                 return unauthorizedTokenFreeze();
             }
 
-            return unauthorized();
+            return unauthorizedError(e.getMessage());
         } else if (isInstanceofExceptionClass(e, AuthenticationException)) {
             String authToken = "";
             if (ClassLoaderUtil.isPresent(ServletUtils)) {

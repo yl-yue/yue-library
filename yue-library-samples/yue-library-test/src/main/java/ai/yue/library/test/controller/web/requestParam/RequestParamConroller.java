@@ -6,10 +6,11 @@ import ai.yue.library.test.constant.TestEnum;
 import ai.yue.library.test.ipo.ParamParseIPO;
 import ai.yue.library.test.ipo.ValidationIPO;
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author	ylyue
@@ -130,7 +131,12 @@ public class RequestParamConroller {
 	public Result<?> list5(@Valid List<ValidationIPO> validationIPOs) {
 		return R.success(validationIPOs);
 	}
-
+    
+    @PostMapping("/list6")
+    public Result<?> list6(String str, @Valid List<ValidationIPO> validationIPOs) {
+        return R.success(Map.of("str", str, "validationIPOs", validationIPOs));
+    }
+    
 	// 其它
 
 	@GetMapping("/paramParseIPO")

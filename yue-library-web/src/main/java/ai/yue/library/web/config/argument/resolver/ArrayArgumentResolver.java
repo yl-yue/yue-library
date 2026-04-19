@@ -5,12 +5,12 @@ import ai.yue.library.base.util.ListUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
 import ai.yue.library.web.util.ServletUtils;
+import cn.hutool.v7.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
-import cn.hutool.v7.core.bean.BeanUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
@@ -150,71 +150,85 @@ public class ArrayArgumentResolver extends AbstractNamedValueMethodArgumentResol
 				arg = (paramValues.length == 1 ? paramValues[0] : paramValues);
 			}
 		}
-		
-		// bl
-		if (arg == null) {
-			JSONObject param = null;
-			try {
-				param = ServletUtils.getParamToJson(servletRequest);
-			} catch (Exception e) {
-				// 忽略
-			}
-			if (param != null) {
-				arg = param.get(name);
-			} else {
-				// 确认数组类型
-				String body = ServletUtils.getBody(servletRequest);
-				Class<?> parameterType = parameter.getParameterType();
-				Class<?> actualTypeArgument = null;
-				if (List.class.isAssignableFrom(parameterType)) {
-					ParameterizedType genericParameterType = (ParameterizedType) parameter.getGenericParameterType();
-					actualTypeArgument = (Class<?>) genericParameterType.getActualTypeArguments()[0];
-				} else if (parameterType.isArray()) {
-					actualTypeArgument = parameterType.getComponentType();
-				}
-				
-				// 执行转换
-				if (parameterType == JSONArray.class || actualTypeArgument == JSONArray.class) {
-					arg = Convert.toJSONArray(body);
-				} else if (actualTypeArgument == JSONObject.class) {
-					arg = ListUtils.toJsonList(Convert.toJSONArray(body));
-				} else if (!BeanUtils.isSimpleProperty(actualTypeArgument) && BeanUtil.isWritableBean(actualTypeArgument)) {
-					List<?> value = Convert.toJSONArray(body).toJavaList(actualTypeArgument);
-					arg = value;
-
-					// 确认校验
-					boolean verify = false;
-					Class<?>[] groups = {};
-					if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
-						verify = true;
-						Validated validated = parameter.getParameterAnnotation(Validated.class);
-						groups = validated != null ? validated.value() : groups;
-					}
-					if (verify == false && value != null && value.size() > 0) {
-						Object verifyObject = value.get(0);
-						Class<?> paramClass = verifyObject.getClass();
-						if (paramClass.isAnnotationPresent(Valid.class) || paramClass.isAnnotationPresent(Validated.class)) {
-							verify = true;
-						}
-					}
-
-					// 执行校验
-					if (verify) {
-						Validator validator = SpringUtils.getBean(Validator.class);
-						for (Object javaBean : value) {
-							validator.valid(javaBean, groups);
-						}
-					}
-				} else {
-					arg = Convert.toList(actualTypeArgument, body);
-				}
-			}
-		}
+  
+		// yue-library 增强解析逻辑
+        if (arg == null) {
+            JSONObject param = null;
+            String body = null;
+            try {
+                // 映射为 json 对象
+                param = ServletUtils.getParamToJson(servletRequest);
+            } catch (Exception e) {
+                // 忽略错误，映射为 String 对象
+                body = ServletUtils.getBody(servletRequest);
+            }
+            
+            // 处理 json 值
+            if (param != null) {
+                // 尝试单体映射
+                body = param.getString(name);
+                if (body == null) {
+                    // 使用整体映射
+                    body = param.toJSONString();
+                }
+            }
+            
+            arg = getObject(parameter, body);
+        }
 		
 		return arg;
 	}
+    
+    private static Object getObject(MethodParameter parameter, String body) {
+        Object arg;
+        Class<?> parameterType = parameter.getParameterType();
+        Class<?> actualTypeArgument = null;
+        if (List.class.isAssignableFrom(parameterType)) {
+            ParameterizedType genericParameterType = (ParameterizedType) parameter.getGenericParameterType();
+            actualTypeArgument = (Class<?>) genericParameterType.getActualTypeArguments()[0];
+        } else if (parameterType.isArray()) {
+            actualTypeArgument = parameterType.getComponentType();
+        }
+        
+        // 执行转换
+        if (parameterType == JSONArray.class || actualTypeArgument == JSONArray.class) {
+            arg = Convert.toJSONArray(body);
+        } else if (actualTypeArgument == JSONObject.class) {
+            arg = ListUtils.toJsonList(Convert.toJSONArray(body));
+        } else if (!BeanUtils.isSimpleProperty(actualTypeArgument) && BeanUtil.isWritableBean(actualTypeArgument)) {
+            List<?> value = Convert.toJSONArray(body).toJavaList(actualTypeArgument);
+            arg = value;
 
-	@Override
+            // 确认校验
+            boolean verify = false;
+            Class<?>[] groups = {};
+            if (parameter.hasParameterAnnotation(Valid.class) || parameter.hasParameterAnnotation(Validated.class)) {
+                verify = true;
+                Validated validated = parameter.getParameterAnnotation(Validated.class);
+                groups = validated != null ? validated.value() : groups;
+            }
+            if (verify == false && value != null && value.size() > 0) {
+                Object verifyObject = value.get(0);
+                Class<?> paramClass = verifyObject.getClass();
+                if (paramClass.isAnnotationPresent(Valid.class) || paramClass.isAnnotationPresent(Validated.class)) {
+                    verify = true;
+                }
+            }
+
+            // 执行校验
+            if (verify) {
+                Validator validator = SpringUtils.getBean(Validator.class);
+                for (Object javaBean : value) {
+                    validator.valid(javaBean, groups);
+                }
+            }
+        } else {
+            arg = Convert.toList(actualTypeArgument, body);
+        }
+        return arg;
+    }
+    
+    @Override
 	protected void handleMissingValue(String name, MethodParameter parameter, NativeWebRequest request)
 			throws Exception {
 

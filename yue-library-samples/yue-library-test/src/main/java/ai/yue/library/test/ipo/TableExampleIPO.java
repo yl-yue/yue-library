@@ -26,7 +26,7 @@ public class TableExampleIPO {
     private String fieldOne;
     private String fieldTwo;
     private String fieldThree;
-    private String tenantSys;
-    private String tenantCo;
+    private String tenantSysId;
+    private String tenantCoId;
 
 }

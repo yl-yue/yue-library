@@ -1,17 +1,21 @@
 package ai.yue.library.test.controller.base.async;
 
 import ai.yue.library.base.util.AsyncUtils;
+import ai.yue.library.base.util.DateUtils;
 import ai.yue.library.base.util.ListUtils;
+import ai.yue.library.base.util.time.interval.TimeInterval;
 import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.web.util.ServletUtils;
+import cn.hutool.v7.core.text.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import cn.hutool.v7.core.text.StrUtil;
 import org.slf4j.MDC;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 /**
@@ -142,7 +146,75 @@ public class AsyncController {
         log.info("链路-结束: header={}, {}", header, headerVerify);
         return R.success(headerVerify);
     }
+    
+    /**
+     * 并发上下文测试
+     */
+    @PostMapping("/execParallelLimitContext")
+    public Result<?> execParallelLimitContext() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            list.add(i + "");
+        }
+        List<List<String>> split = ListUtils.partition(list, 10);
+        List<String> list1 = new ArrayList<>();
+        List<String> cowList = new CopyOnWriteArrayList<>();
+        
+        // ========== 并发上下文测试-集合【数据并发】==========
+        AsyncUtils.execParallelLimit(5, split, item -> {
+            String name = Thread.currentThread().getName();
+            String s = StrUtil.subAfter(name, "-", true);
+            list1.add(s);
+            cowList.add(s);
+            AsyncUtils.sleep(500);
+            String syncContext = ServletUtils.getRequest().getHeader("syncContext");
+            log.info("{}", item);
+            log.info("syncContext Runnable: {}", syncContext);
+        });
+        System.out.println(list1.size());
+        System.out.println(cowList.size());
+        
+        // ========== 并发上下文测试-任务并发 ==========
+        TimeInterval timeInterval = DateUtils.timer();
+        
+        // 动作 1：获取用户信息（耗时 500ms）
+        CompletableFuture<UserInfo> userTask = AsyncUtils.execParallelLimit(10, () -> {
+            AsyncUtils.sleep(500);
+            String clientIP = ServletUtils.getClientIP();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setAddress(clientIP);
+            return userInfo;
+        });
 
+        // 动作 2：获取订单信息（耗时 600ms）
+        CompletableFuture<OrderInfo> orderTask = AsyncUtils.execParallelLimit(10, () -> {
+            AsyncUtils.sleep(600);
+            String acceptLanguage = MDC.get(HttpHeaders.ACCEPT_LANGUAGE);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.setOrderDesc(acceptLanguage);
+            return orderInfo;
+        });
+
+        // 动作 3：异步发一个通知（耗时 300ms，不需要返回值）
+        AsyncUtils.execParallelLimit(5, () -> {
+            AsyncUtils.sleep(300);
+            String clientIP = ServletUtils.getClientIP();
+            log.info("用户 {} 访问了该页面", clientIP);
+        });
+
+        // ---------- 这里是分水岭 ----------
+        // 此时，userTask 和 orderTask 正在 ForkJoinPool(10) 里面【并发齐射】！
+
+        // 主线程阻塞，等待两个独立任务的结果：
+        UserInfo userInfo = userTask.join();
+        OrderInfo orderInfo = orderTask.join();
+        System.out.println(userInfo);
+        System.out.println(orderInfo);
+        // 总耗时不是 500+600 = 1100ms，而是 Max(500, 600) = 600ms！
+        System.out.println("总耗时：" + timeInterval.intervalMs() + "ms");
+        return R.success();
+    }
+    
     public void testParallelStream() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
@@ -170,8 +242,8 @@ public class AsyncController {
                 set2.add(s);
             });
         });
-
-        ForkJoinTask<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
+        
+        CompletableFuture<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
             split.parallelStream().forEach(item -> {
                 log.info("{}", item);
                 String name = Thread.currentThread().getName();

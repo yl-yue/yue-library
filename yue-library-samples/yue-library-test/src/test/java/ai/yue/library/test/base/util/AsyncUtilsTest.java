@@ -2,15 +2,14 @@ package ai.yue.library.test.base.util;
 
 import ai.yue.library.base.util.AsyncUtils;
 import ai.yue.library.base.util.ListUtils;
+import cn.hutool.v7.core.text.StrUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import cn.hutool.v7.core.text.StrUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ForkJoinTask;
 
 @Slf4j
 public class AsyncUtilsTest {
@@ -94,8 +93,8 @@ public class AsyncUtilsTest {
                 AsyncUtils.sleep(20);
             });
         });
-
-        ForkJoinTask<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
+        
+        CompletableFuture<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
             split.parallelStream().forEach(item -> {
                 log.info("{}", item);
                 String name = Thread.currentThread().getName();
@@ -175,8 +174,8 @@ public class AsyncUtilsTest {
                 AsyncUtils.sleep(20);
             });
         });
-
-        ForkJoinTask<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
+        
+        CompletableFuture<String> forkJoinTask = AsyncUtils.execParallelLimit(5, () -> {
             split.forEach(item -> {
                 log.info("{}", item);
                 String name = Thread.currentThread().getName();

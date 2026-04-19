@@ -32,8 +32,8 @@ public class TenantCoInterceptor extends FieldInterceptor {
         this.interceptorName = "企业租户拦截器";
         this.ignoreTableList = mybatisProperties.getIgnoreTableTenantCos();
         this.ignoreDsList = mybatisProperties.getIgnoreDsTenantCos();
-        this.classField = DbConstant.CLASS_TENANT_CO;
-        this.dbField = DbConstant.DB_TENANT_CO;
+        this.classField = DbConstant.CLASS_TENANT_CO_ID;
+        this.dbField = DbConstant.DB_TENANT_CO_ID;
         this.tenantIdExpression = new AuditValue(auditDataProvider);
     }
 

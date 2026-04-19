@@ -31,7 +31,7 @@
     <properties>
         <!-- project.version -->
         <java.version>17</java.version>
-        <revision>j${java.version}.3.3.0</revision>
+        <revision>j${java.version}.3.3.1</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <spring-boot.version>3.3.13</spring-boot.version>
@@ -43,16 +43,16 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- yue-library.version -->
-        <yue-library-base.version>j${java.version}.3.3.0</yue-library-base.version>
-        <yue-library-base-crypto.version>j${java.version}.3.3.0</yue-library-base-crypto.version>
-        <yue-library-web.version>j${java.version}.3.3.0</yue-library-web.version>
-        <yue-library-webflux.version>j${java.version}.3.3.0</yue-library-webflux.version>
-        <yue-library-data-mybatis.version>j${java.version}.3.3.0</yue-library-data-mybatis.version>
-        <yue-library-data-redis.version>j${java.version}.3.3.0</yue-library-data-redis.version>
+        <yue-library-base.version>j${java.version}.3.3.1</yue-library-base.version>
+        <yue-library-base-crypto.version>j${java.version}.3.3.1</yue-library-base-crypto.version>
+        <yue-library-web.version>j${java.version}.3.3.1</yue-library-web.version>
+        <yue-library-webflux.version>j${java.version}.3.3.1</yue-library-webflux.version>
+        <yue-library-data-mybatis.version>j${java.version}.3.3.1</yue-library-data-mybatis.version>
+        <yue-library-data-redis.version>j${java.version}.3.3.1</yue-library-data-redis.version>
 
         <!-- dependencies.version -->
 <!--        <nacos.client.version>2.4.3</nacos.client.version>-->
-        <hutool.version>7.0.0-M3</hutool.version>
+        <hutool.version>7.0.0-M5</hutool.version>
         <bouncycastle.version>1.80</bouncycastle.version>
         <guava.version>33.4.8-jre</guava.version>
         <fastjson.version>2.0.60</fastjson.version>
@@ -72,6 +72,7 @@
 <!--        <es.version>7.10.2</es.version>-->
 <!--        <es-rest-high-level-client.version>7.10.2</es-rest-high-level-client.version>-->
         <easy-es.version>2.1.0</easy-es.version>
+        <casbin.version>1.9.0</casbin.version>
         <datafaker.version>2.4.3</datafaker.version>
 
         <!-- plugins.version -->
@@ -315,7 +316,7 @@
             </dependency>
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-redisson</artifactId>
+                <artifactId>sa-token-redisson-spring-boot-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
             <dependency>
@@ -344,6 +345,11 @@
                 <groupId>org.dromara.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
                 <version>${easy-es.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.casbin</groupId>
+                <artifactId>casbin-spring-boot-starter</artifactId>
+                <version>${casbin.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.datafaker</groupId>

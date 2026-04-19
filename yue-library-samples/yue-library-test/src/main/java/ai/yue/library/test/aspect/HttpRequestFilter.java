@@ -25,7 +25,7 @@ import java.io.IOException;
 public class HttpRequestFilter extends OncePerRequestFilter {
 
     public static final String ACCEPT_LANGUAGE = HttpHeaders.ACCEPT_LANGUAGE;
-    public static final String TENANT_CO = DbConstant.CLASS_TENANT_CO;
+    public static final String TENANT_CO_ID = DbConstant.CLASS_TENANT_CO_ID;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,12 +35,12 @@ public class HttpRequestFilter extends OncePerRequestFilter {
 
         // 2. 配置请求上下文
         String acceptLanguage = request.getHeader(ACCEPT_LANGUAGE);
-        String tenantCo = request.getHeader(TENANT_CO);
+        String tenantCoId = request.getHeader(TENANT_CO_ID);
         if (StrUtils.isNotEmpty(acceptLanguage)) {
             MDC.put(ACCEPT_LANGUAGE, acceptLanguage);
         }
-        if (StrUtils.isNotEmpty(tenantCo)) {
-            MDC.put(TENANT_CO, tenantCo);
+        if (StrUtils.isNotEmpty(tenantCoId)) {
+            MDC.put(TENANT_CO_ID, tenantCoId);
         }
 
         // 3. 打印日志

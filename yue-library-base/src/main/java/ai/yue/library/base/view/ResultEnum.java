@@ -49,6 +49,7 @@ public enum ResultEnum implements ResultCode {
 	BAD_REQUEST(400, "ai.yue.library.base.view.ResultEnum.BAD_REQUEST.msg"),
 
 	UNAUTHORIZED(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED.msg"),
+    UNAUTHORIZED_ERROR(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_ERROR.msg"),
 	UNAUTHORIZED_BE_REPLACED(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_BE_REPLACED.msg"),
 	UNAUTHORIZED_KICK_OUT(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_KICK_OUT.msg"),
 	UNAUTHORIZED_TOKEN_FREEZE(401, "ai.yue.library.base.view.ResultEnum.UNAUTHORIZED_TOKEN_FREEZE.msg"),
