@@ -32,18 +32,18 @@ public class MybatisConfig {
             }
 
             @Override
-            public String getTenantSys() {
+            public String getTenantSysId() {
                 return "sys";
             }
 
             @Override
-            public String getTenantCo() {
-                String tenantCo = ServletUtils.getRequest().getHeader("tenantCo");
-                if (StrUtils.isBlank(tenantCo)) {
-                    tenantCo = "co";
+            public String getTenantCoId() {
+                String tenantCoId = ServletUtils.getRequest().getHeader("tenantCoId");
+                if (StrUtils.isBlank(tenantCoId)) {
+                    tenantCoId = "co";
                 }
 
-                return tenantCo;
+                return tenantCoId;
             }
         };
     }

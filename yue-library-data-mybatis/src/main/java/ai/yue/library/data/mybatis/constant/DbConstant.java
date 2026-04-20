@@ -16,6 +16,18 @@ public class DbConstant {
     public static final String CLASS_TENANT_CO_ID = "tenantCoId";
     /** 删除时间：逻辑删除 */
     public static final String CLASS_DELETE_TIME = "deleteTime";
+    /** 创建用户 */
+    public static final String CLASS_CREATE_USER = "createUser";
+    /** 创建用户 ID */
+    public static final String CLASS_CREATE_USER_ID = "createUserId";
+    /** 创建时间 */
+    public static final String CLASS_CREATE_TIME = "createTime";
+    /** 更新用户 */
+    public static final String CLASS_UPDATE_USER = "updateUser";
+    /** 更新用户 ID */
+    public static final String CLASS_UPDATE_USER_ID = "updateUserId";
+    /** 更新时间 */
+    public static final String CLASS_UPDATE_TIME = "updateTime";
 
     // ====================== 数据库字段名定义 ======================
 
@@ -25,6 +37,18 @@ public class DbConstant {
     public static final String DB_TENANT_CO_ID = "tenant_co_id";
     /** 删除时间：逻辑删除 */
     public static final String DB_DELETE_TIME = "delete_time";
+    /** 创建用户 */
+    public static final String DB_CREATE_USER = "create_user";
+    /** 创建用户 ID */
+    public static final String DB_CREATE_USER_ID = "create_user_id";
+    /** 创建时间 */
+    public static final String DB_CREATE_TIME = "create_time";
+    /** 更新用户 */
+    public static final String DB_UPDATE_USER = "update_user";
+    /** 更新用户 ID */
+    public static final String DB_UPDATE_USER_ID = "update_user_id";
+    /** 更新时间 */
+    public static final String DB_UPDATE_TIME = "update_time";
     
     // ====================== 字段默认值定义 ======================
     

@@ -19,18 +19,18 @@ public class AuditValue extends ASTNodeAccessImpl implements Expression {
 
     @Override
     public void accept(ExpressionVisitor expressionVisitor) {
-        expressionVisitor.visit(new StringValue(auditDataProvider.getTenantCo()));
+        expressionVisitor.visit(new StringValue(auditDataProvider.getTenantCoId()));
     }
 
     @Override
     public <T, S> T accept(ExpressionVisitor<T> expressionVisitor, S s) {
-        String tenantCo = auditDataProvider.getTenantCo();
-        return expressionVisitor.visit(new StringValue(tenantCo), tenantCo);
+        String tenantCoId = auditDataProvider.getTenantCoId();
+        return expressionVisitor.visit(new StringValue(tenantCoId), tenantCoId);
     }
 
     @Override
     public String toString() {
-        return new StringValue(auditDataProvider.getTenantCo()).toString();
+        return new StringValue(auditDataProvider.getTenantCoId()).toString();
     }
 
 }

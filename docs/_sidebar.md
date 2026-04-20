@@ -38,7 +38,7 @@
   * [逻辑删除](data/mybatis/逻辑删除.md "yue-library-data-mybatis逻辑删除")
   * [分页](data/mybatis/分页.md "yue-library-data-mybatis分页")
   * [多租户与 i18n](data/mybatis/多租户与i18n.md "yue-library-data-mybatis多租户与i18n")
-  * [企业租户 tenant_co](data/mybatis/企业租户tenant_co.md "yue-library-data-mybatis企业租户tenant_co")
+  * [企业租户 tenant_co_id](data/mybatis/企业租户tenant_co_id.md "yue-library-data-mybatis企业租户tenant_co_id")
   * [动态数据源](data/mybatis/动态数据源.md "yue-library-data-mybatis动态数据源")
   * [性能调优](data/mybatis/性能调优.md "yue-library-data-mybatis性能调优")
   * [启用插件](data/mybatis/启用插件.md "yue-library-data-mybatis启用插件")

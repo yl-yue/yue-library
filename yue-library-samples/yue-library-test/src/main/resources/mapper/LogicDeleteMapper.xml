@@ -106,7 +106,7 @@
         FROM
             delete_time_query_1 a
                 LEFT JOIN delete_time_query_2 b ON a.uk = b.uk
-                LEFT JOIN delete_time_query_4 c ON a.uk = c.uk AND c.tenant_co = 'co'
+                LEFT JOIN delete_time_query_4 c ON a.uk = c.uk AND c.tenant_co_Id = 'co'
                 LEFT JOIN no_tenant_no_delete d ON a.uk = d.uk
         WHERE
             a.field_one IS NOT NULL

@@ -25,9 +25,9 @@ public class MybatisProperties {
 	private boolean enableDataAudit = false;
 
 	/**
-	 * 启用企业租户
+	 * 启用企业租户 Id
 	 */
-	private boolean enableTenantCo = false;
+	private boolean enableTenantCoId = false;
 
 	/**
 	 * 逻辑删除忽略表
@@ -44,17 +44,17 @@ public class MybatisProperties {
 	private Set<String> ignoreDsLogicDeletes = new HashSet<>();
 
 	/**
-	 * 企业租户忽略表
+	 * 企业租户 Id 忽略表
 	 * <pre>
 	 *     企业租户插件会自动扫描所有 @{@linkplain Mapper} Bean，如果实体中没有 {@value DbConstant#CLASS_TENANT_CO_ID} 字段，则忽略此表。
 	 *     此处可配置需要额外忽略的表名
 	 * </pre>
 	 */
-	private Set<String> ignoreTableTenantCos = new HashSet<>();
+	private Set<String> ignoreTableTenantCoIds = new HashSet<>();
 
 	/**
-	 * 企业租户忽略数据源
+	 * 企业租户 Id 忽略数据源
 	 */
-	private Set<String> ignoreDsTenantCos = new HashSet<>();
+	private Set<String> ignoreDsTenantCoIds = new HashSet<>();
 
 }

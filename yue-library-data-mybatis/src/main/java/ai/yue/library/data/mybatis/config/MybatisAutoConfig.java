@@ -2,7 +2,7 @@ package ai.yue.library.data.mybatis.config;
 
 import ai.yue.library.base.config.BaseAutoConfig;
 import ai.yue.library.data.mybatis.interceptor.LogicDeleteInterceptor;
-import ai.yue.library.data.mybatis.interceptor.TenantCoInterceptor;
+import ai.yue.library.data.mybatis.interceptor.TenantCoIdInterceptor;
 import ai.yue.library.data.mybatis.mapper.SqlMapper;
 import ai.yue.library.data.mybatis.provider.AuditDataFill;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @AutoConfigureAfter({BaseAutoConfig.class})
 @EnableConfigurationProperties(MybatisProperties.class)
-@Import({AuditDataFill.class, LogicDeleteInterceptor.class, TenantCoInterceptor.class})
+@Import({AuditDataFill.class, LogicDeleteInterceptor.class, TenantCoIdInterceptor.class})
 public class MybatisAutoConfig {
 
     /**

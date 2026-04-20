@@ -5,7 +5,7 @@ import ai.yue.library.base.view.R;
 import ai.yue.library.base.view.Result;
 import ai.yue.library.data.mybatis.config.MybatisProperties;
 import ai.yue.library.data.mybatis.interceptor.LogicDeleteInterceptor;
-import ai.yue.library.data.mybatis.interceptor.TenantCoInterceptor;
+import ai.yue.library.data.mybatis.interceptor.TenantCoIdInterceptor;
 import ai.yue.library.test.entity.TableExampleStandard;
 import ai.yue.library.test.service.TableExampleStandardService;
 import jakarta.annotation.Resource;
@@ -22,7 +22,7 @@ import java.util.Set;
  * @since	2020年2月21日
  */
 @RestController
-@RequestMapping("/data/mybatis/tenantCo")
+@RequestMapping("/data/mybatis/tenantCoId")
 public class TenantCoController {
 
     @Resource
@@ -40,7 +40,7 @@ public class TenantCoController {
 
     @PostMapping("/testIgnore")
     public Result<?> testIgnore(TableExampleStandard tableExampleStandard) {
-        Set<String> ignoreDsTenantCos = mybatisProperties.getIgnoreDsTenantCos();
+        Set<String> ignoreDsTenantCos = mybatisProperties.getIgnoreDsTenantCoIds();
         Set<String> ignoreDsLogicDeletes = mybatisProperties.getIgnoreDsLogicDeletes();
         ignoreDsTenantCos.add("mysql5");
         ignoreDsLogicDeletes.add("mysql5");
@@ -49,7 +49,7 @@ public class TenantCoController {
         tableExampleStandard.setFieldThree("testDefault");
         tableExampleStandardService.updateById(tableExampleStandard);
 
-        TenantCoInterceptor bean = SpringUtils.getBean(TenantCoInterceptor.class);
+        TenantCoIdInterceptor bean = SpringUtils.getBean(TenantCoIdInterceptor.class);
         LogicDeleteInterceptor bean2 = SpringUtils.getBean(LogicDeleteInterceptor.class);
         System.out.println(bean);
         System.out.println(bean2);

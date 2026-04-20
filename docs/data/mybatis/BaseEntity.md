@@ -15,8 +15,8 @@ public class TableExample extends BaseEntity {
 	private static final long serialVersionUID = 6404495051119680239L;
 
 	@TableField(fill = FieldFill.INSERT)
-	String tenantSys;
-	String tenantCo;
+	String tenantSysId;
+	String tenantCoId;
 	String fieldOne;
 	String fieldTwo;
 	String fieldThree;
@@ -116,8 +116,8 @@ CREATE TABLE `table_example` (
   `update_user_id` bigint unsigned NOT NULL COMMENT '更新人：用户id',
   `update_time` bigint unsigned NOT NULL COMMENT '更新时间',
   `delete_time` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间：默认0（未删除）',
-  `tenant_sys` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '系统租户：一级租户（dict_tenant_sys）',
-  `tenant_co` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '企业租户：二级租户',
+  `tenant_sys_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '系统租户：一级租户（dict_tenant_sys）',
+  `tenant_co_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '企业租户：二级租户',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='建表规范示例：提供基础字段规范';
 ```

@@ -15,18 +15,18 @@ public interface AuditDataProvider {
     String getUser();
 
     /**
-     * 用户id
+     * 用户 Id
      */
     Long getUserId();
 
     /**
-     * 系统租户：一级租户
+     * 系统租户 Id：一级租户
      */
-    String getTenantSys();
+    String getTenantSysId();
 
     /**
-     * 企业租户：二级租户
+     * 企业租户 Id：二级租户
      */
-    String getTenantCo();
+    String getTenantCoId();
 
 }

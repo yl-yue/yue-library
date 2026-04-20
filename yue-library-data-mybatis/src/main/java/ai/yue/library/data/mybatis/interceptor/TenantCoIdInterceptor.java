@@ -10,18 +10,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 企业租户拦截器
+ * 企业租户 Id 拦截器
  *
  * @author yl-yue
  * @since 2023/2/20
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-tenant-co", havingValue = "true")
-public class TenantCoInterceptor extends FieldInterceptor {
+@ConditionalOnProperty(prefix = "yue.data.mybatis", name = "enable-tenant-co-id", havingValue = "true")
+public class TenantCoIdInterceptor extends FieldInterceptor {
 
-    public TenantCoInterceptor(MybatisProperties mybatisProperties) {
-        AuditDataProvider auditDataProvider = null;
+    public TenantCoIdInterceptor(MybatisProperties mybatisProperties) {
+        AuditDataProvider auditDataProvider;
         try {
             auditDataProvider = SpringUtils.getBean(AuditDataProvider.class);
         } catch (Exception e) {
@@ -30,8 +30,8 @@ public class TenantCoInterceptor extends FieldInterceptor {
         }
 
         this.interceptorName = "企业租户拦截器";
-        this.ignoreTableList = mybatisProperties.getIgnoreTableTenantCos();
-        this.ignoreDsList = mybatisProperties.getIgnoreDsTenantCos();
+        this.ignoreTableList = mybatisProperties.getIgnoreTableTenantCoIds();
+        this.ignoreDsList = mybatisProperties.getIgnoreDsTenantCoIds();
         this.classField = DbConstant.CLASS_TENANT_CO_ID;
         this.dbField = DbConstant.DB_TENANT_CO_ID;
         this.tenantIdExpression = new AuditValue(auditDataProvider);

@@ -1,6 +1,7 @@
 package ai.yue.library.data.mybatis.provider;
 
 import ai.yue.library.base.util.SpringUtils;
+import ai.yue.library.data.mybatis.constant.DbConstant;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
@@ -23,38 +24,38 @@ public class AuditDataFill implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         // 1. 获得用户
-        String user = null;
-        Long userId = null;
-        String tenantSys = null;
-        String tenantCo = null;
+        String user;
+        Long userId;
+        String tenantSysId;
+        String tenantCoId;
         try {
             AuditDataProvider auditDataProvider = SpringUtils.getBean(AuditDataProvider.class);
             user = auditDataProvider.getUser();
             userId = auditDataProvider.getUserId();
-            tenantSys = auditDataProvider.getTenantSys();
-            tenantCo = auditDataProvider.getTenantCo();
+            tenantSysId = auditDataProvider.getTenantSysId();
+            tenantCoId = auditDataProvider.getTenantCoId();
         } catch (Exception e) {
             log.error("【数据审计】未找到合适的Bean：{}", AuditDataProvider.class);
             throw e;
         }
-
+        
         // 2. 新增填充（支持i18n）
         long currentTimeMillis = System.currentTimeMillis();
-        this.strictInsertFill(metaObject, "createUser", String.class, user);
-        this.strictInsertFill(metaObject, "createUserId", Long.class, userId);
-        this.strictInsertFill(metaObject, "createTime", Long.class, currentTimeMillis);
-        this.strictInsertFill(metaObject, "updateUser", String.class, user);
-        this.strictInsertFill(metaObject, "updateUserId", Long.class, userId);
-        this.strictInsertFill(metaObject, "updateTime", Long.class, currentTimeMillis);
-        this.strictInsertFill(metaObject, "tenantSys", String.class, tenantSys);
-        this.strictInsertFill(metaObject, "tenantCo", String.class, tenantCo);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_CREATE_USER, String.class, user);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_CREATE_USER_ID, Long.class, userId);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_CREATE_TIME, Long.class, currentTimeMillis);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_UPDATE_USER, String.class, user);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_UPDATE_USER_ID, Long.class, userId);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_UPDATE_TIME, Long.class, currentTimeMillis);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_TENANT_SYS_ID, String.class, tenantSysId);
+        this.strictInsertFill(metaObject, DbConstant.CLASS_TENANT_CO_ID, String.class, tenantCoId);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         // 1. 获得用户
-        String user = null;
-        Long userId = null;
+        String user;
+        Long userId;
         try {
             AuditDataProvider auditDataProvider = SpringUtils.getBean(AuditDataProvider.class);
             user = auditDataProvider.getUser();
@@ -66,9 +67,9 @@ public class AuditDataFill implements MetaObjectHandler {
 
         // 2. 更新填充（支持i18n）
         long currentTimeMillis = System.currentTimeMillis();
-        this.strictUpdateFill(metaObject, "updateUser", String.class, user);
-        this.strictUpdateFill(metaObject, "updateUserId", Long.class, userId);
-        this.strictUpdateFill(metaObject, "updateTime", Long.class, currentTimeMillis);
+        this.strictUpdateFill(metaObject, DbConstant.CLASS_UPDATE_USER, String.class, user);
+        this.strictUpdateFill(metaObject, DbConstant.CLASS_UPDATE_USER_ID, Long.class, userId);
+        this.strictUpdateFill(metaObject, DbConstant.CLASS_UPDATE_TIME, Long.class, currentTimeMillis);
     }
 
 }

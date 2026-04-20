@@ -16,8 +16,8 @@ public class TableExample extends BaseEntity {
 	private static final long serialVersionUID = 6404495051119680239L;
 
 	@TableField(fill = FieldFill.INSERT)
-	String tenantSys;
-	String tenantCo;
+	String tenantSysId;
+	String tenantCoId;
 	String fieldOne;
 	String fieldTwo;
 	String fieldThree;
@@ -42,8 +42,8 @@ public class TableExampleIPO {
     private String fieldOne;
     private String fieldTwo;
     private String fieldThree;
-    private String tenantSys;
-    private String tenantCo;
+    private String tenantSysId;
+    private String tenantCoId;
 
 }
 
