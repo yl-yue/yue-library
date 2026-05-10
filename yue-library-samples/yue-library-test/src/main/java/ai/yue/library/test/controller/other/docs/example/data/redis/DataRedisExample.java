@@ -10,6 +10,7 @@ import ai.yue.library.test.entity.TableExampleStandard;
 import ai.yue.library.test.service.TableExampleStandardService;
 import com.alibaba.fastjson2.JSONObject;
 import cn.hutool.v7.core.text.StrUtil;
+import jakarta.annotation.Resource;
 import org.redisson.Redisson;
 import org.redisson.api.RList;
 import org.redisson.api.RMap;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class DataRedisExample {
 
-	@Autowired
+    @Resource
 	Redis redis;// 直接注入即可
 	@Autowired
 	TableExampleStandardService tableExampleService;

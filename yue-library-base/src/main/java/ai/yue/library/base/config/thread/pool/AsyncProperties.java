@@ -33,7 +33,7 @@ public class AsyncProperties implements Serializable {
 	/**
 	 * 是否启用 <code style="color:red">异步线程池</code> 自动配置
 	 * <p>
-	 * 默认：false
+	 * 默认：true
 	 * <p>
 	 * <b style="color:red">注意，@Async异步执行方法，不要和同步调用方法写在同一个类中，否则异步执行将失效。</b>
 	 */
