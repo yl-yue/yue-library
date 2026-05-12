@@ -4,6 +4,8 @@ application-test-confidential-*.yml
 
 # IDE ignore
 rebel.xml
+.trae/
+AI协同矩阵/
 
 # Eclipse and STS
 .project
