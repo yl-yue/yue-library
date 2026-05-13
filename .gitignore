@@ -6,6 +6,7 @@ application-test-confidential-*.yml
 rebel.xml
 .trae/
 AI协同矩阵/
+ai-docs/
 
 # Eclipse and STS
 .project
