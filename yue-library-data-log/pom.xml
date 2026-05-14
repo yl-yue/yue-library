@@ -22,5 +22,11 @@
 			<groupId>ai.ylyue</groupId>
 			<artifactId>yue-library-web</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.dtflys.forest</groupId>
+			<artifactId>forest-spring-boot3-starter</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

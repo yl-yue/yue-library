@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = "yue.data.log.async=false")
 class LogIT {
 
     @Resource
@@ -159,7 +161,8 @@ class LogIT {
     void operLog_exceptionStatus() throws Exception {
         mockMvc.perform(post("/data/log/exception")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(false));
 
         List<OperLogEntity> logs = operLogMapper.selectList(null);
         assertEquals(1, logs.size());

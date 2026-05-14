@@ -11,6 +11,7 @@ import ai.yue.library.data.log.spi.LogUserProvider;
 import ai.yue.library.data.log.util.LogUtils;
 import ai.yue.library.data.mybatis.constant.DbCrudEnum;
 import ai.yue.library.web.util.ServletUtils;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import cn.hutool.v7.core.text.StrUtil;
 import jakarta.annotation.Resource;
@@ -168,7 +169,7 @@ public class LogAspect {
                 return "";
             }
 
-            String jsonResult = result.toString();
+            String jsonResult = JSON.toJSONString(result);
             if (StrUtil.isBlank(jsonResult) || !jsonResult.trim().startsWith("{")) {
                 return "";
             }

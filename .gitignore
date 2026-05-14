@@ -4,7 +4,9 @@ application-test-confidential-*.yml
 
 # IDE ignore
 rebel.xml
-.trae/
+.trae/rules/
+.trae/skills/
+.trae/.gitignore
 AI协同矩阵/
 ai-docs/
 

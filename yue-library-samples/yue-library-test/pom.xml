@@ -38,6 +38,11 @@
 			<artifactId>yue-library-data-log</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.dtflys.forest</groupId>
+			<artifactId>forest-spring-boot3-starter</artifactId>
+		</dependency>
+
 		<!-- SpringBoot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
