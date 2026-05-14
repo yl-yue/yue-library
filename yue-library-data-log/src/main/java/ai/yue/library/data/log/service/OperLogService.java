@@ -5,9 +5,18 @@ import org.springframework.stereotype.Service;
 import ai.yue.library.base.util.AsyncUtils;
 import ai.yue.library.data.log.config.LogProperties;
 import ai.yue.library.data.log.entity.OperLogEntity;
+import ai.yue.library.data.log.ipo.OperLogPageIPO;
+import ai.yue.library.data.log.mapper.OperLogMapper;
 import ai.yue.library.data.log.spi.LogStorageProvider;
+import ai.yue.library.web.util.ServletUtils;
+import cn.hutool.v7.core.text.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +30,9 @@ public class OperLogService {
 
 	@Resource(name = "logMaskService")
 	private LogMaskService logMaskService;
+
+	@Resource
+	private OperLogMapper operLogMapper;
 
 	public void recordOper(OperLogEntity entity) {
 		try {
@@ -42,5 +54,24 @@ public class OperLogService {
 		} catch (Exception e) {
 			log.warn("【操作日志】记录异常：{}", e.getMessage());
 		}
+	}
+
+	public PageInfo<OperLogEntity> pageOperLog(OperLogPageIPO ipo) {
+		PageHelper.startPage(ServletUtils.getRequest());
+		LambdaQueryWrapper<OperLogEntity> wrapper = new LambdaQueryWrapper<>();
+		wrapper.likeRight(StrUtil.isNotBlank(ipo.getTitle()), OperLogEntity::getTitle, ipo.getTitle())
+				.eq(StrUtil.isNotBlank(ipo.getBizType()), OperLogEntity::getBizType, ipo.getBizType())
+				.eq(StrUtil.isNotBlank(ipo.getOperType()), OperLogEntity::getOperType, ipo.getOperType())
+				.likeRight(StrUtil.isNotBlank(ipo.getUsername()), OperLogEntity::getUsername, ipo.getUsername())
+				.eq(ipo.getStatus() != null, OperLogEntity::getStatus, ipo.getStatus())
+				.ge(ipo.getStartTime() != null, OperLogEntity::getOperTime, ipo.getStartTime())
+				.le(ipo.getEndTime() != null, OperLogEntity::getOperTime, ipo.getEndTime())
+				.orderByDesc(OperLogEntity::getId);
+		List<OperLogEntity> list = operLogMapper.selectList(wrapper);
+		return PageInfo.of(list);
+	}
+
+	public OperLogEntity getOperLog(Long id) {
+		return operLogMapper.selectById(id);
 	}
 }

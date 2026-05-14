@@ -66,10 +66,11 @@
 │   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
 │   ├── yue-library-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
 │   ├── yue-library-data-mybatis          ORM框架，基于mybatis-plus，拥有着强大性能的同时又不失简单灵活等
-│   └── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   ├── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   └── yue-library-data-log              日志模块，基于注解的日志自动记录，支持操作日志与登录日志等
 └── yue-library-samples               yue-library示例项目
-    ├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
-    └── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
+	├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
+	└── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
 ```
 
 ## 快速开始
@@ -125,11 +126,11 @@ public class QuickstartController {
 访问接口测试，如：http://localhost:8080/quickstart/get
 ```json
 {
-    "code": 200,
-    "msg": "成功",
-    "flag": true,
-    "traceId": "a1bde0ba625de731",
-    "data": {}
+	"code": 200,
+	"msg": "成功",
+	"flag": true,
+	"traceId": "a1bde0ba625de731",
+	"data": {}
 }
 ```
 
@@ -183,7 +184,7 @@ public class QuickstartController {
 - **全局异常处理**：CRUD操作相关异常统一处理，定位更精准，提示更友好，实现全局RESTful风格
 
 ### 更多模块
-　　关于`data-redis`、`data-es`、`auth-service`、`auth-client`等模块的特性介绍与更详细的使用说明，请查看[中文文档](https://ylyue.cn)
+　　关于`data-redis`、`data-log`等模块的特性介绍与更详细的使用说明，请查看[中文文档](https://ylyue.cn)
 
 ## 社区
 　　在[Gitter](https://gitter.im/yl-yue/yue-library)的社区里可以找到yue-library的用户和开发者团队。

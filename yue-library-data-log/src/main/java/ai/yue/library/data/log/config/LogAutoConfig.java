@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ai.yue.library.data.log.aspect.LogAspect;
+import ai.yue.library.data.log.controller.LogQueryController;
 import ai.yue.library.data.log.controller.LogStorageController;
 import ai.yue.library.data.log.mapper.LoginLogMapper;
 import ai.yue.library.data.log.mapper.OperLogMapper;
@@ -79,5 +80,12 @@ public class LogAutoConfig {
 	@ConditionalOnBean(DefaultLogStorageProvider.class)
 	public LogStorageController logStorageController(DefaultLogStorageProvider defaultLogStorageProvider) {
 		return new LogStorageController(defaultLogStorageProvider);
+	}
+
+	@Bean
+	@ConditionalOnProperty(prefix = "yue.data.log.query-api", name = "enabled", havingValue = "true")
+	@ConditionalOnBean(DefaultLogStorageProvider.class)
+	public LogQueryController logQueryController(LoginLogService loginLogService, OperLogService operLogService) {
+		return new LogQueryController(loginLogService, operLogService);
 	}
 }

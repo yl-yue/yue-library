@@ -50,4 +50,14 @@
   * [二级缓存](data/redis/二级缓存.md "yue-library-data-redis二级缓存")
   * [有界阻塞队列与延迟队列](data/redis/有界阻塞队列与延迟队列.md "yue-library-data-redis有界阻塞队列与延迟队列")
 
+* 📋yue-library-data-log
+
+  * [快速开始](data/log/快速开始.md "yue-library-data-log快速开始")
+  * [操作日志](data/log/操作日志.md "yue-library-data-log操作日志")
+  * [登录日志](data/log/登录日志.md "yue-library-data-log登录日志")
+  * [日志查询](data/log/日志查询.md "yue-library-data-log日志查询")
+  * [数据脱敏](data/log/数据脱敏.md "yue-library-data-log数据脱敏")
+  * [日志归档](data/log/日志归档.md "yue-library-data-log日志归档")
+  * [微服务日志](data/log/微服务日志.md "yue-library-data-log微服务日志")
+
 * [Changelog<sup style="color:red">(new)<sup>](changelog.md)

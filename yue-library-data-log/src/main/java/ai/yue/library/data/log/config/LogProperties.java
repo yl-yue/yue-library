@@ -66,6 +66,9 @@ public class LogProperties {
     /** 持久化接口配置 */
     private StorageApi storageApi = new StorageApi();
     
+    /** 查询接口配置 */
+    private QueryApi queryApi = new QueryApi();
+    
     @Data
     public static class Http {
         /** 是否启用 HTTP 转发模式 */
@@ -77,6 +80,12 @@ public class LogProperties {
     @Data
     public static class StorageApi {
         /** 是否启用持久化接口（日志服务端开启） */
+        private Boolean enabled = false;
+    }
+    
+    @Data
+    public static class QueryApi {
+        /** 是否启用查询接口（业务管理后台需显式开启） */
         private Boolean enabled = false;
     }
     

@@ -9,10 +9,11 @@
 │   ├── yue-library-web                   WebMvc模块，servlet编程，提供请求与响应参数的包装与解析等
 │   ├── yue-library-webflux               WebFlux模块，响应式编程（如：SpringCloudGateway）
 │   ├── yue-library-data-mybatis          ORM框架，基于mybatis-plus，拥有着强大性能的同时又不失简单灵活等
-│   └── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   ├── yue-library-data-redis            Redis客户端，基于SpringRedis，更简单灵活，提供分布式锁等
+│   └── yue-library-data-log              日志模块，基于注解的日志自动记录，支持操作日志与登录日志等
 └── yue-library-samples               yue-library示例项目
-    ├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
-    └── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
+	├── yue-library-test                  web测试项目，提供详细的特性使用示例、接口单元测试
+	└── yue-library-test-webflux          webflux测试项目，提供详细的特性使用示例、接口单元测试
 ```
 
 ### 快速开始
