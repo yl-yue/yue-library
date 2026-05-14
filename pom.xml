@@ -26,6 +26,8 @@
         <module>yue-library-data-mybatis</module>
         <!-- 增强库-redis模块 -->
         <module>yue-library-data-redis</module>
+        <!-- 增强库-log模块 -->
+        <module>yue-library-data-log</module>
     </modules>
 
     <properties>
@@ -49,6 +51,7 @@
         <yue-library-webflux.version>j${java.version}.3.3.1</yue-library-webflux.version>
         <yue-library-data-mybatis.version>j${java.version}.3.3.1</yue-library-data-mybatis.version>
         <yue-library-data-redis.version>j${java.version}.3.3.1</yue-library-data-redis.version>
+        <yue-library-data-log.version>j${java.version}.3.3.1</yue-library-data-log.version>
 
         <!-- dependencies.version -->
 <!--        <nacos.client.version>2.4.3</nacos.client.version>-->
@@ -144,6 +147,11 @@
                 <groupId>ai.ylyue</groupId>
                 <artifactId>yue-library-data-redis</artifactId>
                 <version>${yue-library-data-redis.version}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.ylyue</groupId>
+                <artifactId>yue-library-data-log</artifactId>
+                <version>${yue-library-data-log.version}${sha1}${changelist}</version>
             </dependency>
 
             <!-- hutool工具包 -->

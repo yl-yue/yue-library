@@ -1,0 +1,4 @@
+# yue-library Mapper 包注册
+# 每行声明一个 Mapper 包，供 MybatisAutoConfig 自动扫描。
+# 以 # 开头的行是注释。空行将被忽略。
+ai.yue.library.data.log.mapper

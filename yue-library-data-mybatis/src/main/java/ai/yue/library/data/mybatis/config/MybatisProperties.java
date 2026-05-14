@@ -57,4 +57,13 @@ public class MybatisProperties {
 	 */
 	private Set<String> ignoreDsTenantCoIds = new HashSet<>();
 
+	/**
+	 * 额外 Mapper 扫描包
+	 * <pre>
+	 *     用于扩展 Mapper 扫描范围，适用于 yue-library 子模块或业务项目需要额外扫描的场景。
+	 *     yue-library 子模块推荐使用 META-INF/yue/mapper-packages 文件约定自动注册，此配置项适用于手动扩展。
+	 * </pre>
+	 */
+	private Set<String> extraMapperPackages = new HashSet<>();
+
 }

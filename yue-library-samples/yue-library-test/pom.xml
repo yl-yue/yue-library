@@ -33,6 +33,11 @@
 			<artifactId>yue-library-data-redis</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>ai.ylyue</groupId>
+			<artifactId>yue-library-data-log</artifactId>
+		</dependency>
+
 		<!-- SpringBoot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
