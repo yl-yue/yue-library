@@ -36,6 +36,11 @@ public class LoginLogEntity extends LogBaseEntity {
     private String ip;
 
     /**
+     * 客户端User-Agent（框架自动从请求头获取）
+     */
+    private String userAgent;
+
+    /**
      * 登录时间
      */
     private Long loginTime;

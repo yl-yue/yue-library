@@ -37,4 +37,9 @@ public class LoginLogPageIPO {
      */
     private Long endTime;
 
+    /**
+     * 仅查当前用户自己的日志（框架自动通过LogUserProvider获取当前登录账号，精确匹配username）
+     */
+    private Boolean onlyMine;
+
 }
