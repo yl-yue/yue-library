@@ -1,12 +1,13 @@
 package ai.yue.library.web.config.jvm;
 
 import com.alibaba.fastjson2.JSONObject;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.v7.core.math.NumberUtil;
 import cn.hutool.v7.core.thread.ThreadUtil;
 import cn.hutool.v7.core.util.RuntimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,10 +21,11 @@ import java.math.BigDecimal;
 @Slf4j
 @Configuration
 @EnableScheduling
+@ConditionalOnBean(MetricsEndpoint.class)
 @ConditionalOnProperty(prefix = "yue.web", name = "enable-jvm-idle-optimization", havingValue = "true", matchIfMissing = true)
 public class JvmIdleGcOptimization {
 
-    @Resource
+    @Autowired(required = false)
     MetricsEndpoint metricsEndpoint;
 
     /**
@@ -52,6 +54,9 @@ public class JvmIdleGcOptimization {
 
         // 内存使用已超过3/2
         if (usableMemory < maxMemory * 0.35) {
+            if (metricsEndpoint == null) {
+                return;
+            }
             MetricsEndpoint.MetricDescriptor metric = metricsEndpoint.metric("process.cpu.usage", null);
             int cpuUsage = NumberUtil.roundHalfEven(BigDecimal.valueOf(metric.getMeasurements().get(0).getValue() * 100), 0).intValue();
             int processorCount = RuntimeUtil.getProcessorCount();
