@@ -1,5 +1,5 @@
 ## BaseEntity <!-- {docsify-ignore} -->
-在 [POJO规范](https://ylyue.cn/#/规约/后端规约说明?id=pojo) 中，`Entity` 为数据对象，一般情况下与数据库表结构一一对应，通过 `Mapper` 层向上传输数据源对象。
+在 POJO 规范中，`Entity` 为数据对象，一般情况下与数据库表结构一一对应，通过 `Mapper` 层向上传输数据源对象。
 
 BaseEntity将表中的必备字段进行了规范整理，**可根据需求选择继承或复制表字段**，即可遵守bl数据库规约。
 - 使用规范的字段可获得bl的 [数据审计](data/mybatis/数据审计.md) 支持（自动填充创建时与更新时的基础数据）

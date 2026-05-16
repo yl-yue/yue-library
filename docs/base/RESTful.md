@@ -1,7 +1,7 @@
 ## RESTful <!-- {docsify-ignore} -->
-RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，bl在 [接口质检标准-RESTful](规约/接口质检标准-RESTful.md) 的介绍中，已对RESTful风格的API进行了详细的阐述与定义。
+RESTful是一种架构的规范与约束、原则，符合这种规范的架构就是RESTful架构，yue-library 已对RESTful风格的API进行了详细的阐述与定义。
 
-### 统一响应体定义（详见：[👉接口质检标准-RESTful](规约/接口质检标准-RESTful.md)）
+### 统一响应体定义
 响应体参数介绍：
 
 |参数名称	|参数类型	|最大长度	|描述													|示例																	|
@@ -89,7 +89,7 @@ public @interface ApiVersion {
 @RestController
 @RequestMapping("/{version}/apiVersion")
 public class ApiVersionConroller {
-// 配合RESTful接口规约，详情见开发文档：规约-2RESTful接口
+// 配合RESTful接口规约
 // @RequestMapping("/open/{version}/apiVersion")
 // public class OpenApiVersionConroller {
 // @RequestMapping("/auth/{version}/apiVersion")
