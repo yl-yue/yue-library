@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.task.TaskDecorator;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -108,10 +109,29 @@ public class WebAutoConfig {
 	}
 
     /**
+     * /lan/ 路径 Spring Security 放行配置
+     * <p>
+     * 在 Spring Security 层面将 /lan/** 设为 permitAll，防止业务应用自定义 SecurityFilterChain 时误拦截。
+     * 与 LanSecurityFilter（Servlet Filter）互补：LanSecurityFilter 负责 IP 白名单 + Basic Auth 认证，
+     * 本 chain 确保 Spring Security 体系不干扰 /lan/ 路径的访问控制。
+     */
+    @SneakyThrows
+    @Bean
+    @Order(1)
+    protected SecurityFilterChain lanSecurityPermitAllChain(HttpSecurity http) {
+        return http
+                .securityMatcher("/lan/**")
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .build();
+    }
+
+    /**
      * actuator 端点安全配置
      */
     @SneakyThrows
     @Bean
+    @Order(2)
     protected SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) {
         return http.authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests

@@ -27,6 +27,11 @@
   * [请求参数解析与包装](web/请求参数解析与包装.md)
   * [响应消息转换器](web/响应消息转换器.md)
 
+* 🔒auth（鉴权与安全）
+
+  * [Actuator 安全](auth/Actuator安全.md)
+  * [LAN接口安全](auth/LAN接口安全.md)
+
 * 🥞yue-library-data-mybatis（推荐）
 
   * [快速开始](data/mybatis/快速开始.md "yue-library-data-mybatis快速开始")

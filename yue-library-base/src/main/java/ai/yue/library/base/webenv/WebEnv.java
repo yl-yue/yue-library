@@ -19,7 +19,7 @@ public interface WebEnv {
 	 * {@link Result#response()}
 	 * @param result
 	 */
-	public void resultResponse(Result<?> result);
+    void resultResponse(Result<?> result);
 	
 	// ParamUtils
 	
@@ -28,7 +28,7 @@ public interface WebEnv {
 	 * 
 	 * @return JSON对象
 	 */
-	public JSONObject getParam();
+    JSONObject getParam();
 	
 	/**
 	 * {@link ParamUtils#getParam(Class)}
@@ -37,6 +37,6 @@ public interface WebEnv {
 	 * @param clazz 想要获取的参数类型
 	 * @return 想要的对象实例
 	 */
-	public <T> T getParam(Class<T> clazz);
+    <T> T getParam(Class<T> clazz);
 	
 }

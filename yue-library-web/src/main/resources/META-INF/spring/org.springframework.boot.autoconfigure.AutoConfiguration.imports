@@ -1,2 +1,3 @@
 ai.yue.library.web.config.WebAutoConfig
+ai.yue.library.web.config.lan.LanSecurityAutoConfiguration
 ai.yue.library.web.config.exception.ResultErrorAutoConfig
