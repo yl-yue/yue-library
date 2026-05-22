@@ -51,13 +51,13 @@ public class LanSecurityFilter extends OncePerRequestFilter {
 
 		String clientIp = ServletUtils.getClientIP(request);
 
-		if (NetUtils.isInnerIP() || isInExtraWhitelist(clientIp)) {
+		if (NetUtils.isInnerIP(request) || isInExtraWhitelist(clientIp)) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		if (!properties.getBasicAuth().isEnabled()) {
-			logForbidden(request.getRequestURI(), clientIp);
+			logForbidden(response, request.getRequestURI(), clientIp);
 			return;
 		}
 
@@ -85,15 +85,15 @@ public class LanSecurityFilter extends OncePerRequestFilter {
 		return false;
 	}
  
-	private void logForbidden(String uri, String clientIp) {
+	private void logForbidden(HttpServletResponse response, String uri, String clientIp) {
 		logger.warn("【/lan/安全拦截】IP拒绝：uri=%s, clientIp=%s".formatted(uri, clientIp));
-        R.forbidden("请求 " + uri + " 路径来自公网IP " + clientIp + "，被安全策略拒绝").response();
+		R.forbidden("请求 " + uri + " 路径来自公网IP " + clientIp + "，被安全策略拒绝").response(response);
 	}
 
 	private void logUnauthorized(HttpServletResponse response, String uri, String clientIp, String reason) {
 		logger.warn("【/lan/安全拦截】认证失败：uri=%s, clientIp=%s, 原因=%s".formatted(uri, clientIp, reason));
 		response.setHeader("WWW-Authenticate", "Basic realm=\"LAN API\"");
-        R.unauthorizedError("请求 " + uri + " 路径需要 Basic Auth 认证").response();
+		R.unauthorizedError("请求 " + uri + " 路径需要 Basic Auth 认证").response(response);
 	}
 
 }

@@ -179,6 +179,18 @@ public class Result<T> implements Serializable {
 		webEnv.resultResponse(this);
 	}
 
+	/**
+	 * 将Result写入指定的原生响应对象中，不依赖 RequestContextHolder ThreadLocal。
+	 * <p>适用于 Servlet Filter 等 ThreadLocal 未就绪的场景。
+	 * <p>调用示例：{@code R.forbidden("无权限").response(response)}
+	 *
+	 * @param nativeResponse 原生响应对象（Servlet 环境为 {@code HttpServletResponse}，WebFlux 环境为 {@code ServerHttpResponse}）
+	 */
+	public void response(Object nativeResponse) {
+		WebEnv webEnv = SpringUtils.getBean(WebEnv.class);
+		webEnv.resultResponse(nativeResponse, this);
+	}
+
 	@Override
 	public String toString() {
 		this.setMsg(I18nUtils.getYueDefault(this.getMsg()));

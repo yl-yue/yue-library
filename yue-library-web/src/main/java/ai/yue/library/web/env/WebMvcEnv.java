@@ -17,15 +17,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class WebMvcEnv implements WebEnv {
-	
-	@SneakyThrows
+    
     @Override
 	public void resultResponse(Result<?> result) {
 		HttpServletResponse response = ServletUtils.getResponse();
-        response.setStatus(result.getCode());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(result.toJSONString());
+        resultResponse(response, result);
+	}
+
+	@SneakyThrows
+	@Override
+	public void resultResponse(Object nativeResponse, Result<?> result) {
+		HttpServletResponse response = (HttpServletResponse) nativeResponse;
+		response.setStatus(result.getCode());
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(result.toJSONString());
 	}
 
 	@Override

@@ -21,6 +21,18 @@ public interface WebEnv {
 	 */
     void resultResponse(Result<?> result);
 	
+	/**
+	 * 将Result写入指定的原生响应对象中（如 Servlet 的 HttpServletResponse、WebFlux 的 ServerHttpResponse），不依赖 RequestContextHolder ThreadLocal。
+	 * <p>适用于 Servlet Filter 等 ThreadLocal 未就绪的场景。
+	 * <p>默认委托给 {@link #resultResponse(Result)}}，由各 Web 环境实现覆写以支持直接写入。
+	 *
+	 * @param nativeResponse 原生响应对象（Servlet 环境为 {@code HttpServletResponse}，WebFlux 环境为 {@code ServerHttpResponse}）
+	 * @param result         响应结果
+	 */
+	default void resultResponse(Object nativeResponse, Result<?> result) {
+		resultResponse(result);
+	}
+	
 	// ParamUtils
 	
 	/**
