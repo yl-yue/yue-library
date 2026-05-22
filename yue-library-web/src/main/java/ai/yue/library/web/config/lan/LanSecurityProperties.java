@@ -24,6 +24,9 @@ public class LanSecurityProperties {
 	/** 额外的IP白名单（CIDR格式，如 "10.0.0.0/8"），默认为空 */
 	private List<String> ipWhitelistExtra = new ArrayList<>();
 
+	/** 排除路径模式（Ant风格，匹配的路径不做安全拦截），示例: /lan/&#42;/emqx/callback/&#42;&#42; */
+	private List<String> excludePathPatterns = new ArrayList<>();
+
 	/** Basic Auth 认证配置，外网IP访问 /lan/ 时生效 */
 	private BasicAuth basicAuth = new BasicAuth();
 

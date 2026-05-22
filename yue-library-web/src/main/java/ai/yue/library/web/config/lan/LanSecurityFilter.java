@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.Base64;
 public class LanSecurityFilter extends OncePerRequestFilter {
 
 	private static final String LAN_PATH_PREFIX = "/lan/";
+
+	private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
 	private final LanSecurityProperties properties;
 
@@ -30,7 +33,16 @@ public class LanSecurityFilter extends OncePerRequestFilter {
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
-		return !request.getRequestURI().startsWith(LAN_PATH_PREFIX);
+		String uri = request.getRequestURI();
+		if (!uri.startsWith(LAN_PATH_PREFIX)) {
+			return true;
+		}
+		for (String pattern : properties.getExcludePathPatterns()) {
+			if (pathMatcher.match(pattern, uri)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

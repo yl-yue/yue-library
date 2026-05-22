@@ -63,12 +63,29 @@ yue:
 
 > 未配置密码时，框架自动生成随机密码，**启动时在日志中打印**。请及时从日志中获取并妥善保管。
 
+### 可选：排除路径
+
+某些 `/lan/` 子路径需要对外放开安全拦截（如 EMQX HTTP 鉴权回调、webhook 回调等），可通过排除路径配置实现。匹配的路径**完全跳过安全拦截**，不做任何 IP 检查或认证。
+
+```yml
+yue:
+  web:
+    lan-security:
+      enabled: true
+      exclude-path-patterns:       # Ant 风格路径模式
+        - /lan/*/callback/**       # 排除所有 callback 路径
+        - /lan/*/actuator/**       # 排除 actuator 端点
+```
+
+> 路径模式使用 Spring Ant 风格匹配：`*` 匹配一层路径，`**` 匹配多层路径。排除路径后，该路径对所有来源 IP 均不做安全拦截，请确保排除路径本身不涉及敏感操作。
+
 ## 配置项
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `yue.web.lan-security.enabled` | Boolean | true | 是否启用 /lan/ 路径安全拦截 |
 | `yue.web.lan-security.ip-whitelist-extra` | List | [] | 额外 IP 白名单（CIDR 格式），内网 IP 段默认放行 |
+| `yue.web.lan-security.exclude-path-patterns` | List | [] | 排除路径模式（Ant 风格），匹配的路径不做安全拦截 |
 | `yue.web.lan-security.basic-auth.enabled` | Boolean | false | 是否为公网 IP 开启 Basic Auth 认证 |
 | `yue.web.lan-security.basic-auth.username` | String | admin | Basic Auth 用户名 |
 | `yue.web.lan-security.basic-auth.password` | String | 随机 | Basic Auth 密码（未配置时随机生成，启动时日志打印） |
