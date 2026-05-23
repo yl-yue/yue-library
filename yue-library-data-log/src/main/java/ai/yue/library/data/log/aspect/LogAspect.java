@@ -21,6 +21,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 日志 AOP 切面
  * <p>拦截 @Log 注解方法，自动记录操作日志</p>
@@ -76,12 +80,21 @@ public class LogAspect {
                 .operTime(System.currentTimeMillis())
                 .requestUrl(getRequestUrl())
                 .requestMethod(getHttpMethod())
-                .requestParam(captureRequestParam())
-                .responseResult(captureResponseResult(result))
+                .requestParam(logAnnotation.saveRequestData() ? captureRequestParam() : "")
+                .responseResult(logAnnotation.saveResponseData() ? captureResponseResult(result) : "")
                 .status(inferStatus(result, exception))
                 .build();
 
-        operLogService.recordOper(entity);
+        Set<String> excludeParamNames = resolveExcludeParamNames(logAnnotation);
+        operLogService.recordOper(entity, excludeParamNames);
+    }
+
+    private Set<String> resolveExcludeParamNames(Log logAnnotation) {
+        String[] names = logAnnotation.excludeParamNames();
+        if (names == null || names.length == 0) {
+            return Set.of();
+        }
+        return new HashSet<>(Arrays.asList(names));
     }
 
     private String inferOperType(Log logAnnotation) {

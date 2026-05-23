@@ -4,6 +4,8 @@ import ai.yue.library.data.log.service.LogMaskService;
 import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -106,6 +108,66 @@ class LogMaskServiceTest {
         assertEquals("张三", json.getString("name"));
         assertEquals("25", json.getString("age"));
         assertEquals("北京市", json.getString("address"));
+    }
+
+    // ===== maskParam(param, additionalExcludeKeys) 测试 =====
+
+    @Test
+    void maskParamWithExclude_empty() {
+        assertEquals("", logMaskService.maskParam("", Set.of("token")));
+    }
+
+    @Test
+    void maskParamWithExclude_additionalKey() {
+        String param = "{\"username\":\"admin\",\"token\":\"tk123\"}";
+        String result = logMaskService.maskParam(param, Set.of("token"));
+        JSONObject json = JSONObject.parseObject(result);
+        assertEquals("admin", json.getString("username"));
+        assertEquals("", json.getString("token"));
+    }
+
+    @Test
+    void maskParamWithExclude_multipleAdditionalKeys() {
+        String param = "{\"username\":\"admin\",\"token\":\"tk123\",\"apiKey\":\"ak456\"}";
+        String result = logMaskService.maskParam(param, Set.of("token", "apiKey"));
+        JSONObject json = JSONObject.parseObject(result);
+        assertEquals("admin", json.getString("username"));
+        assertEquals("", json.getString("token"));
+        assertEquals("", json.getString("apiKey"));
+    }
+
+    @Test
+    void maskParamWithExclude_mergedWithPasswordKeys() {
+        String param = "{\"username\":\"admin\",\"password\":\"123\",\"token\":\"tk123\"}";
+        String result = logMaskService.maskParam(param, Set.of("token"));
+        JSONObject json = JSONObject.parseObject(result);
+        assertEquals("admin", json.getString("username"));
+        assertEquals("", json.getString("password"));
+        assertEquals("", json.getString("token"));
+    }
+
+    @Test
+    void maskParamWithExclude_keyNotInParam() {
+        String param = "{\"username\":\"admin\"}";
+        String result = logMaskService.maskParam(param, Set.of("token", "apiKey"));
+        JSONObject json = JSONObject.parseObject(result);
+        assertEquals("admin", json.getString("username"));
+    }
+
+    @Test
+    void maskParamWithExclude_nonJson() {
+        String param = "plain text";
+        String result = logMaskService.maskParam(param, Set.of("token"));
+        assertEquals("plain text", result);
+    }
+
+    @Test
+    void maskParamWithExclude_normalParamNotAffected() {
+        String param = "{\"name\":\"张三\",\"token\":\"tk123\"}";
+        String result = logMaskService.maskParam(param, Set.of("token"));
+        JSONObject json = JSONObject.parseObject(result);
+        assertEquals("张三", json.getString("name"));
+        assertEquals("", json.getString("token"));
     }
 
 }

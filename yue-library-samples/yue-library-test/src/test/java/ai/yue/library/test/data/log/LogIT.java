@@ -262,4 +262,53 @@ class LogIT {
         assertEquals(0, logs.size());
     }
 
+    @Test
+    void operLog_saveRequestDataFalse_emptyRequestParam() throws Exception {
+        mockMvc.perform(post("/data/log/noRequestData")
+                        .param("username", "admin")
+                        .param("password", "123456")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        List<OperLogEntity> logs = operLogMapper.selectList(null);
+        assertEquals(1, logs.size());
+        OperLogEntity logEntity = logs.get(0);
+        assertEquals("不保存请求参数", logEntity.getTitle());
+        assertEquals("", logEntity.getRequestParam());
+    }
+
+    @Test
+    void operLog_saveResponseDataFalse_emptyResponseResult() throws Exception {
+        mockMvc.perform(get("/data/log/noResponseData")
+                        .param("username", "admin")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        List<OperLogEntity> logs = operLogMapper.selectList(null);
+        assertEquals(1, logs.size());
+        OperLogEntity logEntity = logs.get(0);
+        assertEquals("不保存响应结果", logEntity.getTitle());
+        assertEquals("", logEntity.getResponseResult());
+    }
+
+    @Test
+    void operLog_excludeParamNames_sensitiveParamsCleared() throws Exception {
+        mockMvc.perform(post("/data/log/excludeParams")
+                        .param("username", "admin")
+                        .param("token", "tk123")
+                        .param("apiKey", "ak456")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        List<OperLogEntity> logs = operLogMapper.selectList(null);
+        assertEquals(1, logs.size());
+        OperLogEntity logEntity = logs.get(0);
+        assertEquals("排除敏感参数", logEntity.getTitle());
+        String requestParam = logEntity.getRequestParam();
+        assertNotNull(requestParam);
+        assertTrue(requestParam.contains("admin"));
+        assertFalse(requestParam.contains("tk123"));
+        assertFalse(requestParam.contains("ak456"));
+    }
+
 }

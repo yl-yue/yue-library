@@ -32,32 +32,44 @@ public class LogMaskService {
      * @return 脱敏后参数
      */
     public String maskParam(String param) {
+        return maskParam(param, Set.of());
+    }
+
+    /**
+     * 脱敏处理（支持追加排除参数名）
+     * <p>注解级 excludeParamNames 追加到框架内置排除集合，合并置空处理</p>
+     * <p>当存在自定义 LogMaskStrategy SPI 时，先执行框架级排除，再交由 SPI 处理</p>
+     *
+     * @param param                原始参数
+     * @param additionalExcludeKeys 追加排除的参数名集合（来自注解 excludeParamNames）
+     * @return 脱敏后参数
+     */
+    public String maskParam(String param, Set<String> additionalExcludeKeys) {
         if (StrUtil.isBlank(param)) {
             return param;
         }
 
         try {
+            // 先执行框架级排除（内置集合 + 追加集合）
+            String masked = excludeKeys(param, additionalExcludeKeys);
+
+            // 再交由自定义 SPI 处理
             LogMaskStrategy customStrategy = getCustomStrategy();
             if (customStrategy != null) {
-                return customStrategy.mask(param);
+                return customStrategy.mask(masked);
             }
 
-            return defaultMask(param);
+            return masked;
         } catch (Exception e) {
             log.warn("【日志脱敏】脱敏失败，使用原始参数：{}", e.getMessage());
             return param;
         }
     }
 
-    private LogMaskStrategy getCustomStrategy() {
-        try {
-            return SpringUtils.getBean(LogMaskStrategy.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String defaultMask(String param) {
+    /**
+     * 框架级排除：将内置排除集合 + 追加排除集合中的参数值置空
+     */
+    private String excludeKeys(String param, Set<String> additionalExcludeKeys) {
         try {
             JSONObject json = JSONObject.parseObject(param);
             if (json == null) {
@@ -67,12 +79,22 @@ public class LogMaskService {
             for (String key : json.keySet()) {
                 if (PASSWORD_KEYS.contains(key.toLowerCase())) {
                     json.put(key, "");
+                } else if (additionalExcludeKeys.contains(key)) {
+                    json.put(key, "");
                 }
             }
 
             return json.toJSONString();
         } catch (Exception e) {
             return param;
+        }
+    }
+
+    private LogMaskStrategy getCustomStrategy() {
+        try {
+            return SpringUtils.getBean(LogMaskStrategy.class);
+        } catch (Exception e) {
+            return null;
         }
     }
 

@@ -47,4 +47,23 @@ public @interface Log {
      */
     String bizType() default "";
 
+    /**
+     * 是否保存请求参数（默认保存）
+     * <p>文件上传、大数据量提交等接口可设为 false 跳过请求体采集</p>
+     */
+    boolean saveRequestData() default true;
+
+    /**
+     * 是否保存响应结果（默认保存）
+     * <p>列表导出、大量数据返回等接口可设为 false 跳过响应体采集</p>
+     */
+    boolean saveResponseData() default true;
+
+    /**
+     * 按参数名排除脱敏（默认空）
+     * <p>追加到框架内置排除集合（password/pwd/passwd/secret/accessToken/refreshToken），
+     * 声明的参数名对应值将被置空。如 token/secretKey/apiKey 等敏感参数</p>
+     */
+    String[] excludeParamNames() default {};
+
 }

@@ -87,4 +87,22 @@ public class LogTestController {
         return R.success(username);
     }
 
+    @Log(title = "不保存请求参数", saveRequestData = false)
+    @PostMapping("/noRequestData")
+    public Result<?> noRequestData(String username, String password) {
+        return R.success(username);
+    }
+
+    @Log(title = "不保存响应结果", saveResponseData = false)
+    @GetMapping("/noResponseData")
+    public Result<?> noResponseData(String username) {
+        return R.success(username);
+    }
+
+    @Log(title = "排除敏感参数", excludeParamNames = {"token", "apiKey"})
+    @PostMapping("/excludeParams")
+    public Result<?> excludeParams(String username, String token, String apiKey) {
+        return R.success(username);
+    }
+
 }

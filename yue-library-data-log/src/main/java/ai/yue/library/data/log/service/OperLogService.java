@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -35,9 +36,19 @@ public class OperLogService {
 	private OperLogMapper operLogMapper;
 
 	public void recordOper(OperLogEntity entity) {
+		recordOper(entity, Set.of());
+	}
+
+	/**
+	 * 记录操作日志
+	 *
+	 * @param entity              操作日志实体
+	 * @param excludeParamNames   注解级追加排除的参数名集合
+	 */
+	public void recordOper(OperLogEntity entity, Set<String> excludeParamNames) {
 		try {
-			if (logProperties.getMaskEnabled() && entity.getRequestParam() != null) {
-				entity.setRequestParam(logMaskService.maskParam(entity.getRequestParam()));
+			if (logProperties.getMaskEnabled() && StrUtil.isNotBlank(entity.getRequestParam())) {
+				entity.setRequestParam(logMaskService.maskParam(entity.getRequestParam(), excludeParamNames));
 			}
 
 			if (logProperties.getAsync()) {
