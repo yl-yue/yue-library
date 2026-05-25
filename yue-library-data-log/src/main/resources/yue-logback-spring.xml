@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- 环境变量定义 -->
+    <springProperty scope="context" name="plumelog.redisHost" source="plumelog.redisHost"/>
+    <springProperty scope="context" name="plumelog.redisPort" source="plumelog.redisPort"/>
+    <springProperty scope="context" name="plumelog.redisAuth" source="plumelog.redisAuth"/>
+    <springProperty scope="context" name="plumelog.redisDb" source="plumelog.redisDb"/>
+    <springProperty scope="context" name="plumelog.env" source="plumelog.env"/>
+    <springProperty scope="context" name="plumelog.port" source="server.port"/>
+    <springProperty scope="context" name="plumelog.appName" source="spring.application.name"/>
+
+    <!-- 日志格式（含 traceId） -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%X{traceId}]){magenta} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出 -->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/${plumelog.appName}-${plumelog.port}-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志文件 -->
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/${plumelog.appName}-${plumelog.port}-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- plumelog 日志聚合（按 spring profile 控制） -->
+    <springProfile name="plumelog">
+        <appender name="plumelog" class="com.plumelog.logback.appender.RedisAppender">
+            <redisHost>${plumelog.redisHost}</redisHost>
+            <redisPort>${plumelog.redisPort}</redisPort>
+            <redisAuth>${plumelog.redisAuth}</redisAuth>
+            <redisDb>${plumelog.redisDb}</redisDb>
+            <appName>${plumelog.appName}</appName>
+            <env>${plumelog.env}</env>
+            <threadPoolSize>2</threadPoolSize>
+            <maxCount>500</maxCount>
+            <logQueueSize>50000</logQueueSize>
+        </appender>
+    </springProfile>
+
+    <!-- 日志输出级别 -->
+    <root level="info">
+        <appender-ref ref="console"/>
+        <!-- 文件输出按 profile 控制 -->
+        <springProfile name="file">
+            <appender-ref ref="file"/>
+            <appender-ref ref="file_error"/>
+        </springProfile>
+        <!-- plumelog 按 profile 控制 -->
+        <springProfile name="plumelog">
+            <appender-ref ref="plumelog"/>
+        </springProfile>
+    </root>
+</configuration>
