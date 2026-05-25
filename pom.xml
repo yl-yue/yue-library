@@ -67,6 +67,7 @@
         <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
         <druid-spring-boot-3-starter.version>1.2.23</druid-spring-boot-3-starter.version>
         <plumelog.version>3.5.3</plumelog.version>
+        <micrometer.version>1.3.10</micrometer.version>
         <spring-boot-admin.version>3.3.6</spring-boot-admin.version>
         <forest.version>1.7.6</forest.version>
         <easyexcel.version>4.0.3</easyexcel.version>
@@ -287,6 +288,16 @@
                 <groupId>com.plumelog</groupId>
                 <artifactId>plumelog-trace</artifactId>
                 <version>${plumelog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-tracing</artifactId>
+                <version>${micrometer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-tracing-bridge-brave</artifactId>
+                <version>${micrometer.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.codecentric</groupId>
