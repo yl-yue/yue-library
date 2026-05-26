@@ -1,5 +1,6 @@
 package ai.yue.library.data.log.config;
 
+import ai.yue.library.data.log.constant.LogModeEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -23,9 +24,9 @@ public class LogProperties {
     private Boolean enabled = true;
 
     /**
-     * 持久化模式：http（HTTP 转发，默认）/ direct（直连写库）
+     * 持久化模式（默认 HTTP 转发）
      */
-    private String mode = "http";
+    private LogModeEnum mode = LogModeEnum.HTTP;
 
     /**
      * 是否异步记录
@@ -91,14 +92,14 @@ public class LogProperties {
      * 是否为直连写库模式
      */
     public boolean isDirectMode() {
-        return "direct".equalsIgnoreCase(mode);
+        return LogModeEnum.DIRECT.equals(mode);
     }
 
     /**
      * 是否为 HTTP 转发模式
      */
     public boolean isHttpMode() {
-        return "http".equalsIgnoreCase(mode);
+        return LogModeEnum.HTTP.equals(mode);
     }
 
     @Data
