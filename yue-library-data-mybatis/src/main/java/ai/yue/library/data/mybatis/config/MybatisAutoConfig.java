@@ -10,10 +10,13 @@ import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +40,7 @@ public class MybatisAutoConfig {
      * 扫描当前项目包下的 Mapper 接口
      */
     @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer(ApplicationContext applicationContext, MybatisProperties properties) {
+    public static MapperScannerConfigurer mapperScannerConfigurer(ApplicationContext applicationContext, Environment environment) {
         MapperScannerConfigurer configurer = new MapperScannerConfigurer();
 
         // 获取 SqlMapper 的包名
@@ -50,7 +53,12 @@ public class MybatisAutoConfig {
         Set<String> packages = new LinkedHashSet<>();
         packages.add(sqlMapperPackageName);
         packages.add(startupMapperPackageName);
-        packages.addAll(properties.getExtraMapperPackages());
+
+        Set<String> extraPackages = Binder.get(environment)
+                .bind(MybatisProperties.PREFIX + ".extra-mapper-packages", Bindable.setOf(String.class))
+                .orElse(new LinkedHashSet<>());
+        packages.addAll(extraPackages);
+
         discoverModuleMapperPackages(packages, applicationContext.getClassLoader());
 
         configurer.setBasePackage(String.join(",", packages));
@@ -60,7 +68,7 @@ public class MybatisAutoConfig {
     /**
      * 获取运行项目启动类的包名
      */
-    public String getStartupPackageName(ApplicationContext applicationContext) {
+    public static String getStartupPackageName(ApplicationContext applicationContext) {
         return applicationContext.getBeansWithAnnotation(SpringBootApplication.class)
                 .values()
                 .stream()
@@ -71,7 +79,7 @@ public class MybatisAutoConfig {
                 .orElse(null);
     }
 
-    private void discoverModuleMapperPackages(Set<String> packages, ClassLoader classLoader) {
+    private static void discoverModuleMapperPackages(Set<String> packages, ClassLoader classLoader) {
         try {
             Enumeration<URL> resources = classLoader.getResources(MAPPER_PACKAGES_RESOURCE_LOCATION);
             while (resources.hasMoreElements()) {
