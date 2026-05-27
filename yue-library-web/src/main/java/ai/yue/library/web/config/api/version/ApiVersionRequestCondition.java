@@ -40,6 +40,10 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
     public ApiVersionRequestCondition getMatchingCondition(HttpServletRequest request) {
     	// 校验请求url中是否包含版本信息
     	String requestURI = request.getRequestURI();
+    	String contextPath = request.getContextPath();
+    	if (StrUtil.isNotBlank(contextPath) && requestURI.startsWith(contextPath)) {
+    		requestURI = requestURI.substring(contextPath.length());
+    	}
     	String[] versionPaths = SplitUtil.splitToArray(requestURI, "/");
     	double pathVersion = Double.valueOf(versionPaths[versionPlaceholderIndex].substring(1));
 		
