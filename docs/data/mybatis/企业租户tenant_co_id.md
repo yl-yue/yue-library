@@ -73,3 +73,19 @@ yue:
         - aaa
         - bbb
 ```
+
+### 按数据源忽略企业租户
+
+多数据源场景下，如果某个数据源的表没有 `tenant_co_id` 列，可通过 `ignore-ds-tenant-co-ids` 按数据源名跳过企业租户拦截器。
+
+> 排除粒度为数据源级别，该数据源下的所有表都将跳过企业租户条件追加。如果一个数据源对应多个物理库且仅部分库需要排除，推荐为不同物理库配置独立数据源名。
+
+```yml
+yue:
+  data:
+    mybatis:
+      enable-tenant-co-id: true
+      ignore-ds-tenant-co-ids:                         # 配置企业租户需要忽略的数据源
+        - archive                                      # archive 数据源下的所有表跳过企业租户
+        - log_db                                       # log_db 数据源下的所有表跳过企业租户
+```
