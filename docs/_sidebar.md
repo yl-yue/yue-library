@@ -47,6 +47,7 @@
   * [动态数据源](data/mybatis/动态数据源.md "yue-library-data-mybatis动态数据源")
   * [性能调优](data/mybatis/性能调优.md "yue-library-data-mybatis性能调优")
   * [启用插件](data/mybatis/启用插件.md "yue-library-data-mybatis启用插件")
+  * [模块化 Mapper 注册](data/mybatis/模块化Mapper注册.md "yue-library-data-mybatis模块化Mapper注册")
 
 * 🥝yue-library-data-redis
 
