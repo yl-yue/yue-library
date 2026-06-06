@@ -5,6 +5,7 @@ import ai.yue.library.base.config.exception.ExceptionHandlerProperties;
 import ai.yue.library.base.config.net.proxy.NetProxy;
 import ai.yue.library.base.config.properties.BaseProperties;
 import ai.yue.library.base.config.thread.pool.AsyncConfig;
+import ai.yue.library.base.config.thread.pool.BusinessPoolAutoConfiguration;
 import ai.yue.library.base.util.I18nUtils;
 import ai.yue.library.base.util.SpringUtils;
 import ai.yue.library.base.validation.Validator;
@@ -23,7 +24,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @Configuration
-@Import({SpringUtils.class, I18nUtils.class, NetProxy.class, AsyncConfig.class, DateTimeFormatConfig.class})
+@Import({SpringUtils.class, I18nUtils.class, NetProxy.class, AsyncConfig.class, BusinessPoolAutoConfiguration.class, DateTimeFormatConfig.class})
 @EnableConfigurationProperties({BaseProperties.class, ExceptionHandlerProperties.class})
 public class BaseAutoConfig {
 

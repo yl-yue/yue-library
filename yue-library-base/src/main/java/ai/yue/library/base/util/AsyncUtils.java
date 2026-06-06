@@ -63,8 +63,10 @@ public class AsyncUtils {
         executor = asyncConfig.getThreadPoolTaskExecutor();
     }
 
+    // ================= 全局线程池方法 =================
+
     /**
-     * 获得 {@link ThreadPoolTaskExecutor}
+     * 获得全局 {@link ThreadPoolTaskExecutor}
      */
     public static ThreadPoolTaskExecutor getExecutor() {
         return executor;
@@ -118,9 +120,46 @@ public class AsyncUtils {
                         .collect(Collectors.toList()));
         return allFutures.join();
     }
-    
-    // ================= 以下为带上下文状态传递的安全并发隔离池方法 =================
-    
+
+    // ================= 业务线程池方法 =================
+
+    /**
+     * 使用指定业务线程池异步执行代码块（无返回值，不阻塞）
+     * <p>业务线程池通过 {@code yue.thread-pool.business-pools.<poolName>} 配置定义。</p>
+     *
+     * @param poolName 业务线程池名称
+     * @param task     要执行的代码块
+     */
+    public static void exec(String poolName, Runnable task) {
+        ThreadPoolRegistry.getExecutor(poolName).execute(task);
+    }
+
+    /**
+     * 使用指定业务线程池异步执行代码块-获取CompletableFuture<Void>
+     * <p>业务线程池通过 {@code yue.thread-pool.business-pools.<poolName>} 配置定义。</p>
+     *
+     * @param poolName 业务线程池名称
+     * @param task     要执行的代码块
+     * @return {@link CompletableFuture<Void>}
+     */
+    public static CompletableFuture<Void> execAsync(String poolName, Runnable task) {
+        return CompletableFuture.runAsync(task, ThreadPoolRegistry.getExecutor(poolName));
+    }
+
+    /**
+     * 使用指定业务线程池异步执行代码块-获取有返回值的CompletableFuture<T>
+     * <p>业务线程池通过 {@code yue.thread-pool.business-pools.<poolName>} 配置定义。</p>
+     *
+     * @param poolName 业务线程池名称
+     * @param task     有返回值的代码块
+     * @return {@link CompletableFuture<T>}
+     */
+    public static <T> CompletableFuture<T> execAsync(String poolName, Supplier<T> task) {
+        return CompletableFuture.supplyAsync(task, ThreadPoolRegistry.getExecutor(poolName));
+    }
+
+    // ================= 并行限制池方法（带上下文状态传递的安全并发隔离池） =================
+
     private static ForkJoinPool getForkJoinPool(@Nullable String businessId, Integer parallelism) {
         if (parallelism == null || parallelism < 5 || parallelism > 20) {
             throw new IllegalArgumentException("parallelism 参数必须在 5 到 20 之间");
@@ -166,7 +205,7 @@ public class AsyncUtils {
         // 1. 在当前拥有上下文的主线程中，串行且安全地打包装配任务
         CompletableFuture<?>[] futures = source.stream().map(item -> {
             Runnable runnable = () -> action.accept(item);
-            // 给子任务穿上上下文的“外衣”
+            // 给子任务穿上上下文的"外衣"
             Runnable decorated = taskDecorator != null ? taskDecorator.decorate(runnable) : runnable;
             // 扔进线程池开启激进并发
             return CompletableFuture.runAsync(decorated, forkJoinPool);
@@ -259,6 +298,8 @@ public class AsyncUtils {
     public static <T> CompletableFuture<T> execParallelLimit(Integer parallelism, Callable<T> task) {
         return execParallelLimit(null, parallelism, task);
     }
+
+    // ================= 工具方法 =================
     
     /**
      * 挂起当前线程

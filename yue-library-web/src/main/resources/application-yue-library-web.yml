@@ -17,6 +17,10 @@ spring:
         enabled: true
 
   ### 默认线程池调优 ###
+  ## 注意：execution 部分对 @Async 无效（已被 yue.thread-pool.async 覆盖），
+  ## 仅对注入 applicationTaskExecutor bean 的其他组件可能有效。
+  ## 异步线程池请使用 yue.thread-pool.async 配置。
+  ## 业务级独立线程池请使用 yue.thread-pool.business-pools 配置。
   task:
     execution:
       pool:
