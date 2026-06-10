@@ -44,6 +44,10 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <!-- Spring AI -->
+        <spring-ai.version>1.1.2</spring-ai.version>
+        <spring-ai-alibaba.version>1.1.2.2</spring-ai-alibaba.version>
+
         <!-- yue-library.version -->
         <yue-library-base.version>j${java.version}.3.3.1</yue-library-base.version>
         <yue-library-base-crypto.version>j${java.version}.3.3.1</yue-library-base-crypto.version>
@@ -117,6 +121,25 @@
 <!--                <artifactId>nacos-client</artifactId>-->
 <!--                <version>${nacos.client.version}</version>-->
 <!--            </dependency>-->
+
+            <!-- spring-ai -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-agent-framework</artifactId>
+                <version>${spring-ai-alibaba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+                <version>${spring-ai-alibaba.version}</version>
+            </dependency>
 
             <!-- yue-library -->
             <dependency>
