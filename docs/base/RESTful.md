@@ -198,3 +198,31 @@ yue:
     "data": null
 }
 ```
+
+### R 工厂方法速查
+`R` 是构建 `Result` 响应体的工具类，方法名即语义、末尾数字为对应 `code`。以下为高频方法，**完整方法列表（含各类 401/402 细分、SQL 异常、客户端兜底等）请探查源码 `ai.yue.library.base.view.R`**。
+
+- **成功**
+  - `R.success()`：成功，data 为 null-200
+  - `R.success(T data)`：成功，携带业务数据-200
+- **认证授权**
+  - `R.unauthorized()`：未登录或登录已失效-401
+  - `R.forbidden()`：无权限访问-403
+- **限流与幂等**
+  - `R.tooManyRequests()` / `R.qpsLimit(String msg)`：请求过多/QPS 限流-429
+  - `R.idempotent(T data)`：幂等拦截（重复提交）
+  - `R.lockAcquireFailure(T data)`：分布式锁获取失败
+- **参数校验**
+  - `R.paramVoid()`：缺少必填参数
+  - `R.paramCheckNotPass()`：参数校验未通过
+  - `R.paramValueInvalid()`：参数值无效
+- **服务端错误**
+  - `R.internalServerError()`：服务器内部错误-500
+  - `R.serviceUnavailable()`：服务不可用-503
+- **自定义错误提示（推荐业务使用）**
+  - `R.errorPrompt(String msg)`：友好错误提示-600（业务异常首选）
+  - `R.errorPromptFormat(String msg, Object... values)`：模板格式化提示，`{}` 占位符
+  - `R.errorPromptI18n(String msgKey, Object... values)`：i18n 资源包提示
+  - `R.errorPromptCode(ResultCode resultCode)`：自定义 code（>600）提示，传入实现了 `ResultCode` 的枚举
+
+> 命名规律：方法名表达语义、按 HTTP 风格状态码分组（200 成功 / 400 客户端 / 500 服务端 / 600+ 自定义提示）；多数方法有 `(T data)` 重载用于携带业务数据。需要未列出的方法时，按此规律在源码 `R` 类中定位即可。
