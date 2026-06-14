@@ -70,4 +70,73 @@
 		    <version>${jsr305.version}</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<resources>
+			<!-- 默认资源目录 -->
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<!--
+				AI随包文档：将项目根目录的docs/打包为jar内docs/目录
+				白名单策略：只打包 _sidebar.md 导航中引用的活跃文档
+				同步约束：新增/删除 _sidebar.md 导航项时，必须同步更新此白名单
+			-->
+			<resource>
+				<directory>${project.basedir}/../docs</directory>
+				<targetPath>docs</targetPath>
+				<includes>
+					<!-- base 模块 -->
+					<include>base/介绍.md</include>
+					<include>base/RESTful.md</include>
+					<include>base/校验.md</include>
+					<include>base/类型转换器.md</include>
+					<include>base/统一异常处理.md</include>
+					<include>base/线程池.md</include>
+					<include>base/网络代理.md</include>
+					<include>base/i18n.md</include>
+					<include>base/Actuator安全.md</include>
+					<!-- base-crypto 模块 -->
+					<include>base-crypto/快速开始.md</include>
+					<include>base-crypto/密钥交换加解密.md</include>
+					<!-- web 模块 -->
+					<include>web/介绍.md</include>
+					<include>web/QPS限流.md</include>
+					<include>web/请求参数解析与包装.md</include>
+					<include>web/响应消息转换器.md</include>
+					<!-- auth 模块 -->
+					<include>auth/Actuator安全.md</include>
+					<include>auth/LAN接口安全.md</include>
+					<!-- data-mybatis 模块 -->
+					<include>data/mybatis/快速开始.md</include>
+					<include>data/mybatis/BaseEntity.md</include>
+					<include>data/mybatis/Mapper、Service、Controller示例.md</include>
+					<include>data/mybatis/SqlService.md</include>
+					<include>data/mybatis/数据填充.md</include>
+					<include>data/mybatis/数据审计.md</include>
+					<include>data/mybatis/逻辑删除.md</include>
+					<include>data/mybatis/分页.md</include>
+					<include>data/mybatis/多租户与i18n.md</include>
+					<include>data/mybatis/企业租户tenant_co_id.md</include>
+					<include>data/mybatis/动态数据源.md</include>
+					<include>data/mybatis/性能调优.md</include>
+					<include>data/mybatis/启用插件.md</include>
+					<include>data/mybatis/模块化Mapper注册.md</include>
+					<!-- data-redis 模块 -->
+					<include>data/redis/快速开始.md</include>
+					<include>data/redis/分布式锁与接口幂等性.md</include>
+					<include>data/redis/二级缓存.md</include>
+					<include>data/redis/有界阻塞队列与延迟队列.md</include>
+					<!-- data-log 模块 -->
+					<include>data/log/快速开始.md</include>
+					<include>data/log/操作日志.md</include>
+					<include>data/log/登录日志.md</include>
+					<include>data/log/日志查询.md</include>
+					<include>data/log/数据脱敏.md</include>
+					<include>data/log/日志归档.md</include>
+					<include>data/log/微服务日志.md</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
 </project>
