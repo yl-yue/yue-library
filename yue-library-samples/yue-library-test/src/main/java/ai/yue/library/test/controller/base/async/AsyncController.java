@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,6 +41,7 @@ import java.util.concurrent.Future;
 public class AsyncController {
 
     final AsyncService asyncService;
+    final NestedAsyncService nestedAsyncService;
 
     @GetMapping("/async")
     public Result<?> async() {
@@ -215,6 +217,22 @@ public class AsyncController {
         return R.success();
     }
     
+    @GetMapping("/nestedAsyncParallelDb")
+    public Result<?> nestedAsyncParallelDb(int parallelism, int queryCount) {
+        return R.success(nestedAsyncService.nestedAsyncParallelDb(parallelism, queryCount).join());
+    }
+
+    /**
+     * 嵌套异步上下文正确性验证：在请求中设置诊断属性，验证子线程能否正确读取。
+     */
+    @GetMapping("/nestedAsyncContextCorrectness")
+    public Result<?> nestedAsyncContextCorrectness(int parallelism) {
+        String diagnosticValue = "ctx-" + System.nanoTime();
+        ServletUtils.getRequest().setAttribute("diagnosticAttr", diagnosticValue);
+        List<Map<String, Object>> results = nestedAsyncService.verifyContextCorrectness(parallelism, diagnosticValue).join();
+        return R.success(results);
+    }
+
     public void testParallelStream() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {

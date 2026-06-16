@@ -1,6 +1,7 @@
 package ai.yue.library.web.config.thread.pool;
 
 import ai.yue.library.base.config.thread.pool.AsyncProperties;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,8 +26,15 @@ public class ContextDecorator extends AbstractContextDecorator {
 
     @Override
     public Runnable decorate(Runnable runnable) {
-        // Servlet上下文
+        // 无 Servlet 上下文时（如非 Web 环境或测试场景）直接返回原任务
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return runnable;
+        }
+
+        // Servlet上下文（捕获 HttpServletRequest 引用，在子线程中创建新的 ServletRequestAttributes 包装实例，
+        // 避免嵌套异步场景（如 execParallelLimit）下多个并发子线程共享同一引用导致的竞态问题）
         ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+        HttpServletRequest request = context.getRequest();
         // i18n上下文
         Locale locale = LocaleContextHolder.getLocale();
         // 日志上下文
@@ -55,7 +63,7 @@ public class ContextDecorator extends AbstractContextDecorator {
          */
         return () -> {
             try {
-                RequestContextHolder.setRequestAttributes(context);
+                RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
                 LocaleContextHolder.setLocale(locale);
                 if (previous != null) {
                     MDC.setContextMap(previous);
