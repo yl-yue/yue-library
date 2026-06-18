@@ -56,7 +56,7 @@ public class WebAutoConfig {
 	@Bean
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(prefix = "yue.base.cors", name = "allow", havingValue = "true", matchIfMissing = true)
-	public CorsFilter corsFilter(BaseProperties baseProperties) {
+	public FilterRegistrationBean<CorsFilter> corsFilter(BaseProperties baseProperties) {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		final CorsConfiguration config = new CorsConfiguration();
 		
@@ -76,8 +76,12 @@ public class WebAutoConfig {
 		
 		source.registerCorsConfiguration("/**", config);
 		
+		FilterRegistrationBean<CorsFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+		filterRegistrationBean.setFilter(new CorsFilter(source));
+		filterRegistrationBean.setOrder(webProperties.getCorsFilterOrder());
+		
 		log.info("【初始化配置-跨域】默认配置为true，当前环境为true：默认任何情况下都允许跨域访问 ... 已初始化完毕。");
-		return new CorsFilter(source);
+		return filterRegistrationBean;
 	}
 	
 	// 注册Filter并配置执行顺序

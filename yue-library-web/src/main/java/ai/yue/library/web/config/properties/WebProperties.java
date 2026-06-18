@@ -33,6 +33,13 @@ public class WebProperties {
 	private int repeatedlyReadServletRequestFilterOrder = -1200;
 
 	/**
+	 * 跨域 CorsFilter 优先级
+	 * <p>值越小优先级越高
+	 * <p>默认：-10000，确保在所有业务 Filter 之前执行，避免认证 Filter 拒绝请求时缺少 CORS 响应头导致浏览器 CORS 错误
+	 */
+	private int corsFilterOrder = -10000;
+
+	/**
 	 * 启用接口幂等拦截
 	 * <p>默认：true
 	 */
