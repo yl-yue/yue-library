@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 public class KeyExchangeController {
 
     @PostMapping("/keyExchangeEncryptDecrypt")
-    public Result<?> keyExchangeEncryptDecrypt(@Valid ValidationIPO validationIPO) {
+    public Result<?> keyExchangeEncryptDecrypt(@RequestBody @Valid ValidationIPO validationIPO) {
         System.out.println(validationIPO);
         return R.success(validationIPO);
     }

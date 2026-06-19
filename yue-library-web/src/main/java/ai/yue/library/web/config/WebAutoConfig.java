@@ -54,7 +54,6 @@ public class WebAutoConfig {
 	// CorsConfig-跨域
 	
 	@Bean
-	@ConditionalOnMissingBean
 	@ConditionalOnProperty(prefix = "yue.base.cors", name = "allow", havingValue = "true", matchIfMissing = true)
 	public FilterRegistrationBean<CorsFilter> corsFilter(BaseProperties baseProperties) {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

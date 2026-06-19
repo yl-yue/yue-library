@@ -61,7 +61,7 @@ public class ConvertTest {
 
 		// 数组
 		paramJson.put("arrayStr", new String[]{"aaaa", "bbbbb", "cccc"});
-		paramJson.put("arrayLong", new Long[]{1L, 2L, 3L});
+		paramJson.put("arrayLong", new long[]{1L, 2L, 3L});
 		paramJson.put("list", new String[]{"aaaa", "bbbbb", "cccc"});
 
 		// 时间类型
