@@ -9,6 +9,8 @@ import com.alibaba.fastjson2.JSONObject;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.v7.core.text.StrUtil;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,6 +27,7 @@ import java.util.List;
  * @since	2017年10月8日
  */
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ResultExceptionHandler extends AbstractExceptionHandler {
 	

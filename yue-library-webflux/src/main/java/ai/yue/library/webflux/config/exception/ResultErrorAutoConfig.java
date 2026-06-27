@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Configuration
 @AutoConfigureBefore(ErrorWebFluxAutoConfiguration.class)
-@Import({ ResultExceptionHandler.class })
+@Import({ ResultExceptionHandler.class, ResultExceptionFallbackHandler.class, SaTokenExceptionAutoConfig.class })
 @EnableConfigurationProperties({ ServerProperties.class })
 @ConditionalOnProperty(prefix = "yue.exception-handler", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class ResultErrorAutoConfig {

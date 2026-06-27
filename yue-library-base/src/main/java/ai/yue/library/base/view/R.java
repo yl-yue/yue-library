@@ -51,6 +51,8 @@ public class R {
 
     // ======security======
     private static final String NotLoginException = "cn.dev33.satoken.exception.NotLoginException";
+    private static final String NotRoleException = "cn.dev33.satoken.exception.NotRoleException";
+    private static final String NotPermissionException = "cn.dev33.satoken.exception.NotPermissionException";
     private static final String AuthenticationException = "org.springframework.security.core.AuthenticationException";
     private static final String AccessDeniedException = "org.springframework.security.access.AccessDeniedException";
 
@@ -751,6 +753,10 @@ public class R {
 
             String msg = I18nUtils.getYueDefault(ResultEnum.FORBIDDEN.getMsg());
             log.error("【权限异常】{}, {}, {}", msg, e.getMessage(), authToken);
+            return forbidden();
+        } else if (isInstanceofExceptionClass(e, NotRoleException) || isInstanceofExceptionClass(e, NotPermissionException)) {
+            // Sa-Token 角色或权限校验未通过-403（@SaCheckRole / @SaCheckPermission 失败抛出）
+            ExceptionUtils.printException(e);
             return forbidden();
         } else if (isInstanceofExceptionClass(e, PageException)) {
             return paramCheckNotPass(e.getMessage());

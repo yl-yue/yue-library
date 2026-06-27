@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @Configuration
-@Import({ ResultExceptionHandler.class, ResultResponseBodyHandler.class })
+@Import({ ResultExceptionHandler.class, ResultExceptionFallbackHandler.class, SaTokenExceptionAutoConfig.class, ResultResponseBodyHandler.class })
 @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 @EnableConfigurationProperties({ ServerProperties.class })
 @ConditionalOnProperty(prefix = "yue.exception-handler", name = "enabled", havingValue = "true", matchIfMissing = true)

@@ -6,6 +6,7 @@ import ai.yue.library.base.view.Result;
 import ai.yue.library.test.entity.DataAudit;
 import ai.yue.library.test.service.DataAuditService;
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotRoleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,12 @@ public class ExceptionController {
 		}
 
 		throw NotLoginException.newInstance("异常测试", NotLoginException.NO_PREFIX, NotLoginException.NO_PREFIX_MESSAGE, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOjExNzkxNzE4LCJyblN0ciI6ImV1M2QxOHVnWHRFanVySHNsNTRaVW5aZFBsUkJYVHlYIiwiZXhwIjoxNzI4MTEwOTE1LCJ1c2VybmFtZSI6IjExNzkxNzE4In0.5OCeX0rKX-VXoiaVYvwPX94dm9DAsEFySgvbCH-OQvc");
+	}
+
+	@PostMapping("/notroleexception")
+	public Result<?> notroleexception() {
+		// Sa-Token @SaCheckRole 角色校验失败抛出此异常，验证框架识别为 403
+		throw new NotRoleException("super-admin", "login");
 	}
 
 	@PostMapping("/dataIntegrityViolationException")

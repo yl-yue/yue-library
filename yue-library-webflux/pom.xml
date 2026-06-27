@@ -22,5 +22,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
+
+		<!-- Sa-Token 认证框架（optional，仅用于 Sa-Token 异常精细处理，不传递给下游） -->
+		<dependency>
+			<groupId>cn.dev33</groupId>
+			<artifactId>sa-token-core</artifactId>
+			<version>${sa-token.version}</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

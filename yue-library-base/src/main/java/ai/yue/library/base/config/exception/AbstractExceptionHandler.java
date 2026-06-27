@@ -27,16 +27,6 @@ public abstract class AbstractExceptionHandler {
     // RESTful 异常拦截
 
     /**
-     * 拦截所有未知异常（DispatcherServlet异常处理）
-     * <p>避免StandardWrapperValve类打印异常，导致堆栈信息重复打印</p>
-     */
-    @ResponseBody
-    @ExceptionHandler(Exception.class)
-    public Result<?> exception(Exception e) {
-		return R.getResult(e);
-    }
-
-    /**
 	 * RESTful 异常结果处理
 	 * 
 	 * @param e 结果异常
