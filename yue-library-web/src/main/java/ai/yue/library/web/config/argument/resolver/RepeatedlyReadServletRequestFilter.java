@@ -1,6 +1,6 @@
 package ai.yue.library.web.config.argument.resolver;
 
-import ai.yue.library.base.constant.Constant;
+import ai.yue.library.web.util.ServletUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,28 +15,47 @@ import java.io.IOException;
  * RepeatedlyReadServletRequestWrapper过滤器
  * <p>传递输入流可反复读取的HttpServletRequest
  * <p>OncePerRequestFilter是在一次外部请求中只过滤一次。对于服务器内部之间的forward等请求，不会再次执行过滤方法。
- * 
+ *
  * @author ylyue
  * @since 2020年9月3日
  */
 @Slf4j
 public class RepeatedlyReadServletRequestFilter extends OncePerRequestFilter {
-	
-	private static final String PARAM_TRANSMIT = Constant.PREFIX + "Param-Transmit";
-	
+
+	/**
+	 * 是否对 multipart 请求包装为可重复读
+	 */
+	private final boolean repeatedlyReadMultipart;
+
+	/**
+	 * 默认构造，multipart 请求跳过包装（保全文件上传）
+	 */
+	public RepeatedlyReadServletRequestFilter() {
+		this(false);
+	}
+
+	/**
+	 * @param repeatedlyReadMultipart 是否对 multipart 请求包装为可重复读
+	 */
+	public RepeatedlyReadServletRequestFilter(boolean repeatedlyReadMultipart) {
+		this.repeatedlyReadMultipart = repeatedlyReadMultipart;
+	}
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		log.debug("传递输入流可反复读取的HttpServletRequest ...");
-		
 		/*
-		 * 在request被包装之前，先进行一次参数解析处理，避免后续出现使用未包装的request导致：FileUploadException: Stream closed.
-		 * 如：调用 request#getParts() 将使用已解析过的结果（parse multipart content and store the parts）.
+		 * multipart 请求的 body 字节缓存与 getParts() 参数解析互斥（Servlet 规范限制：二者独占 InputStream 唯一一次可读性）。
+		 * 未开启 repeatedlyReadMultipart 时跳过包装，让容器正常解析 multipart 文件上传，避免包装后 getParts() 因流已耗尽而解析失败。
 		 */
-		request.getParameter(PARAM_TRANSMIT);
-		
+		if (ServletUtils.isMultipart(request) && !repeatedlyReadMultipart) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+
+		log.debug("传递输入流可反复读取的HttpServletRequest ...");
 		ServletRequest requestWrapper = new RepeatedlyReadServletRequestWrapper(request);
 		filterChain.doFilter(requestWrapper, response);
 	}
-	
+
 }

@@ -33,6 +33,15 @@ public class WebProperties {
 	private int repeatedlyReadServletRequestFilterOrder = -1200;
 
 	/**
+	 * 是否对 multipart 请求包装为可重复读
+	 * <p>Servlet 规范限制：multipart 请求的 body 字节缓存与 getParts() 参数解析互斥，二者独占 InputStream 唯一一次可读性
+	 * <p>false：multipart 请求跳过包装，让容器正常解析文件上传（@RequestPart 等），但 body 不可重复读
+	 * <p>true：multipart 请求纯字节缓存，body 可重复读；此时需排除 Spring Boot MultipartAutoConfiguration，否则 getParts() 解析失败
+	 * <p>默认：false（保全主流的 multipart 文件上传场景）
+	 */
+	private boolean repeatedlyReadMultipart = false;
+
+	/**
 	 * 跨域 CorsFilter 优先级
 	 * <p>值越小优先级越高
 	 * <p>默认：-10000，确保在所有业务 Filter 之前执行，避免认证 Filter 拒绝请求时缺少 CORS 响应头导致浏览器 CORS 错误
