@@ -25,15 +25,9 @@ public class ContextDecorator extends AbstractContextDecorator {
     }
 
     @Override
-    public Runnable decorate(Runnable runnable) {
-        // 无 Servlet 上下文时（如非 Web 环境或测试场景）直接返回原任务
-        if (RequestContextHolder.getRequestAttributes() == null) {
-            return runnable;
-        }
-
+    protected Runnable decorateWithWebRequest(Runnable runnable, ServletRequestAttributes context) {
         // Servlet上下文（捕获 HttpServletRequest 引用，在子线程中创建新的 ServletRequestAttributes 包装实例，
         // 避免嵌套异步场景（如 execParallelLimit）下多个并发子线程共享同一引用导致的竞态问题）
-        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         HttpServletRequest request = context.getRequest();
         // i18n上下文
         Locale locale = LocaleContextHolder.getLocale();

@@ -22,9 +22,7 @@ public class CustomContextDecorator extends AbstractContextDecorator {
     }
 
     @Override
-    public Runnable decorate(Runnable runnable) {
-        // Servlet上下文
-        ServletRequestAttributes context = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
+    protected Runnable decorateWithWebRequest(Runnable runnable, ServletRequestAttributes context) {
         // ServletAsyncContext-enable：异步上下文最长生命周期（最大阻塞父线程多久）
         log.info("自定义上下文装饰器-ServletAsyncContext-enable：异步上下文最长生命周期（最大阻塞父线程多久）");
         enableServletAsyncContext(context, asyncProperties);
