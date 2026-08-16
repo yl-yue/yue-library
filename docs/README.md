@@ -1,6 +1,6 @@
 <p align="center">
 	<a target="_blank" href="https://ylyue.cn/">
-		<img src="docs/_images/logo.png" width="400">
+		<img src="_images/logo.png" width="400">
 	</a>
 </p>
 <p align="center">
