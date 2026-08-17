@@ -33,7 +33,7 @@
     <properties>
         <!-- project.version -->
         <java.version>17</java.version>
-        <revision>j${java.version}.3.3.1</revision>
+        <revision>j${java.version}.3.3.2</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <spring-boot.version>3.3.13</spring-boot.version>
@@ -49,13 +49,13 @@
         <spring-ai-alibaba.version>1.1.2.2</spring-ai-alibaba.version>
 
         <!-- yue-library.version -->
-        <yue-library-base.version>j${java.version}.3.3.1</yue-library-base.version>
-        <yue-library-base-crypto.version>j${java.version}.3.3.1</yue-library-base-crypto.version>
-        <yue-library-web.version>j${java.version}.3.3.1</yue-library-web.version>
-        <yue-library-webflux.version>j${java.version}.3.3.1</yue-library-webflux.version>
-        <yue-library-data-mybatis.version>j${java.version}.3.3.1</yue-library-data-mybatis.version>
-        <yue-library-data-redis.version>j${java.version}.3.3.1</yue-library-data-redis.version>
-        <yue-library-data-log.version>j${java.version}.3.3.1</yue-library-data-log.version>
+        <yue-library-base.version>j${java.version}.3.3.2</yue-library-base.version>
+        <yue-library-base-crypto.version>j${java.version}.3.3.2</yue-library-base-crypto.version>
+        <yue-library-web.version>j${java.version}.3.3.2</yue-library-web.version>
+        <yue-library-webflux.version>j${java.version}.3.3.2</yue-library-webflux.version>
+        <yue-library-data-mybatis.version>j${java.version}.3.3.2</yue-library-data-mybatis.version>
+        <yue-library-data-redis.version>j${java.version}.3.3.2</yue-library-data-redis.version>
+        <yue-library-data-log.version>j${java.version}.3.3.2</yue-library-data-log.version>
 
         <!-- dependencies.version -->
 <!--        <nacos.client.version>2.4.3</nacos.client.version>-->
