@@ -50,6 +50,10 @@ build/
 *.patch
 *.tmp
 
+# 发布工具脚本：本地配置与过程产物不入库
+scripts/
+release-notes/
+
 # system ignore
 .DS_Store
 Thumbs.db

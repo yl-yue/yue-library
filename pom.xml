@@ -89,7 +89,7 @@
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -402,14 +402,16 @@
     </dependencyManagement>
 
     <distributionManagement>
+        <!-- 日常 SNAPSHOT 发布至阿里云私有仓库（mvn deploy 不激活 release profile 时生效） -->
         <snapshotRepository>
             <id>rdc-snapshots</id>
             <url>https://packages.aliyun.com/614409d1c0c796adef4f37ac/maven/2138714-snapshot-1klhwj</url>
         </snapshotRepository>
-        <repository>
-            <id>oss-releases</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
+        <!--
+            正式版发布走 Sonatype Central Portal（central.sonatype.com）：
+            由 release profile 中的 central-publishing-maven-plugin 接管 deploy，无需在此声明 repository。
+            旧 OSSRH 通道（oss.sonatype.org）已于 2025-06-30 关停，请勿回填其地址。
+        -->
     </distributionManagement>
 
     <licenses>
@@ -465,11 +467,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${flatten-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus-staging-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -589,15 +586,17 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- 自动发布 -->
+                    <!-- 自动发布：Sonatype Central Portal（mvn deploy -P release 触发，验证通过自动发布至 Maven Central） -->
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>oss-releases</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <!-- 与 ~/.m2/settings.xml 中 <server><id>central</id></server> 保持一致 -->
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
                         </configuration>
                     </plugin>
                 </plugins>
