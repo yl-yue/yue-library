@@ -13,7 +13,56 @@
 
 [👉点击查看pom.xml依赖](https://gitee.com/yl-yue/yue-library/blob/master/pom.xml)
 
-### j11.2.6.3【规划中】
+### j17.3.3.1【2026-08-17】
+yue-library 自 j11.2.6.2 以来的首个大版本里程碑，**破坏性大版本**。框架全面升级至 Java 17 + Spring Boot 3.3 + Spring Cloud 2023 技术栈，核心模块大规模重构与精简。
+
+> ⚠️ 升级提示：不兼容旧版，升级涉及 Java 版本、依赖体系与多个 API 变更，请对照本版本说明逐项适配。
+
+1. 基础环境全面升级：Java 17、Spring Boot 3.3.13、Spring Cloud 2023.0.6、Spring Cloud Alibaba 2023.0.3.4、fastjson2、hutool v7
+2. ORM 层基于 MyBatis-Plus 3.5.14 重构，Redis 客户端全面切换 Redisson 3.45.1
+3. 移除 data-es、auth-client、auth-service、template-boot、template-cloud 模块
+4. 新增 data-log 日志模块（操作/登录日志，多持久化模式）
+
+#### 重大变更
+- 【redis】Redis API 重构：全新 Redisson 客户端，旧序列化配置与 `ApiIdempotent` 体系废弃，改为 `@Idempotent` 注解 + fastjson2 可读序列化
+- 【mybatis】取消 `BaseService` 封装，改为直接继承 `ServiceImpl`；新增 `SqlService` 动态 SQL；审计/逻辑删除改为实体动态适配
+- 【web】取消 `code` 码与 HTTP 状态码同步，新增 `ResultCode` 接口与 `R.errorPromptI18n()`，响应码体系按 i18n 规范调整
+- 【base】工具类改名：`StringUtils→StrUtils`、`ObjectUtils→ObjUtils`、`ArithCompute→NumUtils`、`URIUtils→UrlUtils`
+- 【base-crypto】加密模块注解化重构（`@RequestDecrypt`/`@ResponseEncrypt`），`spring.factories` 迁移至 `AutoConfiguration.imports`
+
+#### 新特性
+- 【base】新增限流工具类（令牌桶，支持任意时间维度）；异步工具类支持异步返回值；线程池按 CPU 动态调整；`Result.successValidate()` 链式调用；`IdUtils.getDateOrderNo()` 有序时间单号
+- 【web】LAN 接口安全拦截（IP 白名单/Basic Auth/排除路径）；`@QpsLimit` 接口限流；跨域 Filter 优先级；Sa-Token 认证异常精细化处理；请求体可重复读（multipart 感知）
+- 【redis】全新 Redisson 客户端；`@Idempotent` 幂等锁、`@Lock` 分布式锁（SPEL）；有界阻塞队列、延迟队列；可读序列化与反序列化
+- 【mybatis】`SqlService` 动态 SQL；企业租户拦截器；审计动态适配；逻辑删除智能 SQL 解析；动态映射器包扫描
+- 【data-log】新增日志模块：操作/登录日志、多持久化模式（本地/HTTP/SPI）、数据脱敏、日志归档与查询
+- 【base-crypto】加解密注解化；密钥交换存储 Caffeine/Redis 双实现
+- 【其他】Spring AI 与阿里 AI starter 依赖、Micrometer Tracing、JVM 空闲 GC 优化
+
+#### Bug修复
+- 【base】修复响应序列化异常导致的重复响应与错误结果；修复 `DateUtils.toDateFormatter()` 时间戳转换问题
+- 【base】移除存在问题的旧时间单号生成方法，新增 `IdUtils.getDateOrderNo()`
+- 【redis】心跳检查，解决连接超时问题
+- 【web】修复 feign 服务降级异常经统一异常处理后返回空报文的问题
+
+#### Maven关键依赖库
+[**👉Maven详细依赖定义见pom.xml文件**](https://gitee.com/yl-yue/yue-library/blob/j17.3.3.1/pom.xml)
+
+|依赖库					|依赖版本	|
+|--						|--			|
+|java					|17			|
+|spring-boot			|3.3.13		|
+|spring-cloud			|2023.0.6	|
+|spring-cloud-alibaba	|2023.0.3.4	|
+|mybatis-plus			|3.5.14		|
+|pagehelper				|6.1.1		|
+|redisson				|3.45.1		|
+|hutool					|7.0.0-M5	|
+|fastjson2				|2.0.60		|
+|sa-token				|1.44.0		|
+|spring-ai				|1.1.2		|
+|spring-ai-alibaba		|1.1.2.2	|
+
 ### j11.2.6.2【2023-03-28】
 1. 移除yue-library-pay模块，放至里程碑实现
 2. 移除yue-library-data-jdbc模块，放至里程碑实现
