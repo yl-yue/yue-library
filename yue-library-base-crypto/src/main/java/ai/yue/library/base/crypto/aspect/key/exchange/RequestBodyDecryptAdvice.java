@@ -28,7 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +97,7 @@ public class RequestBodyDecryptAdvice extends RequestBodyAdviceAdapter {
 		return new HttpInputMessage() {
 			@Override
 			public InputStream getBody() throws IOException {
-				String decryptStr = StreamUtils.copyToString(inputMessage.getBody(), Charset.defaultCharset());
+				String decryptStr = StreamUtils.copyToString(inputMessage.getBody(), StandardCharsets.UTF_8);
 				log.debug("【密钥交换-解密】sessionKey={}，symmetricKey={}，decryptStr={}", finalSessionKey, symmetricKey, decryptStr);
 				return new ByteArrayInputStream(symmetricCrypto.decrypt(decryptStr));
 			}

@@ -6,6 +6,8 @@ import cn.hutool.v7.crypto.asymmetric.AbstractAsymmetricCrypto;
 import cn.hutool.v7.crypto.bc.SmUtil;
 import cn.hutool.v7.crypto.symmetric.SymmetricCrypto;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * 交换密钥类型
  *
@@ -26,7 +28,8 @@ public enum ExchangeKeyEnum {
 
         @Override
         public SymmetricCrypto getSymmetricCrypto(String key) {
-            return SecureUtil.aes(key.getBytes());
+            // 密钥按 UTF-8 取字节：不能依赖平台默认字符集，否则同一份密钥在 Windows/Linux 会派生出不同的 AES 实例
+            return SecureUtil.aes(key.getBytes(StandardCharsets.UTF_8));
         }
 
     },

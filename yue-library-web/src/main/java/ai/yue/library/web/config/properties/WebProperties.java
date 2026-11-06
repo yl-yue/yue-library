@@ -3,6 +3,7 @@ package ai.yue.library.web.config.properties;
 import ai.yue.library.web.config.argument.resolver.RepeatedlyReadServletRequestFilter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.unit.DataSize;
 
 /**
  * Web自动配置属性
@@ -40,6 +41,15 @@ public class WebProperties {
 	 * <p>默认：false（保全主流的 multipart 文件上传场景）
 	 */
 	private boolean repeatedlyReadMultipart = false;
+
+	/**
+	 * 请求体重复读的缓存上限（如 2MB、512KB）
+	 * <p>超过上限的请求不再缓存 body，保证堆占用与请求体大小脱钩：
+	 * 已声明 Content-Length 且超限时直接透传不包装；无 Content-Length（chunked）时仅首次读取可用（降级为不可重复读）
+	 * <p>仅对文本类 content-type（JSON/XML/纯文本/表单）生效，二进制请求体不参与缓存
+	 * <p>默认：{@link RepeatedlyReadServletRequestFilter#DEFAULT_MAX_BODY_SIZE}（2MB）；&lt;= 0 表示不限制
+	 */
+	private DataSize repeatedlyReadMaxBodySize = DataSize.ofBytes(RepeatedlyReadServletRequestFilter.DEFAULT_MAX_BODY_SIZE);
 
 	/**
 	 * 跨域 CorsFilter 优先级

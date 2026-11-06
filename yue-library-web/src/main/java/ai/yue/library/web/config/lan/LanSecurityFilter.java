@@ -12,6 +12,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class LanSecurityFilter extends OncePerRequestFilter {
@@ -28,7 +29,8 @@ public class LanSecurityFilter extends OncePerRequestFilter {
 		this.properties = properties;
 		String username = properties.getBasicAuth().getUsername();
 		String password = properties.getBasicAuth().getPassword();
-		this.expectedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+		// Basic 认证凭据按 UTF-8 编码：不能依赖平台默认字符集（Windows 中文版 GBK），否则非 ASCII 账号口令永远校验失败
+		this.expectedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
 	}
 
 	@Override

@@ -72,6 +72,51 @@ class RepeatedlyReadServletRequestFilterTest {
 		assertArrayEquals(BODY, wrapper.getInputStream().readAllBytes());
 	}
 
+	/**
+	 * 二进制 content-type 不参与重复读缓存（大文件场景，缓存会压垮堆内存）
+	 */
+	@Test
+	void binaryContentType_shouldSkipWrap() throws Exception {
+		MockHttpServletRequest request = buildRequest("POST", "application/octet-stream", BODY);
+
+		MockFilterChain chain = new MockFilterChain();
+		RepeatedlyReadServletRequestFilter filter = new RepeatedlyReadServletRequestFilter();
+
+		filter.doFilter(request, new MockHttpServletResponse(), chain);
+
+		assertFalse(chain.getRequest() instanceof RepeatedlyReadServletRequestWrapper);
+	}
+
+	/**
+	 * 文本类 content-type 仍应包装（参数解析链路依赖 body 可重复读）
+	 */
+	@Test
+	void textContentType_shouldWrap() throws Exception {
+		MockHttpServletRequest request = buildRequest("POST", "text/plain;charset=UTF-8", BODY);
+
+		MockFilterChain chain = new MockFilterChain();
+		RepeatedlyReadServletRequestFilter filter = new RepeatedlyReadServletRequestFilter();
+
+		filter.doFilter(request, new MockHttpServletResponse(), chain);
+
+		assertInstanceOf(RepeatedlyReadServletRequestWrapper.class, chain.getRequest());
+	}
+
+	/**
+	 * 声明了 Content-Length 且超过缓存上限：不包装（直接透传原始请求），避免把大 body 读进内存
+	 */
+	@Test
+	void oversizedContentLength_shouldSkipWrap() throws Exception {
+		MockHttpServletRequest request = buildRequest("POST", "application/json", BODY);
+
+		MockFilterChain chain = new MockFilterChain();
+		RepeatedlyReadServletRequestFilter filter = new RepeatedlyReadServletRequestFilter(false, 4L);
+
+		filter.doFilter(request, new MockHttpServletResponse(), chain);
+
+		assertFalse(chain.getRequest() instanceof RepeatedlyReadServletRequestWrapper);
+	}
+
 	private MockHttpServletRequest buildRequest(String method, String contentType, byte[] content) {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setMethod(method);

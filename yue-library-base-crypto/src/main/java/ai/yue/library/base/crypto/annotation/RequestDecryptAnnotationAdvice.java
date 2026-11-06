@@ -25,7 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,13 +71,15 @@ public class RequestDecryptAnnotationAdvice extends RequestBodyAdviceAdapter {
 							}
 						}
 
-						return new ByteArrayInputStream(param.toJSONString().getBytes());
+						// 重新序列化后必须按 UTF-8 输出字节：下游 @RequestBody（Jackson）按 UTF-8 解码，
+						// 用平台默认编码（Windows 中文版 GBK）会让解密后的中文参数变成乱码
+						return new ByteArrayInputStream(param.toJSONString().getBytes(StandardCharsets.UTF_8));
 					} catch (Exception e) {
 						log.error("decryptParamNames与整个body解密是互斥的，获取请求参数失败", e);
 						throw e;
 					}
 				} else {
-					String decryptStr = StreamUtils.copyToString(inputMessage.getBody(), Charset.defaultCharset());
+					String decryptStr = StreamUtils.copyToString(inputMessage.getBody(), StandardCharsets.UTF_8);
 					log.debug("【RequestDecrypt】decryptStr={}", decryptStr);
 					return new ByteArrayInputStream(symmetricCrypto.decrypt(decryptStr));
 				}

@@ -3,6 +3,8 @@ package ai.yue.library.base.crypto.util;
 import com.alibaba.fastjson2.JSON;
 import cn.hutool.v7.core.util.ObjUtil;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * 加密参数处理
  *
@@ -23,9 +25,9 @@ public class EncryptParamUtils {
         }
 
         if (data instanceof String) {
-            return ((String) data).getBytes();
+            return ((String) data).getBytes(StandardCharsets.UTF_8);
         } else if (data instanceof Enum) {
-            return ((Enum<?>) data).name().getBytes();
+            return ((Enum<?>) data).name().getBytes(StandardCharsets.UTF_8);
 
         }
 

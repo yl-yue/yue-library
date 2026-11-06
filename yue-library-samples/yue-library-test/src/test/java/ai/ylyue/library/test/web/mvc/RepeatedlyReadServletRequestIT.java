@@ -25,14 +25,19 @@ class RepeatedlyReadServletRequestIT {
 
 	/**
 	 * 非 multipart 请求经 Filter 包装后，Controller 内多次读取 body 与参数均正常
+	 * <p>请求体含中文：若 getReader 使用平台默认字符集或写死非 UTF-8，读取结果会出现乱码
 	 */
 	@Test
 	void nonMultipart_bodyRepeatable() throws Exception {
 		mockMvc.perform(post("/repeatedlyReadServletRequest")
 				.contentType("application/json")
-				.content("{\"name\":\"ylyue\",\"age\":18}"))
+				.content("{\"name\":\"中文测试\",\"age\":18}"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.flag").value(true));
+				.andExpect(jsonPath("$.flag").value(true))
+				.andExpect(jsonPath("$.data[0]").value("{\"name\":\"中文测试\",\"age\":18}"))
+				.andExpect(jsonPath("$.data[1]").value("{\"name\":\"中文测试\",\"age\":18}"))
+				.andExpect(jsonPath("$.data[2].name").value("中文测试"))
+				.andExpect(jsonPath("$.data[3].name").value("中文测试"));
 	}
 
 }
